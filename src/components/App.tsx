@@ -1,7 +1,7 @@
 import Avatar from 'components/Avatar'
-import Menu from 'components/contents'
+import Menu from 'components/menu'
 
-function App() {
+export default function App() {
   return (
         <div className="bg-im">
 		<Menu />
@@ -9,4 +9,3 @@ function App() {
   )
 }
 
-export default App
