@@ -14,7 +14,6 @@ export const Contenter = ({children} ):React.ReactElement  => {
 		</div>)
 }
 
-
  export const Menu = ():React.ReactElement  => {
 	return (
 		<div className="flex flex-col w-full min-h-screen overflow-x-hidden py-18 sm:h-fit">
