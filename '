@@ -21,11 +21,12 @@ return(
 }
 export default function Chat(): JSX.Element {
   return (
-  // add border to the chat box
-		<div className="flex flex-col flex-grow  h-1/2 max-w-xl
-			 w-96 h-96 lg:w-2/6  lg:h-5/6 border border-slate-600
-			m-10  mt-12  transition ease-in delay-50
-			shadow-2xl">
+  // background with transparent
+  // applying  a darker tone to the background
+  //	so that the text is more readable 
+  //	without having to use a white background
+  //opacity
+    <div className="flex flex-col  bg-opacity-50   flex-grow w-full h-1/2 max-w-xl   shadow-xl rounded-lg overflow-hidden">
       <div className="flex flex-col  flex-grow h-full p-4 overflow-auto">
 		<TextBox Text="hello"></TextBox>
 		<TextBox Text="hello"></TextBox>
