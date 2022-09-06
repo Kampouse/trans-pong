@@ -22,13 +22,13 @@ export function TextBox(prop: { Text?: string }): JSX.Element {
 export default function Chat(): JSX.Element {
   return (
     // add border to the chat box
-    <div className="flex flex-col justify-center w-full  lg:w-1/2 min-h-screen h-1/2  sm:h-fit overflow-hidden">
-      <div className="flex flex-col flex-grow  max-w-xl m-10 backdrop-blur-md rounded-2xl w-5/8  h-24 lg:w-2/6  border-2 border-slate-600  mt-12  transition ease-in delay-50 shadow-2xl">
-        <div className="flex  justify-centr">
+    <div className="flex flex-col justify-center w-full  lg:w-1/2 min-h-screen   overflow-hidden">
+      <div className="flex flex-col flex-grow  max-w-xl m-10 backdrop-blur-md rounded-2xl w-5/8  h-0 lg:w-2/6  border-2 border-slate-600  mt-12  transition ease-in delay-50 shadow-2xl">
+        <div className="flex  justify-center">
           < div className="flex flex-row-reverse w-screen bg-slate-600 rounded-t-lg p-2 text-white">
-            <button className="bg-slate-600 rounded-lg p-2 ">
+            <div className=" cursor-pointer bg-slate-600 rounded-lg p-2 ">  
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path d="M4 6h16M4 12h16M4 18h16" /> </svg>
-            </button>
+            </div>
           </div>
         </div>
         <div className=" flex flex-col flex-grow h-full p-4 overflow-auto">
@@ -85,7 +85,6 @@ export default function Chat(): JSX.Element {
           <input
             type="text"
             className="w-full bg-white rounded-b-lg border border-gray-300 focus:outline-none text-base px-4 py-2" placeholder="Type something..." />
-
         </div>
       </div>
     </div>
