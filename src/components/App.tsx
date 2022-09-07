@@ -2,8 +2,7 @@ import Avatar from 'components/Avatar'
 import {Menu} from 'components/menu'
 import PlayMenu from 'components/PlayMenu'
 import CreateGame from 'components/CreateGame'
-import Chat from 'components/Chat'
-
+import Game from 'components/Game'
 export default function App() {
   return (
 
@@ -11,7 +10,7 @@ export default function App() {
 			<PlayMenu />
 			<CreateGame />
 			<Menu />
-			<Chat />
+      <Game/>
     </div>
   )
 }
