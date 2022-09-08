@@ -1,4 +1,4 @@
-import { ReactElement } from 'React';
+import { ReactElement } from 'react';
 
 type children = ReactElement | ReactElement[];
 // define default  image and text if   there no image

@@ -1,6 +1,6 @@
 import PLayMenu from './PlayMenu';
-import {ReactElement} from 'React';
-import { ReactComponent as Play } from "./svgs/Start.svg";
+import {ReactElement} from 'react';
+import Play from "./svgs/Start.svg"
 import {Contenter} from './PlayMenu';
 
 

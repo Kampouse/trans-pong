@@ -1,10 +1,14 @@
-import { ReactComponent as Eyes } from "./svgs/eye.svg";
-import { ReactComponent as Play } from "./svgs/Start.svg";
-import { ReactComponent as Setting } from "./svgs/settings.svg";
-import { ReactComponent as Stats } from "./svgs/stats.svg";
-import { ReactComponent as Chat } from "./svgs/chat.svg";
+import ReactComponent from "*.svg"
+import Play from "./svgs/play.svg"
+import Setting from "./svgs/settings.svg"
+import Eyes from "./svgs/eye.svg"
+import Chat from "./svgs/chat.svg"
+import Stats from "./svgs/stats.svg"
 
-export const Contenter = ({children} ):React.ReactElement  => {
+type ReactNode = JSX.Element | JSX.Element[]
+
+
+export const Contenter =  ({children}: {children: React.ReactNode}) => {
 	return (
 		<div className="grid  place-items-center  
 			w-96 h-96 border border-slate-600
@@ -19,23 +23,17 @@ export const Contenter = ({children} ):React.ReactElement  => {
 		<div className="flex flex-col w-full min-h-screen overflow-x-hidden py-18 sm:h-fit">
 			<div className="flex  flex-wrap  justify-center py-18">
 				<Contenter>
-					< Play width="228" height="228" color="black" />
 				</Contenter>
 				<Contenter>
-					< Setting width="228" height="228" />
 				</Contenter>
 				<Contenter>
-					<Eyes width="228" height="228" />
 				</Contenter>
 			</div>
-			<div className="flex flex-col lg:flex-row md:flex-row justify-center py-18 w-screen
-
-				">
+			<div className="flex flex-col lg:flex-row md:flex-row justify-center py-18 w-screen">
 				<ContenterLarge>
-					<Chat width="228" height="228" />
+
 				</ContenterLarge>
 				<ContenterLarge>
-					<Stats width="228" height="228" />
 				</ContenterLarge>
 			</div>
 		</div>

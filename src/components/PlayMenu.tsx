@@ -1,13 +1,26 @@
 import PLayMenu from './PlayMenu';
-import {ReactElement} from 'React';
-import { ReactComponent as Play } from "./svgs/Start.svg";
+import React, {ReactElement} from 'react';
+import Play from './svgs/play.svg'
 
-type children = ReactElement | ReactElement[];
 
-export const Contenter = ({children}:children):React.ReactElement  => {
+ const PlaySVG = ():JSX.Element=> {
+return(
+<svg width={100}>
+<Play></Play>
+</svg>
+
+)
+
+}
+
+
+
+type ReactNode = JSX.Element | JSX.Element[]
+
+export const Contenter =  ({children}: {children: React.ReactNode}) => {
 	return (
 		<div className="grid  place-items-center  h-screen 
-			 w-96 h-96 lg:w-2/6  lg:h-5/6 border border-slate-600
+			 w-96  lg:w-2/6  lg:h-5/6 border border-slate-600
 			m-10  mt-12  transition ease-in delay-50
 			shadow-2xl hover:opacity-80">
 <div className="grid place-items-center gap-y-2 ">
@@ -29,7 +42,6 @@ export default function PlayMenu() {
 		</form>
 				</Contenter>
 				<Contenter>
-				< Play width="100" height="100" color="black" />
 				<h1 className="text-2xl font-bold text-slate-600">matchmaking</h1>
 				</Contenter>
 				</div>
