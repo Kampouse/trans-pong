@@ -23,16 +23,16 @@ export function TextBox(prop: { Text?: string }): JSX.Element {
 export default function Chat(): JSX.Element {
   return (
     // add border to the chat box
-    <div className="flex flex-col justify-center h-5/6  mt-8 m-12 overflow-hidden">
-      <div className="flex flex-col flex-grow    backdrop-blur-md rounded-2xl   h-1/2   border-2 border-slate-600    transition ease-in delay-50 shadow-2xl">
+    <div className="flex flex-col justify-center h-5/6  mt-8 m-8 overflow-hidden">
+      <div className="flex flex-col flex-grow    backdrop-blur-md rounded-2xl   h-1/2   border border-slate-600    transition ease-in delay-50 ">
         <div className="flex">
-          < div className="flex flex-row-reverse  bg-slate-600 w-full rounded-t-lg p-2 text-white">
-            <button className="bg-slate-600 rounded-lg p-2 ">
+          < div className="flex flex-row-reverse  ring-1 ring-slate-600 bg-slate-600 w-full rounded-t-lg p-2 text-white">
+            <button className="bg-slate-600 rounded-lg  ">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path d="M4 6h16M4 12h16M4 18h16" /> </svg>
             </button>
           </div>
         </div>
-        <div className=" flex flex-col flex-grow h-full p-4 overflow-auto">
+        <div className=" flex flex-col flex-grow lg:full h-96 p-8 overflow-auto">
           <TextBox Text="hello"></TextBox>
           <TextBox Text="hello"></TextBox>
           <TextBox Text="hello"></TextBox>
@@ -67,7 +67,7 @@ export default function Chat(): JSX.Element {
           <TextBox Text="hello"></TextBox>
           <TextBox></TextBox>
         </div>
-        <div className="bg-slate-500 p-4 self-end w-full rounded-b-lg">
+        <div className="bg-slate-500 p-2 ring-1 ring-slate-600 self-end w-full rounded-b-lg">
           <input
             type="text"
             className="w-full bg-white rounded-b-lg border border-gray-300 focus:outline-none text-base px-4 py-2" placeholder="Type something..." />
