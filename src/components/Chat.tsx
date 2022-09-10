@@ -23,7 +23,7 @@ export function TextBox(prop: { Text?: string }): JSX.Element {
 export default function Chat(): JSX.Element {
   return (
     // add border to the chat box
-    <div className="flex flex-col justify-center h-5/6  mt-8 m-8 overflow-hidden">
+    <div className="flex flex-col justify-center h-5/6 mt-4 m-4 mb-0 md:mt-8 md:m-8 lg:mt-8 lg:m-8 overflow-hidden">
       <div className="flex flex-col flex-grow    backdrop-blur-md rounded-2xl   h-1/2   border border-slate-600    transition ease-in delay-50 ">
         <div className="flex">
           < div className="flex flex-row-reverse  ring-1 ring-slate-600 bg-slate-600 w-full rounded-t-lg p-2 text-white">
@@ -32,7 +32,7 @@ export default function Chat(): JSX.Element {
             </button>
           </div>
         </div>
-        <div className=" flex flex-col flex-grow lg:full h-96 p-8 overflow-auto">
+        <div className=" flex flex-col flex-grow md:full lg:full h-96 p-8 overflow-auto">
           <TextBox Text="hello"></TextBox>
           <TextBox Text="hello"></TextBox>
           <TextBox Text="hello"></TextBox>

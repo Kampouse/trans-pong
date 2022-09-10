@@ -67,7 +67,7 @@ fill="#000000" stroke="none">
 const StartSVG = () => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" id="root" version="1.1" width="100" height="100" viewBox="0 0 12 12">
-            <path fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M 11 6 L 2 1 v 10 z"/>
+            <path fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" d="M 11 6 L 2 1 v 10 z"/>
         </svg>
         
     )
@@ -171,7 +171,7 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
                 <StatSVG/>
                 </Contenter>
             </div>
-            <div className="flex flex-col lg:flex-row md:flex-row justify-center py-18 w-screen">
+            <div className="flex flex-col lg:flex-row md:flex-row justify-center py-18  w-screen">
                 <ContenterLarge>
             <SettingSvg/>
                 </ContenterLarge>

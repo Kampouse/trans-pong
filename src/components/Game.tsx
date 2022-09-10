@@ -9,8 +9,8 @@ return(
     
     
     
-    <div className="flex flex-col lg:flex-row md:flex-col justify-center  lg:w-screen w-fit h-fit lg:h-screen min-h-screen">
-<div className="lg:w-screen md:w-fit w-fit  h-screen lg:h-5/6 border border-slate-600 m-1 ml-8 mt-8 transition ease-in delay-50 shadow-2xl ">
+    <div className="flex flex-col lg:flex-row md:flex-col justify-center    h-screen lg:h-screen min-h-screen  min-w-screen ">
+ <div className="flex flex-col justify-center h-5/6  mt-8 lg:mr-2 m-4 lg:m-8  ring-1 ring-slate-600 lg:w-screen min-h-5/6 ">
 <canvas/>
                 </div>
                 <Chat></Chat>
