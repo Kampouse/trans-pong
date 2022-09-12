@@ -165,7 +165,7 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
         <div className="flex flex-col md:flex-col w-full min-h-screen overflow-x-hidden py-18 sm:h-fit">
             <div className="flex  flex-wrap  justify-center py-18">
    				<Contenter>
-                <Link to="/play" className="h-full w-full">
+                <Link to="/root" className="h-full w-full">
                     <div className="flex justify-center mt-32">
 						<Watch/>
                     </div>
@@ -214,7 +214,6 @@ function ContenterLarge({ children }: { children: React.ReactNode }): JSX.Elemen
             w-96 h-96 lg:w-1/3 md:w-96 border border-slate-600
             m-9 transition ease-in delay-50
             shadow-2xl hover:opacity-50">
-
             {children}
         </div>)
 }
