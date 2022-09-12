@@ -3,10 +3,14 @@ import { Routes, Route } from "react-router-dom";
 import Game from "components/Game";
 import CreateGame from "./CreateGame";
 import PlayMenu from "./PlayMenu";
+import Nav from "./Nav";
 export default function App() {
   return (
     <div className="  h-screen min-h-screen w-full overflow-x-hidden bg-gradient-to-r from-purple-500  to-pink-500">
       <>
+		<main>
+<Nav/>
+			</main>
         <Routes>
           <Route path="/" element={<Menu />} />
           <Route path="/CreateGame" element={<CreateGame />} />

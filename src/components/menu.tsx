@@ -1,8 +1,6 @@
 import React from "react";
 import { Link, Route } from "react-router-dom";
-
-type ReactNode = JSX.Element | JSX.Element[];
-
+import Nav from "components/Nav"
 export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
@@ -221,7 +219,8 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
 
 export const Menu = (): React.ReactElement => {
   return (
-    // array of React elements
+<>
+
     <div className=" flex min-h-screen w-full flex-col overflow-x-hidden sm:h-fit md:flex-col">
       <div className="  flex  flex-wrap justify-center">
         <Contenter>
@@ -250,19 +249,21 @@ export const Menu = (): React.ReactElement => {
         <ContenterLarge>
           <Link to="/CreateGame" className="relative h-full w-full">
             <div className="mt-32 flex justify-center">
-              <SettingSvg />
+
+              <StartSVG />
             </div>
           </Link>
         </ContenterLarge>
         <ContenterLarge>
           <Link to="/PlayMenu" className="relative h-full w-full">
             <div className="mt-32 flex justify-center">
-              <StartSVG />
+              <SettingSvg />
             </div>
           </Link>
         </ContenterLarge>
       </div>
     </div>
+	</>
   );
 };
 
