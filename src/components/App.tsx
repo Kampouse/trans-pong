@@ -7,7 +7,7 @@ import Nav from "./Nav";
 import Login from "./Login";
 export default function App() {
   return (
-    <div className="  h-screen min-h-screen w-full overflow-x-hidden bg-gradient-to-r from-purple-500  to-pink-500">
+    <div className="  h-screen min-h-screen w-full overflow-x-hidden bg-gradient-to-tl  bg-gradient-to-r from-purple-500  to-pink-500">
       <>
 		<main>
 <Nav/>
