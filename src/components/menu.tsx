@@ -166,34 +166,41 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
             <div className="flex  flex-wrap  justify-center py-18">
    				<Contenter>
                 <Link to="/play" className="h-full w-full">
-                    <div className="relative lg:inset-1/3 inset-x-1/3 top-24">
+                    <div className="flex justify-center mt-32">
 						<Watch/>
                     </div>
                 </Link>
                 </Contenter>
                     <Contenter>
                 <Link to="/play" className="relative h-full w-full">
-                    <div className="relative  lg:inset-1/3 inset-x-1/3  top-24">
+                    <div className="flex justify-center mt-32">
                             <PlaySVG/>
                     </div>
                 </Link>
                 </Contenter>
 				<Contenter>
                 <Link to="/play" className="relative h-full w-full">
-                    <div className="
-                    
-                    relative  lg:inset-1/3 inset-x-1/3  top-24">
+                    <div className="flex justify-center mt-32">
                             <StatSVG/>
                     </div>
                 </Link>
+
                 </Contenter>
             </div>
             <div className="flex flex-wrap lg:flex-row md:flex-row justify-center p-18  w-screen">
                 <ContenterLarge>
-            <SettingSvg/>
+                <Link to="/play" className="relative h-full w-full">
+                    <div className="flex justify-center mt-32">
+                            <SettingSvg/>
+                    </div>
+                </Link>
                 </ContenterLarge>
                 <ContenterLarge>
-            <StartSVG/>
+                    <Link to="/play" className="relative h-full w-full">
+                    <div className="flex justify-center mt-32">
+                            <StartSVG/>
+                    </div>
+                </Link>
                 </ContenterLarge>
             </div>
         </div>
