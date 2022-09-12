@@ -225,14 +225,14 @@ export const Menu = (): React.ReactElement => {
     <div className=" flex min-h-screen w-full flex-col overflow-x-hidden sm:h-fit md:flex-col">
       <div className="  flex  flex-wrap justify-center">
         <Contenter>
-          <Link to="/root" className="h-full w-full">
+          <Link to="/Play" className="h-full w-full">
             <div className="mt-32 flex justify-center">
               <Watch />
             </div>
           </Link>
         </Contenter>
         <Contenter>
-          <Link to="/play" className="relative h-full w-full">
+          <Link to="/CreateGame" className="relative h-full w-full">
             <div className="mt-32 flex justify-center">
               <PlaySVG />
             </div>
@@ -248,14 +248,14 @@ export const Menu = (): React.ReactElement => {
       </div>
       <div className=" flex w-screen flex-wrap justify-center md:flex-row  lg:flex-row">
         <ContenterLarge>
-          <Link to="/play" className="relative h-full w-full">
+          <Link to="/CreateGame" className="relative h-full w-full">
             <div className="mt-32 flex justify-center">
               <SettingSvg />
             </div>
           </Link>
         </ContenterLarge>
         <ContenterLarge>
-          <Link to="/play" className="relative h-full w-full">
+          <Link to="/PlayMenu" className="relative h-full w-full">
             <div className="mt-32 flex justify-center">
               <StartSVG />
             </div>
