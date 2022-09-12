@@ -161,21 +161,31 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
 
  export const Menu = ():React.ReactElement  => {
     return (
+		// array of React elements
         <div className="flex flex-col md:flex-col w-full min-h-screen overflow-x-hidden py-18 sm:h-fit">
             <div className="flex  flex-wrap  justify-center py-18">
-                <Contenter>
-                    <Watch/>	
+   				<Contenter>
+                <Link to="/play" className="h-full w-full">
+                    <div className="relative lg:inset-1/3 inset-x-1/3 top-24">
+						<Watch/>
+                    </div>
+                </Link>
                 </Contenter>
-
                     <Contenter>
                 <Link to="/play" className="relative h-full w-full">
-                    <div className="relative  inset-1/3">
+                    <div className="relative  lg:inset-1/3 inset-x-1/3  top-24">
                             <PlaySVG/>
                     </div>
                 </Link>
                 </Contenter>
-                <Contenter>
-                <StatSVG/>
+				<Contenter>
+                <Link to="/play" className="relative h-full w-full">
+                    <div className="
+                    
+                    relative  lg:inset-1/3 inset-x-1/3  top-24">
+                            <StatSVG/>
+                    </div>
+                </Link>
                 </Contenter>
             </div>
             <div className="flex flex-wrap lg:flex-row md:flex-row justify-center p-18  w-screen">
@@ -194,7 +204,7 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
 function ContenterLarge({ children }: { children: React.ReactNode }): JSX.Element {
     return (
         <div className="grid  place-items-center  
-            w-96 h-96 lg:w-1/5 md:w-96 border border-slate-600
+            w-96 h-96 lg:w-1/3 md:w-96 border border-slate-600
             m-9 transition ease-in delay-50
             shadow-2xl hover:opacity-50">
 
