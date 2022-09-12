@@ -4,12 +4,14 @@ import Game from "components/Game";
 import CreateGame from "./CreateGame";
 import PlayMenu from "./PlayMenu";
 import Nav from "./Nav";
+import Login from "./Login";
 export default function App() {
   return (
     <div className="  h-screen min-h-screen w-full overflow-x-hidden bg-gradient-to-r from-purple-500  to-pink-500">
       <>
 		<main>
 <Nav/>
+<Login/>
 			</main>
         <Routes>
           <Route path="/" element={<Menu />} />
