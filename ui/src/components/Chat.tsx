@@ -1,21 +1,14 @@
-import { ReactElement } from 'react';
-
-type children = ReactElement | ReactElement[];
-// define default  image and text if   there no image
 export function TextBox(prop: { Text?: string }): JSX.Element {
   return (
-    <div className="flex w-full mt-2 space-x-3 max-w-xs">
-       < div className="flex flex-col justify-center">
-      <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+    <div className="mt-2 flex w-full max-w-xs space-x-3">
+      <div className="flex flex-col justify-center">
+        <div className="h-10 w-10 shrink-0 rounded-full bg-gray-300"></div>
         <div className="text-sm text-gray-800">name</div>
-        </div>
+      </div>
       <div className="p-2 ">
-        <div className="flex flex-wrap bg-gray-300 p-3 rounded-r-lg rounded-bl-lg break-all ">
-          <p className="text-sm">
-            {prop.Text || "there no text provided"}
-          </p>
+        <div className="flex flex-wrap break-all rounded-r-lg rounded-bl-lg bg-gray-300 p-3 ">
+          <p className="text-sm">{prop.Text || "there no text provided"}</p>
         </div>
-        
       </div>
     </div>
   );
@@ -23,16 +16,25 @@ export function TextBox(prop: { Text?: string }): JSX.Element {
 export default function Chat(): JSX.Element {
   return (
     // add border to the chat box
-    <div className="flex flex-col justify-center h-5/6 mt-4 m-4 mb-0 md:mt-8 md:m-8 lg:mt-8 lg:m-8 overflow-hidden">
-      <div className="flex flex-col flex-grow    backdrop-blur-md rounded-2xl   h-1/2   border border-slate-600    transition ease-in delay-50 ">
+    <div className="m-4 mt-4 mb-0 flex h-5/6 flex-col justify-center overflow-hidden md:m-8 md:mt-8 lg:m-8 lg:mt-8">
+      <div className="flex h-1/2    grow flex-col   rounded-2xl   border border-slate-600    backdrop-blur-md transition ease-in ">
         <div className="flex">
-          < div className="flex flex-row-reverse  ring-1 ring-slate-600 bg-slate-600 w-full rounded-t-lg p-2 text-white">
-            <button className="bg-slate-600 rounded-lg  ">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" > <path d="M4 6h16M4 12h16M4 18h16" /> </svg>
+          <div className="flex w-full  flex-row-reverse rounded-t-lg bg-slate-600 p-2 text-white ring-1 ring-slate-600">
+            <button className="rounded-lg bg-slate-600  ">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {" "}
+                <path d="M4 6h16M4 12h16M4 18h16" />{" "}
+              </svg>
             </button>
           </div>
         </div>
-        <div className=" flex flex-col flex-grow md:full lg:full h-96 p-8 overflow-auto">
+        <div className="flex h-96 grow flex-col overflow-auto p-8">
           <TextBox Text="hello"></TextBox>
           <TextBox Text="hello"></TextBox>
           <TextBox Text="hello"></TextBox>
@@ -67,11 +69,12 @@ export default function Chat(): JSX.Element {
           <TextBox Text="hello"></TextBox>
           <TextBox></TextBox>
         </div>
-        <div className="bg-slate-500 p-2 ring-1 ring-slate-600 self-end w-full rounded-b-lg">
+        <div className="w-full self-end rounded-b-lg bg-slate-500 p-2 ring-1 ring-slate-600">
           <input
             type="text"
-            className="w-full bg-white rounded-b-lg border border-gray-300 focus:outline-none text-base px-4 py-2" placeholder="Type something..." />
-
+            className="w-full rounded-b-lg border border-gray-300 bg-white px-4 py-2 text-base focus:outline-none"
+            placeholder="Type something..."
+          />
         </div>
       </div>
     </div>
