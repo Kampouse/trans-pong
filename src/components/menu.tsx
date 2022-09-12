@@ -6,11 +6,13 @@ import Eyes from "./svgs/eye.svg"
 import Chat from "./svgs/chat.svg"
 import Stats from "./svgs/stats.svg"
 import React from "react"
+import {Link,LinkProps,Route} from "react-router-dom"
 
 type ReactNode = JSX.Element | JSX.Element[]
 
 
-export const Contenter =  ({children}: {children: React.ReactNode}) => {
+export const Contenter =  ( {children}: {children: React.ReactNode}) => {
+
     return (
         <div className="grid  place-items-center  
             w-96 h-96 border border-slate-600
@@ -159,19 +161,24 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
 
  export const Menu = ():React.ReactElement  => {
     return (
-        <div className="flex flex-col w-full min-h-screen overflow-x-hidden py-18 sm:h-fit">
+        <div className="flex flex-col md:flex-col w-full min-h-screen overflow-x-hidden py-18 sm:h-fit">
             <div className="flex  flex-wrap  justify-center py-18">
                 <Contenter>
                     <Watch/>	
                 </Contenter>
-                <Contenter>
-                    <PlaySVG/>
+
+                    <Contenter>
+                <Link to="/play" className="relative h-full w-full">
+                    <div className="relative  inset-1/3">
+                            <PlaySVG/>
+                    </div>
+                </Link>
                 </Contenter>
                 <Contenter>
                 <StatSVG/>
                 </Contenter>
             </div>
-            <div className="flex flex-col lg:flex-row md:flex-row justify-center py-18  w-screen">
+            <div className="flex flex-wrap lg:flex-row md:flex-row justify-center p-18  w-screen">
                 <ContenterLarge>
             <SettingSvg/>
                 </ContenterLarge>
@@ -184,13 +191,12 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
 
 }
 
-
 function ContenterLarge({ children }: { children: React.ReactNode }): JSX.Element {
     return (
-        <div className="grid place-items-center 
-            w-95 lg:w-1/3 h-96  border border-slate-600 
-            m-9 md:m-14 lg:m-4 shadow-2xl  
-            transition ease-in delay-50 hover:opacity-50">
+        <div className="grid  place-items-center  
+            w-96 h-96 lg:w-1/5 md:w-96 border border-slate-600
+            m-9 transition ease-in delay-50
+            shadow-2xl hover:opacity-50">
 
             {children}
         </div>)
