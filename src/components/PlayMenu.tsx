@@ -4,8 +4,8 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       className=" m-10  mt-12 
-			 grid  h-screen  w-96 place-items-center border
-			border-slate-600  shadow-2xl  transition ease-in hover:opacity-80
+			 grid  h-screen w-96  place-items-center rounded-lg border
+			border-slate-300  shadow-2xl  transition ease-in hover:opacity-80
 			lg:h-5/6 lg:w-2/6"
     >
       <div className="grid place-items-center gap-y-2 ">{children}</div>
@@ -26,7 +26,7 @@ export default function PlayMenu() {
               type="text"
               placeholder="enter code here"
             />
-            <button className="rounded-lg bg-slate-600 p-2 text-white">
+            <button className="rounded-lg bg-slate-500 p-2 text-white">
               Join
             </button>
           </form>

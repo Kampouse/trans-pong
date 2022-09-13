@@ -7,12 +7,12 @@ import Nav from "./Nav";
 import Login from "./Login";
 export default function App() {
   return (
-    <div className="  h-screen min-h-screen w-full overflow-x-hidden bg-gradient-to-tl  bg-gradient-to-r from-purple-500  to-pink-500">
+    <div className="  h-screen min-h-screen w-full overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
       <>
-		<main>
-<Nav/>
-<Login/>
-			</main>
+        <main>
+          <Nav />
+          <Login />
+        </main>
         <Routes>
           <Route path="/" element={<Menu />} />
           <Route path="/CreateGame" element={<CreateGame />} />
