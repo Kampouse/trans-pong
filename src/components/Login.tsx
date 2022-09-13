@@ -2,7 +2,7 @@
 
 export default function Login() {
   return (
-    <div className=" bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover  h-screen w-full py-16 px-4">
+    <div className="h-screen w-full py-16 px-4">
       <div className="flex flex-col items-center justify-center">
         <div className="bg-white shadow rounded lg:w-1/3  md:w-1/2 w-full p-10 mt-48">
           <p className="focus:outline-none text-2xl font-extrabold leading-6 text-gray-800">
