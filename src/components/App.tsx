@@ -12,7 +12,7 @@ export default function App() {
       <>
         <main>
           <Nav />
-		  <Register />
+          <Register />
         </main>
         <Routes>
           <Route path="/" element={<Menu />} />

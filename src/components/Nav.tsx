@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 export default function Nav() {
   return (
-    <nav className="relative w-full flex flex-wrap items-center justify-between py-3 bg-gray-900 text-gray-200 shadow-lg navbar navbar-expand-lg navbar-light">
-      <div className="container-fluid w-full flex flex-wrap items-center justify-between px-6">
+    <nav className="relative flex w-full flex-wrap items-center justify-between bg-gray-900 py-3 text-gray-200 shadow-lg">
+      <div className=" flex w-full flex-wrap items-center justify-between px-6">
         <button
-          className="navbar-toggler text-gray-200 border-0 hover:shadow-none hover:no-underline py-2 px-2.5 bg-transparent focus:outline-none focus:ring-0 focus:shadow-none focus:no-underline"
+          className=" border-0 bg-transparent py-2 px-2.5 text-gray-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent1"
@@ -12,20 +12,17 @@ export default function Nav() {
           aria-expanded="false"
           aria-label="Toggle navigation"
         ></button>
-        <div
-          className="collapse navbar-collapse flex-grow items-center"
-          id="navbarSupportedContent1"
-        >
-          <Link to="/" className="text-xl text-white pr-2 font-semibold">
+        <div className="  grow items-center" id="navbarSupportedContent1">
+          <Link to="/" className="pr-2 text-xl font-semibold text-white">
             trans-pong
           </Link>
-          <ul className="navbar-nav flex flex-col pl-0 list-style-none mr-auto"></ul>
+          <ul className="  mr-auto flex flex-col pl-0"></ul>
         </div>
 
-        <div className="flex items-center relative">
-          <div className="dropdown relative">
+        <div className="relative flex items-center">
+          <div className="relative">
             <a
-              className="text-white opacity-60 hover:opacity-80 focus:opacity-80 mr-4 dropdown-toggle hidden-arrow flex items-center"
+              className="mr-4 flex items-center text-white opacity-60 hover:opacity-80 focus:opacity-80"
               href="#"
               id="dropdownMenuButton1"
               role="button"
