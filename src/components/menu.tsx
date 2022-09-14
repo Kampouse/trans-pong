@@ -5,14 +5,99 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
     <div
       className=" m-9  
             grid h-96 w-96 place-items-center
-            rounded-lg border border-slate-300 shadow-2xl transition
-            ease-in hover:opacity-50"
+            rounded-lg border border-slate-300 shadow-md transition
+            ease-in "
     >
       {children}
     </div>
   );
 };
 // play menu
+export const Menu = (): React.ReactElement => {
+  return (
+    <>
+      <div className=" flex min-h-screen w-full flex-col overflow-x-hidden pt-48 sm:h-fit md:flex-col">
+        <div className="  flex  flex-wrap justify-center">
+          <Contenter>
+            <Link to="/Watch" className="h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <Watch />
+              </div>
+            </Link>
+          </Contenter>
+          <Contenter>
+            <Link to="/Profile" className="relative h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <UserSVG />
+              </div>
+            </Link>
+          </Contenter>
+          <Contenter>
+            <Link to="/Chat" className="relative h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <ChatSVG />
+              </div>
+            </Link>
+          </Contenter>
+        </div>
+        <div className=" flex w-screen flex-wrap justify-center md:flex-row  lg:flex-row">
+          <ContenterLarge>
+            <Link to="/PlayMenu" className="relative h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <StartSVG />
+              </div>
+            </Link>
+          </ContenterLarge>
+          <ContenterLarge>
+            <Link to="/CreateGame" className="relative h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <SettingSvg />
+              </div>
+            </Link>
+          </ContenterLarge>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const UserSVG = () => {
+  return (
+    <svg
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      x="0px"
+      y="0px"
+      viewBox="0 0 1000 1000"
+      fill="rgb(100,116,137)"
+      height={150}
+      width={150}
+      enableBackground="new 0 0 1000 1000"
+      xmlSpace="preserve"
+    >
+      <g>
+        <g>
+          <path d="M911,783.7l-3.3,4C799,918.1,654.2,990,500,990c-154.2,0-299-71.9-407.7-202.3l-3.3-4l0.8-5.1c21-137,92.6-247,201.5-309.9l7.7-4.5l6.2,6.5c51.4,54,120.6,83.7,194.8,83.7s143.4-29.7,194.8-83.7l6.2-6.5l7.7,4.5c108.9,62.9,180.5,172.9,201.5,309.9L911,783.7z M500,499.4c134.9,0,244.7-109.8,244.7-244.7S634.9,10,500,10S255.3,119.8,255.3,254.7S365.1,499.4,500,499.4z" />
+        </g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+        <g></g>
+      </g>
+    </svg>
+  );
+};
 
 const Watch = () => {
   return (
@@ -21,12 +106,12 @@ const Watch = () => {
       xmlns="http://www.w3.org/2000/svg"
       width="100.000000pt"
       height="100.000000pt"
+      fill="rgb(100,116,137)"
       viewBox="0 0 512.000000 512.000000"
       preserveAspectRatio="xMidYMid meet"
     >
       <g
         transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-        fill="#000000"
         stroke="none"
       >
         <path
@@ -86,12 +171,12 @@ const StartSVG = () => {
       id="root"
       version="1.1"
       width="100"
+      fill="rgb(100,116,137)"
       height="100"
       viewBox="0 0 12 12"
     >
       <path
-        fill="currentColor"
-        stroke="currentColor"
+        stroke="rgb(100,116,137)"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeMiterlimit="10"
@@ -101,62 +186,19 @@ const StartSVG = () => {
   );
 };
 
-const StatSVG = (): React.ReactElement => {
+const ChatSVG = (): React.ReactElement => {
   return (
     <svg
       version="1.0"
       xmlns="http://www.w3.org/2000/svg"
       width="100.000000pt"
       height="100.000000pt"
+      fill="rgb(100, 116, 137)"
       viewBox="0 0 512.000000 512.000000"
       preserveAspectRatio="xMidYMid meet"
     >
       <g
         transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-        fill="#000000"
-        stroke="none"
-      >
-        <path
-          d="M395 4806 c-37 -16 -70 -52 -84 -89 -8 -20 -11 -561 -11 -1773 l0
--1744 450 0 450 0 0 1759 0 1758 -22 33 c-48 69 -55 70 -423 70 -253 -1 -337
--4 -360 -14z"
-        />
-        <path
-          d="M2825 4213 c-35 -9 -87 -54 -101 -89 -12 -28 -14 -265 -14 -1479 l0
--1445 450 0 450 0 0 1453 c0 1398 -1 1454 -19 1487 -10 19 -34 44 -52 55 -32
-19 -54 20 -364 22 -181 0 -339 -1 -350 -4z"
-        />
-        <path
-          d="M1585 3591 c-16 -10 -39 -28 -50 -41 -20 -22 -20 -38 -23 -1186 l-2
--1164 450 0 450 0 0 1148 c0 1097 -1 1149 -19 1182 -10 19 -33 45 -51 58 -33
-22 -37 22 -379 22 -319 0 -348 -2 -376 -19z"
-        />
-        <path
-          d="M4000 2992 c-19 -9 -45 -32 -57 -51 l-23 -34 0 -853 0 -854 450 0
-450 0 0 843 0 844 -23 43 c-42 79 -45 80 -427 80 -299 0 -339 -2 -370 -18z"
-        />
-        <path
-          d="M0 659 c0 -230 1 -243 22 -280 14 -25 37 -46 63 -59 41 -20 62 -20
-2475 -20 2413 0 2434 0 2475 20 26 13 49 34 63 59 21 37 22 50 22 280 l0 241
--2560 0 -2560 0 0 -241z"
-        />
-      </g>
-    </svg>
-  );
-};
-const PlaySVG = (): React.ReactElement => {
-  return (
-    <svg
-      version="1.0"
-      xmlns="http://www.w3.org/2000/svg"
-      width="100.000000pt"
-      height="100.000000pt"
-      viewBox="0 0 512.000000 512.000000"
-      preserveAspectRatio="xMidYMid meet"
-    >
-      <g
-        transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-        fill="#000000"
         stroke="none"
       >
         <path
@@ -183,13 +225,13 @@ const SettingSvg = (): React.ReactElement => {
       version="1.0"
       xmlns="http://www.w3.org/2000/svg"
       width="100.000000pt"
+      fill="rgb(100,116,137)"
       height="100.000000pt"
       viewBox="0 0 512.000000 512.000000"
       preserveAspectRatio="xMidYMid meet"
     >
       <g
         transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-        fill="#000000"
         stroke="none"
       >
         <path
@@ -216,54 +258,6 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
   );
 };
 
-export const Menu = (): React.ReactElement => {
-  return (
-    <>
-      <div className=" flex min-h-screen w-full flex-col overflow-x-hidden pt-48 sm:h-fit md:flex-col">
-        <div className="  flex  flex-wrap justify-center">
-          <Contenter>
-            <Link to="/Watch" className="h-full w-full">
-              <div className="mt-32 flex justify-center">
-                <Watch />
-              </div>
-            </Link>
-          </Contenter>
-          <Contenter>
-            <Link to="/Chat" className="relative h-full w-full">
-              <div className="mt-32 flex justify-center">
-                <PlaySVG />
-              </div>
-            </Link>
-          </Contenter>
-          <Contenter>
-            <Link to="/play" className="relative h-full w-full">
-              <div className="mt-32 flex justify-center">
-                <StatSVG />
-              </div>
-            </Link>
-          </Contenter>
-        </div>
-        <div className=" flex w-screen flex-wrap justify-center md:flex-row  lg:flex-row">
-          <ContenterLarge>
-            <Link to="/PlayMenu" className="relative h-full w-full">
-              <div className="mt-32 flex justify-center">
-                <StartSVG />
-              </div>
-            </Link>
-          </ContenterLarge>
-          <ContenterLarge>
-            <Link to="/CreateGame" className="relative h-full w-full">
-              <div className="mt-32 flex justify-center">
-                <SettingSvg />
-              </div>
-            </Link>
-          </ContenterLarge>
-        </div>
-      </div>
-    </>
-  );
-};
-
 function ContenterLarge({
   children,
 }: {
@@ -273,7 +267,7 @@ function ContenterLarge({
     <div
       className="  m-9  
             grid h-96 w-96 place-items-center rounded-lg border border-slate-300
-            shadow-2xl transition ease-in hover:opacity-50
+            shadow-md transition ease-in 
             md:w-96 lg:w-1/3"
     >
       {children}
