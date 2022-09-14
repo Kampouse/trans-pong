@@ -17,16 +17,16 @@ export default function Chat(): JSX.Element {
   return (
     // add border to the chat box
     <div className="m-4 mt-4 mb-0 flex h-5/6 flex-col justify-center overflow-hidden md:m-8 md:mt-8 lg:m-8 lg:mt-8">
-      <div className="flex h-1/2    grow flex-col   rounded-2xl   border border-slate-600    backdrop-blur-md transition ease-in ">
+      <div className="flex h-1/2    grow flex-col   rounded-2xl   border border-slate-300    backdrop-blur-sm transition ease-in ">
         <div className="flex">
-          <div className="flex w-full  flex-row-reverse rounded-t-lg bg-slate-600 p-2 text-white ring-1 ring-slate-600">
-            <button className="rounded-lg bg-slate-600  ">
+          <div className="flex w-full  flex-row-reverse rounded-t-lg bg-slate-300 p-2 text-white ring-1 ring-slate-300">
+            <button className="rounded-lg bg-slate-300  ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
+                stroke="gray"
               >
                 {" "}
                 <path d="M4 6h16M4 12h16M4 18h16" />{" "}
@@ -69,10 +69,10 @@ export default function Chat(): JSX.Element {
           <TextBox Text="hello"></TextBox>
           <TextBox></TextBox>
         </div>
-        <div className="w-full self-end rounded-b-lg bg-slate-500 p-2 ring-1 ring-slate-600">
+        <div className="w-full self-end rounded-b-lg   ring-1 ring-white">
           <input
             type="text"
-            className="w-full rounded-b-lg border border-gray-300 bg-white px-4 py-2 text-base focus:outline-none"
+            className="  w-full rounded-b-lg border border-gray-300 bg-white px-4 py-2 text-base focus:outline-none"
             placeholder="Type something..."
           />
         </div>

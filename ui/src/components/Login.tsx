@@ -1,17 +1,15 @@
-;
-
 export default function Login() {
   return (
-    <div className=" bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover  h-screen w-full py-16 px-4">
+    <div className=" h-screen w-full py-16 px-4">
       <div className="flex flex-col items-center justify-center">
-        <div className="bg-white shadow rounded lg:w-1/3  md:w-1/2 w-full p-10 mt-48">
-          <p className="focus:outline-none text-2xl font-extrabold leading-6 text-gray-800">
+        <div className="mt-48 w-full rounded bg-white  p-10 shadow md:w-1/2 lg:w-1/3">
+          <p className="text-2xl font-extrabold leading-6 text-gray-800 focus:outline-none">
             Acces to the game{" "}
           </p>
           <button
             aria-label="Continue with google"
             role="button"
-            className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center w-full mt-10"
+            className="mt-10 flex w-full items-center rounded-lg border border-gray-700 py-3.5 px-4 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-1"
           >
             <svg
               width="19"
@@ -37,14 +35,14 @@ export default function Login() {
                 fill="#EB4335"
               />
             </svg>
-            <p className="text-base font-medium ml-4 text-gray-700">
+            <p className="ml-4 text-base font-medium text-gray-700">
               Continue with Google
             </p>
           </button>
           <button
             aria-label="Continue with github"
             role="button"
-            className="focus:outline-none  focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center w-full mt-4"
+            className="mt-4  flex w-full items-center rounded-lg border border-gray-700 py-3.5 px-4 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-1"
           >
             <svg
               width="21"
@@ -59,14 +57,14 @@ export default function Login() {
               />
             </svg>
 
-            <p className="text-base font-medium ml-4 text-gray-700">
+            <p className="ml-4 text-base font-medium text-gray-700">
               Continue with Github
             </p>
           </button>
           <button
             aria-label="Continue with twitter"
             role="button"
-            className="focus:outline-none  focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center w-full mt-4"
+            className="mt-4  flex w-full items-center rounded-lg border border-gray-700 py-3.5 px-4 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-1"
           >
             <svg
               width="24"
@@ -81,11 +79,11 @@ export default function Login() {
               />
             </svg>
 
-            <p className="text-base font-medium ml-4 text-gray-700">
+            <p className="ml-4 text-base font-medium text-gray-700">
               Continue with Twitter
             </p>
           </button>
-          <div className="w-full flex items-center justify-between py-5"></div>
+          <div className="flex w-full items-center justify-between py-5"></div>
         </div>
       </div>
     </div>

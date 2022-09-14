@@ -1,12 +1,11 @@
 import React from "react";
-import { Link, Route } from "react-router-dom";
-import Nav from "components/Nav"
+import { Link } from "react-router-dom";
 export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       className=" m-9  
             grid h-96 w-96 place-items-center
-            border border-slate-600 shadow-2xl transition
+            rounded-lg border border-slate-300 shadow-2xl transition
             ease-in hover:opacity-50"
     >
       {children}
@@ -219,51 +218,49 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
 
 export const Menu = (): React.ReactElement => {
   return (
-<>
-
-    <div className=" flex min-h-screen w-full flex-col overflow-x-hidden sm:h-fit md:flex-col">
-      <div className="  flex  flex-wrap justify-center">
-        <Contenter>
-          <Link to="/Play" className="h-full w-full">
-            <div className="mt-32 flex justify-center">
-              <Watch />
-            </div>
-          </Link>
-        </Contenter>
-        <Contenter>
-          <Link to="/CreateGame" className="relative h-full w-full">
-            <div className="mt-32 flex justify-center">
-              <PlaySVG />
-            </div>
-          </Link>
-        </Contenter>
-        <Contenter>
-          <Link to="/play" className="relative h-full w-full">
-            <div className="mt-32 flex justify-center">
-              <StatSVG />
-            </div>
-          </Link>
-        </Contenter>
+    <>
+      <div className=" flex min-h-screen w-full flex-col overflow-x-hidden pt-48 sm:h-fit md:flex-col">
+        <div className="  flex  flex-wrap justify-center">
+          <Contenter>
+            <Link to="/Watch" className="h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <Watch />
+              </div>
+            </Link>
+          </Contenter>
+          <Contenter>
+            <Link to="/Chat" className="relative h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <PlaySVG />
+              </div>
+            </Link>
+          </Contenter>
+          <Contenter>
+            <Link to="/play" className="relative h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <StatSVG />
+              </div>
+            </Link>
+          </Contenter>
+        </div>
+        <div className=" flex w-screen flex-wrap justify-center md:flex-row  lg:flex-row">
+          <ContenterLarge>
+            <Link to="/PlayMenu" className="relative h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <StartSVG />
+              </div>
+            </Link>
+          </ContenterLarge>
+          <ContenterLarge>
+            <Link to="/CreateGame" className="relative h-full w-full">
+              <div className="mt-32 flex justify-center">
+                <SettingSvg />
+              </div>
+            </Link>
+          </ContenterLarge>
+        </div>
       </div>
-      <div className=" flex w-screen flex-wrap justify-center md:flex-row  lg:flex-row">
-        <ContenterLarge>
-          <Link to="/CreateGame" className="relative h-full w-full">
-            <div className="mt-32 flex justify-center">
-
-              <StartSVG />
-            </div>
-          </Link>
-        </ContenterLarge>
-        <ContenterLarge>
-          <Link to="/PlayMenu" className="relative h-full w-full">
-            <div className="mt-32 flex justify-center">
-              <SettingSvg />
-            </div>
-          </Link>
-        </ContenterLarge>
-      </div>
-    </div>
-	</>
+    </>
   );
 };
 
@@ -275,7 +272,7 @@ function ContenterLarge({
   return (
     <div
       className="  m-9  
-            grid h-96 w-96 place-items-center border border-slate-600
+            grid h-96 w-96 place-items-center rounded-lg border border-slate-300
             shadow-2xl transition ease-in hover:opacity-50
             md:w-96 lg:w-1/3"
     >
