@@ -3,7 +3,7 @@ import React from "react";
 export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
-      className=" m-10  mt-12 
+      className=" m-10   mt-12 
 			 grid  h-screen w-96  place-items-center rounded-lg border
 			border-slate-300  shadow-2xl  transition ease-in hover:opacity-80
 			lg:h-5/6 lg:w-2/6"
@@ -14,7 +14,7 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
 };
 export default function PlayMenu() {
   return (
-    <div className="flex min-h-screen w-full flex-col overflow-x-hidden sm:h-fit">
+    <div className="flex  min-h-screen w-full flex-col overflow-x-hidden pt-6 sm:h-fit">
       <div
         className="flex  h-max  w-screen  
 		 flex-wrap  justify-center lg:h-screen"

@@ -219,17 +219,17 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
 export const Menu = (): React.ReactElement => {
   return (
     <>
-      <div className=" flex min-h-screen w-full flex-col overflow-x-hidden sm:h-fit md:flex-col">
+      <div className=" flex min-h-screen w-full flex-col overflow-x-hidden pt-48 sm:h-fit md:flex-col">
         <div className="  flex  flex-wrap justify-center">
           <Contenter>
-            <Link to="/Play" className="h-full w-full">
+            <Link to="/Watch" className="h-full w-full">
               <div className="mt-32 flex justify-center">
                 <Watch />
               </div>
             </Link>
           </Contenter>
           <Contenter>
-            <Link to="/CreateGame" className="relative h-full w-full">
+            <Link to="/Chat" className="relative h-full w-full">
               <div className="mt-32 flex justify-center">
                 <PlaySVG />
               </div>
@@ -245,14 +245,14 @@ export const Menu = (): React.ReactElement => {
         </div>
         <div className=" flex w-screen flex-wrap justify-center md:flex-row  lg:flex-row">
           <ContenterLarge>
-            <Link to="/CreateGame" className="relative h-full w-full">
+            <Link to="/PlayMenu" className="relative h-full w-full">
               <div className="mt-32 flex justify-center">
                 <StartSVG />
               </div>
             </Link>
           </ContenterLarge>
           <ContenterLarge>
-            <Link to="/PlayMenu" className="relative h-full w-full">
+            <Link to="/CreateGame" className="relative h-full w-full">
               <div className="mt-32 flex justify-center">
                 <SettingSvg />
               </div>

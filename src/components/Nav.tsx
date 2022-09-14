@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 export default function Nav() {
   return (
-    <nav className="relative flex w-full flex-wrap items-center justify-between bg-gray-900 py-3 text-gray-200 shadow-lg">
+    <nav className="fixed z-10 flex w-full flex-wrap items-center justify-between bg-gray-900 py-3 text-gray-200 shadow-lg">
       <div className=" flex w-full flex-wrap items-center justify-between px-6">
         <button
           className=" border-0 bg-transparent py-2 px-2.5 text-gray-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0"
