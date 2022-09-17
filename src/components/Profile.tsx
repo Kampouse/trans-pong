@@ -7,12 +7,6 @@ function FriendList() {
           <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-slate-600">
             Friend list
           </h3>
-          <a
-            href="#"
-            className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
-          >
-            View all
-          </a>
         </div>
         <div className="flow-root">
           <ul
@@ -29,9 +23,9 @@ function FriendList() {
                   />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-600">
+                  <button className="truncate text-sm font-medium text-gray-900 hover:underline dark:text-slate-600">
                     Neil Sims
-                  </p>
+                  </button>
                   <p className="truncate text-sm text-gray-500 dark:text-slate-500">
                     email@windster.com
                   </p>
