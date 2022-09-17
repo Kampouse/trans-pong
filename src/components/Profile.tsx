@@ -2,10 +2,10 @@ import "../../main.css";
 function FriendList() {
   return (
     <div className="flex  h-[75%] flex-col">
-      <div className="  container-snap h-screen overflow-y-scroll rounded-lg shadow-sm dark:border-gray-300 dark:bg-transparent p-8">
+      <div className="  container-snap h-screen overflow-y-scroll rounded-lg bg-transparent p-8 shadow-sm dark:border-gray-300">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-slate-600">
-            Friend list 
+            Friend list
           </h3>
           <a
             href="#"
@@ -38,7 +38,7 @@ function FriendList() {
                 </div>
               </div>
             </li>
-             <li className="py-3 sm:py-4">
+            <li className="py-3 sm:py-4">
               <div className="flex items-center space-x-4">
                 <div className="shrink-0">
                   <img
