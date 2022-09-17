@@ -1,8 +1,9 @@
+import "../../main.css"
 function FriendList() {
   return (
-    <div className="flex h-1/2 flex-col">
-      <div className=" rounded-lg border bg-white p-4 shadow-sm dark:border-gray-300 dark:bg-transparent sm:p-8">
-        <div className="mb-4 flex items-center justify-between">
+    <div className="flex  h-[52%] flex-col">
+      <div className=" h-5/6 rounded-lg border bg-white p-4 shadow-sm dark:border-gray-300 dark:bg-transparent sm:p-8 overflow-y-scroll container-snap">
+        <div className="mb-2 flex items-center justify-between">
           <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
             Latest Customers
           </h3>
@@ -151,6 +152,7 @@ export default function Profile() {
           <h1 className="  text-center ">is online </h1>
           <h1 className="  text-center ">Rating == wrong</h1>
           <h1 className="text-center ">Rating == bad </h1>
+
         </div>
         <FriendList />
       </div>
