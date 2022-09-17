@@ -1,9 +1,9 @@
 import "../../main.css";
 function FriendList() {
   return (
-    <div className="flex  h-1/2 flex-col">
-      <div className=" container-snap h-[79%] overflow-y-scroll rounded-lg shadow-sm dark:border-gray-300 dark:bg-transparent sm:p-8">
-        <div className="mb-2 flex items-center justify-between">
+    <div className="flex  h-[75%] flex-col">
+      <div className="  container-snap h-screen overflow-y-scroll rounded-lg shadow-sm dark:border-gray-300 dark:bg-transparent sm:p-8">
+        <div className="flex items-center justify-between">
           <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
             Latest Customers
           </h3>
@@ -141,7 +141,7 @@ export default function Profile() {
   return (
     <div className=" mt-16  flex    h-screen min-h-screen     flex-col   lg:h-screen lg:flex-row    ">
       <div className="  mx-12    mt-8  h-5/6    rounded-lg bg-white/50 p-1 ring-1  ring-slate-300  backdrop-blur-sm  md:ml-4   lg:m-10 lg:mx-8  lg:h-5/6 lg:w-1/3">
-        <div className="mb-20 grid-rows-1">
+        <div className="grid-rows-1">
           <img
             className="mx-auto mt-12 mb-5  h-40 w-40"
             src=" https://pic.onlinewebfonts.com/svg/img_51277.png"
