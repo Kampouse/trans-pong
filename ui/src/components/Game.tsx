@@ -19,7 +19,7 @@ function Next() {
         xmlns="http://www.w3.org/2000/svg"
         id="root"
         version="1.1"
-        color="gray"
+        color="rgb(100,116,137"
         viewBox="0 0 13 16"
         transform="rotate(180,0,0)"
         height={100}
@@ -37,7 +37,7 @@ function Prev() {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         id="root"
-        color="gray"
+        color="rgb(100,116,137)"
         version="1.1"
         viewBox="0 0 13 16"
         height={100}

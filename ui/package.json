@@ -13,7 +13,8 @@
     "email": "joaopaulomoraes@outlook.com"
   },
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite",
+    "start": "vite --open http://127.0.0.1:5173/",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "jest",
