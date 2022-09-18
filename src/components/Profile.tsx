@@ -77,7 +77,6 @@ export default function Profile() {
         </div>
         <FriendList />
       </div>
-
       <div className="   mx-12    mt-8  h-full    rounded-lg bg-white/50 ring-1 ring-slate-300  backdrop-blur-sm  md:ml-4  lg:m-10   lg:ml-2 lg:mr-8  lg:h-5/6 lg:w-5/6  lg:p-4 "></div>
     </div>
   );
