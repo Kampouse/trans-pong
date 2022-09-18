@@ -12,14 +12,21 @@ export default function Nav() {
           aria-expanded="false"
           aria-label="Toggle navigation"
         ></button>
-        <div className="  grow items-center" id="navbarSupportedContent1">
-          <Link to="/" className="pr-2 text-xl font-semibold text-white">
+        <div className=" grow  " id="navbarSupportedContent1">
+          <Link to="/" className=" text-xl font-semibold text-white">
             trans-pong
+          </Link>
+          <Link to="/Play" className=" ml-2 pl-3 font-semibold text-white">
+            Play
+          </Link>
+          <Link to="/Profile" className=" ml-2 pl-3 font-semibold text-white">
+            Profile
           </Link>
           <ul className="  mr-auto flex flex-col pl-0"></ul>
         </div>
 
         <div className="relative flex items-center">
+          <input className="mr-5" />
           <div className="relative">
             <a
               className="mr-4 flex items-center text-white opacity-60 hover:opacity-80 focus:opacity-80"
