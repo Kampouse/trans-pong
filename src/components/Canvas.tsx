@@ -72,9 +72,7 @@ const Canvas = () => {
 
 	const handleMouseMove = (e: any) => {
 		if (!countdown) {
-			user.y = e.clientY - e.target.offsetTop;
-			if (user.y > canvasHeight - user.height/2)
-				user.y = canvasHeight - user.height/2;
+			user.y = e.clientY - e.target.offsetTop - 50;
 		}
 	}
 
