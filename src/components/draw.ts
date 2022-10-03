@@ -30,6 +30,8 @@ interface DrawProps {
 		height: number;
 		score: number;
 	}
+	// canvasWidth: number;
+	// canvasHeight: number;
 }
 
 export const draw = (props: DrawProps) => {
@@ -68,15 +70,18 @@ export const draw = (props: DrawProps) => {
 export const update = (props: DrawProps) => {
 	const { canvas, ball, user, com } = props;
 
+	const canvasWidth = canvas.current!.width;
+	const canvasHeight = canvas.current!.height;
+
 	ball.x += ball.velocityX;
 	ball.y += ball.velocityY;
 
 	com.y += (ball.y - (com.y + com.height/2)) * 0.1;
 
-	if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= canvas.current!.height)
+	if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= canvasHeight)
 		ball.velocityY = -ball.velocityY;
 
-	let player = (ball.x < canvas.current!.width/2) ? user : com;
+	let player = (ball.x < canvasWidth/2) ? user : com;
 
 	let bTop, bBottom, bLeft, bRight;
 	let pTop, pBottom, pLeft, pRight;
@@ -97,20 +102,20 @@ export const update = (props: DrawProps) => {
 
 		let angleRad = Math.PI/4 * collidePoint;
 
-		let direction = (ball.x < canvas.current!.width/2) ? 1 : -1;
+		let direction = (ball.x < canvasWidth/2) ? 1 : -1;
 
 		ball.velocityX = direction * ball.speed * Math.cos(angleRad);
 		ball.velocityY = ball.speed * Math.sin(angleRad);
 
 		ball.speed += 0.25;
 	}
-	else if (ball.x < ball.radius || ball.x + ball.radius > canvas.current!.width) {
+	else if (ball.x < ball.radius || ball.x + ball.radius > canvasWidth) {
 		if (ball.x < ball.radius)
 			com.score++;
 		else
 			user.score++;
-		ball.x = canvas.current!.width / 2;
-		ball.y = canvas.current!.height / 2;
+		ball.x = canvasWidth / 2;
+		ball.y = canvasHeight / 2;
 		ball.speed = 7;
 		ball.velocityY = 0;
 		ball.velocityX = (ball.velocityX < 0) ? -7.0 : 7.0;

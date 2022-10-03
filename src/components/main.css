@@ -17,15 +17,17 @@
 
 #container {
 	position: relative;
-	width: 900px;
-	height: 600px;
-	top: 50px;
   }
-  #container canvas {
-	position: absolute;
-	border: 1px solid black;
-  }
-  #overlay {
+#canvas {
+	position: relative;
+	/* display: flex; */
+	/* width: 100%;
+	size: 100%; */
+}
+  /* #container canvas {
+	position: relative;
+  } */
+  /* #overlay {
 	position: absolute;
 	width: 30%;
 	height: 100%;
@@ -38,4 +40,4 @@
 	justify-content: center;
 	opacity: 1;
 	left: 35%;
-  }
+  } */

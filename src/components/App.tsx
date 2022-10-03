@@ -26,7 +26,6 @@ export default function App() {
           <Route path="/PlayMenu" element={<PlayMenu />} />
           <Route path="/Play" element={<Game />}></Route>
           <Route path="/Profile" element={<Profile />}></Route>
-		  <Route path="/Pong" element={<Canvas />}></Route>
           <Route path="*" element={<Error404 />}></Route>
         </Routes>
       </>

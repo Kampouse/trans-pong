@@ -22,9 +22,6 @@ export default function Nav() {
           <Link to="/Profile" className=" ml-2 pl-3 font-semibold text-white">
             Profile
           </Link>
-		  <Link to="/Pong" className=" ml-2 pl-3 font-semibold text-white">
-            Pong
-          </Link>
           <ul className="  mr-auto flex flex-col pl-0"></ul>
         </div>
 
