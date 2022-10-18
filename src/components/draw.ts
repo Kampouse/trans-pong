@@ -2,46 +2,64 @@ import React, { useEffect, useState } from "react"
 
 interface DrawProps {
 	canvas: React.MutableRefObject<HTMLCanvasElement | null>;
-	ball: {
-		x: number;
+	mouse : {
 		y: number;
-		radius: number;
-		velocityX: number;
-		velocityY: number;
-		speed: number;
 	}
-	net: {
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-	}
-	user: {
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-		score: number;
-	}
-	com: {
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-		score: number;
-	}
-	// canvasWidth: number;
-	// canvasHeight: number;
 }
 
-export const draw = (props: DrawProps) => {
-	const { canvas, ball, net, user, com } = props;
-	const ctx = canvas!.current!.getContext('2d');
+const ball = {
+	x : 0,
+	y : 0,
+	radius : 10,
+	velocityX : 7,
+	velocityY : 0,
+	speed : 7,
+}
+
+const user = {
+	x : 0,
+	y : 0,
+	width : 10,
+	height : 100,
+	score : 0,
+}
+
+const com = {
+	x : 0,
+	y : 0,
+	width : 10,
+	height : 100,
+	score : 0,
+}
+
+
+export function init(props: DrawProps) {
+	const { canvas, mouse } = props;
+	canvas.current!.setAttribute("width", window.getComputedStyle(canvas!.current!.parentElement!).width);
+	canvas.current!.setAttribute("height", window.getComputedStyle(canvas!.current!.parentElement!).height);
 	
+	const canvasWidth = canvas.current!.width;
+	const canvasHeight = canvas.current!.height;
+	
+	com.x = canvasWidth - 10;
+	com.y = (canvasHeight - 100) / 2;
+	user.y = (canvasHeight - 100) / 2;
+	ball.x = canvasWidth / 2;
+	ball.y = canvasHeight / 2;
+	mouse.y = user.y;
+}
+
+export function draw (props: DrawProps) {
+	const { canvas, mouse } = props;
+	var ctx = canvas!.current!.getContext('2d');
+
 	if (!ctx) {
 		return ;
 	}
 
+	canvas.current!.setAttribute("width", window.getComputedStyle(canvas!.current!.parentElement!).width);
+	canvas.current!.setAttribute("height", window.getComputedStyle(canvas!.current!.parentElement!).height);
+	
 	const canvasWidth = canvas.current!.width;
 	const canvasHeight = canvas.current!.height;
 
@@ -55,7 +73,7 @@ export const draw = (props: DrawProps) => {
 	ctx.fillText(com.score.toString(), 3*canvasWidth/4, canvasHeight/5);
 
 	for (let i = 0; i <= canvasHeight; i += 15)
-		ctx.fillRect(net.x, i, net.width, net.height);
+		ctx.fillRect((canvasWidth - 2) / 2, i, 2, 10);
 	
 	ctx.fillRect(user.x, user.y, user.width, user.height);
 	ctx.fillRect(com.x, com.y, com.width, com.height);
@@ -68,10 +86,13 @@ export const draw = (props: DrawProps) => {
 
 
 export const update = (props: DrawProps) => {
-	const { canvas, ball, user, com } = props;
+	const { canvas, mouse } = props;
+
+	user.y = mouse.y;
 
 	const canvasWidth = canvas.current!.width;
 	const canvasHeight = canvas.current!.height;
+	com.x = canvasWidth - 10;
 
 	ball.x += ball.velocityX;
 	ball.y += ball.velocityY;

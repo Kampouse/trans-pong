@@ -3,14 +3,13 @@ import Canvas from "./Canvas";
 import { createRef, DetailedHTMLProps, HTMLAttributes } from "react";
 
 export default function Game() {
-
+// className=" mt-12 flex h-screen min-h-screen flex-col justify-center  md:flex-col lg:ml-4 lg:h-screen lg:flex-row "
   return (
-    <div id="divID" className=" mt-12 flex h-screen min-h-screen flex-col   justify-center  md:flex-col lg:ml-4 lg:h-screen lg:flex-row ">
-	  <Canvas width={window.innerWidth * 0.8} height={window.innerHeight * 0.8}/>
-
-      <Chat></Chat>
-    </div>
+	  <Canvas />
   );
+	  // <div id="divID">
+		{/* <Chat></Chat> */}
+	  // </div>
 }
 
 function Next() {
