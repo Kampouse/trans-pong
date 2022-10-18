@@ -11,6 +11,7 @@ import Profile from "./Profile";
 import "./main.css";
 import Error404 from "./Error404";
 import Canvas from "./Canvas";
+import Chat from "./Chat";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/PlayMenu" element={<PlayMenu />} />
           <Route path="/Play" element={<Game />}></Route>
           <Route path="/Profile" element={<Profile />}></Route>
+		  <Route path="/Chat" element={<Chat />}></Route>
           <Route path="*" element={<Error404 />}></Route>
         </Routes>
       </>
