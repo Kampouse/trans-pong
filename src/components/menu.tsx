@@ -4,7 +4,7 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       className=" m-9  
-            grid h-80 w-80 place-items-center
+            grid h-96 w-96 place-items-center
             rounded-lg border border-slate-300 shadow-md transition
             ease-in "
     >
@@ -16,45 +16,45 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
 export const Menu = (): React.ReactElement => {
   return (
     <>
-      <div className=" flex min-h-screen w-full flex-col overflow-x-hidden pt-8 sm:h-fit md:flex-col">
+      <div className=" flex min-h-screen w-full flex-col overflow-x-hidden pt-48 sm:h-fit md:flex-col">
         <div className="  flex  flex-wrap justify-center">
           <Contenter>
             <Link to="/Watch" className="h-full w-full">
-              <div className="mt-20 flex justify-center">
+              <div className="mt-32 flex justify-center">
                 <Watch />
               </div>
             </Link>
           </Contenter>
           <Contenter>
             <Link to="/Profile" className="relative h-full w-full">
-              <div className="mt-20 flex justify-center">
+              <div className="mt-32 flex justify-center">
                 <UserSVG />
               </div>
             </Link>
           </Contenter>
           <Contenter>
             <Link to="/Chat" className="relative h-full w-full">
-              <div className="mt-20 flex justify-center">
+              <div className="mt-32 flex justify-center">
                 <ChatSVG />
               </div>
             </Link>
           </Contenter>
-        {/* </div>
-        <div className=" flex w-screen flex-wrap justify-center md:flex-row  lg:flex-row"> */}
-          <Contenter>
+        </div>
+        <div className=" flex w-screen flex-wrap justify-center md:flex-row  lg:flex-row">
+          <ContenterLarge>
             <Link to="/PlayMenu" className="relative h-full w-full">
-              <div className="mt-20 flex justify-center">
+              <div className="mt-32 flex justify-center">
                 <StartSVG />
               </div>
             </Link>
-          </Contenter>
-          <Contenter>
+          </ContenterLarge>
+          <ContenterLarge>
             <Link to="/CreateGame" className="relative h-full w-full">
-              <div className="mt-20 flex justify-center">
+              <div className="mt-32 flex justify-center">
                 <SettingSvg />
               </div>
             </Link>
-          </Contenter>
+          </ContenterLarge>
         </div>
       </div>
     </>
