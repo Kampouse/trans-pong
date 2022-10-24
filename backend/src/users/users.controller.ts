@@ -21,6 +21,13 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
+  // find if a user exists by email or username
+  @Get('exists/:email/:username')
+  exists(@Param('email') email: string, @Param('username') username: string) {
+      // return only true or false if the user exists 
+     let output = this.usersService.exists(email, username);
+      return output;
+  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
