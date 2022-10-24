@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router";
 import "./main.css";
 
 export default function Login({ setIsAuth }) {
+	const navigate = useNavigate();
 
 	const loginRequest = () => {
 		setIsAuth(true);
+		navigate('/');
 	}
 
   return (

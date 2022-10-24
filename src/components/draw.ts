@@ -10,10 +10,11 @@ interface DrawProps {
 const ball = {
 	x : 0,
 	y : 0,
-	radius : 10,
-	velocityX : 7,
-	velocityY : 0,
-	speed : 7,
+	radius : 8,
+	velocityX : 2.0,
+	velocityY : 0.0,
+	speed : 2.0,
+	defaultSpeed: 2.0,
 }
 
 const user = {
@@ -32,20 +33,25 @@ const com = {
 	score : 0,
 }
 
+const canvasSize = {
+	height : 0,
+	width : 0,
+}
+
 
 export function init(props: DrawProps) {
 	const { canvas, mouse } = props;
 	canvas.current!.setAttribute("width", window.getComputedStyle(canvas!.current!.parentElement!).width);
 	canvas.current!.setAttribute("height", window.getComputedStyle(canvas!.current!.parentElement!).height);
+
+	canvasSize.height = canvas.current!.height;
+	canvasSize.width = canvas.current!.width;
 	
-	const canvasWidth = canvas.current!.width;
-	const canvasHeight = canvas.current!.height;
-	
-	com.x = canvasWidth - 10;
-	com.y = (canvasHeight - 100) / 2;
-	user.y = (canvasHeight - 100) / 2;
-	ball.x = canvasWidth / 2;
-	ball.y = canvasHeight / 2;
+	com.x = canvasSize.width - 10;
+	com.y = (canvasSize.height - 100) / 2;
+	user.y = (canvasSize.height - 100) / 2;
+	ball.x = canvasSize.width / 2;
+	ball.y = canvasSize.height / 2;
 	mouse.y = user.y;
 }
 
@@ -60,20 +66,23 @@ export function draw (props: DrawProps) {
 	canvas.current!.setAttribute("width", window.getComputedStyle(canvas!.current!.parentElement!).width);
 	canvas.current!.setAttribute("height", window.getComputedStyle(canvas!.current!.parentElement!).height);
 	
-	const canvasWidth = canvas.current!.width;
-	const canvasHeight = canvas.current!.height;
+	if (canvas.current!.height !== canvasSize.height || canvas.current!.width !== canvasSize.width) {
+		canvasSize.height = canvas.current!.height;
+		canvasSize.width = canvas.current!.width;
+		
+	}
 
 	ctx.fillStyle = "red";
-	ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+	ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
 
 	ctx.fillStyle = "#FFF";
 	ctx.font = "75px fantasy";
 
-	ctx.fillText(user.score.toString(), canvasWidth/4, canvasHeight/5);
-	ctx.fillText(com.score.toString(), 3*canvasWidth/4, canvasHeight/5);
+	ctx.fillText(user.score.toString(), canvasSize.width/4, canvasSize.height/5);
+	ctx.fillText(com.score.toString(), 3*canvasSize.width/4, canvasSize.height/5);
 
-	for (let i = 0; i <= canvasHeight; i += 15)
-		ctx.fillRect((canvasWidth - 2) / 2, i, 2, 10);
+	for (let i = 0; i <= canvasSize.height; i += 15)
+		ctx.fillRect((canvasSize.width - 2) / 2, i, 2, 10);
 	
 	ctx.fillRect(user.x, user.y, user.width, user.height);
 	ctx.fillRect(com.x, com.y, com.width, com.height);
@@ -128,7 +137,7 @@ export const update = (props: DrawProps) => {
 		ball.velocityX = direction * ball.speed * Math.cos(angleRad);
 		ball.velocityY = ball.speed * Math.sin(angleRad);
 
-		ball.speed += 0.25;
+		ball.speed += 0.1;
 	}
 	else if (ball.x < ball.radius || ball.x + ball.radius > canvasWidth) {
 		if (ball.x < ball.radius)
@@ -137,8 +146,8 @@ export const update = (props: DrawProps) => {
 			user.score++;
 		ball.x = canvasWidth / 2;
 		ball.y = canvasHeight / 2;
-		ball.speed = 7;
+		ball.speed = 2;
 		ball.velocityY = 0;
-		ball.velocityX = (ball.velocityX < 0) ? -7.0 : 7.0;
+		ball.velocityX = (ball.velocityX < 0) ? -ball.defaultSpeed : ball.defaultSpeed;
 	}
 }
