@@ -6,8 +6,11 @@ module.exports = {
     extend: {
 		 backgroundImage: {
         'splash': "url('./splash.png')",
-		}
-  },
-  plugins: []
-}
+			},
+  	},
+		fontFamily: {
+			'kaushan': 'Kaushan Script, cursive',
+			'carattere': 'Carattere, cursive',
+		},
+	}
 }
