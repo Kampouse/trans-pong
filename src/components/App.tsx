@@ -8,6 +8,7 @@ import Login from "./Login";
 import Register from "./Register";
 import Watch from "./Watch";
 import Profile from "./Profile";
+import Api from "./Api";
 import "./main.css";
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/PlayMenu" element={<PlayMenu />} />
           <Route path="/Play" element={<Game />}></Route>
           <Route path="/Profile" element={<Profile />}></Route>
+          <Route path="/Api" element={<Api />}></Route>
         </Routes>
       </>
     </div>

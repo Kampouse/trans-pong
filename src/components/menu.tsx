@@ -16,7 +16,7 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
 export const Menu = (): React.ReactElement => {
   return (
     <>
-      <div className=" flex min-h-screen w-full flex-col overflow-x-hidden pt-48 sm:h-fit md:flex-col">
+      <div className=" flex min-h-screen w-full flex-col overflow-x-hidden pt-24 sm:h-fit md:flex-col">
         <div className="  flex  flex-wrap justify-center">
           <Contenter>
             <Link to="/Watch" className="h-full w-full">
