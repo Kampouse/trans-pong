@@ -32,8 +32,6 @@ const Canvas = () => {
 	}, [])
 	
 	useEffect(() => {
-		console.log(document.getElementById('container')?.clientHeight);
-		console.log(document.getElementById('container')?.clientWidth);
 		const interval = setInterval(() => {
 			update({ canvas, mouse });
 			draw({ canvas, mouse });
@@ -42,15 +40,20 @@ const Canvas = () => {
 	}, [countdown]);
 
 	return (
-		<div id="container" ref={div} className="w-4/5 h-5/6">			
-			<canvas
-					id="myCanvas"
-					ref={canvas}
-					style={{border: "1px solid #000"}}
-					onMouseMove={(evt) => {mouse.y = evt.clientY - canvas.current!.getBoundingClientRect().top - 50}}
-				/>
-			{/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}
-		</div>
+		<>
+			<div id="container" ref={div} className="w-5/6 h-3/5 pt-[75px] m-auto">
+				<canvas
+						id="myCanvas"
+						ref={canvas}
+						style={{border: "1px solid #000"}}
+						onMouseMove={(evt) => {mouse.y = evt.clientY - canvas.current!.getBoundingClientRect().top - (canvas.current!.height / 16)}}
+						className="m-auto"
+					/>
+				{/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}
+			</div>
+			{/* <div className="font-bold text-gray-700 rounded-full bg-white flex items-center justify-center font-mono h-[100px] w-[100px] bg-blue-500">404</div>
+			<div className="font-bold text-gray-700 rounded-full bg-white flex items-center justify-center font-mono h-[100px] w-[100px] bg-blue-500">404</div> */}
+		</>
 	);
 }
 

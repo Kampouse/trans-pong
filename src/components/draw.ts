@@ -10,7 +10,9 @@ interface DrawProps {
 const ball = {
 	x : 0,
 	y : 0,
-	radius : 8,
+	vX: 0.0,
+	vY: 0.0,
+	radius : 0,
 	velocityX : 2.0,
 	velocityY : 0.0,
 	speed : 2.0,
@@ -20,16 +22,16 @@ const ball = {
 const user = {
 	x : 0,
 	y : 0,
-	width : 10,
-	height : 100,
+	width : 0,
+	height : 0,
 	score : 0,
 }
 
 const com = {
 	x : 0,
 	y : 0,
-	width : 10,
-	height : 100,
+	width : 0,
+	height : 0,
 	score : 0,
 }
 
@@ -38,20 +40,61 @@ const canvasSize = {
 	width : 0,
 }
 
+function getCanvasSize(props: DrawProps) {
+	const { canvas } = props;
+
+	let width = (parseInt(window.getComputedStyle(canvas!.current!.parentElement!).width));
+	let height = (parseInt(window.getComputedStyle(canvas!.current!.parentElement!).height));
+
+	console.log(width, height);
+	if (height < 600) 
+		width = height * 1.5;
+	else if (width < 900)
+		height = width / 1.5;
+	console.log(width, height);
+
+	canvas.current!.setAttribute("width", Math.min(width, 900).toString());
+	canvas.current!.setAttribute("height", Math.min(height, 600).toString());
+
+	// canvasSize.height = canvas.current!.height;
+	// canvasSize.width = canvas.current!.width;
+}
+// 871, 424
+// 871, 580
+
+// 904, 443
+// 664, 443
+
+// 895, 437
+// 895, 596
+
 
 export function init(props: DrawProps) {
 	const { canvas, mouse } = props;
-	canvas.current!.setAttribute("width", window.getComputedStyle(canvas!.current!.parentElement!).width);
-	canvas.current!.setAttribute("height", window.getComputedStyle(canvas!.current!.parentElement!).height);
+
+	getCanvasSize(props);
+
+	// canvas.current!.setAttribute("width", Math.min(parseInt(window.getComputedStyle(canvas!.current!.parentElement!).width), 900).toString());
+	// canvas.current!.setAttribute("height", Math.min(parseInt(window.getComputedStyle(canvas!.current!.parentElement!).height), 600).toString());
 
 	canvasSize.height = canvas.current!.height;
 	canvasSize.width = canvas.current!.width;
 	
-	com.x = canvasSize.width - 10;
-	com.y = (canvasSize.height - 100) / 2;
-	user.y = (canvasSize.height - 100) / 2;
+	ball.vX = 0.5;
+	ball.vY = 0.5;
 	ball.x = canvasSize.width / 2;
 	ball.y = canvasSize.height / 2;
+	user.width = Math.floor(canvasSize.width / 100);
+	com.width = Math.floor(canvasSize.width / 100);
+	user.height = Math.floor(canvasSize.height / 8);
+	com.height = Math.floor(canvasSize.height / 8);
+	user.y = (canvasSize.height - user.height) / 2;
+	com.y = (canvasSize.height - com.height) / 2;
+	com.x = canvasSize.width - com.width;
+	ball.radius = Math.min(Math.max(Math.floor((canvasSize.width * canvasSize.width) / 65000), 5), 12);
+	ball.velocityX = canvasSize.width / 500;
+	ball.defaultSpeed = ball.velocityX;
+	ball.speed = ball.defaultSpeed;
 	mouse.y = user.y;
 }
 
@@ -63,14 +106,25 @@ export function draw (props: DrawProps) {
 		return ;
 	}
 
-	canvas.current!.setAttribute("width", window.getComputedStyle(canvas!.current!.parentElement!).width);
-	canvas.current!.setAttribute("height", window.getComputedStyle(canvas!.current!.parentElement!).height);
+	getCanvasSize(props);
+
+	// canvas.current!.setAttribute("width", Math.min(parseInt(window.getComputedStyle(canvas!.current!.parentElement!).width), 900).toString());
+	// canvas.current!.setAttribute("height", Math.min(parseInt(window.getComputedStyle(canvas!.current!.parentElement!).height), 600).toString());
 	
 	if (canvas.current!.height !== canvasSize.height || canvas.current!.width !== canvasSize.width) {
 		canvasSize.height = canvas.current!.height;
 		canvasSize.width = canvas.current!.width;
-		
+		// ball.x = canvasSize.width * ball.vX;
+		// ball.y = canvasSize.height * ball.vY;
+		user.width = Math.floor(canvasSize.width / 100);
+		com.width = Math.floor(canvasSize.width / 100);
+		user.height = Math.floor(canvasSize.height / 8);
+		com.height = Math.floor(canvasSize.height / 8);
+		ball.radius = Math.min(Math.max(Math.floor((canvasSize.width * canvasSize.width) / 65000), 5), 12);
+		com.x = canvasSize.width - com.width;
 	}
+
+	// console.log(canvasSize.width, canvasSize.height);
 
 	ctx.fillStyle = "red";
 	ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
@@ -101,7 +155,6 @@ export const update = (props: DrawProps) => {
 
 	const canvasWidth = canvas.current!.width;
 	const canvasHeight = canvas.current!.height;
-	com.x = canvasWidth - 10;
 
 	ball.x += ball.velocityX;
 	ball.y += ball.velocityY;
@@ -137,7 +190,7 @@ export const update = (props: DrawProps) => {
 		ball.velocityX = direction * ball.speed * Math.cos(angleRad);
 		ball.velocityY = ball.speed * Math.sin(angleRad);
 
-		ball.speed += 0.1;
+		ball.speed += ball.defaultSpeed / 10;
 	}
 	else if (ball.x < ball.radius || ball.x + ball.radius > canvasWidth) {
 		if (ball.x < ball.radius)
@@ -146,7 +199,7 @@ export const update = (props: DrawProps) => {
 			user.score++;
 		ball.x = canvasWidth / 2;
 		ball.y = canvasHeight / 2;
-		ball.speed = 2;
+		ball.speed = ball.defaultSpeed;
 		ball.velocityY = 0;
 		ball.velocityX = (ball.velocityX < 0) ? -ball.defaultSpeed : ball.defaultSpeed;
 	}
