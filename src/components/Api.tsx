@@ -33,6 +33,15 @@ const  getAllUsers= async () => {
       return data;
     }) 
 }
+const  login = async () => {
+
+      console.log("login");
+  fetch("http://localhost:3000/auth/login", { 
+    method: "GET" }).then((response) => response.json()).then((data) => {
+})
+}
+
+
  const PostVerifUser = async (input: DataIntput, func?: (input:DataIntput) => void) => { 
   const response = await fetch("http://localhost:3000/users/exists/" + input.email + "/" + input.username, {
     method: "GET",
@@ -78,7 +87,11 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           <input type="text"  onChange={handleInputChange} name="email" id="email" />
       <button className=" border-0  py-2 px-2.5 bg-slate-800 text-gray-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0"
         onClick={(event) => buttonHandler(() => { PostVerifUser(inputs,CreateUser) }, event)} type="submit"  >send data </button>
+
       </form>
+// button that trigger login function
+      <button className=" border-0  py-2 px-2.5 bg-slate-800 text-gray-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0"
+        onClick={(event) => buttonHandler(login, event)} type="submit"  >login </button>
   </div>
  </>)
 }

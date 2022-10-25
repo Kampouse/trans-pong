@@ -14,7 +14,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "start": "vite --open http://127.0.0.1:5173/",
+    "start": "vite & cd backend; npm run start",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "jest",
@@ -24,6 +24,7 @@
   "dependencies": {
     "@types/react-router": "^5.1.18",
     "i": "^0.3.7",
+    "passport-42": "^1.2.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.3.0"
