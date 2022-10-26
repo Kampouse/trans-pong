@@ -27,18 +27,25 @@ export default function Api()  {
 const  getAllUsers= async () => {
     fetch("http://localhost:3000/users", {
       method: "GET", 
-      headers: { "Content-Type": "application/json" }, 
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" 
+      }, 
       
     }).then((response) => response.json()).then((data) => {
       return data;
     }) 
+
 }
 const  login = async () => {
 
-      console.log("login");
-  fetch("http://localhost:3000/auth/login", { 
-    method: "GET" }).then((response) => response.json()).then((data) => {
-})
+  window.location.href = "https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2F&response_type=code";
+    fetch("https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2F&response_type=code", {
+      method: "OPTIONS", 
+      headers: { "Access-Control-Allow-Origin": "http://api.intra.42.fr"  
+      }, 
+      
+    }).then((response) => console.log(response));
+
+
 }
 
 
