@@ -1,6 +1,6 @@
 import { defaultMaxListeners } from "events";
 import React, { Component, useEffect, useRef, useState } from "react";
-import { init, draw, update } from "./draw";
+import { init, draw, update, drawGameover } from "./draw";
 
 function parentWidth(elem: HTMLElement | null) {
 	return elem!.clientWidth;
@@ -15,6 +15,7 @@ const Canvas = () => {
 	const div = useRef<HTMLDivElement | null>(null);
 
 	const [countdown, setCountdown] = useState(true);
+	const gameover = useRef(false);
 
 	let canvasHeight = 0;
 	let canvasWidth = 0;
@@ -33,8 +34,13 @@ const Canvas = () => {
 	
 	useEffect(() => {
 		const interval = setInterval(() => {
-			update({ canvas, mouse });
-			draw({ canvas, mouse });
+			if (gameover.current) {
+				drawGameover({ canvas, mouse });
+			}
+			if (!gameover.current) {
+				update({ canvas, mouse }, {gameover});
+				draw({ canvas, mouse });
+			}
 		}, 10);
 		return () => clearInterval(interval);
 	}, [countdown]);
