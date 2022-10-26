@@ -16,13 +16,6 @@ const Canvas = () => {
 
 	const [countdown, setCountdown] = useState(true);
 	const gameover = useRef(false);
-
-	let canvasHeight = 0;
-	let canvasWidth = 0;
-	if (document.getElementById('container')) {
-		canvasHeight = parentWidth(document.getElementById('container'));
-		canvasWidth = parentHeight(document.getElementById('container'));
-	}
 		
 	const mouse = {
 		y : 0,

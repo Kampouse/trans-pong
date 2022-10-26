@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import "./main.css";
 
@@ -6,8 +7,11 @@ export default function Login({ setIsAuth }) {
 
 	const loginRequest = () => {
 		setIsAuth(true);
-		navigate('/');
 	}
+
+	useEffect(() => {
+		navigate('/');
+	}, [])
 
   return (
 		<div className="flex h-[90%] w-screen place-items-center justify-center" >
