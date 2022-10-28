@@ -37,14 +37,7 @@ const  getAllUsers= async () => {
 }
 const  login = async () => {
 
-  window.location.href = "https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2F&response_type=code";
-    fetch("https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2F&response_type=code", {
-      method: "OPTIONS", 
-      headers: { "Access-Control-Allow-Origin": "http://api.intra.42.fr"  
-      }, 
-      
-    }).then((response) => console.log(response));
-
+ window.location.href =  "https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2F169.254.78.128%3A3000&response_type=code"
 
 }
 
