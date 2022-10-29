@@ -1,7 +1,8 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards,Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard,FortyTwoAuthGuard } from './utils/Guards';
 
+import { PassportSerializer} from "@nestjs/passport";
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -17,8 +18,10 @@ handleLogin() {
 
 @UseGuards(FortyTwoAuthGuard)
 @Get('42login')
-handleLogin42() {
-    console.log('handleLogin');
+//use the @Req decorator to access the request object
+ 
+handleLogin42(@Req()  request:Request) {
+  console.log(request);
     //
   // redirect to  to normal login page
     
@@ -31,12 +34,3 @@ handleLogin42() {
     return { message: 'Redirect' };
   }
 }
-
-
-
-
-
-
-
-
-

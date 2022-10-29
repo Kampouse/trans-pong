@@ -1,4 +1,4 @@
-import { AuthGuard } from "@nestjs/passport";
+import { AuthGuard ,PassportSerializer } from "@nestjs/passport";
 import { ExecutionContext, Injectable } from "@nestjs/common";
 
 @Injectable()
@@ -20,4 +20,14 @@ export class  GoogleAuthGuard extends AuthGuard('google') {
         await super.logIn(request);
         return activate;
         }
+}
+@Injectable()
+export class SessionSerializer extends PassportSerializer {
+  serializeUser(user: any, done: Function): any {
+    done(null, user);
+  }
+
+  deserializeUser(payload: any, done: Function): any {
+    done(null, payload);
+  }
 }

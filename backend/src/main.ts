@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {PrismaClient } from '@prisma/client';
-
-
+import * as  session from 'express-session';
+import { env } from 'process';
+ 
 declare global {
   var prisma: PrismaClient | undefined;
 }
@@ -25,6 +26,13 @@ async function bootstrap() {
    app.enableCors({
     origin: 'http://localhost:5173'
    });
+
+  app.use(session({
+    secret: process.env.CLIENT_ID,
+    resave: false,
+    saveUninitialized: false,
+    
+  }));
   await app.listen(3000);
 }
 bootstrap();
