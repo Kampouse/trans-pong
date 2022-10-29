@@ -9,10 +9,14 @@ import { done } from "passport";
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     constructor() {
     super({
+            authorizationURL: 'https://api.intra.42.fr/oauth/authorize',
+            tokenURL: 'https://api.intra.42.fr/oauth/token',
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
             redirect_uri: process.env.CALLBACK_URL,
-            // 42 scope is not working, so we use the default scope
+            callbackURL: 'http://localhost:3000/auth/42login',
+            passReqToCallback: true,
+          
         });
     }
 
