@@ -1,11 +1,11 @@
-import { Controller, Get, Req, UseGuards,Request, Redirect ,Res, Post} from '@nestjs/common';
-import { response, Express } from 'express';
+import { Controller, Get, Req, UseGuards, Redirect ,Res, Post,Response} from '@nestjs/common';
+import { response, Express, Request,  } from 'express';
 import { AuthService } from './auth.service';
 import { FortyTwoStrategy } from './utils/42strategy';
 import { GoogleAuthGuard,FortyTwoAuthGuard, FortyTwoRedirect } from './utils/Guards';
 // import Redirect from 'express-redirect';
 import { PassportModule, PassportSerializer} from "@nestjs/passport";
-import { reduce } from 'rxjs';
+import cookieParser from 'cookie-parser';
 // create a type of request with the request object 
 type  User =  {
     id: string;
@@ -21,7 +21,6 @@ type RequestWithUser = Request & { user: User ,response : any }  & { session: { 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
 @Get('login')
 @UseGuards(GoogleAuthGuard)
 handleLogin() {
@@ -32,14 +31,29 @@ handleLogin() {
   }
 @UseGuards(FortyTwoAuthGuard)
 @Get('42login')
-@Redirect('http://localhost:5173')
-handleLogin42(@Req()  request:RequestWithUser,response:Express.Response)  {
-    return { request: request.user };
-  }
+@Get('redirect')
+@Redirect()
+handleLogin42(@Req()  request:RequestWithUser,@Res({ passthrough: true }) response: Response) {  
+    if(request.user){
+      const url = "http://localhost:5173" + "/Profile/" + request.user.username  ; 
+      // add   user to  request body 
+      request.header['user'] = request.user;
+      return {statCode: 302, url: url, message: 'Login42' };
+    }
+    if(!request.user){
+      const url = "http://localhost:5173" + "/Login";
+      return {statCode: 302, url: url, cookies: { "hello" : "hello" },Headers : { "hello" : "hello" }, message: 'Login42' };
+    }
+    
+  console.log(request);
+ };
+
 
 @Get('redirect')
-@UseGuards(GoogleAuthGuard)
- handleRedirect () {
+// pass in the redirect url as a query parameter
+ 
+ handleRedirect (request:Request,response:Express.Response)  {
+    request.cookies['payload'] =  "hello world";
     return { message: 'Redirect' };
   }
 }

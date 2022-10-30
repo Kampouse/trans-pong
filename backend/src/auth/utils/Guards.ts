@@ -5,24 +5,13 @@ import { ExecutionContext, Injectable } from "@nestjs/common";
 // create athGuard class with 42  api strategy
 export class FortyTwoAuthGuard extends AuthGuard('42') {
     async canActivate(context: ExecutionContext) {
-      
         const activate = (await super.canActivate(context)) as boolean;
         const request = context.switchToHttp().getRequest();
         request.session.passport = request.session.passport || {};
         request.session.passport.user = request.session.passport.user || {};
         await super.getAuthenticateOptions( context);
-        //if user is already logged in, return true
-        await super.logIn(request);
-          
-        const isAuthenticated = (request.isAuthenticated && request.isAuthenticated()) || false;
-         
-         // if the user is logged in redirect to the home page   otherwise redirect to the login page
-        if (isAuthenticated) { 
-            request.session.passport.user = request.user;
-            request.session.save();
-
-        }
-        return activate && isAuthenticated;
+            await super.logIn(request);
+        return activate;
         }
 }
  // create  redirect class with 42  api strategy

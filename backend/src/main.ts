@@ -2,6 +2,7 @@ import { Redirect, Body } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {PrismaClient } from '@prisma/client';
+import * as cookieParser from 'cookie-parser';
 import * as  session from 'express-session';
 import { env } from 'process';
  
@@ -38,8 +39,13 @@ async function bootstrap() {
     
     },
   }));
+
+  app.use(cookieParser());
   // check the payload of the request and see if the user is logged in
   // if the user is logged in, attach the user to the request object
+
+
+
   app.use((req, res, next) => {
     if (req.session?.passport?.user) {
       req.user = req.session.passport.user;
@@ -47,18 +53,7 @@ async function bootstrap() {
     next();
   });
    
-  // if there a Post to /auth/login then redirect to the home page
-   app.use ('/auth/42login', (req, res, next) => {
-     next();
-    }, (req, res, next) => {
-       // if the user is logged in redirect to the home page   otherwise redirect to the login page
-       console.log(req.session);
-        
-       next();
-    });
-    
-   // check if the thea  authentification is succesful
-
+  // check the  payload of the request and see if the user is logged in 
   await app.listen(3000);
 }
 bootstrap();
