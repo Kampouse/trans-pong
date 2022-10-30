@@ -1,3 +1,4 @@
+import { Redirect, Body } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {PrismaClient } from '@prisma/client';
@@ -31,8 +32,33 @@ async function bootstrap() {
     secret: process.env.CLIENT_ID,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: false,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
     
+    },
   }));
+  // check the payload of the request and see if the user is logged in
+  // if the user is logged in, attach the user to the request object
+  app.use((req, res, next) => {
+    if (req.session?.passport?.user) {
+      req.user = req.session.passport.user;
+    }
+    next();
+  });
+   
+  // if there a Post to /auth/login then redirect to the home page
+   app.use ('/auth/42login', (req, res, next) => {
+     next();
+    }, (req, res, next) => {
+       // if the user is logged in redirect to the home page   otherwise redirect to the login page
+       console.log(req.session);
+        
+       next();
+    });
+    
+   // check if the thea  authentification is succesful
+
   await app.listen(3000);
 }
 bootstrap();

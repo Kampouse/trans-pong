@@ -1,3 +1,4 @@
+import { response } from 'express';
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy as strat } from "passport-google-oauth20";
 import {   } from "@nestjs/passport" ;
@@ -16,7 +17,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
             redirect_uri: process.env.CALLBACK_URL,
             callbackURL: 'http://localhost:3000/auth/42login',
             passReqToCallback: true,
-          
+            scope : ['public'],
         });
     }
 

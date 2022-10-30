@@ -1,8 +1,23 @@
-import { Controller, Get, Req, UseGuards,Request } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards,Request, Redirect ,Res, Post} from '@nestjs/common';
+import { response, Express } from 'express';
 import { AuthService } from './auth.service';
-import { GoogleAuthGuard,FortyTwoAuthGuard } from './utils/Guards';
+import { FortyTwoStrategy } from './utils/42strategy';
+import { GoogleAuthGuard,FortyTwoAuthGuard, FortyTwoRedirect } from './utils/Guards';
+// import Redirect from 'express-redirect';
+import { PassportModule, PassportSerializer} from "@nestjs/passport";
+import { reduce } from 'rxjs';
+// create a type of request with the request object 
+type  User =  {
+    id: string;
+    username: string;
+    displayName: string;
+    email: string;
+    accessToken: string;
+    refreshToken: string;
+}
+ //create a type for the cookie 
 
-import { PassportSerializer} from "@nestjs/passport";
+type RequestWithUser = Request & { user: User ,response : any }  & { session: { passport: { user: User } } };
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -15,17 +30,11 @@ handleLogin() {
       
     return { message: 'Login' };
   }
-
 @UseGuards(FortyTwoAuthGuard)
 @Get('42login')
-//use the @Req decorator to access the request object
- 
-handleLogin42(@Req()  request:Request) {
-  console.log(request);
-    //
-  // redirect to  to normal login page
-    
-    return { message: 'Login' };
+@Redirect('http://localhost:5173')
+handleLogin42(@Req()  request:RequestWithUser,response:Express.Response)  {
+    return { request: request.user };
   }
 
 @Get('redirect')
@@ -34,3 +43,4 @@ handleLogin42(@Req()  request:Request) {
     return { message: 'Redirect' };
   }
 }
+   // handle  the post from the login page  
