@@ -1,6 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route,useNavigate, Navigate } from "react-router-dom";
 import React, { useState,useEffect } from "react";
 import { InputType } from "zlib";
+import { Console } from "console";
 
 type ApiOutput = { message: string | null;
 
@@ -16,6 +17,7 @@ export default function Api()  {
   const [data , setData] = useState<ApiOutput>({message: null});
   const [inputs, setInputs] = useState<DataIntput>({username: "", email: ""});
   const [shouldTrigger, setShouldTrigger] = useState(false);
+  const nav = useNavigate();
 
 /* generic function to handle the input change */
   const buttonHandler = ( func: (input:DataIntput) => void, event: React.MouseEvent<HTMLButtonElement>) => {
@@ -35,7 +37,34 @@ const  getAllUsers= async () => {
     }) 
 
 }
+const  check = async () => {
+
+    // check in the cookie if the user is logged in
+    fetch("http://localhost:3000/auth/login", {
+      method: "GET",
+      headers: { "Content-Type": "application/json",  "Access-Control-Allow-Origin": "*" , "Access-Control-Allow-Credentials": "true" 
+
+     },
+
+    }).then((response) => response.json()).then((data) => {
+      console.log(data);
+      // if the object is empty the user is not logged in
+      if (Object.keys(data).length === 0) {
+        login();
+      }
+      else {
+        setShouldTrigger(!shouldTrigger);
+      }
+
+      return data;
+
+        
+    })
+
+ //window.location.href =  "https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code";
+}
 const  login = async () => {
+
  window.location.href =  "https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code";
 }
 
@@ -72,6 +101,7 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 }
     useEffect(() => {
       if (shouldTrigger) {
+          return (nav("/"));
           getAllUsers();
       }
     }, [shouldTrigger]);
@@ -89,7 +119,9 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       </form>
 // button that trigger login function
       <button className=" border-0  py-2 px-2.5 bg-slate-800 text-gray-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0"
-        onClick={(event) => buttonHandler(login, event)} type="submit"  >login </button>
-  </div>
+        onClick={(event) => buttonHandler(check, event) } type="submit"  >Login </button>
+    </div>
+
+
  </>)
 }

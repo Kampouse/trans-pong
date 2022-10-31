@@ -41,10 +41,12 @@ export class  GoogleAuthGuard extends AuthGuard('google') {
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
   serializeUser(user: any, done: Function): any {
+    console.log("hello:",user);
     done(null, user);
   }
 
   deserializeUser(payload: any, done: Function): any {
+     console.log("hello:",payload);
     done(null, payload);
   }
 }
