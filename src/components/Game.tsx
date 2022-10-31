@@ -1,15 +1,11 @@
 import Chat from "./Chat";
-import Canvas from "./Canvas";
+import ReactiveCanvas from "./ReactiveCanvas";
 import { createRef, DetailedHTMLProps, HTMLAttributes } from "react";
 
 export default function Game() {
-// className=" mt-12 flex h-screen min-h-screen flex-col justify-center  md:flex-col lg:ml-4 lg:h-screen lg:flex-row "
   return (
-	  <Canvas />
+	  <ReactiveCanvas />
   );
-	  // <div id="divID">
-		{/* <Chat></Chat> */}
-	  // </div>
 }
 
 function Next() {

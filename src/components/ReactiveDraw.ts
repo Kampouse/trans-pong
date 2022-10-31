@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 
 interface DrawProps {
 	canvas: React.MutableRefObject<HTMLCanvasElement | null>;
@@ -13,12 +13,9 @@ const ball = {
 	vX: 0.0,
 	vY: 0.0,
 	radius : 0,
-	velocityX : 0.0,
-	velocityY : 0.0,
 	dirX : 0.0,
 	dirY : 0.0,
 	speed : 0.0,
-	defaultSpeed: 0.0,
 }
 
 const user = {
@@ -48,16 +45,6 @@ function getCanvasSize(props: DrawProps) {
 	let width = (parseInt(window.getComputedStyle(canvas!.current!.parentElement!).width));
 	let height = (parseInt(window.getComputedStyle(canvas!.current!.parentElement!).height));
 
-	// console.log(width, height);
-
-	// if (width > 900) {
-	// 	width = 900;
-	// 	height = 600;
-	// }
-	// else {
-	// 	height = width / 1.5;
-	// }
-
 	canvas.current!.setAttribute("width", width.toString());
 	canvas.current!.setAttribute("height", height.toString());
 }
@@ -69,8 +56,6 @@ export function init(props: DrawProps) {
 
 	canvasSize.height = canvas.current!.height;
 	canvasSize.width = canvas.current!.width;
-
-	// console.log(canvasSize.height, canvasSize.width);
 	
 	ball.vX = 0.5;
 	ball.vY = 0.5;
@@ -85,9 +70,7 @@ export function init(props: DrawProps) {
 	com.x = canvasSize.width - com.width;
 	ball.radius = canvasSize.width / 100;
 
-	ball.velocityX = canvasSize.width / 1000;
-	ball.defaultSpeed = ball.velocityX;
-	ball.speed = ball.defaultSpeed;
+	ball.speed = 1;
 
 	ball.dirX = -1.0;
 	ball.dirY = 0.0;
@@ -108,8 +91,8 @@ export function draw (props: DrawProps) {
 	if (canvas.current!.height !== canvasSize.height || canvas.current!.width !== canvasSize.width) {
 		canvasSize.height = canvas.current!.height;
 		canvasSize.width = canvas.current!.width;
-		// ball.x = canvasSize.width * ball.vX;
-		// ball.y = canvasSize.height * ball.vY;
+		ball.x = canvasSize.width * ball.vX;
+		ball.y = canvasSize.height * ball.vY;
 		user.width = Math.floor(canvasSize.width / 100);
 		com.width = Math.floor(canvasSize.width / 100);
 		user.height = Math.floor(canvasSize.height / 6);
@@ -186,27 +169,20 @@ export function drawGameover(props: DrawProps) {
 export const update = (props: DrawProps, {gameover} ) => {
 	const { canvas, mouse } = props;
 
-	// user.y = mouse.y;
-	user.y = canvasSize.height / 2;
+	user.y = mouse.y;
+	com.y += (ball.y - (com.y + com.height/2)) * 0.1;
 
 	const canvasWidth = canvas.current!.width;
 	const canvasHeight = canvas.current!.height;
-
-	ball.x += ball.velocityX;
-	ball.y += ball.velocityY;
-
-	// ball.x += ball.dirX * ball.speed;
-	// ball.y += ball.dirY * ball.speed;
 	
-	// ball.vX += (ball.dirX * ball.speed) / 1000;
-	// ball.vY += (ball.dirY * ball.speed) / 1000;
-	// console.log(ball.vX, ball.vY);
+	ball.vX += (ball.dirX * ball.speed) / 1000;
+	ball.vY += (ball.dirY * ball.speed) / 1000;
 
-	com.y += (ball.y - (com.y + com.height/2)) * 0.1;
+	ball.x = canvasSize.width * ball.vX;
+	ball.y = canvasSize.height * ball.vY;
 
 	if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= canvasHeight) {
-		ball.velocityY = -ball.velocityY;
-		// ball.dirY = -ball.dirY;
+		ball.dirY = -ball.dirY;
 	}
 
 	let player = (ball.x < canvasWidth/2) ? user : com;
@@ -229,33 +205,24 @@ export const update = (props: DrawProps, {gameover} ) => {
 		collidePoint = collidePoint / (player.height/2);
 
 		let angleRad = Math.PI/4 * collidePoint;
-		// console.log(angleRad, Math.cos(angleRad), Math.sin(angleRad));
-		// console.log((180 - (Math.atan2(Math.cos(angleRad), Math.sin(angleRad)) * (180 / Math.PI))));
 
 		let direction = (ball.x < canvasWidth/2) ? 1 : -1;
 
-		ball.velocityX = direction * ball.speed * Math.cos(angleRad);
-		ball.velocityY = ball.speed * Math.sin(angleRad);
+		ball.dirX = direction * Math.cos(angleRad);
+		ball.dirY = Math.sin(angleRad);
 
-		// console.log(ball.velocityX, ball.velocityY);
-
-		// ball.dirX = direction * Math.cos(angleRad);
-		// ball.dirY = Math.sin(angleRad);
-
-		ball.speed += ball.defaultSpeed / 10;
-
-		// console.log(ball.velocityX, ball.velocityY);
+		ball.speed += 0.2;
 	}
 	else if (ball.x < ball.radius || ball.x + ball.radius > canvasWidth) {
 		if (ball.x < ball.radius)
 			com.score++;
 		else
 			user.score++;
-		ball.x = canvasWidth / 2;
-		ball.y = canvasHeight / 2;
-		ball.speed = ball.defaultSpeed;
-		ball.velocityY = 0.0;
-		ball.velocityX = (ball.velocityX < 0) ? -ball.defaultSpeed : ball.defaultSpeed;
+		ball.vX = 0.5;
+		ball.vY = 0.5;
+		ball.speed = 1;
+		ball.dirX = (ball.dirY < 0) ? 1.0 : -1.0;
+		ball.dirY = 0.0;
 	}
 
 	if (user.score >= 5 || com.score >= 5)

@@ -2,14 +2,6 @@ import { defaultMaxListeners } from "events";
 import React, { Component, useEffect, useRef, useState } from "react";
 import { init, draw, update, drawGameover } from "./draw";
 
-function parentWidth(elem: HTMLElement | null) {
-	return elem!.clientWidth;
-}
-
-function parentHeight(elem: HTMLElement | null) {
-	return elem!.clientWidth;
-}
-
 const Canvas = () => {
 	const canvas = useRef<HTMLCanvasElement | null>(null);
 	const div = useRef<HTMLDivElement | null>(null);
@@ -34,13 +26,13 @@ const Canvas = () => {
 				update({ canvas, mouse }, {gameover});
 				draw({ canvas, mouse });
 			}
-		}, 10);
+		}, 1);
 		return () => clearInterval(interval);
 	}, [countdown]);
 
 	return (
 		<>
-			<div id="container" ref={div} className="w-5/6 h-3/5 pt-[75px] m-auto">
+			<div id="container" ref={div} className="xl:w-[1200px] xl:h-[800px] lg:w-[900px] lg:h-[600px] md:w-[600px] md:h-[400px] sm:w-[600px] sm:h-[400px] w-[300px] h-[200px] pt-[75px] m-auto">
 				<canvas
 						id="myCanvas"
 						ref={canvas}
