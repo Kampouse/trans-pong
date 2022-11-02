@@ -38,30 +38,19 @@ const  getAllUsers= async () => {
 
 }
 const  check = async () => {
-
-    // check in the cookie if the user is logged in
-    fetch("http://localhost:3000/auth/login", {
+    fetch("http://localhost:3000/auth/verify", {
       method: "GET",
       headers: { "Content-Type": "application/json",  "Access-Control-Allow-Origin": "*" , "Access-Control-Allow-Credentials": "true" 
-
      },
-
     }).then((response) => response.json()).then((data) => {
-      console.log(data);
-      // if the object is empty the user is not logged in
-      if (Object.keys(data).length === 0) {
+      if (data.user === "no user") {
         login();
       }
       else {
-        setShouldTrigger(!shouldTrigger);
+          setShouldTrigger(!shouldTrigger);
       }
-
       return data;
-
-        
     })
-
- //window.location.href =  "https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code";
 }
 const  login = async () => {
 

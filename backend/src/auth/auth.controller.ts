@@ -3,9 +3,7 @@ import { response, Express, Request,  } from 'express';
 import { request } from 'http';
 import { AuthService } from './auth.service';
 import { FortyTwoStrategy } from './utils/42strategy';
-import { GoogleAuthGuard,FortyTwoAuthGuard, FortyTwoRedirect } from './utils/Guards';
-// import Redirect from 'express-redirect';
-// create a type of request with the request object 
+import { GoogleAuthGuard,FortyTwoAuthGuard, LoginGuard } from './utils/Guards';
 type  User =  {
     id: string;
     username: string;
@@ -14,41 +12,30 @@ type  User =  {
     accessToken: string;
     refreshToken: string;
 }
- // type that is oject of key value pairs of string and any type
 type  SessionUser = { [key: string]: any };
- //create a type for the cookie 
-
 type RequestWithUser = Request & { user: User ,response : any }  & { session: { passport: { user: User } } };
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-@Get('login')
+@Get('verify')
 handleLogin(@Req() request : Request , @Headers () headers:Headers) {
-   var sessionStore = request['sessionStore'];
+    let sessionStore = request['sessionStore'];
     let type: SessionUser =  sessionStore['sessions'];
-    const groups = {...type} // remove null object for test comparison
-     
-    // get the first value of the object
-     
+    const groups = {...type} 
     const first = Object.values(groups)[0];
-      
-    // verify the timestamp of the object 
-     
-    // JSON.parse the first value of the object
       if(first !== undefined){
-
-        const parsed = JSON.parse(first); // remove null object for test comparison
+        const parsed = JSON.parse(first); 
         const expire = parsed['cookie']['expires']; 
-        const passport = parsed['passport']; // remove null object for test comparison
+        const passport = parsed['passport']; 
         if(expire < Date.now()){
            return {};
          } else {
             return { user : passport['user']['displayName'] };
          }
       }
-     
-    return { };
+    return { user : "no user" };
   }
+
 @UseGuards(FortyTwoAuthGuard)
 @Get('42login')
 @Redirect()
@@ -64,14 +51,13 @@ handleLogin42(@Req()  request:RequestWithUser,@Res({ passthrough: true }) respon
     }
     
  };
-
-
-@Get('redirect')
-// pass in the redirect url as a query parameter
- 
- handleRedirect (request:Request,response:Express.Response)  {
-    request.cookies['payload'] =  "hello world";
-    return { message: 'Redirect' };
+@Get('check')
+@UseGuards(LoginGuard)
+check(@Req() request : Request , @Headers () headers:Headers) {
+    return { hello : "hello" };
   }
+
+
+  
+
 }
-   // handle  the post from the login page  
