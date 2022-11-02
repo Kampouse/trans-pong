@@ -1,7 +1,9 @@
+import Medal5 from './Medal5.png'
+
 function MatchResult() {
   return (
     <div className="mx-auto w-[100%] h-full rounded-md  px-4 pt-0  ring-1   ring-slate-300 sm:px-8">
-      <div className="py-8">
+      <div className="py-4">
         <div  className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold leading-tight">Recent Matches</h2>
 					<a
@@ -181,11 +183,20 @@ function FriendList() {
 
 function Achievements() {
 	return (
-		<div className="w-[100%] h-full rounded-md  px-4 pt-0  ring-1   ring-slate-300 sm:px-8">
-			<div className="py-8">
-				<div>
+		<div className="w-[100%] h-full rounded-md px-4 pt-0 ring-1 ring-slate-300 sm:px-8 mb-10">
+			<div className="pt-8 pb-4">
           <h2 className="text-2xl font-semibold leading-tight">Achievements</h2>
-        </div>
+			</div>
+			<div className="grid sm:grid-rows-4 sm:grid-cols-7 grid-rows-2 grid-cols-14 w-[100%] md:h-[70%] h-[50%] mx-auto">
+				<img
+					className="h-full object-scale-down"
+					src={Medal5}
+					alt=""
+				/>
+				<h1>A</h1>
+				<h1>A</h1>
+				<h1>A</h1>
+				<h1>A</h1>
 			</div>
 		</div>
 	);
@@ -196,13 +207,12 @@ function Achievements() {
 // Sent your first message in the Chat
 // First friend added to your friend list
 // First Match Won
-// Won 5/10/25/50/100/250 matches
-// Won 3/5/10/15/20/25 matches in a row
-// Shut out opponent 3/5/10/15/20/25 times
-// Scored 25/50/100/250/500/1000 points
+// Won 5/10/25/50/100 matches
+// Won 3/5/10/15/20 matches in a row
+// Shut out opponent 5/10/15/20/25 times
+// Scored 25/50/100/250/500 points
 // Customized the game
 // Won by opponent's withdrawal
-// Reaching X rank?
 // All achievements obtained
 
 export default function Profile() {
@@ -224,12 +234,12 @@ export default function Profile() {
         <FriendList />
       </div>
 
-			<div className="grid grid-cols-1 grid-rows-3 h-5/6 lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] sm:mt-[6%] mb-10">
+			<div className="grid grid-cols-1 lg:grid-rows-3 sm:grid-rows-4 h-5/6 lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] sm:mt-[6%]">
 	      <div className="grid row-span-2 lg:h-[95%] bg-white/50 rounded-lg backdrop-blur-sm mb-[5%]">
 	        <MatchResult />
 	      </div>
 
-				<div className="bg-white/50 rounded-lg backdrop-blur-sm mt-4">
+				<div className="grid lg:row-span-1 row-span-2 bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 lg:mb-0">
 	        <Achievements />
 	      </div>
 	    </div>
