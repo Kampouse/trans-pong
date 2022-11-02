@@ -56,8 +56,6 @@ const  login = async () => {
 
  window.location.href =  "https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code";
 }
-
-
  const PostVerifUser = async (input: DataIntput, func?: (input:DataIntput) => void) => { 
   const response = await fetch("http://localhost:3000/users/exists/" + input.email + "/" + input.username, {
     method: "GET",
@@ -109,6 +107,7 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 // button that trigger login function
       <button className=" border-0  py-2 px-2.5 bg-slate-800 text-gray-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0"
         onClick={(event) => buttonHandler(check, event) } type="submit"  >Login </button>
+
     </div>
 
 
