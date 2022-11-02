@@ -27,7 +27,9 @@
     "passport-42": "^1.2.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router": "^6.3.0"
+    "react-responsive-canvas": "^1.0.2",
+    "react-router": "^6.3.0",
+    "sass": "^1.55.0"
   },
   "devDependencies": {
     "@babel/core": "latest",

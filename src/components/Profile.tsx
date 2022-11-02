@@ -173,29 +173,57 @@ function FriendList() {
   );
 }
 
+function Achievements() {
+	return (
+			<div className="grid-rows-1">
+				<h2 className="text-center text-2xl font-semibold pt-6 pb-4">Achievements</h2>
+				<h2 className="text-xl font-semibold pl-6">Earned</h2>
+				<h2 className="text-xl font-semibold pl-6">Unearned</h2>
+			</div>
+	);
+}
+
+// First steps : Welcome to the game
+// Uploaded a profile pic
+// Sent your first message in the Chat
+// First friend added to your friend list
+// First Match Won
+// Won 5/10/25/50/100/250 matches
+// Won 3/5/10/15/20/25 matches in a row
+// Shut out opponent 3/5/10/15/20/25 times
+// Scored 25/50/100/250/500/1000 points
+// Customized the game
+// Won by opponent's withdrawal
+// Reaching X rank?
+// All achievements obtained
+
 export default function Profile() {
   // canvas should be  replace by the actual game and the chat should be replaced by the actual chat
   return (
-    <div className=" mt-16  flex    h-screen min-h-screen     flex-col   lg:h-screen lg:flex-row    ">
-      <div className="  mx-12    mt-8  h-5/6    rounded-lg bg-white/50 p-1 ring-1  ring-slate-300  backdrop-blur-sm  md:ml-4   lg:m-10 lg:mx-8  lg:h-5/6 lg:w-[15%]">
+    <div className="mt-16 flex h-screen min-h-screen flex-col lg:h-screen lg:flex-row">
+      <div className="mx-12 mt-8 h-5/6 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:ml-4 lg:m-10 lg:mx-8 lg:h-5/6 lg:w-[20%]">
         <div className="grid-rows-1">
           <img
             className="mx-auto mt-12 mb-5  h-40 w-40"
-            src=" https://pic.onlinewebfonts.com/svg/img_51277.png"
+            src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
             alt="Avatar"
           />
           <h1 className="text-center text-2xl font-bold">Username</h1>
-          <h1 className="  text-center ">Rating</h1>
-          <h1 className="  text-center ">is online </h1>
-          <h1 className="  text-center ">Rating == wrong</h1>
-          <h1 className="text-center ">Rating == bad </h1>
+          <h1 className="text-center">Rating</h1>
+					<h1  className="text-center"><span className="text-green-600">●</span> is online</h1>
+          <h1 className="text-center">Rating == wrong</h1>
+          <h1 className="text-center">Rating == bad </h1>
         </div>
         <FriendList />
       </div>
 
-      <div className="   mx-12    mt-8  h-full    rounded-lg    backdrop-blur-sm  md:ml-4  lg:m-10   lg:ml-2 lg:mr-8  lg:h-5/6 lg:w-1/2  ">
+      <div className="mx-12 mt-8 h-full rounded-lg backdrop-blur-sm md:ml-4 lg:m-10 lg:mx-8 lg:h-5/6 lg:w-1/2">
         <MatchResult />
       </div>
+
+			<div className="mx-12 mt-8 h-5/6 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:ml-4 lg:m-10 lg:mx-8 lg:h-5/6 lg:w-[20%]">
+				<Achievements />
+			</div>
     </div>
   );
 }
