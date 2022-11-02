@@ -1,12 +1,18 @@
 function MatchResult() {
   return (
-    <div className="container mx-auto w-[100%] rounded-md bg-white/[55%]  px-4 pt-0  ring-1   ring-slate-300 sm:px-8">
+    <div className="mx-auto w-[100%] h-full rounded-md  px-4 pt-0  ring-1   ring-slate-300 sm:px-8">
       <div className="py-8">
-        <div>
-          <h2 className="text-2xl font-semibold leading-tight">Match Result</h2>
+        <div  className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold leading-tight">Recent Matches</h2>
+					<a
+            href="#"
+            className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
+          >
+            View all
+          </a>
         </div>
-        <div className="-mx-4 overflow-x-auto p-4 sm:-mx-8 sm:px-8">
-          <div className="inline-block min-w-full overflow-hidden rounded-lg shadow shadow-gray-300 ">
+        <div className="-mx-4 overflow-x-auto p-4 sm:-mx-8 sm:px-8 ">
+          <div className="inline-block min-w-full overflow-hidden rounded-lg shadow shadow-gray-300 bg-white/[55%]">
             <table className="min-w-full leading-normal">
               <thead>
                 <tr>
@@ -111,7 +117,7 @@ function MatchResult() {
 function FriendList() {
   return (
     <div className="flex  h-[75%] flex-col">
-      <div className="  container-snap h-[90%] overflow-y-scroll rounded-lg p-8 shadow-sm dark:border-gray-300 dark:bg-transparent">
+      <div className="  container-snap h-[85%] overflow-y-scroll rounded-lg p-8 dark:border-gray-300 dark:bg-transparent">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-slate-600">
             Friend list
@@ -175,11 +181,13 @@ function FriendList() {
 
 function Achievements() {
 	return (
-			<div className="grid-rows-1">
-				<h2 className="text-center text-2xl font-semibold pt-6 pb-4">Achievements</h2>
-				<h2 className="text-xl font-semibold pl-6">Earned</h2>
-				<h2 className="text-xl font-semibold pl-6">Unearned</h2>
+		<div className="w-[100%] h-full rounded-md  px-4 pt-0  ring-1   ring-slate-300 sm:px-8">
+			<div className="py-8">
+				<div>
+          <h2 className="text-2xl font-semibold leading-tight">Achievements</h2>
+        </div>
 			</div>
+		</div>
 	);
 }
 
@@ -198,10 +206,9 @@ function Achievements() {
 // All achievements obtained
 
 export default function Profile() {
-  // canvas should be  replace by the actual game and the chat should be replaced by the actual chat
   return (
-    <div className="mt-16 flex h-screen min-h-screen flex-col lg:h-screen lg:flex-row">
-      <div className="mx-12 mt-8 h-5/6 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:ml-4 lg:m-10 lg:mx-8 lg:h-5/6 lg:w-[20%]">
+    <div className="mt-16 mb-10 flex h-screen min-h-screen flex-col lg:h-screen lg:flex-row">
+      <div className="mx-[5%] mt-8 h-5/6 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:mx-[5%] lg:m-10 lg:mx-[5%] lg:h-5/6 lg:w-[25%]">
         <div className="grid-rows-1">
           <img
             className="mx-auto mt-12 mb-5  h-40 w-40"
@@ -210,20 +217,22 @@ export default function Profile() {
           />
           <h1 className="text-center text-2xl font-bold">Username</h1>
           <h1 className="text-center">Rating</h1>
-					<h1  className="text-center"><span className="text-green-600">●</span> is online</h1>
+					<h1 className="text-center"><span className="text-green-600">●</span> is online</h1>
           <h1 className="text-center">Rating == wrong</h1>
           <h1 className="text-center">Rating == bad </h1>
         </div>
         <FriendList />
       </div>
 
-      <div className="mx-12 mt-8 h-full rounded-lg backdrop-blur-sm md:ml-4 lg:m-10 lg:mx-8 lg:h-5/6 lg:w-1/2">
-        <MatchResult />
-      </div>
+			<div className="grid grid-cols-1 grid-rows-3 h-5/6 lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] sm:mt-[6%] mb-10">
+	      <div className="grid row-span-2 lg:h-[95%] bg-white/50 rounded-lg backdrop-blur-sm mb-[5%]">
+	        <MatchResult />
+	      </div>
 
-			<div className="mx-12 mt-8 h-5/6 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:ml-4 lg:m-10 lg:mx-8 lg:h-5/6 lg:w-[20%]">
-				<Achievements />
-			</div>
-    </div>
+				<div className="bg-white/50 rounded-lg backdrop-blur-sm mt-4">
+	        <Achievements />
+	      </div>
+	    </div>
+		</div>
   );
 }
