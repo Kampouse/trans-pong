@@ -1,4 +1,4 @@
-import Medal5 from './Medal5.png'
+import Medal from './medal.ico'
 
 function MatchResult() {
   return (
@@ -187,17 +187,336 @@ function Achievements() {
 			<div className="pt-8 pb-4">
           <h2 className="text-2xl font-semibold leading-tight">Achievements</h2>
 			</div>
-			<div className="grid sm:grid-rows-4 sm:grid-cols-7 grid-rows-2 grid-cols-14 w-[100%] md:h-[70%] h-[50%] mx-auto">
-				<img
-					className="h-full object-scale-down"
-					src={Medal5}
-					alt=""
-				/>
-				<h1>A</h1>
-				<h1>A</h1>
-				<h1>A</h1>
-				<h1>A</h1>
-			</div>
+			<div className="-mx-4 overflow-x-auto p-2 sm:-mx-8 sm:px-8">
+        <div className="inline-block min-w-full overflow-hidden shadow shadow-gray-300 bg-white/[55%]">
+          <table className="min-w-full leading-normal">
+            <tbody>
+              <tr>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+							</tr>
+							<tr>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+							</tr>
+							<tr>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+							</tr>
+							<tr>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+							</tr>
+							<tr>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+							</tr>
+							<tr>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+							</tr>
+							<tr>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </td>
+							</tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 		</div>
 	);
 }
@@ -235,11 +554,11 @@ export default function Profile() {
       </div>
 
 			<div className="grid grid-cols-1 lg:grid-rows-3 sm:grid-rows-4 h-5/6 lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] sm:mt-[6%]">
-	      <div className="grid row-span-2 lg:h-[95%] bg-white/50 rounded-lg backdrop-blur-sm mb-[5%]">
+	      <div className="grid row-span-2 lg:h-[95%] bg-white/50 rounded-lg backdrop-blur-sm mb-[5%] min-h-[450px]">
 	        <MatchResult />
 	      </div>
 
-				<div className="grid lg:row-span-1 row-span-2 bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 lg:mb-0">
+				<div className="grid lg:row-span-1 row-span-2 bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 lg:mb-0 min-h-[450px]">
 	        <Achievements />
 	      </div>
 	    </div>
