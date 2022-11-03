@@ -2,35 +2,44 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useState  } from "react";
 import "./main.css";
-
+import { setDefaultResultOrder } from "dns";
+import  { useAtom,atom } from 'jotai'
+import { useLogin } from "components/App";
  type DataIntput = {
   username: string;
   email: string;
  }
 
 
-export default function Login({ setIsAuth }) {
-	const navigate = useNavigate();
-	const [Navi , setNavi] = useState("/");
-  const [inputs, setInputs] = useState<DataIntput>({username: "", email: ""});
-
+  
+ // pass a paramertr ass a function
+export default function Login( Status) {
+    const navigate = useNavigate();
+    const [Navi , setNavi] = useState("/");
+    const [islogin, setLogin] = useAtom(useLogin)
+    const [inputs, setInputs] = useState<DataIntput>({username: "", email: ""});
 	  const buttonHandler = ( func: (input:DataIntput) => void, event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     func(inputs);
     const button: HTMLButtonElement = event.currentTarget;
   };
   const  check = async () => {
+    console.log(islogin)
     fetch("http://localhost:3000/auth/verify", {
       method: "GET",
       headers: { "Content-Type": "application/json",  "Access-Control-Allow-Origin": "*" , "Access-Control-Allow-Credentials": "true" 
      },
     }).then((response) => response.json()).then((data) => {
-      if (data.user === "no user") {
+      if (data.user === "no user" || islogin == "reconnect") {
         login();
       }
       else {
-		  setIsAuth(true);
-		  setNavi("/");
+         if(islogin === "should login" || islogin === "signout") 
+         {
+            console.log("should login")
+            setLogin("login");
+            setNavi("/");
+         }
       }
       return data;
     })
@@ -40,10 +49,16 @@ const login = async () => {
 	}
 	useEffect(() => {
 
-
-		check();
+      if( "signout" === islogin ){
+         setLogin("reconnect");
+      }
+      else
+      {
+        check();
+      }
 		navigate(Navi);
-	}, [Navi]);
+     
+	}, []);
 
   return (
 		<>
