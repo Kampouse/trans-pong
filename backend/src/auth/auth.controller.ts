@@ -41,7 +41,7 @@ handleLogin(@Req() request : Request , @Headers () headers:Headers) {
 @Redirect()
 handleLogin42(@Req()  request:RequestWithUser,@Res({ passthrough: true }) response: Response,@Session() session: any ,@Headers() head: Headers)  {  
     if(request.user){
-      const url = "http://localhost:5173/"  ; 
+      const url = "http://localhost:5173/Profile"  ; 
     const rawHeaders = response.headers;
       return {statCode: 302, url: url, message: 'Login42' };
     }

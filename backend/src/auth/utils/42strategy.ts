@@ -35,39 +35,6 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     }
 }
 
-@Injectable()
-export class Google extends PassportStrategy(strat, 'google') {
-    constructor() {
-    super({
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.GOOGLE_CALLBACK_URL,
-
-            scope: ['profile', 'email'],
-        });
-    }
-    // check out access token and refresh token
-    // check if user exists in db
-    // if user exists, return user
-    // if user does not exist, create user and return userkkj
-   async validate(request: any, accessToken: string, refreshToken: string, profile: any, done: any) {
-        console.log('profile', profile);
-        const { id, username, displayName, _json } = profile;
-        const user = {
-            id,
-            username,
-            displayName,
-            accessToken,
-            refreshToken,
-            json: _json,
-        };
-        console.log('user', user);
-
-            // if user exists, return user else create user and return user
-
-            
-    }
    
      
 
-}

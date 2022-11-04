@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { Google, FortyTwoStrategy   } from  './utils/42strategy';
+import {  FortyTwoStrategy   } from  './utils/42strategy';
  import { GoogleAuthGuard, FortyTwoAuthGuard,SessionSerializer,LoginGuard} from './utils/Guards';
   
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, Google,GoogleAuthGuard, FortyTwoStrategy, FortyTwoAuthGuard,SessionSerializer,LoginGuard],
+  providers: [AuthService ,GoogleAuthGuard, FortyTwoStrategy, FortyTwoAuthGuard,SessionSerializer,LoginGuard],
 })
 export class AuthModule {}
