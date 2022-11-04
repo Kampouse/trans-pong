@@ -4,18 +4,12 @@ import { Popover, PopoverHandler, PopoverContent, Button } from "@material-tailw
 function MatchResult() {
   return (
     <div className="mx-auto w-[100%] h-full rounded-md  px-4 pt-0  sm:px-8">
-      <div className="py-4">
+      <div className="py-4 ">
         <div  className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold leading-tight">Recent Matches</h2>
-					<a
-            href="#"
-            className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
-          >
-            View all
-          </a>
+          <h2 className="text-2xl font-semibold leading-tight">Matches Played</h2>
         </div>
         <div className="-mx-4 overflow-x-auto p-4 sm:-mx-8 sm:px-8 ">
-          <div className="inline-block min-w-full overflow-hidden rounded-lg shadow shadow-gray-300 bg-white/[55%]">
+          <div className="inline-block min-w-full overflow-hidden rounded-lg shadow shadow-gray-300 bg-white/[55%] h-[390px] overflow-y-scroll scrollbar-hide">
             <table className="min-w-full leading-normal">
               <thead>
                 <tr>
@@ -108,6 +102,117 @@ function MatchResult() {
                     </div>
                   </td>
                 </tr>
+
+								<tr>
+                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
+                    <div className="flex items-center">
+                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
+                        <img
+                          className="h-full w-full rounded-full"
+                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+                          alt=""
+                        />
+                      </div>
+                      <div className="ml-3">
+                        <p className=" text-gray-900">Team 3</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="border-b border-gray-300  p-5 text-sm">
+                    <p className=" text-center text-gray-900">0</p>
+                  </td>
+                  <td className="border-b border-gray-300  p-5 text-sm">
+                    <p className=" text-center text-gray-900">3</p>
+                  </td>
+                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
+                    <div className="float-right flex items-center">
+                      <div className="mr-3">
+                        <p className=" text-right text-gray-900">Team 4</p>
+                      </div>
+                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
+                        <img
+                          className="h-full w-full rounded-full"
+                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+								<tr>
+                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
+                    <div className="flex items-center">
+                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
+                        <img
+                          className="h-full w-full rounded-full"
+                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+                          alt=""
+                        />
+                      </div>
+                      <div className="ml-3">
+                        <p className=" text-gray-900">Team 3</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="border-b border-gray-300  p-5 text-sm">
+                    <p className=" text-center text-gray-900">0</p>
+                  </td>
+                  <td className="border-b border-gray-300  p-5 text-sm">
+                    <p className=" text-center text-gray-900">3</p>
+                  </td>
+                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
+                    <div className="float-right flex items-center">
+                      <div className="mr-3">
+                        <p className=" text-right text-gray-900">Team 4</p>
+                      </div>
+                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
+                        <img
+                          className="h-full w-full rounded-full"
+                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+								<tr>
+                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
+                    <div className="flex items-center">
+                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
+                        <img
+                          className="h-full w-full rounded-full"
+                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+                          alt=""
+                        />
+                      </div>
+                      <div className="ml-3">
+                        <p className=" text-gray-900">Team 3</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="border-b border-gray-300  p-5 text-sm">
+                    <p className=" text-center text-gray-900">0</p>
+                  </td>
+                  <td className="border-b border-gray-300  p-5 text-sm">
+                    <p className=" text-center text-gray-900">3</p>
+                  </td>
+                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
+                    <div className="float-right flex items-center">
+                      <div className="mr-3">
+                        <p className=" text-right text-gray-900">Team 4</p>
+                      </div>
+                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
+                        <img
+                          className="h-full w-full rounded-full"
+                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -119,25 +224,19 @@ function MatchResult() {
 
 function FriendList() {
   return (
-    <div className="flex  lg:h-[60%] h-[40%] flex-col">
-      <div className="  container-snap overflow-y-scroll rounded-lg p-8 dark:border-gray-300 dark:bg-transparent">
-        <div className="flex items-center justify-between">
+    <div className="flex  md:h-[60%] h-[60%] flex-col">
+      <div className="container-snap rounded-lg p-8 dark:border-gray-300 dark:bg-transparent">
+        <div className="flex items-center justify-between ">
           <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-slate-600">
             Friend list
           </h3>
-          <a
-            href="#"
-            className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
-          >
-            View all
-          </a>
         </div>
-        <div className="flow-root">
+        <div className="flow-root h-[540px] overflow-y-scroll scrollbar-hide">
           <ul
             role="list"
             className="divide-y divide-gray-500 dark:divide-slate-300"
           >
-            <li className="py-3 sm:py-4">
+            <li className="py-4">
               <div className="flex items-center space-x-4">
                 <div className="shrink-0">
                   <img
@@ -154,7 +253,7 @@ function FriendList() {
                 </div>
               </div>
             </li>
-            <li className="py-3 sm:py-4">
+            <li className="py-4">
               <div className="flex items-center space-x-4">
                 <div className="shrink-0">
                   <img
@@ -171,7 +270,92 @@ function FriendList() {
                 </div>
               </div>
             </li>
-            <li className="py-3 sm:py-4">
+            <li className="py-4">
+              <div className="flex items-center space-x-4">
+                <div className="shrink-0">
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                    alt="Neil image"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-600">
+                    Neil Sims
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-slate-500"><span className="text-red-600">●</span>Offline</p>
+                </div>
+              </div>
+            </li>
+						<li className="py-4">
+              <div className="flex items-center space-x-4">
+                <div className="shrink-0">
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                    alt="Neil image"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-600">
+                    Neil Sims
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-slate-500"><span className="text-red-600">●</span>Offline</p>
+                </div>
+              </div>
+            </li>
+						<li className="py-4">
+              <div className="flex items-center space-x-4">
+                <div className="shrink-0">
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                    alt="Neil image"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-600">
+                    Neil Sims
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-slate-500"><span className="text-red-600">●</span>Offline</p>
+                </div>
+              </div>
+            </li>
+						<li className="py-4">
+              <div className="flex items-center space-x-4">
+                <div className="shrink-0">
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                    alt="Neil image"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-600">
+                    Neil Sims
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-slate-500"><span className="text-red-600">●</span>Offline</p>
+                </div>
+              </div>
+            </li>
+						<li className="py-4">
+              <div className="flex items-center space-x-4">
+                <div className="shrink-0">
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                    alt="Neil image"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-600">
+                    Neil Sims
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-slate-500"><span className="text-red-600">●</span>Offline</p>
+                </div>
+              </div>
+            </li>
+						<li className="py-4">
               <div className="flex items-center space-x-4">
                 <div className="shrink-0">
                   <img
@@ -203,12 +387,12 @@ const getAchievementCSS = (name: string) => {
 
 function Achievements() {
 	return (
-		<div className="w-[100%] h-full rounded-md px-4 pt-0 sm:px-8">
+		<div className="w-[100%] h-full rounded-md px-4 pt-0 sm:px-8 ">
 			<div className="pt-8 pb-4">
           <h2 className="text-2xl font-semibold leading-tight">Achievements</h2>
 			</div>
-			<div className="-mx-4 overflow-x-auto p-2 sm:-mx-8 sm:px-8">
-        <div className="inline-block min-w-full overflow-hidden shadow shadow-gray-300 bg-white/[55%]">
+			<div className="-mx-4 p-2 sm:-mx-8 sm:px-8">
+        <div className="inline-block min-w-full shadow shadow-gray-300 bg-white/[55%] h-[371px] overflow-y-scroll scrollbar-hide">
           <table className="min-w-full leading-normal">
             <tbody>
               <tr>
@@ -659,11 +843,11 @@ export default function Profile() {
       </div>
 
 			<div className="lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] mt-[50px] ">
-	      <div className="bg-white/50 rounded-lg backdrop-blur-sm mb-[50px] min-h-[475px] ring-1 ring-slate-300">
+	      <div className="bg-white/50 rounded-lg backdrop-blur-sm mb-[50px] h-[475px] ring-1 ring-slate-300">
 	        <MatchResult />
 	      </div>
 
-				<div className="bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 h-[475px] overflow-x-hidden ring-1 ring-slate-300">
+				<div className="bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 h-[475px] ring-1 ring-slate-300">
 	        <Achievements />
 	      </div>
 	    </div>
