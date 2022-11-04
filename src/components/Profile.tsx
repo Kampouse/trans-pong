@@ -192,7 +192,7 @@ function Achievements() {
           <table className="min-w-full leading-normal">
             <tbody>
               <tr>
-                <td className="border-b border-gray-300  p-3 text-sm">
+                <td className="border-b border-gray-300  p-3 text-smw-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -201,9 +201,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+					  				<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-                <td className="border-b border-gray-300  p-3 text-sm">
+                <td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -212,9 +215,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+										<div>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -223,9 +229,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -234,57 +243,14 @@ function Achievements() {
                         alt=""
                       />
                     </div>
-                  </div>
-                </td>
-							</tr>
-							<tr>
-                <td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                </td>
-                <td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
 							</tr>
 							<tr>
-                <td className="border-b border-gray-300  p-3 text-sm">
+                <td className="border-b border-gray-300  p-3 text-smw-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -293,9 +259,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+					  				<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-                <td className="border-b border-gray-300  p-3 text-sm">
+                <td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -304,9 +273,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+										<div>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -315,9 +287,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -326,57 +301,14 @@ function Achievements() {
                         alt=""
                       />
                     </div>
-                  </div>
-                </td>
-							</tr>
-							<tr>
-                <td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                </td>
-                <td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
 							</tr>
 							<tr>
-                <td className="border-b border-gray-300  p-3 text-sm">
+                <td className="border-b border-gray-300  p-3 text-smw-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -385,9 +317,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+					  				<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-                <td className="border-b border-gray-300  p-3 text-sm">
+                <td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -396,9 +331,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+										<div>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -407,9 +345,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -418,57 +359,14 @@ function Achievements() {
                         alt=""
                       />
                     </div>
-                  </div>
-                </td>
-							</tr>
-							<tr>
-                <td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                </td>
-                <td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
 							</tr>
 							<tr>
-                <td className="border-b border-gray-300  p-3 text-sm">
+                <td className="border-b border-gray-300  p-3 text-smw-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -477,9 +375,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+					  				<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-                <td className="border-b border-gray-300  p-3 text-sm">
+                <td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -488,9 +389,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+										<div>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -499,9 +403,12 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
-								<td className="border-b border-gray-300  p-3 text-sm">
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
                   <div className="flex items-center">
                     <div className="sm:table-cell">
                       <img
@@ -510,6 +417,183 @@ function Achievements() {
                         alt=""
                       />
                     </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+							</tr>
+							<tr>
+                <td className="border-b border-gray-300  p-3 text-smw-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+					  				<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+							</tr>
+							<tr>
+                <td className="border-b border-gray-300  p-3 text-smw-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+					  				<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+							</tr>
+							<tr>
+                <td className="border-b border-gray-300  p-3 text-smw-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+					  				<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+                <td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className="flex items-center">
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First steps</p>
+										</div>
                   </div>
                 </td>
 							</tr>
@@ -537,7 +621,7 @@ function Achievements() {
 export default function Profile() {
   return (
     <div className="mt-16 mb-10 flex h-screen min-h-screen flex-col lg:h-screen lg:flex-row">
-      <div className="mx-[5%] mt-8 h-5/6 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:mx-[5%] lg:m-10 lg:mx-[5%] lg:h-5/6 lg:w-[25%]">
+      <div className="mx-[5%] mt-8 h-5/6 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:mx-[5%] lg:m-10 lg:mx-[5%] lg:h-5/6 lg:w-[25%] sm:min-h-[1000px]">
         <div className="grid-rows-1">
           <img
             className="mx-auto mt-12 mb-5  h-40 w-40"
@@ -553,12 +637,12 @@ export default function Profile() {
         <FriendList />
       </div>
 
-			<div className="grid grid-cols-1 lg:grid-rows-3 sm:grid-rows-4 h-5/6 lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] sm:mt-[6%]">
-	      <div className="grid row-span-2 lg:h-[95%] bg-white/50 rounded-lg backdrop-blur-sm mb-[5%] min-h-[450px]">
+			<div className="lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] sm:mt-[6%]">
+	      <div className="bg-white/50 rounded-lg backdrop-blur-sm mb-[5%] min-h-[475px]">
 	        <MatchResult />
 	      </div>
 
-				<div className="grid lg:row-span-1 row-span-2 bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 lg:mb-0 min-h-[450px]">
+				<div className="bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 min-h-[475px]">
 	        <Achievements />
 	      </div>
 	    </div>
