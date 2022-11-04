@@ -10,31 +10,44 @@ import Api from "./Api";
 import "./main.css";
 import Error404 from "./Error404";
 import Chat from "./Chat";
-import { useState, createContext } from "react";
+import { useState,useEffect} from "react";
 import { useAtom,atom } from 'jotai'
-const UserContext = createContext([{}, () => {}]);
-export const UserProvider = UserContext.Provider;
-export const UserConsumer = UserContext.Consumer;
-
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atomWithStorage } from 'jotai/utils'
 
 export const useLogin = atom("should login")	
-
 export default function App() {
 const [user, setUser] = useState({ username: "", id: "" });
 const [login, setLogin] = useAtom(useLogin)
+ const  check = async () => {
+ 
+    fetch("http://localhost:3000/auth/verify", {
+      method: "GET",
+      headers: { "Content-Type": "application/json",  "Access-Control-Allow-Origin": "*" , "Access-Control-Allow-Credentials": "true" 
+     },
+    }).then((response) => response.json()).then((data) => {
+		if(data.user != "no user") {
+			setLogin("login")
+		}
+      return data.user;
+    })
+} 
+//this function is called because after page is refreshed variable lost ...
+ 
+ useEffect(() => {
+	  check()
+	     }, []);
  return (
-	 			<UserProvider value={[user, setUser]}>
-	<UserConsumer> 
-		{ (value) => (
     <div className=" container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
 		 
       { ( login ==  "login")  ? (
 		  <>
 	        <main>
-	          <Nav  Status={value}  setStatus={setUser} />
+	          <Nav  Status={"f"}  setStatus={setUser} />
 	        </main>
 	        <Routes>
 	          <Route path="/" element={<Menu />} />
+	          <Route path="/Menu" element={<Menu />} />
 	          <Route path="/CreateGame" element={<CreateGame />} />
 	          <Route path="/Watch" element={<GameWatch />} />
 	          <Route path="/PlayMenu" element={<PlayMenu />} />
@@ -49,8 +62,4 @@ const [login, setLogin] = useAtom(useLogin)
 			<Login Status={login }  setStatus={setUser} />
 	  ) }
     </div>)
-}
-	</UserConsumer>
-	</UserProvider>
-  );
 }

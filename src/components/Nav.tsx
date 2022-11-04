@@ -14,7 +14,7 @@ export default function Nav({Status, setStatus}) {
   };
 
 	const logout = () => {
-      setLogin("signout");
+      setLogin("reset");
       console.log(login)
 	}
   return (

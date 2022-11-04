@@ -17,24 +17,38 @@ export default function Login( Status) {
     const navigate = useNavigate();
     const [Navi , setNavi] = useState("/");
     const [islogin, setLogin] = useAtom(useLogin)
+    // const [islogin, setLogin] = useState("login");
     const [inputs, setInputs] = useState<DataIntput>({username: "", email: ""});
 	  const buttonHandler = ( func: (input:DataIntput) => void, event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     func(inputs);
     const button: HTMLButtonElement = event.currentTarget;
   };
-  const  check = async () => {
-    console.log(islogin)
+
+
+  const  isLogged = async () => {
     fetch("http://localhost:3000/auth/verify", {
       method: "GET",
       headers: { "Content-Type": "application/json",  "Access-Control-Allow-Origin": "*" , "Access-Control-Allow-Credentials": "true" 
      },
     }).then((response) => response.json()).then((data) => {
-      if (data.user === "no user" || islogin == "reconnect") {
+     return data
+     })
+    
+  }
+  const  check = async () => {
+console.log(islogin)
+ 
+    fetch("http://localhost:3000/auth/verify", {
+      method: "GET",
+      headers: { "Content-Type": "application/json",  "Access-Control-Allow-Origin": "*" , "Access-Control-Allow-Credentials": "true" 
+     },
+    }).then((response) => response.json()).then((data) => {
+      if ( islogin == "should login" && data.user == "no user" || ( islogin == "reset" && data.user != "no user"))  {
         login();
       }
       else {
-         if(islogin === "should login" || islogin === "signout") 
+         if(islogin === "should login" || islogin === "signout" ) 
          {
             console.log("should login")
             setLogin("login");
@@ -48,14 +62,7 @@ const login = async () => {
 			window.location.href =  "https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code";
 	}
 	useEffect(() => {
-
-      if( "signout" === islogin ){
-         setLogin("reconnect");
-      }
-      else
-      {
-        check();
-      }
+       
 		navigate(Navi);
      
 	}, []);
