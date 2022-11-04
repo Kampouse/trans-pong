@@ -1,8 +1,9 @@
 import Medal from './medal.ico'
+import { Popover, PopoverHandler, PopoverContent, Button } from "@material-tailwind/react"
 
 function MatchResult() {
   return (
-    <div className="mx-auto w-[100%] h-full rounded-md  px-4 pt-0  ring-1   ring-slate-300 sm:px-8">
+    <div className="mx-auto w-[100%] h-full rounded-md  px-4 pt-0  sm:px-8">
       <div className="py-4">
         <div  className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold leading-tight">Recent Matches</h2>
@@ -118,8 +119,8 @@ function MatchResult() {
 
 function FriendList() {
   return (
-    <div className="flex  h-[75%] flex-col">
-      <div className="  container-snap h-[85%] overflow-y-scroll rounded-lg p-8 dark:border-gray-300 dark:bg-transparent">
+    <div className="flex  lg:h-[60%] h-[40%] flex-col">
+      <div className="  container-snap overflow-y-scroll rounded-lg p-8 dark:border-gray-300 dark:bg-transparent">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-bold leading-none text-gray-900 dark:text-slate-600">
             Friend list
@@ -149,9 +150,7 @@ function FriendList() {
                   <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-600">
                     Neil Sims
                   </p>
-                  <p className="truncate text-sm text-gray-500 dark:text-slate-500">
-                    email@windster.com
-                  </p>
+                  <p className="text-sm text-gray-500 dark:text-slate-500"><span className="text-green-600">●</span>Online</p>
                 </div>
               </div>
             </li>
@@ -168,9 +167,24 @@ function FriendList() {
                   <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-600">
                     Neil Sims
                   </p>
-                  <p className="truncate text-sm text-gray-500 dark:text-slate-500">
-                    email@windster.com
+                  <p className="text-sm text-gray-500 dark:text-slate-500"><span className="text-amber-500">●</span>Playing</p>
+                </div>
+              </div>
+            </li>
+            <li className="py-3 sm:py-4">
+              <div className="flex items-center space-x-4">
+                <div className="shrink-0">
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                    alt="Neil image"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-600">
+                    Neil Sims
                   </p>
+                  <p className="text-sm text-gray-500 dark:text-slate-500"><span className="text-red-600">●</span>Offline</p>
                 </div>
               </div>
             </li>
@@ -181,9 +195,15 @@ function FriendList() {
   );
 }
 
+const getAchievementCSS = (name: string) => {
+	if (name) // if achievement obtained
+		return "flex items-center";
+	return "flex items-center opacity-25";
+}
+
 function Achievements() {
 	return (
-		<div className="w-[100%] h-full rounded-md px-4 pt-0 ring-1 ring-slate-300 sm:px-8 mb-10">
+		<div className="w-[100%] h-full rounded-md px-4 pt-0 sm:px-8">
 			<div className="pt-8 pb-4">
           <h2 className="text-2xl font-semibold leading-tight">Achievements</h2>
 			</div>
@@ -193,7 +213,7 @@ function Achievements() {
             <tbody>
               <tr>
                 <td className="border-b border-gray-300  p-3 text-smw-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("FirstSteps")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -207,21 +227,7 @@ function Achievements() {
                   </div>
                 </td>
                 <td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-										<div>
-					  					<p className='text-lg font-semibold'>First steps</p>
-										</div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("UploadImage")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -230,12 +236,12 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>Upload image</p>
 										</div>
                   </div>
                 </td>
 								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("FirstMessage")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -244,14 +250,42 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>First message</p>
+										</div>
+                  </div>
+                </td>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className={getAchievementCSS("FirstFriend")}>
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+												/>
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>First friend</p>
 										</div>
                   </div>
                 </td>
 							</tr>
 							<tr>
+                <td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className={getAchievementCSS("ChangeSettings")}>
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>Change settings</p>
+										</div>
+                  </div>
+                </td>
                 <td className="border-b border-gray-300  p-3 text-smw-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("FirstWin")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -260,26 +294,12 @@ function Achievements() {
                       />
                     </div>
 					  				<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
-										</div>
-                  </div>
-                </td>
-                <td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-										<div>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>First win</p>
 										</div>
                   </div>
                 </td>
 								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("WonGiveUp")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -288,12 +308,12 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>Won by give up</p>
 										</div>
                   </div>
                 </td>
 								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("5Wins")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -302,14 +322,28 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>5 wins</p>
 										</div>
                   </div>
                 </td>
 							</tr>
 							<tr>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className={getAchievementCSS("10Wins")}>
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>10 wins</p>
+										</div>
+                  </div>
+                </td>
                 <td className="border-b border-gray-300  p-3 text-smw-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("25Wins")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -318,26 +352,12 @@ function Achievements() {
                       />
                     </div>
 					  				<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>25 wins</p>
 										</div>
                   </div>
                 </td>
                 <td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-										<div>
-					  					<p className='text-lg font-semibold'>First steps</p>
-										</div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("50Wins")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -346,12 +366,12 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>50 wins</p>
 										</div>
                   </div>
                 </td>
 								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("100Wins")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -360,14 +380,28 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>100 wins</p>
 										</div>
                   </div>
                 </td>
 							</tr>
 							<tr>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className={getAchievementCSS("3Row")}>
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>3 in a row</p>
+										</div>
+                  </div>
+                </td>
                 <td className="border-b border-gray-300  p-3 text-smw-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("5Row")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -376,26 +410,12 @@ function Achievements() {
                       />
                     </div>
 					  				<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>5 in a row</p>
 										</div>
                   </div>
                 </td>
                 <td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-										<div>
-					  					<p className='text-lg font-semibold'>First steps</p>
-										</div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("10Row")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -404,12 +424,12 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>10 in a row</p>
 										</div>
                   </div>
                 </td>
 								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("15Row")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -418,14 +438,28 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>15 in a row</p>
 										</div>
                   </div>
                 </td>
 							</tr>
 							<tr>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className={getAchievementCSS("20Row")}>
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>20 in a row</p>
+										</div>
+                  </div>
+                </td>
                 <td className="border-b border-gray-300  p-3 text-smw-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("Shut5")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -434,26 +468,12 @@ function Achievements() {
                       />
                     </div>
 					  				<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>Shut 5 times</p>
 										</div>
                   </div>
                 </td>
                 <td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-										<div>
-					  					<p className='text-lg font-semibold'>First steps</p>
-										</div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("Shut10")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -462,12 +482,12 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>Shut 10 times</p>
 										</div>
                   </div>
                 </td>
 								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("Shut15")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -476,14 +496,28 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>Shut 15 times</p>
 										</div>
                   </div>
                 </td>
 							</tr>
 							<tr>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className={getAchievementCSS("Shut20")}>
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>Shut 20 times</p>
+										</div>
+                  </div>
+                </td>
                 <td className="border-b border-gray-300  p-3 text-smw-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("Shut25")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -492,26 +526,12 @@ function Achievements() {
                       />
                     </div>
 					  				<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>Shut 25 times</p>
 										</div>
                   </div>
                 </td>
                 <td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-										<div>
-					  					<p className='text-lg font-semibold'>First steps</p>
-										</div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("25points")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -520,12 +540,12 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>25 points</p>
 										</div>
                   </div>
                 </td>
 								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("50points")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -534,14 +554,28 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>50 points</p>
 										</div>
                   </div>
                 </td>
 							</tr>
 							<tr>
+								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
+                  <div className={getAchievementCSS("100points")}>
+                    <div className="sm:table-cell">
+                      <img
+                        className="h-[25px] w-[25px]"
+                        src={Medal}
+                        alt=""
+                      />
+                    </div>
+										<div className='ml-1'>
+					  					<p className='text-lg font-semibold'>100 points</p>
+										</div>
+                  </div>
+                </td>
                 <td className="border-b border-gray-300  p-3 text-smw-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("250points")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -550,26 +584,12 @@ function Achievements() {
                       />
                     </div>
 					  				<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>250 points</p>
 										</div>
                   </div>
                 </td>
                 <td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
-                    <div className="sm:table-cell">
-                      <img
-                        className="h-[25px] w-[25px]"
-                        src={Medal}
-                        alt=""
-                      />
-                    </div>
-										<div>
-					  					<p className='text-lg font-semibold'>First steps</p>
-										</div>
-                  </div>
-                </td>
-								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("500points")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -578,12 +598,12 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>500 points</p>
 										</div>
                   </div>
                 </td>
 								<td className="border-b border-gray-300  p-3 text-sm w-1/4">
-                  <div className="flex items-center">
+                  <div className={getAchievementCSS("Diamond")}>
                     <div className="sm:table-cell">
                       <img
                         className="h-[25px] w-[25px]"
@@ -592,7 +612,7 @@ function Achievements() {
                       />
                     </div>
 										<div className='ml-1'>
-					  					<p className='text-lg font-semibold'>First steps</p>
+					  					<p className='text-lg font-semibold'>Diamond trophy</p>
 										</div>
                   </div>
                 </td>
@@ -605,23 +625,10 @@ function Achievements() {
 	);
 }
 
-// First steps : Welcome to the game
-// Uploaded a profile pic
-// Sent your first message in the Chat
-// First friend added to your friend list
-// First Match Won
-// Won 5/10/25/50/100 matches
-// Won 3/5/10/15/20 matches in a row
-// Shut out opponent 5/10/15/20/25 times
-// Scored 25/50/100/250/500 points
-// Customized the game
-// Won by opponent's withdrawal
-// All achievements obtained
-
 export default function Profile() {
   return (
-    <div className="mt-16 mb-10 flex h-screen min-h-screen flex-col lg:h-screen lg:flex-row">
-      <div className="mx-[5%] mt-8 h-5/6 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:mx-[5%] lg:m-10 lg:mx-[5%] lg:h-5/6 lg:w-[25%] sm:min-h-[1000px]">
+    <div className="mt-20 mb-10 flex flex-col lg:flex-row h-[1000px]">
+      <div className="h-[100%] mx-[5%] mt-8 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[25%] ">
         <div className="grid-rows-1">
           <img
             className="mx-auto mt-12 mb-5  h-40 w-40"
@@ -630,19 +637,33 @@ export default function Profile() {
           />
           <h1 className="text-center text-2xl font-bold">Username</h1>
           <h1 className="text-center">Rating</h1>
-					<h1 className="text-center"><span className="text-green-600">●</span> is online</h1>
+					<h1 className="text-center"><span className="text-green-600">●</span>Online</h1>
           <h1 className="text-center">Rating == wrong</h1>
           <h1 className="text-center">Rating == bad </h1>
         </div>
-        <FriendList />
+      
+			  <FriendList />
+
+				<div className='mx-auto flex max-w-fit align-bottom'>
+					<Popover>
+						<PopoverHandler>
+							<Button variant='gradient' className=" bg-pink-500 text-white font-bold ">Stats</Button>
+						</PopoverHandler>
+						<PopoverContent>
+							Wins: <br/>
+							Losses: <br/>
+							Points won:
+						</PopoverContent>
+					</Popover>
+				</div>
       </div>
 
-			<div className="lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] sm:mt-[6%]">
-	      <div className="bg-white/50 rounded-lg backdrop-blur-sm mb-[5%] min-h-[475px]">
+			<div className="lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] mt-[50px] ">
+	      <div className="bg-white/50 rounded-lg backdrop-blur-sm mb-[50px] min-h-[475px] ring-1 ring-slate-300">
 	        <MatchResult />
 	      </div>
 
-				<div className="bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 min-h-[475px]">
+				<div className="bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 h-[475px] overflow-x-hidden ring-1 ring-slate-300">
 	        <Achievements />
 	      </div>
 	    </div>
