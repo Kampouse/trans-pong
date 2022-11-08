@@ -1,3 +1,5 @@
+import Sidebar from "./Sidebar";
+
 export function TextBox(prop: { Text?: string }): JSX.Element {
   return (
     <div className="mt-2 flex w-full max-w-xs space-x-3">
@@ -13,7 +15,8 @@ export function TextBox(prop: { Text?: string }): JSX.Element {
     </div>
   );
 }
-export default function Chat(): JSX.Element {
+
+export default function Rooms(): JSX.Element {
   return (
     // add border to the chat box
     <div className="m-16 mt-24 mb-0 flex h-5/6 flex-col justify-center overflow-hidden">

@@ -8,7 +8,7 @@ import Login from "./Login";
 import Profile from "./Profile";
 import "./main.css";
 import Error404 from "./Error404";
-import Chat from "./Chat";
+import Chat from "./Chat/Chat";
 import { useState } from "react";
 
 export default function App() {

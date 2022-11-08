@@ -1,4 +1,4 @@
-import Chat from "./Chat";
+import Chat from "./Chat/Chat";
 import ReactiveCanvas from "./ReactiveCanvas";
 import { createRef, DetailedHTMLProps, HTMLAttributes } from "react";
 
