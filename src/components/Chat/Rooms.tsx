@@ -1,4 +1,7 @@
-import Sidebar from "./Sidebar";
+import { Send } from "@mui/icons-material";
+import { Avatar, IconButton } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import Sidebar from "./SidebarDetails";
 
 export function TextBox(prop: { Text?: string }): JSX.Element {
   return (
@@ -19,24 +22,8 @@ export function TextBox(prop: { Text?: string }): JSX.Element {
 export default function Rooms(): JSX.Element {
   return (
     // add border to the chat box
-    <div className="m-16 mt-24 mb-0 flex h-5/6 flex-col justify-center overflow-hidden">
-      <div className="flex h-1/2    grow flex-col   rounded-2xl   border border-slate-300    backdrop-blur-sm transition ease-in ">
-        <div className="flex">
-          <div className="flex w-full  flex-row-reverse rounded-t-lg bg-slate-300 p-2 text-white ring-1 ring-slate-300">
-            <button className="rounded-lg bg-slate-300  ">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="gray"
-              >
-                {" "}
-                <path d="M4 6h16M4 12h16M4 18h16" />{" "}
-              </svg>
-            </button>
-          </div>
-        </div>
+    <div className="flex w-[60%] flex-col justify-center overflow-hidden">
+      <div className="flex grow flex-col border border-slate-300">
         <div className="flex h-96 grow flex-col overflow-auto p-8">
           <TextBox Text="hello"></TextBox>
           <TextBox Text="hello"></TextBox>
@@ -72,12 +59,17 @@ export default function Rooms(): JSX.Element {
           <TextBox Text="hello"></TextBox>
           <TextBox></TextBox>
         </div>
-        <div className="w-full self-end rounded-b-lg   ring-1 ring-white">
+        <div className="w-full flex border-t-[1px] border-slate-300 bg-white">
           <input
             type="text"
-            className="  w-full rounded-b-lg border border-gray-300 bg-white px-4 py-2 text-base focus:outline-none"
+            className="w-full border border-gray-300 rounded-xl bg-white my-1 ml-1.5 px-4 py-2 text-base focus:outline-none"
             placeholder="Type something..."
           />
+					<div className="m-auto">
+						<IconButton className="-rotate-45">
+							<Send sx={{ color: grey[700] }}/>
+						</IconButton>
+					</div>
         </div>
       </div>
     </div>

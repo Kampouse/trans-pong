@@ -26,7 +26,7 @@ const generateOptions = () => {
 
 const SidebarDetails = () => {
 	return (
-		<div>
+		<div className='w-[20%] border-r-[1px] border-y-[1px] border-slate-300 max-h-[100%] overflow-y-scroll scrollbar-hide'>
 			<List>{generateOptions()}</List>
 		</div>
 	);

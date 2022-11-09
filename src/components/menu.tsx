@@ -16,7 +16,7 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
 export const Menu = (): React.ReactElement => {
   return (
     <>
-      <div className="overflow-y-auto overflow-x-hidden h-screen pt-[8%] scrollbar-hide">
+      <div className="overflow-y-auto overflow-x-hidden h-fit scrollbar-hide m-auto pt-[50px]">
         <div className="  flex  flex-wrap justify-center">
           <Contenter>
             <Link to="/Watch" className="h-full w-full">

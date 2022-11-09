@@ -6,7 +6,6 @@ export default function Watch() {
       <div className=" m-4 mt-8 flex  h-5/6 flex-col justify-center rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm  md:ml-4 lg:m-8  lg:mr-2 lg:w-screen ">
         <canvas />
       </div>
-      <Chat></Chat>
     </div>
   );
 }
