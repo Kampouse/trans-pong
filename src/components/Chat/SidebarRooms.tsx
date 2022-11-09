@@ -21,6 +21,10 @@ export interface SidebarRoomsProps {
 	rooms: ChatRoom[];
 }
 
+// export function switchChannel() {
+	
+// }
+
 const SidebarRooms = ({rooms}: SidebarRoomsProps) => {
 	const { userDetails } = useUser();
 	return (
@@ -28,7 +32,7 @@ const SidebarRooms = ({rooms}: SidebarRoomsProps) => {
 			{rooms.map((room: ChatRoom, i: number) => {
 				const userIndex = room.users.findIndex((roomUser: User) => roomUser.username === userDetails.username);
 				return (				
-					<div className="flex flex-row flex-nowrap align-center py-1.5 pl-4 my-auto">
+					<div className="flex flex-row flex-nowrap align-center py-1.5 pl-4 my-auto" onClick={ () => {} }>
 						{userIndex >= 0 && (
 							<React.Fragment>
 								<Avatar sx={{ backgroundColor: blue[700] }}><Group /></Avatar>

@@ -10,7 +10,7 @@ const Chat = () => {
 	const [openNewChat, setOpenNewChat] = useState(false);
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [rooms, setRooms] = useState([] as ChatRoom[]);
-	const [roomCode, setRoomCode] = useState('ABCDE');
+	const [roomCode, setRoomCode] = useState('');
 	const snackbarMsg = useRef('');
 	
 	var player1: User = {username: 'gasselin', id: 'IOEHNJ323', firstname: 'Gabriel', lastname: 'Asselin'};
@@ -27,7 +27,8 @@ const Chat = () => {
 
 	useEffect(() => {
 		setRooms([{ code: 'OEFB23', users: [player1, player2], owner: player1, admins: [player1], status: 'public' },
-							{ code: 'IOEHFIK32', users: [player1, player4], owner: player4, admins: [player4], status: 'public' }])
+							{ code: 'IOEHFIK32', users: [player1, player4], owner: player4, admins: [player4], status: 'public' }]);
+		setRoomCode('OEFB23');
 	}, [])
 
 	return (
@@ -36,7 +37,7 @@ const Chat = () => {
 			{roomCode ? (
 				<React.Fragment>
 					<Rooms />
-					<SidebarDetails />
+					<SidebarDetails rooms={rooms} roomCode={roomCode} />
 				</React.Fragment>
 			) : (
 				<div>

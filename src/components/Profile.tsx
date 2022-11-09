@@ -811,7 +811,7 @@ function Achievements() {
 
 export default function Profile() {
   return (
-    <div className="m-auto pt-[100px] lg:pt-[50px] flex flex-col lg:flex-row h-[1100px] lg:h-[1050px]">
+    <div className="m-auto pt-[50px] flex flex-col lg:flex-row h-[1100px] lg:h-[1050px] w-full">
       <div className="h-[100%] mx-[5%] rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm lg:w-[25%] ">
         <div className="grid-rows-1">
           <img
