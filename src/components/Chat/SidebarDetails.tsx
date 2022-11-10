@@ -1,23 +1,19 @@
-import { Avatar, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText } from '@mui/material';
-import { Group, GroupAdd, Person, PersonAdd, Delete, Image, MeetingRoom } from '@mui/icons-material'
+import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText } from '@mui/material';
+import { Group, GroupAdd, Person, PersonAdd, Delete, Image, MeetingRoom, Lock } from '@mui/icons-material'
 import { blue } from '@mui/material/colors';
 import React from 'react';
 import { ChatRoom, User } from 'components/types';
 
 export interface SidebarDetailsProps {
-	rooms: ChatRoom[];
-	roomCode: string;
+	roomDetails: ChatRoom;
 }
 
 const generateOptions = () => {
 	const ROOM_OPTIONS = [
-		{ label: 'Channel Icon', icon: <Group /> },
-		{ label: 'Add Channel', icon: <GroupAdd /> },
+		{ label: 'Change Channel Image', icon: <Image /> },
 		{ label: 'Quit Channel', icon: <MeetingRoom /> },
-		{ label: 'Change Channel Icon', icon: <Image /> },
-		{ label: 'User Icon', icon: <Person /> },
-		{ label: 'Add User', icon: <PersonAdd /> },
-		{ label: 'Delete Channel', icon: <Delete /> }
+		{ label: 'Delete Channel', icon: <Delete /> },
+		{ label: 'Password Settings', icon: <Lock /> }
 	];
 	
 	return ROOM_OPTIONS.map(({label, icon}, i) => {
@@ -30,23 +26,19 @@ const generateOptions = () => {
 	});
 }
 
-const ListUsers = ({rooms, roomCode}: SidebarDetailsProps) => {
-	console.log(rooms.length);
-	rooms.forEach((currRoom: ChatRoom) => console.log(currRoom.code));
-	const currentRoom = rooms.find((roomUser: ChatRoom) => {roomUser.code === roomCode});
-	console.log(currentRoom);
-
+const ListUsers = ({roomDetails}: SidebarDetailsProps) => {
 	return (
-		<div>
-			{ currentRoom !== undefined &&
-				currentRoom.users.map((currentUser: User) => {
-					return (
-					<React.Fragment>
-						<Avatar sx={{ backgroundColor: blue[700] }}><Person /></Avatar>
-						<div className="align-center my-auto pl-2">
-							<p className="font-bold">{currentUser.username}</p>
-						</div>
-					</React.Fragment>
+		<div className="w-full max-h-[100%] overflow-y-scroll scrollbar-hide">
+			{ roomDetails.users.map((currentUser: User) => {
+				return (
+					<div className="flex flex-row flex-nowrap align-center py-1.5 pl-4 my-auto  cursor-pointer hover:bg-pink-300" onClick={ () => {} } >
+						<React.Fragment key={currentUser.username}>
+							<Avatar sx={{ backgroundColor: blue[700] }}><Person /></Avatar>
+							<div className="align-center my-auto pl-2">
+								<p className="font-bold">{currentUser.username}</p>
+							</div>
+						</React.Fragment>
+					</div>
 					)
 				})
 			}
@@ -54,15 +46,29 @@ const ListUsers = ({rooms, roomCode}: SidebarDetailsProps) => {
 	);
 }
 
-const SidebarDetails = ({rooms, roomCode}: SidebarDetailsProps) => {
+const SidebarDetails = ({roomDetails}: SidebarDetailsProps) => {
 	return (
-		<div className='w-[20%] border-r-[1px] border-y-[1px] border-slate-300 max-h-[100%] overflow-y-scroll scrollbar-hide'>
-			<div className='h-[60%] overflow-y-scroll scrollbar-hide'>
+		<div className='lg:w-[20%] border-r-[1px] border-y-[1px] border-slate-300 max-h-[100%] overflow-y-scroll scrollbar-hide'>
+			<div className="h-[30%] mt-2 flex w-full max-w-xs space-x-3">
+	      <div className="flex flex-col justify-center m-auto">
+					<Avatar className='w-full m-auto' sx={{ width: [75, 100, 125], height: [75, 100, 125] }}>
+						{ !roomDetails.image ? (<Group />) : (<img src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" />) }
+					</Avatar>
+					<p className='flex text-xl font-bold justify-center'>{ roomDetails.code }</p>
+	      </div>
+			</div>
+			<div className='h-[30%] overflow-y-scroll scrollbar-hide'>
 				<List>{generateOptions()}</List>
 			</div>
-			<div className='h-[40%] overflow-y-scroll scrollbar-hide'>
-				<div className="flex flex-row flex-nowrap align-center py-1.5 pl-4 my-auto" onClick={ () => {} }>
-					<ListUsers rooms={rooms} roomCode={roomCode} />
+			<div className='h-fit flex pl-4'>
+				<p className='text-xl font-bold flex'>Members</p>
+				<div className="align-middle pl-2">
+					<IconButton sx={{ height: 25, width: 25}} onClick={() => {}}><PersonAdd /></IconButton>
+				</div>
+			</div>
+			<div className='h-[35%] overflow-y-scroll scrollbar-hide'>
+				<div className="flex py-1.5 pl-2 my-auto">
+					<ListUsers roomDetails={roomDetails} />
 				</div>
 			</div>
 		</div>

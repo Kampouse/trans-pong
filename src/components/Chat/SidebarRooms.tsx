@@ -19,20 +19,22 @@ export const useUser = () => useContext(UserContext);
 
 export interface SidebarRoomsProps {
 	rooms: ChatRoom[];
+	setRoomCode: React.Dispatch<React.SetStateAction<string>>;
+	// roomCode: React.MutableRefObject<string | null>;
 }
 
 // export function switchChannel() {
 	
 // }
 
-const SidebarRooms = ({rooms}: SidebarRoomsProps) => {
+const SidebarRooms = ({rooms, setRoomCode}: SidebarRoomsProps) => {
 	const { userDetails } = useUser();
 	return (
-		<div className="w-[20%] max-h-[100%] overflow-y-scroll scrollbar-hide border-l-[1px] border-y-[1px] border-slate-300">
+		<div className="w-[50%] lg:w-[20%] max-h-[100%] overflow-y-scroll scrollbar-hide border-l-[1px] border-y-[1px] border-slate-300">
 			{rooms.map((room: ChatRoom, i: number) => {
 				const userIndex = room.users.findIndex((roomUser: User) => roomUser.username === userDetails.username);
 				return (				
-					<div className="flex flex-row flex-nowrap align-center py-1.5 pl-4 my-auto" onClick={ () => {} }>
+					<div className="flex flex-row flex-nowrap align-center py-1.5 pl-4 my-auto cursor-pointer hover:bg-pink-300" onClick={(evt) => {setRoomCode(evt.currentTarget.children[1]!.firstChild!.textContent!)} }  key={room.code}>
 						{userIndex >= 0 && (
 							<React.Fragment>
 								<Avatar sx={{ backgroundColor: blue[700] }}><Group /></Avatar>

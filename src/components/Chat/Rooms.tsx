@@ -22,8 +22,8 @@ export function TextBox(prop: { Text?: string }): JSX.Element {
 export default function Rooms(): JSX.Element {
   return (
     // add border to the chat box
-    <div className="flex w-[60%] flex-col justify-center overflow-hidden">
-      <div className="flex grow flex-col border border-slate-300">
+    <div className="flex w-[50%] lg:w-[60%] flex-col justify-center overflow-hidden">
+      <div className="flex grow flex-col border border-slate-300 backdrop-blur-sm transition ease-in">
         <div className="flex h-96 grow flex-col overflow-auto p-8">
           <TextBox Text="hello"></TextBox>
           <TextBox Text="hello"></TextBox>
