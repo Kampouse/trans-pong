@@ -1,4 +1,4 @@
-import Chat from "./Chat";
+import Chat from "./Chat/Chat";
 import ReactiveCanvas from "./ReactiveCanvas";
 import { createRef, DetailedHTMLProps, HTMLAttributes } from "react";
 
@@ -47,8 +47,8 @@ function Prev() {
 
 export function GameWatch() {
   return (
-    <div className=" mt-12 flex h-screen min-h-screen flex-col   justify-center  md:flex-col lg:ml-4 lg:h-screen lg:flex-row ">
-      <div className=" m-4 mt-8 flex  h-5/6 flex-col justify-center rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm  md:ml-4 lg:m-8  lg:mr-2 lg:w-screen ">
+    <div className=" w-[90%] pt-[50px] m-auto flex h-5/6 justify-center lg:flex-row ">
+      <div className=" flex  h-full flex-col justify-center rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm w-full ">
         <button className="absolute rounded-lg ">
           {" "}
           <Prev />{" "}
@@ -60,7 +60,6 @@ export function GameWatch() {
 
         <canvas />
       </div>
-      <Chat></Chat>
     </div>
   );
 }

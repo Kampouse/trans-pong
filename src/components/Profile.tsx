@@ -811,8 +811,8 @@ function Achievements() {
 
 export default function Profile() {
   return (
-    <div className="mt-20 mb-10 flex flex-col lg:flex-row h-[1000px]">
-      <div className="h-[100%] mx-[5%] mt-8 rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[25%] ">
+    <div className="m-auto pt-[50px] flex flex-col lg:flex-row h-[1100px] lg:h-[1050px] w-full">
+      <div className="h-[100%] mx-[5%] rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm lg:w-[25%] ">
         <div className="grid-rows-1">
           <img
             className="mx-auto mt-12 mb-5  h-40 w-40"
@@ -842,7 +842,7 @@ export default function Profile() {
 				</div>
       </div>
 
-			<div className="lg:ml-0 mx-[5%] mt-8 md:mx-[5%] lg:m-10 lg:mx-[5%] lg:w-[60%] mt-[50px] ">
+			<div className="lg:ml-0 mx-[5%] lg:w-[60%] pt-[50px] lg:pt-0">
 	      <div className="bg-white/50 rounded-lg backdrop-blur-sm mb-[50px] h-[475px] ring-1 ring-slate-300">
 	        <MatchResult />
 	      </div>

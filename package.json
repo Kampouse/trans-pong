@@ -22,7 +22,11 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@material-tailwind/react": "^1.2.4",
+    "@mui/icons-material": "^5.10.9",
+    "@mui/material": "^5.10.13",
     "@types/react-router": "^5.1.18",
     "i": "^0.3.7",
     "jotai": "^1.9.1",

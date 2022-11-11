@@ -68,8 +68,7 @@ const login = async () => {
 	}, []);
 
   return (
-		<>
-		<div className="flex h-screen w-screen">
+		<div className="flex h-fit w-screen m-auto pb-[50px]">
 			<div className="m-auto" >
 					<h1 className="font-kaushan xl:text-[250px] lg:text-[200px] md:text-[150px] sm:text-[100px] text-[75px] text-white ">trans-pong</h1>
 					<button onClick={  (event) => buttonHandler(loginOffline, event) } className="font-carattere bg-pink-500 text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl text-lg font-bold py-2 px-4 rounded mr-2 mb-2 relative ml-[50%] translate-x-[-50%]" >Login</button>
@@ -77,6 +76,5 @@ const login = async () => {
 						onClick={(event) => buttonHandler(check, event) } type="submit"  >Login </button>
 			</div>
 		</div>
-		</>
   );
 }
