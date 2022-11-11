@@ -21,9 +21,9 @@ declare global {
   }
 };
 
-export const prisma = global.prisma || new PrismaClient({ log: ['info'] });
+ export const prisma = global.prisma || new PrismaClient({ log: ['info'] });
 async function bootstrap() {
-  startPrisma();  
+ // startPrisma();  
   const app = await NestFactory.create(AppModule);
    app.enableCors({
     origin: 'http://localhost:5173',

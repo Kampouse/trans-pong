@@ -4,6 +4,8 @@ import { request } from 'http';
 import { AuthService } from './auth.service';
 import { FortyTwoStrategy } from './utils/42strategy';
 import { GoogleAuthGuard,FortyTwoAuthGuard, LoginGuard } from './utils/Guards';
+import { UpdateAuthDto } from './dto/update-auth.dto'
+import { CreateAuthDto } from './dto/create-auth.dto'
 type  User =  {
     id: string;
     username: string;
