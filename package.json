@@ -14,7 +14,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "start": "vite & cd backend; npm run start",
+    "start": "vite & cd backend; npm run start:dev",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "jest",
