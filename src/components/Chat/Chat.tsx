@@ -1,11 +1,23 @@
 import { User, ChatRoom } from "../types";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, createContext, useContext } from "react";
 import NewRoom from "./NewRoom";
 import { GeneralSnackbar } from "./Snackbar";
 import SidebarRooms from "./SidebarRooms";
 import SidebarDetails from "./SidebarDetails";
 import Rooms from "./Rooms";
 import { generateSerial } from "utils";
+
+export type UserContextType = {
+	userDetails: User;
+	setUserDetails: (userDetails: User) => void;
+}
+
+export const UserContext = createContext<UserContextType>({
+	userDetails: {username: 'gasselin', id: 'IOEHNJ323', firstname: 'Gabriel', lastname: 'Asselin'},
+	setUserDetails: () => {}
+});
+
+export const useUser = () => useContext(UserContext);
 
 const Chat = () => {
 	const [openNewChat, setOpenNewChat] = useState(false);
@@ -34,13 +46,13 @@ const Chat = () => {
 	}
 
 	useEffect(() => {
-		setRooms([{ code: generateSerial(), users: [player1, player2, player3, player4, player5, player6, player7], owner: player1, admins: [player1], status: 'public' },
-							{ code: generateSerial(), users: [player1, player4], owner: player4, admins: [player4], status: 'public' }]);
+		setRooms([{ code: generateSerial(), users: [player1, player2, player3, player4, player5, player6, player7], owner: player1, admins: [player1, player2], status: 'public' },
+							{ code: generateSerial(), users: [player1, player4], owner: player4, admins: [player4], status: 'private' }]);
 	}, [])
 
 	return (
-		<div className="m-auto flex h-4/6 w-[90%] rounded-2xl">
-			<SidebarRooms rooms={rooms} setRoomCode={setRoomCode} />
+		<div className="m-auto flex h-4/6 w-[90%] max-w-[1500px] rounded-2xl">
+			<SidebarRooms rooms={rooms} setRoomCode={setRoomCode} setOpenNewChat={setOpenNewChat} />
 			{roomCode ? (
 				<React.Fragment>
 					<Rooms />
