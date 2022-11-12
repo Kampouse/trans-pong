@@ -8,19 +8,30 @@ export class AuthService {
   async create(createUserDto: CreateAuthDto) {
     const data = {
       username: createUserDto.username,
+      displayName: createUserDto.displayName,
+      Profile: {
+        connect: { username : createUserDto.username}, 
+      },
     };
-    console.log(data);
-    const output = await prisma.user.create({ data: data });
+    const data2 = {
+      username: createUserDto.username,
+      user: {
+        connect: { username : createUserDto.username}, 
+      },
+    };
+    const output = await prisma.user.create({ data: data});
+    const output2 = await prisma.profile.create({data : data2});
+
+
+
     if (output != null) {
       console.log('user created');
       return output;
     } else {
       console.log('not created');
-
       return null;
     }
   }
-
   async findAll() {
     const output = await prisma.user.findMany();
     return output;
@@ -31,7 +42,6 @@ export class AuthService {
     const data = await prisma.user.findUnique({
       where: { username: username },
     });
-    console.log(data);
     return data;
   }
 
