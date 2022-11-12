@@ -1,19 +1,18 @@
 import { Redirect, Body } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {PrismaClient } from '@prisma/client';
-import * as  session from 'express-session';
+import { PrismaClient } from '@prisma/client';
+import * as session from 'express-session';
 import { env } from 'process';
-import {cors} from 'cors';
- 
+import { cors } from 'cors';
+
 declare global {
   var prisma: PrismaClient | undefined;
 }
- const startPrisma = async () => {
+const startPrisma = async () => {
   try {
-      await prisma.$connect();
-  }
-  catch (e) {
+    await prisma.$connect();
+  } catch (e) {
     console.error(e);
     process.exit(1);
   } finally {
@@ -21,25 +20,34 @@ declare global {
   }
 };
 
- export const prisma = global.prisma || new PrismaClient({ log: ['info'] });
+export const prisma = global.prisma || new PrismaClient({ log: ['info'] });
 async function bootstrap() {
- startPrisma();  
+  startPrisma();
   const app = await NestFactory.create(AppModule);
-   app.enableCors({
+  app.enableCors({
     origin: 'http://localhost:5173',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization' ,'Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods', 'Access-Control-Allow-Credentials'],
-   });
-  app.use(session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-    },
-  }))  ;
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Access-Control-Allow-Origin',
+      'Access-Control-Allow-Headers',
+      'Access-Control-Allow-Methods',
+      'Access-Control-Allow-Credentials',
+    ],
+  });
+  app.use(
+    session({
+      secret: 'secret',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        secure: false,
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      },
+    }),
+  );
   await app.listen(3000);
 }
 bootstrap();
