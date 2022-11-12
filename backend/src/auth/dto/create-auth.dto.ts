@@ -1,7 +1,7 @@
 export class CreateAuthDto {
 
 
- email: string;
+	email: string;
     username: string ;
     displayName: string;
     constructor(partial: Partial<CreateAuthDto>) {

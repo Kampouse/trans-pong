@@ -46,7 +46,16 @@ handleLogin(@Req() request : Request , @Headers () headers:Headers) {
 @Redirect()
 handleLogin42(@Req()  request:RequestWithUser,@Res({ passthrough: true }) response: Response,@Session() session: any ,@Headers() head: Headers)  {  
     if(request.user){
-      const url = "http://localhost:5173/Profile"  ; 
+      const url = "http://localhost:5173/"  ; 
+	  this.authService.exists(request.user.displayName).then( (data)=> {  
+		if (data.length == 0)
+		{
+			console.log("user does not exist", data);
+			this.authService.create(request.user)
+		}
+})
+  //how to check if object is empty
+    
     const rawHeaders = response.headers;
       return {statCode: 302, url: url, message: 'Login42' };
     }

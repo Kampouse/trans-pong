@@ -1,20 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-
+import {prisma} from '../main'
 @Injectable()
 export class AuthService {
  
   create(createUserDto: CreateAuthDto) {
       let data = {
           email: createUserDto.email,
+		  displayName: createUserDto.displayName,
           username: createUserDto.username,
       };
         let output = prisma.user.create({ data: data });
           if(output != null){
+			  console.log("user created");
             return output;
           }
           else{
+
+			  console.log("not created");
+			
             return null
           }
   }
@@ -24,21 +29,19 @@ export class AuthService {
         return output;
   
   }
-  /*
-  exists(email: string, username: string) {
+  
+  exists( username: string) {
     let output = prisma.user.findMany({
         where: {
-            email: email,
             username: username,
         },
         select: {
             id: true,
         },
     });
-    // return true or false if the user exists 
     return output
   }
-   */
+   
   
 
   findOne(id: number) {
