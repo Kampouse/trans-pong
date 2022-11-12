@@ -9,42 +9,58 @@ export class AuthService {
     const data = {
       username: createUserDto.username,
       displayName: createUserDto.displayName,
-      Profile: {
-        connect: { username : createUserDto.username}, 
-      },
     };
-    const data2 = {
-      username: createUserDto.username,
-      user: {
-        connect: { username : createUserDto.username}, 
-      },
+	const user = await prisma.user.create({ data: {} });
+	const stats = await prisma.stats.create({ data: {} });
+	const profile = await prisma.profile.create({ data: {
+		username: createUserDto.username,
+		displayName: createUserDto.displayName,
+		stats: { connect: { id: stats.id } },
+		userId : user.id
+		} });
+		 	return profile;
+		}
+		
+    //const user = await prisma.user.create({ data: data});
+	//const ranking = await prisma.ranking.create({ data: { userId: user.id }});
+	 
+/*
+    const profile_data= {
+		 	  userId: user.id,
+			username: createUserDto.username,
+			ranking : ranking.id,
+			
     };
-    const output = await prisma.user.create({ data: data});
-    const output2 = await prisma.profile.create({data : data2});
-
-
-
-    if (output != null) {
+	*/
+/*
+const profile = await prisma.profile.create({ data: { userId: user.id, username: createUserDto.username}});
+  
+    if (user != null) {
       console.log('user created');
-      return output;
+      return user;
     } else {
       console.log('not created');
       return null;
     }
   }
+  */
+/*
   async findAll() {
     const output = await prisma.user.findMany();
     return output;
   }
+*/
 
   async exists(username: string) {
     console.log(username);
-    const data = await prisma.user.findUnique({
+    const data = await prisma.profile.findUnique({
       where: { username: username },
     });
     return data;
   }
 
+
+/*
   findOne(id: number) {
     return `This action returns a #${id} user`;
   }
@@ -52,4 +68,5 @@ export class AuthService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+  */
 }
