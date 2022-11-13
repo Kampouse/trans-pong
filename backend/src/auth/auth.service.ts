@@ -12,45 +12,19 @@ export class AuthService {
     };
 	const user = await prisma.user.create({ data: {} });
 	const stats = await prisma.stats.create({ data: {} });
+	const ranking = await prisma.ranking.create({ data: {} });
+	// to add anything else to the profile, add it here
+    //specify  by id of the elemement you want to add it to
+
 	const profile = await prisma.profile.create({ data: {
 		username: createUserDto.username,
 		displayName: createUserDto.displayName,
-		stats: { connect: { id: stats.id } },
-		userId : user.id
+		userId : user.id,
+		statsId : stats.id,
+		rankingId : ranking.id
 		} });
-		 	return profile;
-		}
-		
-    //const user = await prisma.user.create({ data: data});
-	//const ranking = await prisma.ranking.create({ data: { userId: user.id }});
-	 
-/*
-    const profile_data= {
-		 	  userId: user.id,
-			username: createUserDto.username,
-			ranking : ranking.id,
-			
-    };
-	*/
-/*
-const profile = await prisma.profile.create({ data: { userId: user.id, username: createUserDto.username}});
-  
-    if (user != null) {
-      console.log('user created');
-      return user;
-    } else {
-      console.log('not created');
-      return null;
-    }
-  }
-  */
-/*
-  async findAll() {
-    const output = await prisma.user.findMany();
-    return output;
-  }
-*/
-
+			return profile;
+	}
   async exists(username: string) {
     console.log(username);
     const data = await prisma.profile.findUnique({
