@@ -1,3 +1,4 @@
+import { prisma } from './../main';
 import {
   Controller,
   Get,
@@ -32,6 +33,28 @@ type RequestWithUser = Request & { user: User; response: any } & {
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('who')
+  @UseGuards(LoginGuard)
+  who(@Req() request: Request, @Headers() headers: Headers) {
+    const sessionStore = request['sessionStore'];
+    const type: SessionUser = sessionStore['sessions'];
+    const groups = { ...type };
+    const first = Object.values(groups)[0];
+    if (first !== undefined) {
+      const parsed = JSON.parse(first);
+      const expire = parsed['cookie']['expires'];
+      const passport = parsed['passport'];
+      const user = passport['user']['username'];
+      if (expire < Date.now()) {
+        return {};
+      } else {
+        const data = this.authService.findOne(user);
+        return data;
+      }
+    }
+  }
+
   @Get('verify')
   handleLogin(@Req() request: Request, @Headers() headers: Headers) {
     const sessionStore = request['sessionStore'];
@@ -61,7 +84,7 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     if (request.user) {
-      const url = 'http://localhost:5173/';
+      const url = 'http://localhost:5173/Who';
       this.authService.exists(request.user.username).then((data) => {
         if (data == null) {
           this.authService.create(request.user);
