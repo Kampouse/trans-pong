@@ -1,9 +1,8 @@
 import { AuthGuard, PassportSerializer } from '@nestjs/passport';
 import { ExecutionContext, Injectable } from '@nestjs/common';
-
+import { JwtService } from '@nestjs/jwt';
 type SessionUser = { [key: string]: any };
 @Injectable()
-// create athGuard class with 42  api strategy
 export class FortyTwoAuthGuard extends AuthGuard('42') {
   async canActivate(context: ExecutionContext) {
     const activate = (await super.canActivate(context)) as boolean;

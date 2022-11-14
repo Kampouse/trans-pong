@@ -2,10 +2,13 @@ import { Console } from 'console';
 import { Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { JwtService } from '@nestjs/jwt';
 import { prisma } from '../main';
 @Injectable()
 export class AuthService {
+  constructor(private jwtService: JwtService) {}
   async create(createUserDto: CreateAuthDto) {
+    this.jwtService.sign({ username: createUserDto.username });
     const data = {
       username: createUserDto.username,
       displayName: createUserDto.displayName,
