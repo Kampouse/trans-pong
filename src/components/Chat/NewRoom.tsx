@@ -1,12 +1,13 @@
 import { Button, ButtonGroup, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { ChatRoom } from "components/types";
 import React, { useEffect, useState } from "react";
+import { generateSerial } from "utils";
+import { getUserDetails } from "./Chat";
 
 export interface NewRoomProps {
 	open: boolean;
 	onClose: (value: null | ChatRoom) => void;
 }
-
 
 function NewRoom({ open, onClose }: NewRoomProps) {
 	const [ isNew, setIsNew ] = useState(true);
@@ -68,7 +69,9 @@ function NewRoom({ open, onClose }: NewRoomProps) {
 					)}
 
 					<div className="m-auto w-fit">
-						<Button disabled={!passwordMatch} sx={[{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white' }]}>
+						<Button disabled={!passwordMatch} sx={[{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white' }]}
+										onClick={() => handleClose({ code: generateSerial(), users: [getUserDetails()], owner: getUserDetails(), admins: [getUserDetails()], status: status, password: password})}
+						>
 							Proceed
 						</Button>
 					</div>

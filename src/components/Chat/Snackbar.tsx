@@ -1,9 +1,10 @@
 import { Close } from "@mui/icons-material";
-import { IconButton, Snackbar } from "@mui/material";
+import { Alert, AlertColor, IconButton, Snackbar } from "@mui/material";
 
 export interface SnackbarProps {
 	message: string;
 	open: boolean;
+	severity: AlertColor | undefined;
 	onClose: () => void;
 }
 
@@ -12,21 +13,12 @@ export function AchievementSnackbar() {
 
 }
 
-export function GeneralSnackbar({ message, open, onClose }: SnackbarProps) {
+export function GeneralSnackbar({ message, open, severity, onClose }: SnackbarProps) {
 	return (
-		<div>
-			<Snackbar 
-				anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
-				open={open}
-				autoHideDuration={5000}
-				onClose={onClose}
-				message={message}
-				action={
-					<IconButton size="small" onClick={onClose}>
-						<Close fontSize="small" />
-					</IconButton>
-				}
-			/>
-		</div>
+		<Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
+			<Alert variant="filled" onClose={onClose} severity={severity} sx={[{ width: '100%', color: 'white', fontWeight: 'bold' }]}>
+				{message}
+			</Alert>
+		</Snackbar>
 	);
 }

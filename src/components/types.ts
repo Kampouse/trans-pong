@@ -11,6 +11,6 @@ export interface ChatRoom {
 	owner: User;
 	admins: Array<User>;
 	status: string; // public, private or password protected
-	password?: string;
-	image?: HTMLImageElement | null;
+	password: string;
+	// image?: HTMLImageElement | null;
 }
