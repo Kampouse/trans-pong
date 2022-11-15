@@ -7,12 +7,12 @@ import { getUserDetails } from "./Chat";
 
 export function TextBox({ currentMsg }: { currentMsg: Messages }): JSX.Element {
   return (
-    <div className="mt-2 flex w-full space-x-3">
+    <div className="mt-2 flex w-full">
       <div className="flex flex-col justify-center w-[75px]">
-        <div className="w-fit mx-auto"><Avatar sx={{ weight: 40, height: 40 }}><Person /></Avatar></div>
-        <div><p className="w-full text-center text-sm text-gray-800">{ currentMsg.user.username }</p></div>
+        <div className="w-[40px] mx-auto"><Avatar sx={{ weight: 40, height: 40 }}><Person /></Avatar></div>
+        <div><p className="w-[75px] text-center text-sm text-gray-800">{ currentMsg.user.username }</p></div>
       </div>
-      <div className="p-2 max-w-[250px]">
+      <div className="p-2">
         <div className="flex flex-wrap break-all rounded-r-lg rounded-bl-lg bg-gray-300 p-3 w-full">
           <p className="text-sm">{ currentMsg.message }</p>
         </div>
@@ -50,27 +50,29 @@ export default function Rooms({ roomDetails }: { roomDetails: ChatRoom }): JSX.E
 
   return (
     // add border to the chat box
-    <div className="flex w-[60%] flex-col justify-center overflow-hidden border-y-[1px] border-slate-300">
+    <div className="flex w-[60%] flex-col justify-center overflow-hidden border border-slate-300">
       <div className="flex grow flex-col backdrop-blur-sm transition ease-in">
-        <div className="flex h-96 grow flex-col overflow-auto p-8">
+        <div className="flex grow flex-col overflow-auto p-8">
 					<ListMessage roomDetails={roomDetails} userDetails={userDetails} />
         </div>
-					<form onSubmit={sendMessage}>
-        <div className="w-full flex border-t-[1px] border-slate-300 bg-white">
-          <input
-            type="text"
-            className="w-full border border-gray-300 rounded-xl bg-white my-1 ml-1.5 px-4 py-2 text-base focus:outline-none"
-            placeholder="Type something..."
-						onChange={(e) => {setMsg(e.target.value)}}
-						value={msg}
-          />
-					<div className="m-auto">
-						<IconButton className="-rotate-45" onClick={sendMessage}>
-							<Send sx={{ color: grey[700] }}/>
-						</IconButton>
-					</div>
-        </div>
+				<div className="min-h-[51px]">
+					<form onSubmit={sendMessage} >
+		        <div className="w-full flex border-t-[1px] border-slate-300 bg-white">
+		          <input
+		            type="text"
+		            className="w-full border border-gray-300 rounded-xl bg-white my-1 ml-1.5 px-4 py-2 text-base focus:outline-none"
+		            placeholder="Type something..."
+								onChange={(e) => {setMsg(e.target.value)}}
+								value={msg}
+		          />
+							<div className="m-auto">
+								<IconButton className="-rotate-45" onClick={sendMessage}>
+									<Send sx={{ color: grey[700] }}/>
+								</IconButton>
+							</div>
+						</div>
 					</form>
+				</div>
       </div>
     </div>
   );

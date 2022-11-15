@@ -58,7 +58,7 @@ const ListUsers = ({roomDetails}: SidebarDetailsProps) => {
 const SidebarDetails = ({roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel, setOpenAddUser}: SidebarDetailsProps) => {
 	const  userDetails: User = getUserDetails();
 	return (
-		<div className='lg:w-[20%] border-r-[1px] border-y-[1px] border-slate-300 max-h-[100%] overflow-y-scroll scrollbar-hide'>
+		<div className='w-[20%] border-r-[1px] border-y-[1px] border-slate-300 max-h-[100%] overflow-y-scroll scrollbar-hide'>
 			<div className="h-[30%] mt-2 flex w-full max-w-xs space-x-3">
 	      <div className="flex flex-col justify-center m-auto">
 					<Avatar className='w-full m-auto' sx={{ width: [75, 100, 125], height: [75, 100, 125] }}>

@@ -164,7 +164,7 @@ const Chat = () => {
 				</React.Fragment>
 			) : (
 				<div className="border border-slate-300 w-[80%] h-full flex m-auto flex-col justify-center">
-					<p className='flex text-4xl font-bold justify-center align-middle'>
+					<p className='flex text-4xl font-bold justify-center align-middle text-center'>
 						{rooms.length > 0 ? 'Click a room to start chatting!' : 'Create or Join a room start chatting!'}
 					</p>
 				</div>
