@@ -24,7 +24,7 @@ import { AlertColor } from "@mui/material";
 
 // export const useUser = () => useContext(UserContext);
 
-var userDetails: User = {username: 'gasselin', id: 'IOEHNJ323', firstname: 'Gabriel', lastname: 'Asselin'};
+var userDetails: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], firstname: 'Gabriel', lastname: 'Asselin'};
 export const getUserDetails = () => { return userDetails; }
 
 const Chat = () => {
@@ -42,14 +42,14 @@ const Chat = () => {
 	const snackbarBG = useRef('');
 	const snackbarSeverity = useRef<AlertColor | undefined>('success');
 	
-	var player1: User = {username: 'gasselin', id: 'IOEHNJ323', firstname: 'Gabriel', lastname: 'Asselin'};
-	var player2: User = {username: 'jbadia', id: 'OIWJKDJKR23', firstname: 'Justine', lastname: 'Badia'};
-	var player3: User = {username: 'gcollet', id: 'FIKJM32', firstname: 'Gab', lastname: 'Collet'};
-	var player4: User = {username: 'mmondell', id: 'UIDJKJ21', firstname: 'Maxime', lastname: 'Mondello'};
-	var player5: User = {username: 'aguay', id: 'OIEK121', firstname: 'Anthony', lastname: 'Guay'};
-	var player6: User = {username: 'olabrecq', id: 'DWAOIIK24R2', firstname: 'Olivier', lastname: 'Labrecque Lacasse'};
-	var player7: User = {username: 'mleblanc', id: 'HIUWADKL32331', firstname: 'Michael', lastname: 'Leblanc'};
-	var player8: User = {username: 'tberube', id: 'OAISJIK23', firstname: 'Thomas', lastname: 'Bérubé'};
+	var player1: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], firstname: 'Gabriel', lastname: 'Asselin'};
+	var player2: User = {username: 'jbadia', id: 'OIWJKDJKR23', blockedUsers: [], firstname: 'Justine', lastname: 'Badia'};
+	var player3: User = {username: 'gcollet', id: 'FIKJM32', blockedUsers: [], firstname: 'Gab', lastname: 'Collet'};
+	var player4: User = {username: 'mmondell', id: 'UIDJKJ21', blockedUsers: [], firstname: 'Maxime', lastname: 'Mondello'};
+	var player5: User = {username: 'aguay', id: 'OIEK121', blockedUsers: [], firstname: 'Anthony', lastname: 'Guay'};
+	var player6: User = {username: 'olabrecq', id: 'DWAOIIK24R2', blockedUsers: [], firstname: 'Olivier', lastname: 'Labrecque Lacasse'};
+	var player7: User = {username: 'mleblanc', id: 'HIUWADKL32331', blockedUsers: [], firstname: 'Michael', lastname: 'Leblanc'};
+	var player8: User = {username: 'tberube', id: 'OAISJIK23', blockedUsers: [], firstname: 'Thomas', lastname: 'Bérubé'};
 
 	const handleNewRoomClose = (room: ChatRoom | null) => {
 		if (room) {
@@ -143,8 +143,8 @@ const Chat = () => {
 	}
 
 	useEffect(() => {
-		setRooms([{ code: generateSerial(), users: [player1, player2, player3, player4, player5, player6, player7], owner: player1, admins: [player1, player2], status: 'public', password: '' },
-							{ code: generateSerial(), users: [player1, player4], owner: player4, admins: [player4], status: 'private', password: '' }]);
+		setRooms([{ code: generateSerial(), users: [player1, player2, player3, player4, player5, player6, player7], owner: player1, admins: [player1, player2], status: 'public', password: '', messages: [], image: null },
+							{ code: generateSerial(), users: [player1, player4], owner: player4, admins: [player4], status: 'private', password: '', messages: [], image: null }]);
 		setUsers([player1, player2, player3, player4, player5, player6, player7, player8]);
 	}, [])
 
@@ -153,7 +153,7 @@ const Chat = () => {
 			<SidebarRooms rooms={rooms} setRoomCode={setRoomCode} setOpenNewChat={setOpenNewChat} />
 			{(roomCode && roomCode !== '') ? (
 				<React.Fragment>
-					<Rooms />
+					<Rooms roomDetails={getCurrentRoom()!} />
 					<SidebarDetails
 						roomDetails={getCurrentRoom()!}
 						setOpenNewPassword={setOpenNewPassword}

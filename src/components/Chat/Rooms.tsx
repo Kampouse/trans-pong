@@ -1,76 +1,76 @@
-import { Send } from "@mui/icons-material";
+import { Person, Send } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import Sidebar from "./SidebarDetails";
+import { ChatRoom, Messages, User } from "components/types";
+import { useState } from "react";
+import { getUserDetails } from "./Chat";
 
-export function TextBox(prop: { Text?: string }): JSX.Element {
+export function TextBox({ currentMsg }: { currentMsg: Messages }): JSX.Element {
   return (
-    <div className="mt-2 flex w-full max-w-xs space-x-3">
-      <div className="flex flex-col justify-center">
-        <div className="h-10 w-10 shrink-0 rounded-full bg-gray-300"></div>
-        <div className="text-sm text-gray-800">name</div>
+    <div className="mt-2 flex w-full space-x-3">
+      <div className="flex flex-col justify-center w-[75px]">
+        <div className="w-fit mx-auto"><Avatar sx={{ weight: 40, height: 40 }}><Person /></Avatar></div>
+        <div><p className="w-full text-center text-sm text-gray-800">{ currentMsg.user.username }</p></div>
       </div>
-      <div className="p-2 ">
-        <div className="flex flex-wrap break-all rounded-r-lg rounded-bl-lg bg-gray-300 p-3 ">
-          <p className="text-sm">{prop.Text || "there no text provided"}</p>
+      <div className="p-2 max-w-[250px]">
+        <div className="flex flex-wrap break-all rounded-r-lg rounded-bl-lg bg-gray-300 p-3 w-full">
+          <p className="text-sm">{ currentMsg.message }</p>
         </div>
       </div>
     </div>
   );
 }
 
-export default function Rooms(): JSX.Element {
+const ListMessage = ({ roomDetails, userDetails }: { roomDetails: ChatRoom, userDetails: User }) => {
+	return (
+		<>
+			{ roomDetails.messages.map((currentMsg: Messages) => {
+					return (
+						(userDetails.blockedUsers.find((user) => user.username === currentMsg.user.username) === undefined)
+						&&
+						( <TextBox currentMsg={currentMsg} /> )
+					)
+				})
+			}
+		</>
+	);
+}
+
+export default function Rooms({ roomDetails }: { roomDetails: ChatRoom }): JSX.Element {
+	const  userDetails: User = getUserDetails();
+	const [ msg, setMsg ] = useState('');
+
+	const sendMessage = (event) => {
+		event.preventDefault();
+		if (msg !== '') {
+			roomDetails.messages.push({message: msg, user: userDetails});
+			setMsg('');
+		}
+	}
+
   return (
     // add border to the chat box
-    <div className="flex w-[60%] flex-col justify-center overflow-hidden">
-      <div className="flex grow flex-col border border-slate-300 backdrop-blur-sm transition ease-in">
+    <div className="flex w-[60%] flex-col justify-center overflow-hidden border-y-[1px] border-slate-300">
+      <div className="flex grow flex-col backdrop-blur-sm transition ease-in">
         <div className="flex h-96 grow flex-col overflow-auto p-8">
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox Text="hellosihnointashoitshnaeineiashneoiasneoashneioasnishtanieshtaeioashnitenashieotnioeashntieosanhieotnashieotnioeashntieoashnieotnashieotnioeashniths"></TextBox>
-          <TextBox Text="hello"></TextBox>
-          <TextBox></TextBox>
+					<ListMessage roomDetails={roomDetails} userDetails={userDetails} />
         </div>
+					<form onSubmit={sendMessage}>
         <div className="w-full flex border-t-[1px] border-slate-300 bg-white">
           <input
             type="text"
             className="w-full border border-gray-300 rounded-xl bg-white my-1 ml-1.5 px-4 py-2 text-base focus:outline-none"
             placeholder="Type something..."
+						onChange={(e) => {setMsg(e.target.value)}}
+						value={msg}
           />
 					<div className="m-auto">
-						<IconButton className="-rotate-45">
+						<IconButton className="-rotate-45" onClick={sendMessage}>
 							<Send sx={{ color: grey[700] }}/>
 						</IconButton>
 					</div>
         </div>
+					</form>
       </div>
     </div>
   );

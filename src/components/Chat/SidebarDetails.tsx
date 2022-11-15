@@ -14,9 +14,9 @@ export interface SidebarDetailsProps {
 	setOpenAddUser: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const generateOptions = ({ userDetails}: { userDetails: User}, {roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel}: SidebarDetailsProps) => {
+const generateOptions = ({ userDetails }: { userDetails: User}, {roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel}: SidebarDetailsProps) => {
 	const ROOM_OPTIONS = [
-		{ label: 'Change Channel Image', icon: <Image />, ownerOnly: false, adminOnly: true, action: () => {}},
+		{ label: 'Change Image', icon: <Image />, ownerOnly: false, adminOnly: true, action: () => {}},
 		{ label: 'Quit Channel', icon: <MeetingRoom />, ownerOnly: false, adminOnly: false, action: () => setOpenQuitChannel(true)},
 		{ label: 'Delete Channel', icon: <Delete />, ownerOnly: true, adminOnly: false, action: () => setOpenDeleteChannel(true)},
 		{ label: 'Password Settings', icon: <Lock />, ownerOnly: true, adminOnly: false, action: () => setOpenNewPassword(true) }
