@@ -13,6 +13,7 @@ export interface Messages {
 
 export interface ChatRoom {
 	code: string;
+	name: string;
 	users: Array<User>;
 	owner: User;
 	admins: Array<User>;

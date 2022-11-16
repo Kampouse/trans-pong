@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState, createContext, useContext } from "r
 import NewRoom from "./NewRoom";
 import { GeneralSnackbar } from "./Snackbar";
 import SidebarRooms from "./SidebarRooms";
-import SidebarDetails from "./SidebarDetails";
+import {SidebarOptions, SidebarMembers} from "./SidebarDetails";
 import Rooms from "./Rooms";
 import { generateSerial } from "utils";
 import { PasswordSettings } from "./PasswordSettings";
@@ -11,6 +11,8 @@ import { DeleteChannel } from "./DeleteChannel";
 import { QuitChannel } from "./QuitChannel";
 import { AddUser } from "./AddUser";
 import { AlertColor } from "@mui/material";
+import '../main.css';
+import { UserOptions } from "./UserOptions";
 
 // export type UserContextType = {
 // 	userDetails: User;
@@ -33,10 +35,12 @@ const Chat = () => {
 	const [openDeleteChannel, setOpenDeleteChannel] = useState(false);
 	const [openQuitChannel, setOpenQuitChannel] = useState(false);
 	const [openAddUser, setOpenAddUser] = useState(false);
+	const [openUserOptions, setOpenUserOptions] = useState(false);
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [rooms, setRooms] = useState([] as ChatRoom[]);
 	const [users, setUsers] = useState([] as User[]);
 	const [roomCode, setRoomCode] = useState('');
+	const userClicked = useRef<User | null>(null);
 
 	const snackbarMsg = useRef('');
 	const snackbarBG = useRef('');
@@ -134,6 +138,10 @@ const Chat = () => {
 		setOpenQuitChannel(false);
 	}
 
+	const handleUserOptionsClose = () => {
+		setOpenUserOptions(false);
+	}
+
 	const getCurrentRoom = () => {
 		return rooms.find((room: ChatRoom) => room.code === roomCode);
 	}
@@ -143,27 +151,38 @@ const Chat = () => {
 	}
 
 	useEffect(() => {
-		setRooms([{ code: generateSerial(), users: [player1, player2, player3, player4, player5, player6, player7], owner: player1, admins: [player1, player2], status: 'public', password: '', messages: [], image: null },
-							{ code: generateSerial(), users: [player1, player4], owner: player4, admins: [player4], status: 'private', password: '', messages: [], image: null }]);
+		setRooms([{ code: generateSerial(), name: 'Room1', users: [player1, player2, player3, player4, player5, player6, player7], owner: player1, admins: [player1, player2], status: 'public', password: '', messages: [], image: null },
+							{ code: generateSerial(), name: 'Room2', users: [player1, player4], owner: player4, admins: [player4], status: 'private', password: '', messages: [], image: null }]);
 		setUsers([player1, player2, player3, player4, player5, player6, player7, player8]);
 	}, [])
 
 	return (
-		<div className="m-auto flex h-4/6 w-[90%] max-w-[1500px] rounded-2xl">
+		<div className="m-auto flex h-4/6 w-[90%] max-w-[1500px] rounded-2xl grid grid-cols-10 grid-rows-10">
 			<SidebarRooms rooms={rooms} setRoomCode={setRoomCode} setOpenNewChat={setOpenNewChat} />
 			{(roomCode && roomCode !== '') ? (
 				<React.Fragment>
 					<Rooms roomDetails={getCurrentRoom()!} />
-					<SidebarDetails
+					<SidebarOptions
 						roomDetails={getCurrentRoom()!}
 						setOpenNewPassword={setOpenNewPassword}
 						setOpenDeleteChannel={setOpenDeleteChannel}
 						setOpenQuitChannel={setOpenQuitChannel}
 						setOpenAddUser={setOpenAddUser}
+						setOpenUserOptions={setOpenUserOptions}
+						userClicked={userClicked}
+					/>
+					<SidebarMembers
+						roomDetails={getCurrentRoom()!}
+						setOpenNewPassword={setOpenNewPassword}
+						setOpenDeleteChannel={setOpenDeleteChannel}
+						setOpenQuitChannel={setOpenQuitChannel}
+						setOpenAddUser={setOpenAddUser}
+						setOpenUserOptions={setOpenUserOptions}
+						userClicked={userClicked}
 					/>
 				</React.Fragment>
 			) : (
-				<div className="border border-slate-300 w-[80%] h-full flex m-auto flex-col justify-center">
+				<div className="col-span-5 md:col-span-8 row-span-6 md:row-span-10 w-full border border-slate-300 h-full flex m-auto flex-col justify-center">
 					<p className='flex text-4xl font-bold justify-center align-middle text-center'>
 						{rooms.length > 0 ? 'Click a room to start chatting!' : 'Create or Join a room start chatting!'}
 					</p>
@@ -174,6 +193,7 @@ const Chat = () => {
 			<DeleteChannel open={openDeleteChannel} onClose={handleDeleteChannelClose} />
 			<QuitChannel open={openQuitChannel} onClose={handleQuitChannelClose} />
 			<AddUser open={openAddUser} onClose={handleAddUserClose} />
+			<UserOptions open={openUserOptions} currentUser={userClicked.current} onClose={handleUserOptionsClose} />
 			<GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)} />
 		</div>
 	);

@@ -1,10 +1,10 @@
-import { Avatar, IconButton, List, ListItem, ListItemIcon, ListItemText, Popover } from '@mui/material';
+import { Avatar, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { Group, Person, PersonAdd, Delete, Image, MeetingRoom, Lock } from '@mui/icons-material'
+import { Popover, PopoverHandler, PopoverContent, Button } from "@material-tailwind/react"
 import { blue } from '@mui/material/colors';
-import React from 'react';
+import React, { useRef } from 'react';
 import { ChatRoom, User } from 'components/types';
 import { getUserDetails } from './Chat';
-import { popover } from '@material-tailwind/react';
 
 export interface SidebarDetailsProps {
 	roomDetails: ChatRoom;
@@ -12,6 +12,8 @@ export interface SidebarDetailsProps {
 	setOpenDeleteChannel: React.Dispatch<React.SetStateAction<boolean>>;
 	setOpenQuitChannel: React.Dispatch<React.SetStateAction<boolean>>;
 	setOpenAddUser: React.Dispatch<React.SetStateAction<boolean>>;
+	setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>;
+	userClicked: React.MutableRefObject<User | null>;
 }
 
 const generateOptions = ({ userDetails }: { userDetails: User}, {roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel}: SidebarDetailsProps) => {
@@ -35,42 +37,34 @@ const generateOptions = ({ userDetails }: { userDetails: User}, {roomDetails, se
 	)});
 }
 
-const ListUsers = ({roomDetails}: SidebarDetailsProps) => {
+const ListUsers = ({roomDetails, setOpenUserOptions}: SidebarDetailsProps) => {
 	return (
 		<div className="w-full max-h-[100%] overflow-y-scroll scrollbar-hide">
 			{ roomDetails.users.map((currentUser: User) => {
 				return (
-					<div className="flex flex-row flex-nowrap align-center py-1.5 pl-6 my-auto  cursor-pointer hover:bg-sky-200" onClick={() => {}}  key={currentUser.username}>
+					<div className="flex flex-row flex-nowrap align-center py-1.5 pl-6 my-auto  cursor-pointer hover:bg-sky-200" onClick={() => {setOpenUserOptions(true)}} key={currentUser.username}>
 						<React.Fragment>
 							<Avatar sx={{ backgroundColor: blue[700] }}><Person /></Avatar>
 							<div className="align-center my-auto pl-2">
 								<p className="font-bold">{currentUser.username}</p>
 							</div>
 						</React.Fragment>
-					</div>
-					)
-				})
-			}
+					</div>		
+				)
+			})}
 		</div>
 	);
 }
 
-const SidebarDetails = ({roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel, setOpenAddUser}: SidebarDetailsProps) => {
-	const  userDetails: User = getUserDetails();
+{/* Send Message<br/>
+Block User<br/>
+See Profile<br/>
+Invite to Play */}
+
+
+export const SidebarMembers = ({roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel, setOpenAddUser, setOpenUserOptions, userClicked}: SidebarDetailsProps) => {
 	return (
-		<div className='w-[20%] border-r-[1px] border-y-[1px] border-slate-300 max-h-[100%] overflow-y-scroll scrollbar-hide'>
-			<div className="h-[30%] mt-2 flex w-full max-w-xs space-x-3">
-	      <div className="flex flex-col justify-center m-auto">
-					<Avatar className='w-full m-auto' sx={{ width: [75, 100, 125], height: [75, 100, 125] }}>
-						<Group />
-						{/* { !roomDetails.image ? (<Group />) : (<img src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" />) } */}
-					</Avatar>
-					<p className='flex text-xl font-bold justify-center'>{ roomDetails.code }</p>
-	      </div>
-			</div>
-			<div className='h-[30%] overflow-y-scroll scrollbar-hide'>
-				<List>{generateOptions({userDetails}, {roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel, setOpenAddUser})}</List>
-			</div>
+		<div className='col-span-5 md:col-span-2 row-span-4 border-b-[1px] border-r-[1px] border-slate-300'>
 			<div className='h-fit flex pl-4'>
 				<p className='text-xl font-bold flex'>Members</p>
 				{roomDetails.status === 'public' &&
@@ -79,7 +73,7 @@ const SidebarDetails = ({roomDetails, setOpenNewPassword, setOpenDeleteChannel, 
 					</div>
 				}
 			</div>
-			<div className='h-[35%] overflow-y-scroll scrollbar-hide'>
+			<div className='w-full h-[85%] overflow-y-scroll scrollbar-hide'>
 				<div className="flex py-1.5 my-auto">
 					<ListUsers 
 						roomDetails={roomDetails}
@@ -87,6 +81,8 @@ const SidebarDetails = ({roomDetails, setOpenNewPassword, setOpenDeleteChannel, 
 						setOpenDeleteChannel={setOpenDeleteChannel}
 						setOpenQuitChannel={setOpenQuitChannel}
 						setOpenAddUser={setOpenAddUser}
+						setOpenUserOptions={setOpenUserOptions}
+						userClicked={userClicked}
 					/>
 				</div>
 			</div>
@@ -94,4 +90,23 @@ const SidebarDetails = ({roomDetails, setOpenNewPassword, setOpenDeleteChannel, 
 	);
 }
 
-export default SidebarDetails;
+export const SidebarOptions = ({roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel, setOpenAddUser, setOpenUserOptions, userClicked}: SidebarDetailsProps) => {
+	const  userDetails: User = getUserDetails();
+
+	return (
+		<div className='col-span-5 md:col-span-2 row-span-4 md:row-span-6 border-t-0 border-r-0 border-l-[1px] border-b-[1px] md:border-t-[1px] md:border-r-[1px] md:border-l-0 md:border-b-0 border-slate-300'>
+			<div className="h-[50%] mt-2 flex w-full space-x-3">
+	      <div className="flex flex-col justify-center m-auto w-full">
+						<Avatar className='w-full m-auto' sx={{ width: [50, 75, 75, 125], height: [50, 75, 75, 125] }}>
+							<Group />
+							{/* { !roomDetails.image ? (<Group />) : (<img src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" />) } */}
+						</Avatar>
+					<p className='flex text-xl font-bold justify-center w-full text-center'>{ roomDetails.code }</p>
+	      </div>
+			</div>
+			<div className='h-[50%] overflow-y-scroll scrollbar-hide'>
+				<List>{generateOptions({userDetails}, {roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel, setOpenAddUser, setOpenUserOptions, userClicked})}</List>
+			</div>
+		</div>
+	);
+}

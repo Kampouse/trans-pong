@@ -14,7 +14,7 @@ export function QuitChannel({ open, onClose }: QuitChannelProps) {
 		<Dialog onClose={() => handleClose(false)} open={open}>
 			<DialogTitle className="bg-sky-200 text-blue-700">Quit Channel</DialogTitle>
 			<DialogContent className="bg-sky-200">
-				<DialogContentText>
+				<DialogContentText sx={{ textAlign: 'center' }}>
 					Are you sure you want to leave this channel?
 				</DialogContentText>
 			</DialogContent>

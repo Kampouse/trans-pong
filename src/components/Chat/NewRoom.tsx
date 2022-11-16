@@ -13,6 +13,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
 	const [ isNew, setIsNew ] = useState(true);
 	const [ roomCode, setRoomCode ] = useState('');
 	const [ status, setStatus ] = useState('public');
+	const [ roomName, setRoomName ] = useState('');
 	const [ password, setPassword ] = useState('');
 	const [ repeatPassword, setRepeatPassword ] = useState('');
 	const [ passwordMatch, setPasswordMatch ] = useState(true);
@@ -21,6 +22,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
 	const handleClose = (val: null | ChatRoom) => {
 		setIsNew(true);
 		setRoomCode('');
+		setRoomName('');
 		setStatus('public');
 		setPassword('');
 		setRepeatPassword('');
@@ -55,6 +57,9 @@ function NewRoom({ open, onClose }: NewRoomProps) {
 								<Button onClick={() => {setStatus('protected'); setPasswordMatch(false);}} sx={[status === "protected" && { '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white' }]}>Protected</Button>
 							</ButtonGroup>
 							<div className="pt-4 m-auto w-fit">
+								<input onChange={(e) => {setRoomName(e.target.value)}} type="text" placeholder="Enter Room Name" />
+							</div>
+							<div className="pt-4 m-auto w-fit">
 								<input onChange={(e) => {setPassword(e.target.value)}} disabled={status !== 'protected'} type="password" placeholder="Enter Password" />
 							</div>
 							<div className="py-4 m-auto w-fit">
@@ -70,7 +75,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
 
 					<div className="m-auto w-fit">
 						<Button disabled={!passwordMatch} sx={[{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white' }]}
-										onClick={() => handleClose({ code: generateSerial(), users: [getUserDetails()], owner: getUserDetails(), admins: [getUserDetails()], status: status, password: password})}
+										onClick={() => handleClose({ code: generateSerial(), name: roomName, users: [getUserDetails()], owner: getUserDetails(), admins: [getUserDetails()], status: status, password: password, messages: [], image: null})}
 						>
 							Proceed
 						</Button>

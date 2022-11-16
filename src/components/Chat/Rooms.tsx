@@ -50,9 +50,10 @@ export default function Rooms({ roomDetails }: { roomDetails: ChatRoom }): JSX.E
 
   return (
     // add border to the chat box
-    <div className="flex w-[60%] flex-col justify-center overflow-hidden border border-slate-300">
+    <div className="col-span-5 md:col-span-6 row-span-6 md:row-span-10 flex flex-col justify-center overflow-hidden border border-slate-300">
       <div className="flex grow flex-col backdrop-blur-sm transition ease-in">
-        <div className="flex grow flex-col overflow-auto p-8">
+        <div className="flex grow flex-col overflow-auto p-4 md:p-8">
+					{/* <h1>Hello</h1> */}
 					<ListMessage roomDetails={roomDetails} userDetails={userDetails} />
         </div>
 				<div className="min-h-[51px]">
