@@ -142,6 +142,28 @@ const Chat = () => {
 		setOpenUserOptions(false);
 	}
 
+	function checkPrivateRoom(currentRoom: ChatRoom) {
+		return (currentRoom.status === 'private' && currentRoom.users.length === 2
+		&& currentRoom.users.find((user1: User) => user1.username === userDetails.username) !== undefined
+		&& currentRoom.users.find((user2: User) => user2.username === userClicked.current!.username) !== undefined)
+	}
+
+	const handleSendMessage = () => {
+		console.log(rooms);
+		const privateRoom = rooms.find(checkPrivateRoom)
+		console.log(privateRoom);
+		
+		if (privateRoom === undefined) {
+			const serial = generateSerial();
+			handleNewRoomClose({code: serial, name: 'Private Room', users: [userDetails, userClicked.current!], owner: userDetails,
+													admins: [userDetails, userClicked.current!], status: 'private', password: '', messages: [], image: null});
+			setRoomCode(serial);
+		}
+		else {
+			setRoomCode(privateRoom.code);
+		}
+	}
+
 	const getCurrentRoom = () => {
 		return rooms.find((room: ChatRoom) => room.code === roomCode);
 	}
@@ -193,7 +215,7 @@ const Chat = () => {
 			<DeleteChannel open={openDeleteChannel} onClose={handleDeleteChannelClose} />
 			<QuitChannel open={openQuitChannel} onClose={handleQuitChannelClose} />
 			<AddUser open={openAddUser} onClose={handleAddUserClose} />
-			<UserOptions open={openUserOptions} currentUser={userClicked.current} onClose={handleUserOptionsClose} />
+			<UserOptions open={openUserOptions} currentUser={userClicked.current} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} />
 			<GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)} />
 		</div>
 	);

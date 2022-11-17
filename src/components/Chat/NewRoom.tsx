@@ -75,7 +75,12 @@ function NewRoom({ open, onClose }: NewRoomProps) {
 
 					<div className="m-auto w-fit">
 						<Button disabled={!passwordMatch} sx={[{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white' }]}
-										onClick={() => handleClose({ code: generateSerial(), name: roomName, users: [getUserDetails()], owner: getUserDetails(), admins: [getUserDetails()], status: status, password: password, messages: [], image: null})}
+										onClick={() => {
+											if (isNew)
+												handleClose({ code: generateSerial(), name: roomName, users: [getUserDetails()], owner: getUserDetails(), admins: [getUserDetails()], status: status, password: password, messages: [], image: null})
+											// else
+												// joinRoom
+										}}
 						>
 							Proceed
 						</Button>

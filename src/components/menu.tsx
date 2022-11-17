@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { User } from "./types";
+import { getUserDetails } from "./Chat/Chat";
+
 export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
@@ -14,6 +17,9 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
 };
 // play menu
 export const Menu = (): React.ReactElement => {
+	const  userDetails: User = getUserDetails();
+	const link = "/Profile/" + userDetails.username;
+
   return (
     <>
       <div className="overflow-y-auto overflow-x-hidden h-fit scrollbar-hide m-auto pt-[50px]">
@@ -26,7 +32,7 @@ export const Menu = (): React.ReactElement => {
             </Link>
           </Contenter>
           <Contenter>
-            <Link to="/Profile" className="relative h-full w-full">
+            <Link to={link} className="relative h-full w-full">
               <div className="mt-32 flex justify-center">
                 <UserSVG />
               </div>

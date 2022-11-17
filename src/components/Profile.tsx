@@ -27,6 +27,7 @@ function MatchResult() {
                   </th>
                 </tr>
               </thead>
+							
               <tbody>
                 <tr>
                   <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
