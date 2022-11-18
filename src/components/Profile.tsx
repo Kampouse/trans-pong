@@ -1,7 +1,9 @@
 import Medal from './medal.ico'
 import { Popover, PopoverHandler, PopoverContent, Button } from "@material-tailwind/react"
+import { Matches, User } from 'components/types';
+import { getUserDetails } from './Chat/Chat';
 
-function MatchResult() {
+function MatchResult({userDetails}: {userDetails: User}) {
   return (
     <div className="mx-auto w-[100%] h-full rounded-md  px-4 pt-0  sm:px-8">
       <div className="py-4 ">
@@ -14,7 +16,7 @@ function MatchResult() {
               <thead>
                 <tr>
                   <th className="border-b-2   border-gray-300 px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Home
+                    Winner
                   </th>
                   <th className="border-b-2 border-gray-300  px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Res.
@@ -23,204 +25,59 @@ function MatchResult() {
                     Res.
                   </th>
                   <th className="border-b-2 border-gray-300  px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Away
+                    Loser
                   </th>
                 </tr>
               </thead>
 							
-              <tbody>
-                <tr>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className=" text-gray-900">Team 1</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">0</p>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">3</p>
-                  </td>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="float-right flex items-center">
-                      <div className="mr-3">
-                        <p className=" text-right text-gray-900">Team 2</p>
-                      </div>
-
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className=" text-gray-900">Team 3</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">0</p>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">3</p>
-                  </td>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="float-right flex items-center">
-                      <div className="mr-3">
-                        <p className=" text-right text-gray-900">Team 4</p>
-                      </div>
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-
-								<tr>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className=" text-gray-900">Team 3</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">0</p>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">3</p>
-                  </td>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="float-right flex items-center">
-                      <div className="mr-3">
-                        <p className=" text-right text-gray-900">Team 4</p>
-                      </div>
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-
-								<tr>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className=" text-gray-900">Team 3</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">0</p>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">3</p>
-                  </td>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="float-right flex items-center">
-                      <div className="mr-3">
-                        <p className=" text-right text-gray-900">Team 4</p>
-                      </div>
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-
-								<tr>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className=" text-gray-900">Team 3</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">0</p>
-                  </td>
-                  <td className="border-b border-gray-300  p-5 text-sm">
-                    <p className=" text-center text-gray-900">3</p>
-                  </td>
-                  <td className="w-2/5 border-b border-gray-300  p-5 text-sm">
-                    <div className="float-right flex items-center">
-                      <div className="mr-3">
-                        <p className=" text-right text-gray-900">Team 4</p>
-                      </div>
-                      <div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-                          alt=""
-                        />
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+							<tbody>
+							{userDetails.matchHistory.map((currentMatch: Matches) => {
+								return (
+									<tr>
+										<td className="w-2/5 border-b border-gray-300  p-5 text-sm">
+											<div className="flex items-center">
+												<div className="hidden h-10 w-10 shrink-0 sm:table-cell">
+													<img
+														className="h-full w-full rounded-full"
+														src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+														alt=""
+													/>
+												</div>
+												<div className="ml-3">
+													<p className=" text-gray-900">{(currentMatch.result === 'win') ? userDetails.username : currentMatch.opponent.username}</p>
+												</div>
+											</div>
+										</td>
+										<td className="border-b border-gray-300  p-5 text-sm">
+											<p className=" text-center text-gray-900">{(currentMatch.result === 'win') ? currentMatch.scoreUser : currentMatch.scoreOpp}</p>
+										</td>
+										<td className="border-b border-gray-300  p-5 text-sm">
+											<p className=" text-center text-gray-900">{(currentMatch.result === 'loss') ? currentMatch.scoreUser : currentMatch.scoreOpp}</p>
+										</td>
+										<td className="w-2/5 border-b border-gray-300  p-5 text-sm">
+											<div className="float-right flex items-center">
+												<div className="mr-3">
+													<p className=" text-right text-gray-900">{(currentMatch.result === 'loss') ? userDetails.username : currentMatch.opponent.username}</p>
+												</div>
+												<div className="hidden h-10 w-10 shrink-0 sm:table-cell">
+													<img
+														className="h-full w-full rounded-full"
+													 	src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+														alt=""
+													/>
+												</div>
+											</div>
+										</td>
+									</tr>
+								)
+							})}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 function FriendList() {
@@ -232,7 +89,7 @@ function FriendList() {
             Friend list
           </h3>
         </div>
-        <div className="flow-root h-[540px] overflow-y-scroll scrollbar-hide">
+        <div className="flow-root h-[280px] overflow-y-scroll scrollbar-hide">
           <ul
             role="list"
             className="divide-y divide-gray-500 dark:divide-slate-300"
@@ -393,7 +250,7 @@ function Achievements() {
           <h2 className="text-2xl font-semibold leading-tight">Achievements</h2>
 			</div>
 			<div className="-mx-4 p-2 sm:-mx-8 sm:px-8">
-        <div className="inline-block min-w-full shadow shadow-gray-300 bg-white/[55%] h-[371px] overflow-y-scroll scrollbar-hide">
+        <div className="inline-block min-w-full shadow shadow-gray-300 bg-white/[55%] h-[420px] overflow-y-scroll scrollbar-hide">
           <table className="min-w-full leading-normal">
             <tbody>
               <tr>
@@ -811,9 +668,11 @@ function Achievements() {
 }
 
 export default function Profile() {
+	const  userDetails: User = getUserDetails();
+
   return (
-    <div className="m-auto pt-[50px] flex flex-col lg:flex-row h-[1100px] lg:h-[1050px] w-full">
-      <div className="h-[100%] mx-[5%] rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm lg:w-[25%] ">
+    <div className="m-auto pt-[50px] flex flex-col lg:flex-row h-[750px] w-full">
+      <div className="h-[100%] mx-[5%] rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm lg:w-[20%] ">
         <div className="grid-rows-1">
           <img
             className="mx-auto mt-12 mb-5  h-40 w-40"
@@ -829,7 +688,7 @@ export default function Profile() {
       
 			  <FriendList />
 
-				<div className='mx-auto flex max-w-fit align-bottom'>
+				{/* <div className='mx-auto flex max-w-fit align-bottom'>
 					<Popover>
 						<PopoverHandler>
 							<Button variant='gradient' className=" bg-pink-500 text-white font-bold ">Stats</Button>
@@ -840,18 +699,32 @@ export default function Profile() {
 							Points won:
 						</PopoverContent>
 					</Popover>
-				</div>
+				</div> */}
       </div>
+			
+			<div className='w-[35%] h-full flex'>
+				<div className='w-[75%] h-full bg-sky-200 rounded-xl'></div>
+				<div className='w-[25%] h-full grid grid-rows-8'>
+					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Match History</p></div>
+					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Achievements</p></div>
+					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Stats</p></div>
+					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Friend Requests</p></div>
+				</div>
+			</div>
 
-			<div className="lg:ml-0 mx-[5%] lg:w-[60%] pt-[50px] lg:pt-0">
+			{/* <div className="lg:ml-0 mx-[5%] lg:w-[60%] pt-[50px] lg:pt-0">
 	      <div className="bg-white/50 rounded-lg backdrop-blur-sm mb-[50px] h-[475px] ring-1 ring-slate-300">
-	        <MatchResult />
+	        <MatchResult userDetails={userDetails} />
 	      </div>
 
 				<div className="bg-white/50 rounded-lg backdrop-blur-sm mt-4 mb-10 h-[475px] ring-1 ring-slate-300">
 	        <Achievements />
 	      </div>
-	    </div>
+	    </div> */}
 		</div>
   );
 }
+
+// https://codesandbox.io/s/r4m5jp6jjq
+// https://mui.com/material-ui/react-tabs/
+// https://codepen.io/str3d6885b6fb/pen/MNVemK

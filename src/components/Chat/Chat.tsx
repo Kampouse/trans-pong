@@ -26,7 +26,17 @@ import { UserOptions } from "./UserOptions";
 
 // export const useUser = () => useContext(UserContext);
 
-var userDetails: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], firstname: 'Gabriel', lastname: 'Asselin'};
+var player2: User = {username: 'jbadia', id: 'OIWJKDJKR23', blockedUsers: [], status: 'Online', matchHistory: [], friendList: [], firstname: 'Justine', lastname: 'Badia'};
+var player3: User = {username: 'gcollet', id: 'FIKJM32', blockedUsers: [], status: 'Online', matchHistory: [], friendList: [], firstname: 'Gab', lastname: 'Collet'};
+var player4: User = {username: 'mmondell', id: 'UIDJKJ21', blockedUsers: [], status: 'Playing', matchHistory: [], friendList: [], firstname: 'Maxime', lastname: 'Mondello'};
+var player5: User = {username: 'aguay', id: 'OIEK121', blockedUsers: [], status: 'Playing', matchHistory: [], friendList: [], firstname: 'Anthony', lastname: 'Guay'};
+var player6: User = {username: 'olabrecq', id: 'DWAOIIK24R2', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], firstname: 'Olivier', lastname: 'Labrecque Lacasse'};
+var player7: User = {username: 'mleblanc', id: 'HIUWADKL32331', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], firstname: 'Michael', lastname: 'Leblanc'};
+var player8: User = {username: 'tberube', id: 'OAISJIK23', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], firstname: 'Thomas', lastname: 'Bérubé'};
+
+var player1: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], status: 'Online', matchHistory: [{scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 2, scoreOpp: 5, opponent: player5, result: 'loss'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}], friendList: [player2, player3, player4, player5, player6, player7, player8], firstname: 'Gabriel', lastname: 'Asselin'};
+
+var userDetails: User = player1;
 export const getUserDetails = () => { return userDetails; }
 
 const Chat = () => {
@@ -46,15 +56,6 @@ const Chat = () => {
 	const snackbarBG = useRef('');
 	const snackbarSeverity = useRef<AlertColor | undefined>('success');
 	
-	var player1: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], firstname: 'Gabriel', lastname: 'Asselin'};
-	var player2: User = {username: 'jbadia', id: 'OIWJKDJKR23', blockedUsers: [], firstname: 'Justine', lastname: 'Badia'};
-	var player3: User = {username: 'gcollet', id: 'FIKJM32', blockedUsers: [], firstname: 'Gab', lastname: 'Collet'};
-	var player4: User = {username: 'mmondell', id: 'UIDJKJ21', blockedUsers: [], firstname: 'Maxime', lastname: 'Mondello'};
-	var player5: User = {username: 'aguay', id: 'OIEK121', blockedUsers: [], firstname: 'Anthony', lastname: 'Guay'};
-	var player6: User = {username: 'olabrecq', id: 'DWAOIIK24R2', blockedUsers: [], firstname: 'Olivier', lastname: 'Labrecque Lacasse'};
-	var player7: User = {username: 'mleblanc', id: 'HIUWADKL32331', blockedUsers: [], firstname: 'Michael', lastname: 'Leblanc'};
-	var player8: User = {username: 'tberube', id: 'OAISJIK23', blockedUsers: [], firstname: 'Thomas', lastname: 'Bérubé'};
-
 	const handleNewRoomClose = (room: ChatRoom | null) => {
 		if (room) {
 			setRooms([ ...rooms, room ]);
@@ -124,7 +125,7 @@ const Chat = () => {
 				if (userIndex > -1) {
 					rooms.at(index)!.users.splice(userIndex, 1);
 
-					userIndex = rooms.at(index)!.admins.indexOf(userDetails);
+					userIndex = rooms.at(index)!.admins.indexOf(getUserDetails());
 					if (userIndex > -1) {
 						rooms.at(index)!.admins.splice(userIndex, 1);
 					}
@@ -144,7 +145,7 @@ const Chat = () => {
 
 	function checkPrivateRoom(currentRoom: ChatRoom) {
 		return (currentRoom.status === 'private' && currentRoom.users.length === 2
-		&& currentRoom.users.find((user1: User) => user1.username === userDetails.username) !== undefined
+		&& currentRoom.users.find((user1: User) => user1.username === getUserDetails().username) !== undefined
 		&& currentRoom.users.find((user2: User) => user2.username === userClicked.current!.username) !== undefined)
 	}
 
@@ -155,8 +156,8 @@ const Chat = () => {
 		
 		if (privateRoom === undefined) {
 			const serial = generateSerial();
-			handleNewRoomClose({code: serial, name: 'Private Room', users: [userDetails, userClicked.current!], owner: userDetails,
-													admins: [userDetails, userClicked.current!], status: 'private', password: '', messages: [], image: null});
+			handleNewRoomClose({code: serial, name: 'Private Room', users: [getUserDetails(), userClicked.current!], owner: getUserDetails(),
+													admins: [getUserDetails(), userClicked.current!], status: 'private', password: '', messages: [], image: null});
 			setRoomCode(serial);
 		}
 		else {
@@ -169,7 +170,7 @@ const Chat = () => {
 	}
 
 	const getCurrentUser = (users: Array<User>) => {
-		return users.find((user: User) => user.username === userDetails.username);
+		return users.find((user: User) => user.username === getUserDetails().username);
 	}
 
 	useEffect(() => {

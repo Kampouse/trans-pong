@@ -2,9 +2,9 @@ export interface User {
 	username: string;
 	id: string;
 	blockedUsers: Array<User>;
-	status?: string;
-	matchHistory?: Array<Matches>;
-	friendList?: Array<User>;
+	status: string; // online, playing or offline
+	matchHistory: Array<Matches>;
+	friendList: Array<User>;
 	achievements?: Achievements;
 	firstname?: string;
 	lastname?: string;
@@ -14,6 +14,7 @@ export interface Matches {
 	scoreUser: number;
 	scoreOpp: number;
 	opponent: User;
+	result: string; // wn or loss
 }
 
 export interface Messages {
