@@ -13,8 +13,8 @@
     "email": "joaopaulomoraes@outlook.com"
   },
   "scripts": {
-    "dev": "vite",
-    "start": "vite & cd backend; npm run start:dev",
+    "dev": "vite ./frontend",
+    "start": "cd frontend; vite & cd backend; nest --watch",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "jest",

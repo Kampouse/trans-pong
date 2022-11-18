@@ -1,5 +1,33 @@
 {
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "backend/node_modules": true,
+    ".vscode": true,
+    "backend/dist": true,
+    "node_modules": true,
+    ".babelrc": true,
+    "src/vite-env.d.ts": true,
+    ".custom.d.ts": true,
+    "pnpm-lock.yaml": true,
+    "backend/test": true
+  },
+  "hide-files.files": [
+    "backend/node_modules",
+    ".vscode",
+    "backend/dist",
+    "node_modules",
+    ".babelrc",
+    "src/vite-env.d.ts",
+    ".custom.d.ts",
+    "pnpm-lock.yaml",
+    "backend/test"
+  ]
 }
