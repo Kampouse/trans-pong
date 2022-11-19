@@ -3,8 +3,8 @@ import { Popover, PopoverHandler, PopoverContent, Button } from "@material-tailw
 import { Matches, User } from 'components/types';
 import { getUserDetails } from './Chat/Chat';
 import { Tabs, Tab } from '@mui/material'
-import { TabPanel, TabList, TabContext } from '@mui/lab'
 import { useState } from 'react';
+import { History, Favorite, PersonAdd, EmojiEvents, Equalizer } from '@mui/icons-material';
 
 function MatchResult({userDetails}: {userDetails: User}) {
   return (
@@ -674,6 +674,10 @@ export default function Profile() {
 	const  userDetails: User = getUserDetails();
 	const [value, setValue] = useState('1');
 
+	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+
   return (
     <div className="m-auto pt-[50px] flex flex-col lg:flex-row h-[750px] w-full">
       <div className="h-[100%] mx-[5%] rounded-lg bg-white/50 p-1 ring-1 ring-slate-300 backdrop-blur-sm lg:w-[20%] ">
@@ -706,28 +710,18 @@ export default function Profile() {
 				</div> */}
       </div>
 			
-			<div className='w-[35%] h-full flex'>
-				<div className='w-[75%] h-full bg-sky-200 rounded-xl'>
-					<TabContext value={value}>
-						<TabList>
-							<Tab label='History' value='1' />
-							<Tab label='Friends' value='2' />
-							<Tab label='Requests' value='3' />
-							<Tab label='Trophies' value='4' />
-							<Tab label='Stats' value='5' />
-						</TabList>
-						<TabPanel value="1">Item One</TabPanel>
-        		<TabPanel value="2">Item Two</TabPanel>
-      			<TabPanel value="3">Item Three</TabPanel>
-					</TabContext>
+			<div className='lg:max-w-[400px] h-full mx-[5%] bg-sky-200 rounded-lg'>
+				<div className='max-w-fit h-fit p-1 mx-auto'>
+					<Tabs value={value} onChange={handleChange} variant='scrollable' allowScrollButtonsMobile scrollButtons centered>
+							<Tab icon={<History />} label="HISTORY" sx={{ fontWeight: 'bold' }} value='1' />
+  						<Tab icon={<Favorite />} label="FRIENDS" sx={{ fontWeight: 'bold' }} value='2' />
+  						<Tab icon={<PersonAdd />} label="REQUESTS" sx={{ fontWeight: 'bold' }} value='3' />
+  						<Tab icon={<EmojiEvents />} label="TROPHIES" sx={{ fontWeight: 'bold' }} value='4' />
+  						<Tab icon={<Equalizer />} label="STATS" sx={{ fontWeight: 'bold' }} value='5' />
+					</Tabs>
 				</div>
-				{/* <div className='w-[25%] h-full grid grid-rows-8'>
-					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Match History</p></div>
-					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Achievements</p></div>
-					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Stats</p></div>
-					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Friend Requests</p></div>
-				</div> */}
 			</div>
+			
 
 			{/* <div className="lg:ml-0 mx-[5%] lg:w-[60%] pt-[50px] lg:pt-0">
 	      <div className="bg-white/50 rounded-lg backdrop-blur-sm mb-[50px] h-[475px] ring-1 ring-slate-300">
