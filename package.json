@@ -1,0 +1,29 @@
+{
+  "name": "monorepo for transpong",
+  "description": "monorepo for ",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "name": "João Paulo Moraes",
+    "email": "joaopaulomoraes@outlook.com",
+    "url": "https://github.com/joaopaulomoraes"
+  },
+  "bugs": {
+    "url": "https://github.com/joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate/issues",
+    "email": "joaopaulomoraes@outlook.com"
+  },
+  "scripts": {
+	"backend" : "cd ./backend/ && npm run start",
+	"frontend" : "cd ./backend/ && npm run start",
+	"backend-install" : "cd ./frontend/ && npm  i",
+	"frontend-install" : "cd ./backend/ && npm i",
+	"dev" : "concurrently 'npm run backend' 'npm run  frontend'",
+	"install" : "concurrently 'npm run backend-install' 'npm run frontend-install'",
+	"bootstrap" : "npm i & concurrently 'npm run backend-install' 'npm run frontend-install'",
+	"init" : "npm run bootstrap && npm run dev"
+ },
+
+  "devDependencies": {
+    "concurrently": "^7.5.0"
+  }
+}
