@@ -14,9 +14,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "start": "cd frontend; vite & cd backend; nest --watch",
+    "start": "vite",
     "build": "tsc && vite build",
-    "serve": "vite preview",
+    "prod": "vite preview",
     "test": "jest",
     "lint": "eslint src --max-warnings=0",
     "typecheck": "tsc --project tsconfig.json --noEmit"

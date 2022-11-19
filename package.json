@@ -13,17 +13,27 @@
     "email": "joaopaulomoraes@outlook.com"
   },
   "scripts": {
-	"backend" : "cd ./backend/ && npm run start",
-	"frontend" : "cd ./backend/ && npm run start",
-	"backend-install" : "cd ./frontend/ && npm  i",
-	"frontend-install" : "cd ./backend/ && npm i",
-	"dev" : "concurrently 'npm run backend' 'npm run  frontend'",
-	"install" : "concurrently 'npm run backend-install' 'npm run frontend-install'",
-	"bootstrap" : "npm i & concurrently 'npm run backend-install' 'npm run frontend-install'",
-	"init" : "npm run bootstrap && npm run dev"
- },
-
+    "backend": "cd ./backend/ && npm run start",
+    "frontend": "cd ./frontend/ && npm run start",
+    "backend-install": "cd ./backend/ && npm i",
+    "frontend-install": "cd ./frontend/ && npm i",
+    "backend-build": "cd ./backend/ && npm run build",
+    "frontend-build": "cd ./frontend/ && npm run build",
+    "backend-prod": "cd ./backend/ && npm run prod",
+    "frontend-prod": "cd ./frontend/ && npm run prod",
+    "dev": "concurrently 'npm run backend' 'npm run  frontend'",
+    "build": "(concurrently 'npm run frontend-build' 'npm run  backend-build')",
+    "prod": "(concurrently 'npm run frontend-prod' 'npm run  backend-prod')",
+    "install": "concurrently 'npm run backend-install' 'npm run frontend-install'",
+    "bootstrap": "npm i && concurrently 'npm run backend-install' 'npm run frontend-install'",
+    "start": "concurrently 'npm run backend' 'npm run frontend'"
+  },
   "devDependencies": {
     "concurrently": "^7.5.0"
+  },
+  "dependencies": {
+    "@nestjs/core": "^9.2.0",
+    "nest": "^0.1.6",
+    "vite": "^3.2.4"
   }
 }
