@@ -2,6 +2,9 @@ import Medal from './medal.ico'
 import { Popover, PopoverHandler, PopoverContent, Button } from "@material-tailwind/react"
 import { Matches, User } from 'components/types';
 import { getUserDetails } from './Chat/Chat';
+import { Tabs, Tab } from '@mui/material'
+import { TabPanel, TabList, TabContext } from '@mui/lab'
+import { useState } from 'react';
 
 function MatchResult({userDetails}: {userDetails: User}) {
   return (
@@ -669,6 +672,7 @@ function Achievements() {
 
 export default function Profile() {
 	const  userDetails: User = getUserDetails();
+	const [value, setValue] = useState('1');
 
   return (
     <div className="m-auto pt-[50px] flex flex-col lg:flex-row h-[750px] w-full">
@@ -703,13 +707,26 @@ export default function Profile() {
       </div>
 			
 			<div className='w-[35%] h-full flex'>
-				<div className='w-[75%] h-full bg-sky-200 rounded-xl'></div>
-				<div className='w-[25%] h-full grid grid-rows-8'>
+				<div className='w-[75%] h-full bg-sky-200 rounded-xl'>
+					<TabContext value={value}>
+						<TabList>
+							<Tab label='History' value='1' />
+							<Tab label='Friends' value='2' />
+							<Tab label='Requests' value='3' />
+							<Tab label='Trophies' value='4' />
+							<Tab label='Stats' value='5' />
+						</TabList>
+						<TabPanel value="1">Item One</TabPanel>
+        		<TabPanel value="2">Item Two</TabPanel>
+      			<TabPanel value="3">Item Three</TabPanel>
+					</TabContext>
+				</div>
+				{/* <div className='w-[25%] h-full grid grid-rows-8'>
 					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Match History</p></div>
 					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Achievements</p></div>
 					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Stats</p></div>
 					<div className='grid bg-sky-200 mt-4 mr-10 rounded-r-full'><p className='mt-6 ml-2'>Friend Requests</p></div>
-				</div>
+				</div> */}
 			</div>
 
 			{/* <div className="lg:ml-0 mx-[5%] lg:w-[60%] pt-[50px] lg:pt-0">

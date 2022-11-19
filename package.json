@@ -13,17 +13,19 @@
     "email": "joaopaulomoraes@outlook.com"
   },
   "scripts": {
-	"backend" : "cd ./backend/ && npm run start",
-	"frontend" : "cd ./backend/ && npm run start",
-	"backend-install" : "cd ./frontend/ && npm  i",
-	"frontend-install" : "cd ./backend/ && npm i",
-	"dev" : "concurrently 'npm run backend' 'npm run  frontend'",
-	"install" : "concurrently 'npm run backend-install' 'npm run frontend-install'",
-	"bootstrap" : "npm i & concurrently 'npm run backend-install' 'npm run frontend-install'",
-	"init" : "npm run bootstrap && npm run dev"
- },
-
+    "backend": "cd ./backend/ && npm run start",
+    "frontend": "cd ./backend/ && npm run start",
+    "backend-install": "cd ./frontend/ && npm  i",
+    "frontend-install": "cd ./backend/ && npm i",
+    "dev": "concurrently 'npm run backend' 'npm run  frontend'",
+    "install": "concurrently 'npm run backend-install' 'npm run frontend-install'",
+    "bootstrap": "npm i & concurrently 'npm run backend-install' 'npm run frontend-install'",
+    "init": "npm run bootstrap && npm run dev"
+  },
   "devDependencies": {
     "concurrently": "^7.5.0"
+  },
+  "dependencies": {
+    "@mui/lab": "^5.0.0-alpha.108"
   }
 }
