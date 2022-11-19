@@ -34,6 +34,7 @@
   "dependencies": {
     "@nestjs/core": "^9.2.0",
     "nest": "^0.1.6",
+    "turbo": "^1.6.3",
     "vite": "^3.2.4"
   }
 }
