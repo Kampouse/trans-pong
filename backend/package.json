@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build && mkdir ../api && cp  -r ./dist/* ../dist && cp -r dist/*  ../api",
+    "build": "nest build",
     "wipe": "prisma generate && prisma db push && nest start --debug --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
