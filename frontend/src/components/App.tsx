@@ -76,7 +76,7 @@ export default function App() {
             <Route path="/Watch" element={<GameWatch />} />
             <Route path="/PlayMenu" element={<PlayMenu />} />
             <Route path="/Play" element={<Game />}></Route>
-            <Route path="/Profile" element={<Profile />}></Route>
+            <Route path="/Profile/:username" element={<Profile />}></Route>
             <Route path="/Chat" element={<Chat />}></Route>
             <Route path="*" element={<Error404 />}></Route>
           </Routes>
