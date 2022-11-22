@@ -26,15 +26,15 @@ import { UserOptions } from "../UserOptions";
 
 // export const useUser = () => useContext(UserContext);
 
-var player2: User = {username: 'jbadia', id: 'OIWJKDJKR23', blockedUsers: [], status: 'Online', matchHistory: [], friendList: [], achievements: initAchievement(), firstname: 'Justine', lastname: 'Badia'};
-var player3: User = {username: 'gcollet', id: 'FIKJM32', blockedUsers: [], status: 'Online', matchHistory: [], friendList: [], achievements: initAchievement(), firstname: 'Gab', lastname: 'Collet'};
-var player4: User = {username: 'mmondell', id: 'UIDJKJ21', blockedUsers: [], status: 'Playing', matchHistory: [], friendList: [], achievements: initAchievement(), firstname: 'Maxime', lastname: 'Mondello'};
-var player5: User = {username: 'aguay', id: 'OIEK121', blockedUsers: [], status: 'Playing', matchHistory: [], friendList: [], achievements: initAchievement(), firstname: 'Anthony', lastname: 'Guay'};
-var player6: User = {username: 'olabrecq', id: 'DWAOIIK24R2', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], achievements: initAchievement(), firstname: 'Olivier', lastname: 'Labrecque Lacasse'};
-var player7: User = {username: 'mleblanc', id: 'HIUWADKL32331', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], achievements: initAchievement(), firstname: 'Michael', lastname: 'Leblanc'};
-var player8: User = {username: 'tberube', id: 'OAISJIK23', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], achievements: initAchievement(), firstname: 'Thomas', lastname: 'Bérubé'};
+var player2: User = {username: 'jbadia', id: 'OIWJKDJKR23', blockedUsers: [], status: 'Online', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Justine', lastname: 'Badia'};
+var player3: User = {username: 'gcollet', id: 'FIKJM32', blockedUsers: [], status: 'Online', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Gab', lastname: 'Collet'};
+var player4: User = {username: 'mmondell', id: 'UIDJKJ21', blockedUsers: [], status: 'Playing', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Maxime', lastname: 'Mondello'};
+var player5: User = {username: 'aguay', id: 'OIEK121', blockedUsers: [], status: 'Playing', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Anthony', lastname: 'Guay'};
+var player6: User = {username: 'olabrecq', id: 'DWAOIIK24R2', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Olivier', lastname: 'Labrecque Lacasse'};
+var player7: User = {username: 'mleblanc', id: 'HIUWADKL32331', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Michael', lastname: 'Leblanc'};
+var player8: User = {username: 'tberube', id: 'OAISJIK23', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Thomas', lastname: 'Bérubé'};
 
-var player1: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], status: 'Online', matchHistory: [{scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 2, scoreOpp: 5, opponent: player5, result: 'loss'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}], friendList: [player2, player3, player4, player5, player6, player7, player8], achievements: initAchievement(), firstname: 'Gabriel', lastname: 'Asselin'};
+var player1: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], status: 'Online', matchHistory: [{scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 2, scoreOpp: 5, opponent: player5, result: 'loss'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}], friendList: [player2, player3, player4], friendRequests: [player5, player6, player7, player8], achievements: initAchievement(), firstname: 'Gabriel', lastname: 'Asselin'};
 
 var userDetails: User = player1;
 export const getUserDetails = () => { return userDetails; }
@@ -172,7 +172,7 @@ const Chat = () => {
 	}
 
 	useEffect(() => {
-		setRooms([{ code: generateSerial(), name: 'Room1', users: [player1, player2, player3, player4, player5, player6, player7], owner: player1, admins: [player1, player2], status: 'public', password: '', messages: [], image: null },
+		setRooms([{ code: generateSerial(), name: 'Room1', users: [player1, player2, player3], owner: player1, admins: [player1, player2], status: 'public', password: '', messages: [], image: null },
 							{ code: generateSerial(), name: 'Room2', users: [player1, player4], owner: player4, admins: [player4], status: 'private', password: '', messages: [], image: null }]);
 		setUsers([player1, player2, player3, player4, player5, player6, player7, player8]);
 	}, [])
@@ -214,7 +214,7 @@ const Chat = () => {
 			<DeleteChannel open={openDeleteChannel} onClose={handleDeleteChannelClose} />
 			<QuitChannel open={openQuitChannel} onClose={handleQuitChannelClose} />
 			<AddUser open={openAddUser} onClose={handleAddUserClose} />
-			<UserOptions open={openUserOptions} currentUser={userClicked.current} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} />
+			<UserOptions open={openUserOptions} currentUser={userClicked.current} currentRoom={getCurrentRoom()!} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} />
 			<GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)} />
 		</div>
 	);

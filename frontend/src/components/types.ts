@@ -5,6 +5,7 @@ export interface User {
 	status: string; // online, playing or offline
 	matchHistory: Array<Matches>;
 	friendList: Array<User>;
+	friendRequests: Array<User>;
 	achievements: Array<Achievement>;
 	firstname: string;
 	lastname: string;

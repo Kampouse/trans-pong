@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 export interface UserOptionsProps {
 	open: boolean;
 	currentUser: User | null;
+	currentRoom?: ChatRoom;
 	handleSendMessage: () => void;
 	onClose: () => void;
 }
@@ -22,7 +23,11 @@ const handleBlockUser = ({userDetails, currentUser}: {userDetails: User, current
 	}
 }
 
-export function UserOptions({ open, currentUser, handleSendMessage, onClose }: UserOptionsProps) {
+const handleFriendRequest = ({userDetails, currentUser}: {userDetails: User, currentUser: User | null}) => {
+	currentUser!.friendRequests.push(userDetails);
+}
+
+export function UserOptions({ open, currentUser, currentRoom, handleSendMessage, onClose }: UserOptionsProps) {
 	const  userDetails: User = getUserDetails();
 	const link = "/Profile/" + currentUser?.username;
 
@@ -46,6 +51,24 @@ export function UserOptions({ open, currentUser, handleSendMessage, onClose }: U
 				<div>
 					<Button component={Link} to={link} onClick={() => {handleClose();}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>See Profile</Button>
 				</div>
+
+				{ ((userDetails.friendList.find((user: User) => {user.username === userDetails.username}) !== undefined) &&
+						<div className="pt-2">
+							<Button onClick={() => {}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Delete friend</Button>
+						</div>
+					) ||
+					(( currentUser?.friendRequests.find((user: User) => {user.username === userDetails.username}) !== undefined) &&
+						<div className="pt-2">
+							<Button onClick={() => {}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Request Sent</Button>
+						</div>			
+					) ||
+					((currentUser?.blockedUsers.find((user: User) => {user.username === userDetails.username}) === undefined) &&
+						<div className="pt-2">
+							<Button onClick={() => {}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Add friend</Button>
+						</div>
+					)
+				}
+
 				<div className="pt-2">
 					<Button onClick={() => {handleClose(); handleSendMessage();}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Send Message</Button>
 				</div>
@@ -57,6 +80,15 @@ export function UserOptions({ open, currentUser, handleSendMessage, onClose }: U
 						{(userDetails.blockedUsers.length === 0 || userDetails.blockedUsers.find((blockedUser: User) => blockedUser.username === currentUser!.username) === undefined) ? 'Block User' : 'Unblock User'}
 					</Button>
 				</div>
+				{/* Kick user button if we are in chat page and a chat room is selected and the user is the owner of the room
+						or the user is an admin, but can't kick out the owner or another admin of the room */}
+				{ currentRoom && (currentRoom.owner.username === userDetails.username || (currentRoom.admins.find((user: User) => {user.username === userDetails.username}) !== undefined
+					&& currentUser!.username !== currentRoom.owner.username) && currentRoom.admins.find((user: User) => {user.username === currentUser!.username}) === undefined)
+					&&
+					<div className="pt-2">
+						<Button onClick={() => {handleClose();}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Kick user</Button>
+					</div>
+				}
 			</DialogContent>
 		</Dialog>
 	)
