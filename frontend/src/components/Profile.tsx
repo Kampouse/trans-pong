@@ -1,76 +1,67 @@
-import { Popover, PopoverHandler, PopoverContent, Button } from "@material-tailwind/react"
 import { Achievement, Matches, User } from 'components/types';
 import { getUserDetails } from './Chat/Chat';
-import { Tabs, Tab, Box, Typography, Icon } from '@mui/material'
-import React, { useState } from 'react';
+import { Tabs, Tab, Box, Typography } from '@mui/material'
+import React, { useState, useRef } from 'react';
 import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium } from '@mui/icons-material';
+import { UserOptions } from "./UserOptions";
+// import { rooms, setRooms } from "./Chat/Chat";
 
 function MatchResult({userDetails}: {userDetails: User}) {
   return (
-    <div className="mx-auto w-[100%] rounded-md">
-			<div className="overflow-x-auto ">
-				<div className="inline-block min-w-full overflow-hidden rounded-lg shadow shadow-gray-300 bg-white/[55%] h-full overflow-y-scroll scrollbar-hide">
-					<table className="min-w-full leading-normal">
-						<thead>
-							<tr>
-								<th className="border-b-2   border-gray-300 px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-600">
-									Winner
-								</th>
-								<th colSpan={2} className="border-b-2 border-gray-300  px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-600">
-									Result
-								</th>
-								<th className="border-b-2 border-gray-300  px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-600">
-									Loser
-								</th>
-							</tr>
-						</thead>
-						
-						<tbody>
-						{userDetails.matchHistory.map((currentMatch: Matches) => {
+		<div className="flex h-[100%] flex-col -my-4">
+      <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
+        <div className="flow-root overflow-y-scroll scrollbar-hide">
+          <ul
+            role="list"
+            className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg"
+          >
+						<li className="flex h-[40px] w-full">
+							<div className="w-[37%] my-auto text-center"><p>Winner</p></div>
+							<div className="w-[26%] my-auto text-center"><p>Result</p></div>
+							<div className="w-[37%] my-auto text-center"><p>Loser</p></div>
+						</li>
+						{ userDetails.matchHistory.map((currentMatch: Matches) => {
 							return (
-								<tr>
-									<td className="w-2/5 border-b border-gray-300  p-3 text-sm">
-										<div className="flex items-center">
-											<div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-												<img
-													className="h-full w-full rounded-full"
-													src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-													alt=""
-												/>
-											</div>
-											<div className="ml-2">
-												<p className=" text-gray-900">{(currentMatch.result === 'win') ? userDetails.username : currentMatch.opponent.username}</p>
-											</div>
+								<li className="flex py-4">
+									<div className="flex w-[37%] my-auto items-center ml-2">
+										<div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
+											<img
+												className="h-full w-full rounded-full"
+												src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+												alt=""
+											/>
 										</div>
-									</td>
-									<td className="border-b border-gray-300  p-3 text-sm">
-										<p className=" text-center text-gray-900">{(currentMatch.result === 'win') ? currentMatch.scoreUser : currentMatch.scoreOpp}</p>
-									</td>
-									<td className="border-b border-gray-300  p-3 text-sm">
-										<p className=" text-center text-gray-900">{(currentMatch.result === 'loss') ? currentMatch.scoreUser : currentMatch.scoreOpp}</p>
-									</td>
-									<td className="w-2/5 border-b border-gray-300  p-3 text-sm">
-										<div className="float-right flex items-center">
-											<div className="mr-2">
-												<p className=" text-right text-gray-900">{(currentMatch.result === 'loss') ? userDetails.username : currentMatch.opponent.username}</p>
-											</div>
-											<div className="hidden h-10 w-10 shrink-0 sm:table-cell">
-												<img
-													className="h-full w-full rounded-full"
-													src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
-													alt=""
-												/>
-											</div>
+										<div className="ml-2">
+											<p className=" text-gray-900">{(currentMatch.result === 'win') ? userDetails.username : currentMatch.opponent.username}</p>
 										</div>
-									</td>
-								</tr>
-							)
+									</div>
+									<div className="flex h-full w-[26%] my-auto">
+										<div className="w-[50%] my-auto">
+											<p className=" text-center text-gray-900">{(currentMatch.result === 'win') ? currentMatch.scoreUser : currentMatch.scoreOpp}</p>
+										</div>
+										<div className="w-[50%] my-auto">
+											<p className=" text-center text-gray-900">{(currentMatch.result === 'loss') ? currentMatch.scoreUser : currentMatch.scoreOpp}</p>
+										</div>
+									</div>
+									<div className="flex w-[37%] my-auto justify-end items-center mr-2">
+										<div className="mr-2">
+											<p className=" text-gray-900">{(currentMatch.result === 'loss') ? userDetails.username : currentMatch.opponent.username}</p>
+										</div>
+										<div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
+											<img
+												className="h-full w-full rounded-full"
+												src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+												alt=""
+											/>
+										</div>
+									</div>
+								</li>
+							);
 						})}
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
+          </ul>
+        </div>
+      </div>
+    </div>
 	);
 }
 
@@ -125,48 +116,49 @@ function FriendList({userDetails}: {userDetails: User}) {
 
 function Achievements({userDetails}: {userDetails: User}) {
 	return (
-		<div className="w-[100%] h-full rounded-md px-4 pt-0 sm:px-8 ">
-			<div className="-mx-4 p-2 sm:-mx-8 sm:px-8">
-        <div className="inline-block min-w-full shadow shadow-gray-300 bg-white/[55%] h-[420px] overflow-y-scroll scrollbar-hide">
-          <table className="min-w-full leading-normal">
-            <tbody>
-							{ userDetails.achievements.map((currentAchievement: Achievement) => {
-								return (
-									<tr>
-										<td className="border-b border-gray-300  p-3 text-smw-1/4">
-											<div className="flex items-center m-auto">
-												{ (currentAchievement.achieved) ? (
-													<div>
-														<div className="w-12 h-12 ">
-															<Icon sx={{ width: 32, height: 32, m: 1}}>
-																<WorkspacePremium fontSize="large" />
-															</Icon>
-														</div>
-														<div className="min-w-0 flex-1">
-															<p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600">{currentAchievement.name}</p>
-															<p className="text-sm text-gray-500 dark:text-slate-500">{currentAchievement.description}</p>
-														</div>
+		<div className="flex h-[100%] flex-col -my-4">
+      <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
+        <div className="flow-root overflow-y-scroll scrollbar-hide">
+          <ul
+            role="list"
+            className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg"
+          >
+						{ userDetails.achievements.map((currentAchievement: Achievement) => {
+							return (
+								<li className="py-4">
+									<div className="flex items-center m-auto">
+										{ (currentAchievement.achieved) ? (
+											<React.Fragment>
+												<div className="w-12 h-12">
+													<div className="h-[32px] w-[32px]">
+														<WorkspacePremium sx={{ width: 32, height: 32, m: 1}} />
 													</div>
-												) : (
-													<React.Fragment>
-														<div className="w-12 h-12">
-															<Lock />
-														</div>
-														<div className="min-w-0 flex-1">
-															<p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600">Locked</p>
-														</div>
-													</React.Fragment>
-												)}
-											</div>
-										</td>
-									</tr>
-								);
-							})}
-            </tbody>
-          </table>
+												</div>
+												<div className="min-w-0 flex-1 pl-2">
+													<p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600">{currentAchievement.name}</p>
+													<p className="text-sm text-gray-500 dark:text-slate-500">{currentAchievement.description}</p>
+												</div>
+											</React.Fragment>
+										) : (
+											<React.Fragment>
+												<div className="w-12 h-12">
+													<div className="h-[32px] w-[32px]">
+														<Lock sx={{ height: 32, width: 32, m: 1 }} />
+													</div>
+												</div>
+												<div className="min-w-0 flex-1 pl-2">
+													<p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600">Locked</p>
+												</div>
+											</React.Fragment>
+										)}
+									</div>
+								</li>
+							);
+						})}
+          </ul>
         </div>
       </div>
-		</div>
+    </div>
 	);
 }
 
@@ -206,10 +198,16 @@ function a11yProps(index: number) {
 export default function Profile() {
 	const  userDetails: User = getUserDetails();
 	const [value, setValue] = useState(0);
+	const [openUserOptions, setOpenUserOptions] = useState(false);
+	const userClicked = useRef<User | null>(null);
 
 	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+	const handleUserOptionsClose = () => {
+		setOpenUserOptions(false);
+	}
 
   return (
     <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit">
@@ -249,6 +247,7 @@ export default function Profile() {
 					</div>
 				</div>
 			</div>
+			{/* <UserOptions open={openUserOptions} currentUser={userClicked.current} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} /> */}
 		</div>
   );
 }

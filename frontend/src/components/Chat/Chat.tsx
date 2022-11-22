@@ -12,7 +12,7 @@ import { QuitChannel } from "./QuitChannel";
 import { AddUser } from "./AddUser";
 import { AlertColor } from "@mui/material";
 import '../main.css';
-import { UserOptions } from "./UserOptions";
+import { UserOptions } from "../UserOptions";
 
 // export type UserContextType = {
 // 	userDetails: User;
@@ -34,7 +34,7 @@ var player6: User = {username: 'olabrecq', id: 'DWAOIIK24R2', blockedUsers: [], 
 var player7: User = {username: 'mleblanc', id: 'HIUWADKL32331', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], achievements: initAchievement(), firstname: 'Michael', lastname: 'Leblanc'};
 var player8: User = {username: 'tberube', id: 'OAISJIK23', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], achievements: initAchievement(), firstname: 'Thomas', lastname: 'Bérubé'};
 
-var player1: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], status: 'Online', matchHistory: [{scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 2, scoreOpp: 5, opponent: player5, result: 'loss'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}], friendList: [player2, player3, player4, player5, player6, player7, player8], achievements: initAchievement(), firstname: 'Gabriel', lastname: 'Asselin'};
+var player1: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], status: 'Online', matchHistory: [{scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 2, scoreOpp: 5, opponent: player5, result: 'loss'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}], friendList: [player2, player3, player4, player5, player6, player7, player8], achievements: initAchievement(), firstname: 'Gabriel', lastname: 'Asselin'};
 
 var userDetails: User = player1;
 export const getUserDetails = () => { return userDetails; }
@@ -47,8 +47,8 @@ const Chat = () => {
 	const [openAddUser, setOpenAddUser] = useState(false);
 	const [openUserOptions, setOpenUserOptions] = useState(false);
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-	const [rooms, setRooms] = useState([] as ChatRoom[]);
 	const [users, setUsers] = useState([] as User[]);
+	const [rooms, setRooms] = useState([] as ChatRoom[]);
 	const [roomCode, setRoomCode] = useState('');
 	const userClicked = useRef<User | null>(null);
 
@@ -150,9 +150,7 @@ const Chat = () => {
 	}
 
 	const handleSendMessage = () => {
-		console.log(rooms);
 		const privateRoom = rooms.find(checkPrivateRoom)
-		console.log(privateRoom);
 		
 		if (privateRoom === undefined) {
 			const serial = generateSerial();
