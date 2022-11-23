@@ -21,7 +21,7 @@
     "frontend-build": "cd ./frontend/ && npm run build",
     "backend-prod": "cd ./backend/ && npm run prod",
     "frontend-prod": "cd ./frontend/ && npm run prod",
-    "dev": "concurrently 'npm run backend' 'npm run  frontend'",
+    "dev": "sh ./script.sh && concurrently 'npm run backend' 'npm run  frontend'",
     "build": "(concurrently 'npm run frontend-build' 'npm run  backend-build')",
     "prod": "(concurrently 'npm run frontend-prod' 'npm run  backend-prod')",
     "install": "concurrently 'npm run backend-install' 'npm run frontend-install'",
