@@ -41,12 +41,6 @@
     "vite-plugin-doubleshot": "0.0.6"
   },
   "dependencies": {
-    "@nestjs/common": "^9.0.11",
-    "@nestjs/core": "^9.2.0",
-    "@nestjs/microservices": "^9.0.11",
-    "nest": "^0.1.6",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.5.6",
     "turbo": "^1.6.3",
     "vite": "^3.2.4",
     "vite-tsconfig-paths": "^3.6.0"

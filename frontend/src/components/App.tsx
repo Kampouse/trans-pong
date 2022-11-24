@@ -14,17 +14,21 @@ import { useState, useEffect } from 'react'
 import { useAtom, atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { atomWithStorage } from 'jotai/utils'
+import { ChatRoom } from './types'
 
 export const useLogin = atom('should login')
+
 export const myProfile = atom({
   username: '',
   displayName: '',
   image: '',
   userId: ''
 })
+
 export default function App() {
   const [user, setUser] = useState(myProfile)
   const [login, setLogin] = useAtom(useLogin)
+
   const check = async () => {
     fetch('http://localhost:3000/auth/verify', {
       method: 'GET',
@@ -42,6 +46,7 @@ export default function App() {
         return data.user
       })
   }
+
   //this function should assign a jwt to the user since you can only get if there a active session
   const who = async () => {
     fetch('http://localhost:3000/auth/who', {
@@ -57,11 +62,13 @@ export default function App() {
         return setUser(data.user)
       })
   }
+
   //this function is called because after page is refreshed variable lost ...
   useEffect(() => {
     check()
     who()
   }, [])
+
   return (
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
       {login == 'login' ? (
@@ -76,7 +83,7 @@ export default function App() {
             <Route path="/Watch" element={<GameWatch />} />
             <Route path="/PlayMenu" element={<PlayMenu />} />
             <Route path="/Play" element={<Game />}></Route>
-            <Route path="/Profile" element={<Profile />}></Route>
+            <Route path="/Profile/:username" element={<Profile />}></Route>
             <Route path="/Chat" element={<Chat />}></Route>
             <Route path="*" element={<Error404 />}></Route>
           </Routes>
