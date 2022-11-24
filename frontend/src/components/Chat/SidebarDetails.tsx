@@ -39,7 +39,7 @@ const generateOptions = ({ userDetails }: { userDetails: User}, {roomDetails, se
 }
 
 const ListUsers = ({roomDetails, setOpenUserOptions, userClicked}: SidebarDetailsProps) => {
-	const  userDetails: User = getUserDetails();
+	const userDetails: User = getUserDetails();
 
 	return (
 		<div className="w-full max-h-[100%] overflow-y-scroll scrollbar-hide">

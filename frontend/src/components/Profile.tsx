@@ -7,8 +7,10 @@ import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePr
 import { UserOptions } from "./UserOptions";
 import { blue } from '@mui/material/colors';
 
-function MatchResult({userDetails}: {userDetails: User}) {
-  return (
+function MatchResult({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
+  function onUserClick(currentMatch: Matches) {setOpenUserOptions(true); userClicked.current = currentMatch.opponent;}
+	
+	return (
 		<div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
         <div className="flow-root overflow-y-scroll scrollbar-hide">
@@ -25,15 +27,21 @@ function MatchResult({userDetails}: {userDetails: User}) {
 							return (
 								<li className="flex py-4">
 									<div className="flex w-[37%] my-auto items-center ml-2">
-										<div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
+										<div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
 											<img
-												className="h-full w-full rounded-full"
+												className={`h-full w-full rounded-full ${currentMatch.result === 'loss' ? 'cursor-pointer hover:border-2 border-pink-500' : ''}`}
 												src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
 												alt=""
+												onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
 											/>
 										</div>
 										<div className="ml-2">
-											<p className=" text-gray-900">{(currentMatch.result === 'win') ? userDetails.username : currentMatch.opponent.username}</p>
+											<p
+												className={`text-gray-900 ${currentMatch.result === 'loss' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
+												onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
+											>
+												{(currentMatch.result === 'win') ? userDetails.username : currentMatch.opponent.username}
+											</p>
 										</div>
 									</div>
 									<div className="flex h-full w-[26%] my-auto">
@@ -46,13 +54,19 @@ function MatchResult({userDetails}: {userDetails: User}) {
 									</div>
 									<div className="flex w-[37%] my-auto justify-end items-center mr-2">
 										<div className="mr-2">
-											<p className=" text-gray-900">{(currentMatch.result === 'loss') ? userDetails.username : currentMatch.opponent.username}</p>
+											<p 
+												className={`text-gray-900 ${currentMatch.result === 'win' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
+												onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
+											>
+												{(currentMatch.result === 'loss') ? userDetails.username : currentMatch.opponent.username}
+											</p>
 										</div>
 										<div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
 											<img
-												className="h-full w-full rounded-full"
+												className={`h-full w-full rounded-full ${currentMatch.result === 'win' ? 'cursor-pointer hover:border-2 border-pink-500' : ''}`}
 												src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
 												alt=""
+												onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
 											/>
 										</div>
 									</div>
@@ -66,7 +80,7 @@ function MatchResult({userDetails}: {userDetails: User}) {
 	);
 }
 
-function FriendList({userDetails}: {userDetails: User}) {
+function FriendList({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
 
 	const ONLINE = "text-green-600 text-md";
 	const PLAYING = "text-amber-500 text-md";
@@ -95,13 +109,19 @@ function FriendList({userDetails}: {userDetails: User}) {
 									<div className="flex items-center space-x-4">
 										<div className="shrink-0">
 											<img
-												className="h-12 w-12 border-2 border-blue-700 rounded-full"
+												className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer"
 												src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
 												alt="Neil image"
+												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
 											/>
 										</div>
 										<div className="min-w-0 flex-1">
-											<p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600">{currentUser.username}</p>
+											<p
+												className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2"
+												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
+											>
+												{currentUser.username}
+											</p>
 											<p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentUser)}>●</span>{currentUser.status}</p>
 										</div>
 									</div>
@@ -115,7 +135,7 @@ function FriendList({userDetails}: {userDetails: User}) {
   );
 }
 
-function FriendRequests({userDetails}: {userDetails: User}): JSX.Element {
+function FriendRequests({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
 	const [friendRequests, setFriendRequests ] = useState<Array<User>>(userDetails.friendRequests);
 
 	const deleteRequest = ({currentUser}: {currentUser: User}) => {
@@ -150,13 +170,19 @@ function FriendRequests({userDetails}: {userDetails: User}): JSX.Element {
 									<div className="flex items-center space-x-4">
 										<div className="shrink-0">
 											<img
-												className="h-12 w-12 border-2 border-blue-700 rounded-full"
+												className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer"
 												src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
 												alt="Neil image"
+												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
 											/>
 										</div>
 										<div className="min-w-0 flex-1">
-											<p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600">{currentUser.username}</p>
+											<p 
+												className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2"
+												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
+											>
+												{currentUser.username}
+											</p>
 										</div>
 										<div className='flex w-fit justify-end'>
 											<IconButton onClick={() => {handleAcceptRequest({currentUser});}}>
@@ -229,15 +255,33 @@ export default function Profile() {
 	const  userDetails: User = getUserDetails();
 	const [value, setValue] = useState("1");
 	const [openUserOptions, setOpenUserOptions] = useState(false);
+	const userClicked = useRef<User | null>(null);
 	// const userClicked = useRef<User | null>(null);
 
 	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
-	// const handleUserOptionsClose = () => {
-	// 	setOpenUserOptions(false);
-	// }
+	const handleSendMessage = () => {}
+
+	const getAddFriendStatus = (): string => {
+		if (userDetails.friendList.find((user: User) => {return user.username === userClicked.current?.username}) !== undefined)
+			return 'Delete friend';
+		else if (userClicked.current?.friendRequests.find((user: User) => {return user.username === userDetails.username}) !== undefined)
+			return 'Request sent';
+		else if (userClicked.current?.blockedUsers.find((user: User) => {return user.username === userDetails.username}) === undefined)
+			return 'Add friend';
+		else
+			return '';
+	}
+
+	const getAddFriendDisabled = (): boolean => {
+		return (getAddFriendStatus() === 'Request sent')
+	}
+
+	const handleUserOptionsClose = () => {
+		setOpenUserOptions(false);
+	}
 
   return (
     <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit">
@@ -272,16 +316,16 @@ export default function Profile() {
 
 					<div className='grow overflow-hidden'>
 						<div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
-							<TabPanel value="1"><MatchResult userDetails={userDetails} /></TabPanel>
-							<TabPanel value="2"><FriendList userDetails={userDetails} /></TabPanel>
-							<TabPanel value="3"><FriendRequests userDetails={userDetails} /></TabPanel>
+							<TabPanel value="1"><MatchResult userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+							<TabPanel value="2"><FriendList userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+							<TabPanel value="3"><FriendRequests userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
 							<TabPanel value="4"><Achievements userDetails={userDetails} /></TabPanel>
 							<TabPanel value="5">STATS</TabPanel>
 						</div>
 					</div>
 				</TabContext>
 			</div>
-			{/* <UserOptions open={openUserOptions} currentUser={userClicked.current} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} /> */}
+			<UserOptions open={openUserOptions} currentUser={userClicked.current} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} />
 		</div>
   );
 }

@@ -17,6 +17,7 @@ import { atomWithStorage } from 'jotai/utils'
 import { ChatRoom } from './types'
 
 export const useLogin = atom('should login')
+export const useRooms = atom([] as ChatRoom[])
 
 export const myProfile = atom({
   username: '',

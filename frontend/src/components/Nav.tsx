@@ -47,7 +47,7 @@ export default function Nav({Status, setStatus}) {
         </div>
 
         <div className="relative flex items-center">
-			<button  onClick={(event) => buttonHandler(logout, event) } type="submit"  >Login </button>
+					<button  onClick={(event) => buttonHandler(logout, event) } type="submit"  >Logout </button>
         </div>
       </div>
     </nav>

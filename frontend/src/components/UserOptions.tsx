@@ -2,7 +2,7 @@ import { Person } from "@mui/icons-material";
 import { Dialog, DialogContent, DialogTitle, Avatar, Button } from "@mui/material";
 import { blue } from '@mui/material/colors';
 import { ChatRoom, User } from "components/types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { getUserDetails } from './Chat/Chat';
 import { Link } from "react-router-dom";
 
@@ -10,6 +10,8 @@ export interface UserOptionsProps {
 	open: boolean;
 	currentUser: User | null;
 	currentRoom?: ChatRoom;
+	addFriendStatus: string;
+	btnDisabled: boolean;
 	handleSendMessage: () => void;
 	onClose: () => void;
 }
@@ -23,13 +25,28 @@ const handleBlockUser = ({userDetails, currentUser}: {userDetails: User, current
 	}
 }
 
-const handleFriendRequest = ({userDetails, currentUser}: {userDetails: User, currentUser: User | null}) => {
-	currentUser!.friendRequests.push(userDetails);
-}
+// const handleFriendRequest = ({userDetails, currentUser}: {userDetails: User, currentUser: User | null}) => {
+// 	currentUser!.friendRequests.push(userDetails);
+// }
 
-export function UserOptions({ open, currentUser, currentRoom, handleSendMessage, onClose }: UserOptionsProps) {
-	const  userDetails: User = getUserDetails();
+export function UserOptions({ open, currentUser, currentRoom, addFriendStatus, btnDisabled, handleSendMessage, onClose }: UserOptionsProps) {
+	const userDetails: User = getUserDetails();
 	const link = "/Profile/" + currentUser?.username;
+	
+	// const [addFriendButton, setAddFriendButton] = useState<string>(addFriendStatus);
+	const handleAddFriendClick = ({userDetails, currentUser}: {userDetails: User, currentUser: User | null}) => {
+		if (addFriendStatus === 'Add friend') {
+			currentUser?.friendRequests.push(userDetails);
+		}
+		if (addFriendStatus === 'Delete friend') {
+			const userIndex = userDetails.friendList.findIndex((user: User) => {return user.username === currentUser?.username});
+			if (userIndex > -1)
+				userDetails.friendList.splice(userIndex, 1);
+			const friendIndex = currentUser?.friendList.findIndex((user: User) => {return user.username === userDetails.username});
+			if (friendIndex && friendIndex > -1)
+				currentUser?.friendList.splice(friendIndex, 1);
+		}
+	}
 
 	const handleClose = () => {
 		onClose();
@@ -52,21 +69,10 @@ export function UserOptions({ open, currentUser, currentRoom, handleSendMessage,
 					<Button component={Link} to={link} onClick={() => {handleClose();}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>See Profile</Button>
 				</div>
 
-				{ ((userDetails.friendList.find((user: User) => {user.username === userDetails.username}) !== undefined) &&
-						<div className="pt-2">
-							<Button onClick={() => {}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Delete friend</Button>
-						</div>
-					) ||
-					(( currentUser?.friendRequests.find((user: User) => {user.username === userDetails.username}) !== undefined) &&
-						<div className="pt-2">
-							<Button onClick={() => {}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Request Sent</Button>
-						</div>			
-					) ||
-					((currentUser?.blockedUsers.find((user: User) => {user.username === userDetails.username}) === undefined) &&
-						<div className="pt-2">
-							<Button onClick={() => {}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Add friend</Button>
-						</div>
-					)
+				{(addFriendStatus !== '') && 
+					<div className="pt-2">
+						<Button onClick={() => {handleClose(); handleAddFriendClick({userDetails, currentUser})}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, '&:disabled': {color: 'grey'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }} disabled={btnDisabled} >{addFriendStatus}</Button>
+					</div>
 				}
 
 				<div className="pt-2">

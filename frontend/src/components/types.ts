@@ -42,37 +42,6 @@ export interface Achievement {
 	achieved: boolean;
 }
 
-// export interface Achievements {
-// 	FirstSteps: AchievementsDsp;
-// 	UploadImage: AchievementsDsp;
-// 	FirstMessage: AchievementsDsp;
-// 	FirstFriend: AchievementsDsp;
-// 	ChangeSettings: AchievementsDsp;
-// 	FirstWin: AchievementsDsp;
-// 	WonByGiveUp: AchievementsDsp;
-// 	Wins5: AchievementsDsp;
-// 	Wins10: AchievementsDsp;
-// 	Wins25: AchievementsDsp;
-// 	Wins50: AchievementsDsp;
-// 	Wins100: AchievementsDsp;
-// 	Row3: AchievementsDsp;
-// 	Row5: AchievementsDsp;
-// 	Row10: AchievementsDsp;
-// 	Row15: AchievementsDsp;
-// 	Row20: AchievementsDsp;
-// 	Shut5: AchievementsDsp;
-// 	Shut10: AchievementsDsp;
-// 	Shut15: AchievementsDsp;
-// 	Shut20: AchievementsDsp;
-// 	Shut25: AchievementsDsp;
-// 	Points25: AchievementsDsp;
-// 	Points50: AchievementsDsp;
-// 	Points100: AchievementsDsp;
-// 	Points250: AchievementsDsp;
-// 	Points500: AchievementsDsp;
-// 	Diamond: AchievementsDsp;
-// }
-
 export function initAchievement(): Achievement[] {
 	return (
 		[ 

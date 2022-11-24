@@ -13,6 +13,8 @@ import { AddUser } from "./AddUser";
 import { AlertColor } from "@mui/material";
 import '../main.css';
 import { UserOptions } from "../UserOptions";
+import { useAtom } from "jotai";
+import { useRooms } from "components/App";
 
 // export type UserContextType = {
 // 	userDetails: User;
@@ -34,12 +36,13 @@ var player6: User = {username: 'olabrecq', id: 'DWAOIIK24R2', blockedUsers: [], 
 var player7: User = {username: 'mleblanc', id: 'HIUWADKL32331', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Michael', lastname: 'Leblanc'};
 var player8: User = {username: 'tberube', id: 'OAISJIK23', blockedUsers: [], status: 'Offline', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Thomas', lastname: 'Bérubé'};
 
-var player1: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], status: 'Online', matchHistory: [{scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 2, scoreOpp: 5, opponent: player5, result: 'loss'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}], friendList: [player2, player3, player4], friendRequests: [player5, player6, player7, player8], achievements: initAchievement(), firstname: 'Gabriel', lastname: 'Asselin'};
+var player1: User = {username: 'gasselin', id: 'IOEHNJ323', blockedUsers: [], status: 'Online', matchHistory: [{scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 2, scoreOpp: 5, opponent: player5, result: 'loss'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}, {scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win'}],
+										friendList: [player3, player4], friendRequests: [player5, player6, player7, player8], achievements: initAchievement(), firstname: 'Gabriel', lastname: 'Asselin'};
 
 var userDetails: User = player1;
 export const getUserDetails = () => { return userDetails; }
 
-const Chat = () => {
+export default function Chat() {
 	const [openNewChat, setOpenNewChat] = useState(false);
 	const [openNewPassword, setOpenNewPassword] = useState(false);
 	const [openDeleteChannel, setOpenDeleteChannel] = useState(false);
@@ -48,7 +51,7 @@ const Chat = () => {
 	const [openUserOptions, setOpenUserOptions] = useState(false);
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [users, setUsers] = useState([] as User[]);
-	const [rooms, setRooms] = useState([] as ChatRoom[]);
+	const [rooms, setRooms] = useAtom(useRooms);
 	const [roomCode, setRoomCode] = useState('');
 	const userClicked = useRef<User | null>(null);
 
@@ -171,6 +174,21 @@ const Chat = () => {
 		return users.find((user: User) => user.username === getUserDetails().username);
 	}
 
+	const getAddFriendStatus = (): string => {
+		if (userDetails.friendList.find((user: User) => {return user.username === userClicked.current?.username}) !== undefined)
+			return 'Delete friend';
+		else if (userClicked.current?.friendRequests.find((user: User) => {return user.username === userDetails.username}) !== undefined)
+			return 'Request sent';
+		else if (userClicked.current?.blockedUsers.find((user: User) => {return user.username === userDetails.username}) === undefined)
+			return 'Add friend';
+		else
+			return '';
+	}
+
+	const getAddFriendDisabled = (): boolean => {
+		return (getAddFriendStatus() === 'Request sent')
+	}
+
 	useEffect(() => {
 		setRooms([{ code: generateSerial(), name: 'Room1', users: [player1, player2, player3], owner: player1, admins: [player1, player2], status: 'public', password: '', messages: [], image: null },
 							{ code: generateSerial(), name: 'Room2', users: [player1, player4], owner: player4, admins: [player4], status: 'private', password: '', messages: [], image: null }]);
@@ -214,10 +232,8 @@ const Chat = () => {
 			<DeleteChannel open={openDeleteChannel} onClose={handleDeleteChannelClose} />
 			<QuitChannel open={openQuitChannel} onClose={handleQuitChannelClose} />
 			<AddUser open={openAddUser} onClose={handleAddUserClose} />
-			<UserOptions open={openUserOptions} currentUser={userClicked.current} currentRoom={getCurrentRoom()!} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} />
+			<UserOptions open={openUserOptions} currentUser={userClicked.current} currentRoom={getCurrentRoom()!} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} />
 			<GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)} />
 		</div>
 	);
 }
-
-export default Chat;
