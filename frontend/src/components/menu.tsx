@@ -1,7 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { User } from "./types";
-import { getUserDetails } from "./Chat/Chat";
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { User } from './types'
+import { getUserDetails } from './Chat/Chat'
 
 export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -13,12 +13,12 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
     >
       {children}
     </div>
-  );
-};
+  )
+}
 // play menu
 export const Menu = (): React.ReactElement => {
-	const  userDetails: User = getUserDetails();
-	const link = "/Profile/" + userDetails.username;
+  const userDetails: User = getUserDetails()
+  const link = '/Profile/' + userDetails.username
 
   return (
     <>
@@ -63,12 +63,10 @@ export const Menu = (): React.ReactElement => {
           </ContenterLarge>
         </div>
       </div>
-,
-
-
+      ,
     </>
-  );
-};
+  )
+}
 
 const UserSVG = () => {
   return (
@@ -105,8 +103,8 @@ const UserSVG = () => {
         <g></g>
       </g>
     </svg>
-  );
-};
+  )
+}
 
 const Watch = () => {
   return (
@@ -170,8 +168,8 @@ const Watch = () => {
         />
       </g>
     </svg>
-  );
-};
+  )
+}
 
 const StartSVG = () => {
   return (
@@ -192,8 +190,8 @@ const StartSVG = () => {
         d="M 11 6 L 2 1 v 10 z"
       />
     </svg>
-  );
-};
+  )
+}
 
 const ChatSVG = (): React.ReactElement => {
   return (
@@ -226,8 +224,8 @@ m1252 -19 c221 -101 266 -397 85 -559 -132 -119 -328 -117 -456 5 -194 183
         />
       </g>
     </svg>
-  );
-};
+  )
+}
 const SettingSvg = (): React.ReactElement => {
   return (
     <svg
@@ -264,13 +262,13 @@ l94 62 291 -117 c321 -129 349 -135 394 -88 44 44 502 844 502 876 0 15 -6 39
         />
       </g>
     </svg>
-  );
-};
+  )
+}
 
 function ContenterLarge({
-  children,
+  children
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }): JSX.Element {
   return (
     <div
@@ -281,5 +279,5 @@ function ContenterLarge({
     >
       {children}
     </div>
-  );
+  )
 }

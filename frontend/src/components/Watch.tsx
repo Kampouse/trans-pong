@@ -1,4 +1,4 @@
-import Chat from "./Chat/Chat";
+import Chat from './Chat/Chat'
 export default function Watch() {
   // canvas should be  replace by the actual game and the chat should be replaced by the actual chat
   return (
@@ -7,5 +7,5 @@ export default function Watch() {
         <canvas />
       </div>
     </div>
-  );
+  )
 }

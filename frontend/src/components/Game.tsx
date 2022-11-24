@@ -1,11 +1,9 @@
-import Chat from "./Chat/Chat";
-import ReactiveCanvas from "./ReactiveCanvas";
-import { createRef, DetailedHTMLProps, HTMLAttributes } from "react";
+import Chat from './Chat/Chat'
+import ReactiveCanvas from './ReactiveCanvas'
+import { createRef, DetailedHTMLProps, HTMLAttributes } from 'react'
 
 export default function Game() {
-  return (
-	  <ReactiveCanvas />
-  );
+  return <ReactiveCanvas />
 }
 
 function Next() {
@@ -24,7 +22,7 @@ function Next() {
         <path fill="none" stroke="currentColor" d="M 7 4 L 11 8 L 7 12" />
       </svg>
     </div>
-  );
+  )
 }
 
 function Prev() {
@@ -42,7 +40,7 @@ function Prev() {
         <path fill="none" stroke="currentColor" d="M 7 4 L 11 8 L 7 12" />
       </svg>
     </div>
-  );
+  )
 }
 
 export function GameWatch() {
@@ -50,16 +48,16 @@ export function GameWatch() {
     <div className=" w-[90%] pt-[50px] m-auto flex h-5/6 justify-center lg:flex-row ">
       <div className=" flex  h-full flex-col justify-center rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm w-full ">
         <button className="absolute rounded-lg ">
-          {" "}
-          <Prev />{" "}
+          {' '}
+          <Prev />{' '}
         </button>
         <button className="absolute right-2 rounded-lg ">
-          {" "}
-          <Next />{" "}
+          {' '}
+          <Next />{' '}
         </button>
 
         <canvas />
       </div>
     </div>
-  );
+  )
 }

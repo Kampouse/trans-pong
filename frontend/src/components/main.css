@@ -3,16 +3,15 @@
 @tailwind utilities;
 
 @layer utilities {
-.container-snap::-webkit-scrollbar {
+  .container-snap::-webkit-scrollbar {
     display: none;
-}
+  }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.container-snap {
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .container-snap {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-}
-
+  }
 }
 
 /* #container {
@@ -28,23 +27,23 @@
 } */
 
 .login-button {
-	position: relative;
+  position: relative;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 /* For IE, Edge and Firefox */
 .scrollbar-hide {
-	-ms-overflow-style: none;  /* IE and Edge */
-	scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
-  /* #container canvas {
+/* #container canvas {
 	position: relative;
   } */
-  /* #overlay {
+/* #overlay {
 	position: absolute;
 	width: 30%;
 	height: 100%;

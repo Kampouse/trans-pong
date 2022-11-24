@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -10,8 +10,8 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
     >
       <div className="grid place-items-center gap-y-2 ">{children}</div>
     </div>
-  );
-};
+  )
+}
 export default function PlayMenu() {
   return (
     <div className="flex  min-h-screen w-full flex-col overflow-x-hidden pt-6 sm:h-fit">
@@ -36,5 +36,5 @@ export default function PlayMenu() {
         </Contenter>
       </div>
     </div>
-  );
+  )
 }
