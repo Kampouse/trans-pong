@@ -1,4 +1,4 @@
-import { User, ChatRoom, initAchievement } from '../types'
+import { User, ChatRoom, initAchievement } from '@utils/types'
 import React, {
   useEffect,
   useRef,
@@ -6,19 +6,19 @@ import React, {
   createContext,
   useContext
 } from 'react'
-import NewRoom from './NewRoom'
-import { GeneralSnackbar } from './Snackbar'
-import SidebarRooms from './SidebarRooms'
-import { SidebarOptions, SidebarMembers } from './SidebarDetails'
-import Rooms from './Rooms'
+import NewRoom from './components/NewRoom'
+import { GeneralSnackbar } from './components/Snackbar'
+import SidebarRooms from './components/SidebarRooms'
+import { SidebarOptions, SidebarMembers } from './components/SidebarDetails'
+import Rooms from './components/Rooms'
 import { generateSerial } from 'utils'
-import { PasswordSettings } from './PasswordSettings'
-import { DeleteChannel } from './DeleteChannel'
-import { QuitChannel } from './QuitChannel'
-import { AddUser } from './AddUser'
+import { PasswordSettings } from './components/PasswordSettings'
+import { DeleteChannel } from './components/DeleteChannel'
+import { QuitChannel } from './components/QuitChannel'
+import { AddUser } from './components/AddUser'
 import { AlertColor } from '@mui/material'
-import '../main.css'
-import { UserOptions } from '../UserOptions'
+import '@styles/main.css'
+import { UserOptions } from '@views/UserOptions/userOptions'
 
 // export type UserContextType = {
 // 	userDetails: User;

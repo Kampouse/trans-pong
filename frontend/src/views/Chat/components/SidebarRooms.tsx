@@ -2,8 +2,8 @@ import { Group, GroupAdd } from '@mui/icons-material'
 import { Avatar, IconButton } from '@mui/material'
 import { blue } from '@mui/material/colors'
 import React from 'react'
-import { ChatRoom, User } from '../types'
-import { getUserDetails } from './Chat'
+import { ChatRoom, User } from '@utils/types'
+import { getUserDetails } from '../Chat'
 import { generateSerial } from 'utils'
 
 export interface SidebarRoomsProps {

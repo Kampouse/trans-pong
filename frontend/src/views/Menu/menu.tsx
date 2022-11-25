@@ -1,8 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { User } from './types'
-import { getUserDetails } from './Chat/Chat'
-
+import { User } from '@utils/types'
+import { getUserDetails } from '@views/Chat/Chat'
 export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
     <div

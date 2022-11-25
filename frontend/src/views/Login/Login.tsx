@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
-import './main.css'
+import '@styles/main.css'
 import { setDefaultResultOrder } from 'dns'
 import { useAtom, atom } from 'jotai'
-import { useLogin } from 'components/App'
+import { useLogin } from 'Router/Router'
 type DataIntput = {
   username: string
   email: string

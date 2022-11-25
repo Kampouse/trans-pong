@@ -8,7 +8,7 @@ import {
 import { ChatRoom } from 'components/types'
 import React, { useEffect, useState } from 'react'
 import { generateSerial } from 'utils'
-import { getUserDetails } from './Chat'
+import { getUserDetails } from '../Chat'
 
 export interface NewRoomProps {
   open: boolean

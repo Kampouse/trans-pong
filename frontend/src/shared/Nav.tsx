@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAtom, atom } from 'jotai'
-import { useLogin } from './App'
+import { useLogin } from '../Router/Router'
 
 export default function Nav({ Status, setStatus }) {
   const [login, setLogin] = useAtom(useLogin)

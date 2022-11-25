@@ -9,7 +9,7 @@ import {
 import { blue } from '@mui/material/colors'
 import { ChatRoom, User } from 'components/types'
 import React from 'react'
-import { getUserDetails } from './Chat/Chat'
+import { getUserDetails } from '@views/Chat/Chat'
 import { Link } from 'react-router-dom'
 
 export interface UserOptionsProps {

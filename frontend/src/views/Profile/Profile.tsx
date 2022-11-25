@@ -1,5 +1,5 @@
-import { Achievement, Matches, User } from 'components/types'
-import { getUserDetails } from './Chat/Chat'
+import { Achievement, Matches, User } from '@utils/types'
+import { getUserDetails } from '@views/Chat/Chat'
 import { Tabs, Tab, Box, Typography, IconButton } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import React, { useState, useRef } from 'react'
@@ -14,7 +14,7 @@ import {
   CheckCircle,
   Cancel
 } from '@mui/icons-material'
-import { UserOptions } from './UserOptions'
+import { UserOptions } from '@views/UserOptions'
 import { blue } from '@mui/material/colors'
 
 function MatchResult({ userDetails }: { userDetails: User }) {

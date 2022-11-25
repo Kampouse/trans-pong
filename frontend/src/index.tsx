@@ -1,7 +1,7 @@
 import { BrowserRouter } from 'react-router-dom'
 import 'tailwindcss/tailwind.css'
 import ReactDOM from 'react-dom/client'
-import App from 'components/App'
+import Router from '@router/Router'
 import React from 'react'
 import { useState, createContext } from 'react'
 const root = ReactDOM.createRoot(
@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <Router />
     </BrowserRouter>
   </React.StrictMode>
 )

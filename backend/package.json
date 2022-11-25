@@ -10,7 +10,7 @@
     "build": "nest build",
     "wipe": "prisma generate && prisma db push && nest start --debug --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "nest start --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "prod": "node dist/main",

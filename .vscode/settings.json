@@ -17,7 +17,11 @@
     "src/vite-env.d.ts": true,
     ".custom.d.ts": true,
     "pnpm-lock.yaml": true,
-    "backend/test": true
+    "backend/test": true,
+    "frontend/.babelrc": true,
+    "frontend/.custom.d.ts": true,
+    "frontend/.editorconfig": true,
+    "frontend/jest.config.js": true
   },
   "hide-files.files": [
     "backend/node_modules",
@@ -28,6 +32,10 @@
     "src/vite-env.d.ts",
     ".custom.d.ts",
     "pnpm-lock.yaml",
-    "backend/test"
+    "backend/test",
+    "frontend/.babelrc",
+    "frontend/.custom.d.ts",
+    "frontend/.editorconfig",
+    "frontend/jest.config.js"
   ]
 }

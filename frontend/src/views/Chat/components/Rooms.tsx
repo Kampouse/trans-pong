@@ -3,7 +3,7 @@ import { Avatar, IconButton } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { ChatRoom, Messages, User } from 'components/types'
 import { useState } from 'react'
-import { getUserDetails } from './Chat'
+import { getUserDetails } from '../Chat'
 
 export function TextBox({ currentMsg }: { currentMsg: Messages }): JSX.Element {
   return (

@@ -23,9 +23,9 @@ import {
 } from '@material-tailwind/react'
 import { blue } from '@mui/material/colors'
 import React, { useRef } from 'react'
-import { ChatRoom, User } from 'components/types'
-import { getUserDetails } from './Chat'
-import '../main.css'
+import { ChatRoom, User } from '@utils/types'
+import { getUserDetails } from '@views/Chat/Chat'
+import '@styles/main.css'
 
 export interface SidebarDetailsProps {
   roomDetails: ChatRoom
