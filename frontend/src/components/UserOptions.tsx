@@ -3,8 +3,8 @@ import { Dialog, DialogContent, DialogTitle, Avatar, Button } from "@mui/materia
 import { blue } from '@mui/material/colors';
 import { ChatRoom, User } from "components/types";
 import React, { useEffect, useState } from "react";
-import { getUserDetails } from './Chat/Chat';
-import { Link } from "react-router-dom";
+import { getUserDetails } from "components/App";
+import { Link, useNavigate } from "react-router-dom";
 
 export interface UserOptionsProps {
 	open: boolean;
@@ -12,7 +12,7 @@ export interface UserOptionsProps {
 	currentRoom?: ChatRoom;
 	addFriendStatus: string;
 	btnDisabled: boolean;
-	handleSendMessage: () => void;
+	handleSendMessage: (navigate) => void;
 	onClose: () => void;
 }
 
@@ -30,6 +30,7 @@ const handleBlockUser = ({userDetails, currentUser}: {userDetails: User, current
 // }
 
 export function UserOptions({ open, currentUser, currentRoom, addFriendStatus, btnDisabled, handleSendMessage, onClose }: UserOptionsProps) {
+	const navigate = useNavigate();
 	const userDetails: User = getUserDetails();
 	const link = "/Profile/" + currentUser?.username;
 	
@@ -76,7 +77,7 @@ export function UserOptions({ open, currentUser, currentRoom, addFriendStatus, b
 				}
 
 				<div className="pt-2">
-					<Button onClick={() => {handleClose(); handleSendMessage();}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Send Message</Button>
+					<Button onClick={() => {handleClose(); handleSendMessage(navigate);}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Send Message</Button>
 				</div>
 				<div className="pt-2">
 					<Button onClick={() => {handleClose();}} sx={{ '&:hover': {backgroundColor: '#1d4ed8'}, backgroundColor: '#1d4ed8', color: 'white', width: 135 }}>Invite to Play</Button>

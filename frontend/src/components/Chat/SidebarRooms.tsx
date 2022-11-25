@@ -1,26 +1,52 @@
-import { Group, GroupAdd } from "@mui/icons-material";
-import { Avatar, IconButton } from '@mui/material';
+import { Group, GroupAdd, Lock } from "@mui/icons-material";
+import { Avatar, IconButton, styled, Switch, FormControlLabel } from '@mui/material';
 import { blue } from "@mui/material/colors";
-import React from "react";
+import React, { useState } from "react";
 import { ChatRoom, User } from '../types'
-import { getUserDetails } from "./Chat";
+import { getUserDetails } from "components/App";
 import { generateSerial } from "utils";
 
 export interface SidebarRoomsProps {
 	rooms: ChatRoom[];
 	setRoomCode: React.Dispatch<React.SetStateAction<string>>;
-	setOpenNewChat: React.Dispatch<React.SetStateAction<boolean>>;
+	setOpenNewRoom: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SidebarRooms = ({rooms, setRoomCode, setOpenNewChat}: SidebarRoomsProps) => {
+const SidebarSwitch = () => {
+	const [switchSide, setSwitchSide] = useState(false);
+
+	return (
+		<div className={`flex w-[60px] h-[30px] rounded-full ${switchSide ? 'bg-[#f48fb1]' : 'bg-blue-700'}`} onClick={() => setSwitchSide(!switchSide)}>
+			<div className={`w-[50%] h-full m-auto my-auto pt-0.5 ${!switchSide ? 'pl-1.5' : 'pl-2'}`}>
+				<div className={`h-[20px] w-[20px] ${!switchSide ? 'rounded-full bg-white mt-[3px]' : ''}`}>
+					{switchSide &&
+						<Lock sx={{height: 20, width: 20, color: '#1d4fd8'}} />
+					}
+				</div>
+			</div>
+			<div className={`w-[50%] h-full m-auto my-auto pt-0.5 ${switchSide ? 'pl-[5px]' : ' pl-1'}`}>
+				<div className={`h-[20px] w-[20px] ${switchSide ? 'rounded-full bg-white mt-[3px]' : ''}`}>
+					{!switchSide && 
+						<Group sx={{height: 20, width: 20, color: '#f48fb1'}} />
+					}
+				</div>
+			</div>
+		</div>
+	)
+}
+
+const SidebarRooms = ({rooms, setRoomCode, setOpenNewRoom}: SidebarRoomsProps) => {
 	const userDetails: User  = getUserDetails();
 	return (
 		<div className="col-span-5 md:col-span-2 row-span-6 md:row-span-10 h-[100%] overflow-y-scroll scrollbar-hide border-l-[1px] border-y-[1px] border-slate-300">
-			<div className="w-full h-full max-h-[50px] justify-end flex float-right ">
-					<IconButton onClick={() => setOpenNewChat(true)}><GroupAdd sx={{ color: blue[700], width: 40, height: 40 }}/></IconButton>
+			<div className="w-full h-full max-h-[50px] justify-end flex float-right">
+				<div className="h-fit m-auto">
+					<SidebarSwitch />
+				</div>
+				<IconButton onClick={() => setOpenNewRoom(true)}><GroupAdd sx={{ color: '#1d4fd8', width: 40, height: 40 }}/></IconButton>
 			</div>
-			<div className="align-top" id={generateSerial()}>
-				{rooms.map((room: ChatRoom, i: number) => {
+			<div className="align-top" key={generateSerial()}>
+				{rooms.map((room: ChatRoom) => {
 					const userIndex = room.users.findIndex((roomUser: User) => roomUser.username === userDetails.username);
 					return (			
 						<>	

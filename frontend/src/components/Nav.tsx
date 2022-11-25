@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAtom,atom } from 'jotai'
 import { useLogin } from "./App";
+import { TextField, FormControl, OutlinedInput } from "@mui/material";
 
-export default function Nav({Status, setStatus}) {
-      const [login, setLogin] = useAtom(useLogin)
-	  const buttonHandler = ( func: () => void, event: React.MouseEvent<HTMLButtonElement>) => {
+export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, setSearchUser}) {
+  const [login, setLogin] = useAtom(useLogin)
+	const buttonHandler = ( func: () => void, event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     func();
     const button: HTMLButtonElement = event.currentTarget;
@@ -47,7 +48,10 @@ export default function Nav({Status, setStatus}) {
         </div>
 
         <div className="relative flex items-center">
-					<button  onClick={(event) => buttonHandler(logout, event) } type="submit"  >Logout </button>
+					<form onSubmit={(e) => {e.preventDefault(); if (searchUser !== '') setOpenSearchUser(true); }}>
+						<input value={searchUser} type="text" placeholder="Search User" onChange={e => setSearchUser(e.target.value)} className="w-[125px] rounded-sm text-gray-700" />
+					</form>
+					<button  onClick={(event) => buttonHandler(logout, event) } type="submit" className="pl-4" >Logout </button>
         </div>
       </div>
     </nav>

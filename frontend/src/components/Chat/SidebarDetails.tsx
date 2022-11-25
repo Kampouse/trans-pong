@@ -4,7 +4,7 @@ import { Popover, PopoverHandler, PopoverContent, Button } from "@material-tailw
 import { blue } from '@mui/material/colors';
 import React, { useRef } from 'react';
 import { ChatRoom, User } from 'components/types';
-import { getUserDetails } from './Chat';
+import { getUserDetails } from "components/App";
 import "../main.css";
 
 export interface SidebarDetailsProps {
@@ -19,10 +19,10 @@ export interface SidebarDetailsProps {
 
 const generateOptions = ({ userDetails }: { userDetails: User}, {roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel}: SidebarDetailsProps) => {
 	const ROOM_OPTIONS = [
-		{ label: 'Change Image', icon: <Image />, ownerOnly: false, adminOnly: true, action: () => {}},
-		{ label: 'Quit Channel', icon: <MeetingRoom />, ownerOnly: false, adminOnly: false, action: () => setOpenQuitChannel(true)},
-		{ label: 'Delete Channel', icon: <Delete />, ownerOnly: true, adminOnly: false, action: () => setOpenDeleteChannel(true)},
-		{ label: 'Password Settings', icon: <Lock />, ownerOnly: true, adminOnly: false, action: () => setOpenNewPassword(true) }
+		{ label: 'Change Image', icon: <Image />, ownerOnly: false, adminOnly: true, private: true, action: () => {}},
+		{ label: 'Quit Channel', icon: <MeetingRoom />, ownerOnly: false, adminOnly: false, private: false, action: () => setOpenQuitChannel(true)},
+		{ label: 'Delete Channel', icon: <Delete />, ownerOnly: true, adminOnly: false, private: false, action: () => setOpenDeleteChannel(true)},
+		{ label: 'Password Settings', icon: <Lock />, ownerOnly: true, adminOnly: false, private: false, action: () => setOpenNewPassword(true) }
 	];
 	
 	return ROOM_OPTIONS.map(({label, icon, ownerOnly, adminOnly, action}, i) => {

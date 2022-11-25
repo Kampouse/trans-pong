@@ -14,7 +14,9 @@ import { AlertColor } from "@mui/material";
 import '../main.css';
 import { UserOptions } from "../UserOptions";
 import { useAtom } from "jotai";
-import { useRooms } from "components/App";
+import { useRooms, useUsers, useRoomCode } from "components/App";
+import { handleNewRoomClose, handleSendMessage } from "./ChatHandlers";
+import { NavigateFunction } from "react-router";
 
 // export type UserContextType = {
 // 	userDetails: User;
@@ -27,6 +29,8 @@ import { useRooms } from "components/App";
 // });
 
 // export const useUser = () => useContext(UserContext);
+
+// User currently logged in on this browser, to replace with cookies
 
 var player2: User = {username: 'jbadia', id: 'OIWJKDJKR23', blockedUsers: [], status: 'Online', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Justine', lastname: 'Badia'};
 var player3: User = {username: 'gcollet', id: 'FIKJM32', blockedUsers: [], status: 'Online', matchHistory: [], friendList: [], friendRequests: [], achievements: initAchievement(), firstname: 'Gab', lastname: 'Collet'};
@@ -43,28 +47,21 @@ var userDetails: User = player1;
 export const getUserDetails = () => { return userDetails; }
 
 export default function Chat() {
-	const [openNewChat, setOpenNewChat] = useState(false);
+	const [openNewRoom, setOpenNewRoom] = useState(false);
 	const [openNewPassword, setOpenNewPassword] = useState(false);
 	const [openDeleteChannel, setOpenDeleteChannel] = useState(false);
 	const [openQuitChannel, setOpenQuitChannel] = useState(false);
 	const [openAddUser, setOpenAddUser] = useState(false);
 	const [openUserOptions, setOpenUserOptions] = useState(false);
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-	const [users, setUsers] = useState([] as User[]);
+	const [users, setUsers] = useAtom(useUsers);
 	const [rooms, setRooms] = useAtom(useRooms);
-	const [roomCode, setRoomCode] = useState('');
-	const userClicked = useRef<User | null>(null);
+	const [roomCode, setRoomCode] = useAtom(useRoomCode);
+	const userClicked = useRef<User | null>(null)
 
 	const snackbarMsg = useRef('');
 	const snackbarBG = useRef('');
 	const snackbarSeverity = useRef<AlertColor | undefined>('success');
-	
-	const handleNewRoomClose = (room: ChatRoom | null) => {
-		if (room) {
-			setRooms([ ...rooms, room ]);
-		}
-		setOpenNewChat(false);
-	}
 
 	const handleAddUserClose = (user: string | null) => {
 		const isUser = users.find((currUser: User) => currUser.username === user);
@@ -146,26 +143,6 @@ export default function Chat() {
 		setOpenUserOptions(false);
 	}
 
-	function checkPrivateRoom(currentRoom: ChatRoom) {
-		return (currentRoom.status === 'private' && currentRoom.users.length === 2
-		&& currentRoom.users.find((user1: User) => user1.username === getUserDetails().username) !== undefined
-		&& currentRoom.users.find((user2: User) => user2.username === userClicked.current!.username) !== undefined)
-	}
-
-	const handleSendMessage = () => {
-		const privateRoom = rooms.find(checkPrivateRoom)
-		
-		if (privateRoom === undefined) {
-			const serial = generateSerial();
-			handleNewRoomClose({code: serial, name: 'Private Room', users: [getUserDetails(), userClicked.current!], owner: getUserDetails(),
-													admins: [getUserDetails(), userClicked.current!], status: 'private', password: '', messages: [], image: null});
-			setRoomCode(serial);
-		}
-		else {
-			setRoomCode(privateRoom.code);
-		}
-	}
-
 	const getCurrentRoom = () => {
 		return rooms.find((room: ChatRoom) => room.code === roomCode);
 	}
@@ -175,11 +152,11 @@ export default function Chat() {
 	}
 
 	const getAddFriendStatus = (): string => {
-		if (userDetails.friendList.find((user: User) => {return user.username === userClicked.current?.username}) !== undefined)
+		if (getUserDetails().friendList.find((user: User) => {return user.username === userClicked.current?.username}) !== undefined)
 			return 'Delete friend';
-		else if (userClicked.current?.friendRequests.find((user: User) => {return user.username === userDetails.username}) !== undefined)
+		else if (userClicked.current?.friendRequests.find((user: User) => {return user.username === getUserDetails().username}) !== undefined)
 			return 'Request sent';
-		else if (userClicked.current?.blockedUsers.find((user: User) => {return user.username === userDetails.username}) === undefined)
+		else if (userClicked.current?.blockedUsers.find((user: User) => {return user.username === getUserDetails().username}) === undefined)
 			return 'Add friend';
 		else
 			return '';
@@ -189,15 +166,24 @@ export default function Chat() {
 		return (getAddFriendStatus() === 'Request sent')
 	}
 
-	useEffect(() => {
-		setRooms([{ code: generateSerial(), name: 'Room1', users: [player1, player2, player3], owner: player1, admins: [player1, player2], status: 'public', password: '', messages: [], image: null },
-							{ code: generateSerial(), name: 'Room2', users: [player1, player4], owner: player4, admins: [player4], status: 'private', password: '', messages: [], image: null }]);
-		setUsers([player1, player2, player3, player4, player5, player6, player7, player8]);
-	}, [])
+	// const handleNewRoomClose = (room: ChatRoom | null) => {
+	// 	setOpenNewRoom(false);
+	// 	if (room) {
+	// 		setRooms([ ...rooms, room ]);
+	// 	}
+	// }
+
+	// useEffect(() => {
+	// 	console.log(users);
+	// 	console.log(rooms);
+	// 	setRooms([{ code: generateSerial(), name: 'Room1', users: [player1, player2, player3], owner: player1, admins: [player1, player2], status: 'public', password: '', messages: [], image: null },
+	// 						{ code: generateSerial(), name: 'Room2', users: [player1, player4], owner: player4, admins: [player4], status: 'private', password: '', messages: [], image: null }]);
+	// 	setUsers([player1, player2, player3, player4, player5, player6, player7, player8]);
+	// }, [])
 
 	return (
 		<div className="m-auto flex h-4/6 w-[90%] max-w-[1500px] rounded-2xl grid grid-cols-10 grid-rows-10">
-			<SidebarRooms rooms={rooms} setRoomCode={setRoomCode} setOpenNewChat={setOpenNewChat} />
+			<SidebarRooms rooms={rooms} setRoomCode={setRoomCode} setOpenNewRoom={setOpenNewRoom} />
 			{(roomCode && roomCode !== '') ? (
 				<React.Fragment>
 					<Rooms roomDetails={getCurrentRoom()!} />
@@ -227,12 +213,12 @@ export default function Chat() {
 					</p>
 				</div>
 			)}
-			<NewRoom open={openNewChat} onClose={handleNewRoomClose} />
+			<NewRoom open={openNewRoom} onClose={handleNewRoomClose} rooms={rooms} setRooms={setRooms} setOpenNewRoom={setOpenNewRoom} />
 			<PasswordSettings open={openNewPassword} onClose={handleNewPasswordClose} />
 			<DeleteChannel open={openDeleteChannel} onClose={handleDeleteChannelClose} />
 			<QuitChannel open={openQuitChannel} onClose={handleQuitChannelClose} />
 			<AddUser open={openAddUser} onClose={handleAddUserClose} />
-			<UserOptions open={openUserOptions} currentUser={userClicked.current} currentRoom={getCurrentRoom()!} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} />
+			<UserOptions open={openUserOptions} currentUser={userClicked.current} currentRoom={getCurrentRoom()!} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={(navigate) => handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)} onClose={handleUserOptionsClose} />
 			<GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)} />
 		</div>
 	);

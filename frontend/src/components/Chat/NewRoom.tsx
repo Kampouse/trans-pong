@@ -2,14 +2,20 @@ import { Button, ButtonGroup, Dialog, DialogContent, DialogTitle } from "@mui/ma
 import { ChatRoom } from "components/types";
 import React, { useEffect, useState } from "react";
 import { generateSerial } from "utils";
-import { getUserDetails } from "./Chat";
+import { getUserDetails } from "components/App";
 
 export interface NewRoomProps {
 	open: boolean;
-	onClose: (value: null | ChatRoom) => void;
+	onClose: (room: ChatRoom | null,
+						rooms: ChatRoom[],
+						setRooms: React.Dispatch<React.SetStateAction<ChatRoom[]>>,
+						setOpenNewRoom:  React.Dispatch<React.SetStateAction<boolean>>) => void;
+	rooms: ChatRoom[];
+	setRooms: React.Dispatch<React.SetStateAction<ChatRoom[]>>;
+	setOpenNewRoom:  React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function NewRoom({ open, onClose }: NewRoomProps) {
+function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProps) {
 	const [ isNew, setIsNew ] = useState(true);
 	const [ roomCode, setRoomCode ] = useState('');
 	const [ status, setStatus ] = useState('public');
@@ -28,7 +34,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
 		setRepeatPassword('');
 		setPasswordMatch(true);
 		setInit(true);
-		onClose(val);
+		onClose(val, rooms, setRooms, setOpenNewRoom);
 	}
 
 	useEffect(() => {
