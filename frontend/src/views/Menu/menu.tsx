@@ -21,7 +21,7 @@ export const Menu = (): React.ReactElement => {
 
   return (
     <>
-      <div className="overflow-y-auto overflow-x-hidden h-fit scrollbar-hide m-auto pt-[50px]">
+      <div className="overflow-y-scroll scrollbar-hide h-fit max-h-screen m-auto pt-[50px]">
         <div className="  flex  flex-wrap justify-center">
           <Contenter>
             <Link to="/Watch" className="h-full w-full">
@@ -45,7 +45,7 @@ export const Menu = (): React.ReactElement => {
             </Link>
           </Contenter>
         </div>
-        <div className=" flex w-screen flex-wrap justify-center md:flex-row  lg:flex-row">
+        <div className=" flex w-screen flex-wrap justify-center">
           <ContenterLarge>
             <Link to="/PlayMenu" className="relative h-full w-full">
               <div className="mt-32 flex justify-center">

@@ -15,6 +15,7 @@ export default defineConfig({
       '@styles': '/src/styles',
       '@assets': '/src/assets',
       '@shared': '/src/shared',
+      '@src': '/src/',
 
     }
   },

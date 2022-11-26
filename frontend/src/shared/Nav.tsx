@@ -1,20 +1,18 @@
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { useAtom, atom } from 'jotai'
-import { useLogin } from '../Router/Router'
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAtom,atom } from 'jotai'
+import { useLogin } from "@src/Router/Router";
+import { TextField, FormControl, OutlinedInput } from "@mui/material";
 
-export default function Nav({ Status, setStatus }) {
+export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, setSearchUser}) {
   const [login, setLogin] = useAtom(useLogin)
-  const buttonHandler = (
-    func: () => void,
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault()
-    func()
-    const button: HTMLButtonElement = event.currentTarget
-  }
+	const buttonHandler = ( func: () => void, event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    func();
+    const button: HTMLButtonElement = event.currentTarget;
+  };
 
   const logout = () => {
     setLogin('reset')
@@ -48,12 +46,10 @@ export default function Nav({ Status, setStatus }) {
         </div>
 
         <div className="relative flex items-center">
-          <button
-            onClick={(event) => buttonHandler(logout, event)}
-            type="submit"
-          >
-            Login{' '}
-          </button>
+					<form onSubmit={(e) => {e.preventDefault(); if (searchUser !== '') setOpenSearchUser(true); }}>
+						<input value={searchUser} type="text" placeholder="Search User" onChange={e => setSearchUser(e.target.value)} className="w-[125px] rounded-sm text-gray-700" />
+					</form>
+					<button  onClick={(event) => buttonHandler(logout, event) } type="submit" className="pl-4" >Logout </button>
         </div>
       </div>
     </nav>
