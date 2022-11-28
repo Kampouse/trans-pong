@@ -240,7 +240,7 @@ export default function App() {
       {
         code: generateSerial(),
         name: 'Room1',
-        users: [player1, player2, player3],
+        users: [player1, player2, player3, player4, player5, player6],
         owner: player1,
         admins: [player1, player2],
         status: 'public',

@@ -19,33 +19,46 @@ export interface SidebarDetailsProps {
 
 const generateOptions = ({ userDetails }: { userDetails: User}, {roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel}: SidebarDetailsProps) => {
 	const ROOM_OPTIONS = [
-		{ label: 'Change Image', icon: <Image />, ownerOnly: false, adminOnly: true, private: true, action: () => {}},
-		{ label: 'Quit Channel', icon: <MeetingRoom />, ownerOnly: false, adminOnly: false, private: false, action: () => setOpenQuitChannel(true)},
-		{ label: 'Delete Channel', icon: <Delete />, ownerOnly: true, adminOnly: false, private: false, action: () => setOpenDeleteChannel(true)},
-		{ label: 'Password Settings', icon: <Lock />, ownerOnly: true, adminOnly: false, private: false, action: () => setOpenNewPassword(true) }
+		{ label: 'Change Image', icon: <Image />, ownerOnly: false, adminOnly: true, action: () => {}},
+		{ label: 'Quit Channel', icon: <MeetingRoom />, ownerOnly: false, adminOnly: false, action: () => setOpenQuitChannel(true)},
+		{ label: 'Delete Channel', icon: <Delete />, ownerOnly: true, adminOnly: false, action: () => setOpenDeleteChannel(true)},
+		{ label: 'Password Settings', icon: <Lock />, ownerOnly: true, adminOnly: false, action: () => setOpenNewPassword(true) }
 	];
-	
-	return ROOM_OPTIONS.map(({label, icon, ownerOnly, adminOnly, action}, i) => {
-		return (
-			((!ownerOnly && !adminOnly) || (ownerOnly && userDetails.username === roomDetails.owner.username)
-			|| (adminOnly && roomDetails.admins.findIndex((user) => (user.username === userDetails.username)) >= 0))
-			&& (
-				<ListItem key={i} className="hover:cursor-pointer hover:bg-sky-200" onClick={action}>
-					<ListItemIcon>{icon}</ListItemIcon>
-					<ListItemText primary={label} />
+
+	if (roomDetails.status === 'private') {
+		const changeImage = ROOM_OPTIONS.find((button) => button.label === 'Change Image');
+		if (changeImage !== undefined) {
+			return (
+				<ListItem key={1} className="hover:cursor-pointer hover:bg-sky-200" onClick={changeImage.action}>
+					<ListItemIcon>{changeImage.icon}</ListItemIcon>
+					<ListItemText primary={changeImage.label} />
 				</ListItem>
 			)
-	)});
+		}
+	}
+	else {
+		return ROOM_OPTIONS.map(({label, icon, ownerOnly, adminOnly, action}, i) => {
+			return (
+				((!ownerOnly && !adminOnly) || (ownerOnly && userDetails.username === roomDetails.owner.username)
+				|| (adminOnly && roomDetails.admins.findIndex((user) => (user.username === userDetails.username)) >= 0))
+				&& (
+					<ListItem key={i} className="hover:cursor-pointer hover:bg-sky-200" onClick={action}>
+						<ListItemIcon>{icon}</ListItemIcon>
+						<ListItemText primary={label} />
+					</ListItem>
+				)
+		)});
+	}
 }
 
 const ListUsers = ({roomDetails, setOpenUserOptions, userClicked}: SidebarDetailsProps) => {
 	const userDetails: User = getUserDetails();
 
 	return (
-		<div className="w-full max-h-[100%] overflow-y-scroll scrollbar-hide">
+		<div className="w-full overflow-y-scroll overflow-y-hidden">
 			{ roomDetails.users.map((currentUser: User) => {
 				return (
-					<div className="flex flex-row flex-nowrap align-center py-1.5 pl-6 my-auto  cursor-pointer hover:bg-sky-200" onClick={() => {if (userDetails.username !== currentUser.username) setOpenUserOptions(true); userClicked.current = currentUser;}} key={currentUser.username}>
+					<div className="flex flex-row flex-nowrap align-center py-1.5 pl-6 my-auto cursor-pointer hover:bg-sky-200" onClick={() => {if (userDetails.username !== currentUser.username) setOpenUserOptions(true); userClicked.current = currentUser;}} key={currentUser.username}>
 						<React.Fragment>
 							<Avatar sx={{ backgroundColor: blue[700] }}><Person /></Avatar>
 							<div className="align-center my-auto pl-2">
@@ -61,7 +74,7 @@ const ListUsers = ({roomDetails, setOpenUserOptions, userClicked}: SidebarDetail
 
 export const SidebarMembers = ({roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel, setOpenAddUser, setOpenUserOptions, userClicked}: SidebarDetailsProps) => {	
 	return (
-		<div className='col-span-5 md:col-span-2 row-span-4 border-b-[1px] border-r-[1px] border-slate-300 h-full'>
+		<div className='col-span-5 md:col-span-2 row-span-4 border-b-[1px] border-r-[1px] border-slate-300 h-[100%] flex flex-col h-full w-full'>
 			<div className='h-fit flex pl-4 pt-2'>
 				<p className='text-xl font-bold flex'>Members</p>
 				{roomDetails.status === 'public' &&
@@ -70,8 +83,7 @@ export const SidebarMembers = ({roomDetails, setOpenNewPassword, setOpenDeleteCh
 					</div>
 				}
 			</div>
-			<div className='w-full max-h-[85%] grow overflow-y-scroll scrollbar-hide'>
-				{/* <div className="flex py-1.5 my-auto"> */}
+			<div className="flex flex-grow overflow-y-hidden overflow-y-scroll w-full">
 					<ListUsers 
 						roomDetails={roomDetails}
 						setOpenNewPassword={setOpenNewPassword}
@@ -81,7 +93,6 @@ export const SidebarMembers = ({roomDetails, setOpenNewPassword, setOpenDeleteCh
 						setOpenUserOptions={setOpenUserOptions}
 						userClicked={userClicked}
 					/>
-				{/* </div> */}
 			</div>
 		</div>
 	);
