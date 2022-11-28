@@ -7,6 +7,7 @@ if [ ! -f ./backend/.env ]; then
     echo  "please fill the ./backend/env fill  with your own credentials"
     echo  "otherwise your backend wont work"
     cat ./backend/.env
+    cd backend; npx prisma db pull && npx prisma generate
     echo "then run npm run dev again"
     exit 1
 fi
