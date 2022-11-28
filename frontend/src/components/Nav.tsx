@@ -5,9 +5,13 @@ import { useState } from "react";
 import { useAtom,atom } from 'jotai'
 import { useLogin } from "./App";
 import { TextField, FormControl, OutlinedInput } from "@mui/material";
+import { getUserDetails } from "components/App";
+import { User } from "./types";
 
 export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, setSearchUser}) {
   const [login, setLogin] = useAtom(useLogin)
+	const userDetails: User = getUserDetails();
+
 	const buttonHandler = ( func: () => void, event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     func();
@@ -38,7 +42,7 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
           <Link to="/Play" className=" ml-2 pl-3 font-semibold text-white">
             Play
           </Link>
-          <Link to="/Profile" className=" ml-2 pl-3 font-semibold text-white">
+          <Link to={`/Profile/${userDetails.username}`} className=" ml-2 pl-3 font-semibold text-white">
             Profile
           </Link>
           <Link to="/API" className=" ml-2 pl-3 font-semibold text-white">
