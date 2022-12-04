@@ -48,8 +48,7 @@ const localStorageLookup = async () => {
 }
   const check =  () => {
     fetch ('http://localhost:3000/auth/verify').then((response) => response.json()).then((data) => {
-      if (data.user != 'no user') {
-         console.log(data)
+      if (data.status === 200) {
         setLogin('login')
       }
        else {

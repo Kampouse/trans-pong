@@ -31,30 +31,6 @@ type RequestWithUser = Request & { user: User; response: any } & {
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  @Get('who')
-  @UseGuards(LoginGuard)
-  who( @Res({ passthrough: true }) response: Response,@Req() request: Request, @Headers() headers: Headers) {
-    //stor the sid in the cookie
-      
-    const sessionStore = request['sessionStore'];
-    const type: SessionUser = sessionStore['sessions'];
-    const groups = { ...type };
-    const first = Object.values(groups)[0];
-    if (first !== undefined) {
-
-      const parsed = JSON.parse(first);
-      const expire = parsed['cookie']['expires'];
-      const passport = parsed['passport'];
-      const user = passport['user']['username'];
-      if (expire < Date.now()) {
-        return {};
-      } else {
-        const data = this.authService.findOne(user);
-        return data;
-      }
-    }
-  }
   @Get('verify')
   handleLogin(  @Res({ passthrough: true }) response, @Req() request: Request, @Headers() headers: Headers) {
     const sessionStore = request['sessionStore'];
@@ -69,7 +45,7 @@ export class AuthController {
        response.setHeader('Authorization',  `Bearer ${token}`);
        return({200: 'ok'});
     }
-    return { user: 'no user' };
+    return { 404 : 'not found'};
   }
   @UseGuards(FortyTwoAuthGuard)
   @Get('42login')

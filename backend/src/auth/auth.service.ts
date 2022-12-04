@@ -120,7 +120,6 @@ async createToken(passport: any) {
       const auth = await prisma.auth.findUnique({ where: { id: authId } });
       if(auth && auth.bearerToken) {
            await this.verifyToken(input)
-            
       }
       else 
       {

@@ -211,28 +211,8 @@ export default function App() {
         return data.user
       })
   }
-
-  //this function should assign a jwt to the user since you can only get if there a active session
-  const who = async () => {
-    fetch('http://localhost:3000/auth/who', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': 'true'
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return setUser(data.user)
-      })
-  }
-
-  //this function is called because after page is refreshed variable lost ...
   useEffect(() => {
     check()
-    who()
-
 		setRooms([
       {
         code: generateSerial(),
