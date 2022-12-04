@@ -26,12 +26,12 @@ export default function Login(Status) {
   }
 
   const isLogged = async () => {
+     console.log('isLogged')
     fetch('http://localhost:3000/auth/verify', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': 'true'
       }
     })
       .then((response) => response.json())
@@ -42,22 +42,54 @@ export default function Login(Status) {
 const localStorageLookup = async () => {
   const data = localStorage.getItem('userData')
   if (data) {
-     return true
+     
+     return data
   }
-  return false
+  return ""
 }
-  const check =  () => {
-    fetch ('http://localhost:3000/auth/verify').then((response) => response.json()).then((data) => {
-      if (data.status === 200) {
+  const check = async () => {
+      //create header with token
+    const data = await localStorageLookup()
+     console.log("show up",data)
+    const header = {
+               'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': 'true',
+         'Authorization':   data
+    }
+    fetch ('http://localhost:3000/auth/verify',{headers:header}).then((response) => {
+  if(response.status === 200) {
+     response.json().then((data) => {
+       console.log(data)
+       //delete token from local storage
+        localStorage.setItem('userData', data.token)
         setLogin('login')
+     })
+  }
+  else {
+    login();
+  }
+  
+})   
+      
+
+      
+  } 
+
+
+/*
+      if (data.status === 200) {
+        console.log('logged in')
+        setLogin('login')
+        localStorage.setItem('userData', JSON.stringify(data.user))
       }
        else {
+        console.log('not logged in')
          login()
        }
       return data.user
     })
-  
-}
+  */
   const loginOffline = () => {
     setLogin('login')
   }

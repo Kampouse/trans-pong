@@ -8,7 +8,7 @@ import {
   GoogleAuthGuard,
   FortyTwoAuthGuard,
   SessionSerializer,
-  LoginGuard,
+  JwtGuard,
 } from './utils/Guards';
 
 @Module({
@@ -27,7 +27,7 @@ import {
     FortyTwoStrategy,
     FortyTwoAuthGuard,
     SessionSerializer,
-    LoginGuard,
+    JwtGuard,
   ],
 })
 export class AuthModule {}

@@ -7,8 +7,20 @@ import { prisma } from '../main';
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}
-   
   
+  async validate_token (input:string)  {
+     console.log(input)
+  let token = input
+   //mak the shape of the token the same as the shape of the token that is created
+  try {
+    const    secret = 'secret'
+    const decoded = this.jwtService.verify(token, {secret});
+    return true
+  }
+    catch (error) {
+    return false
+  }
+  }    
   async verifyToken(createUserDto: CreateAuthDto) {
       const userFields = await prisma.profile.findUnique({
         where: { username: createUserDto.username },
@@ -24,16 +36,30 @@ export class AuthService {
         const expiresIn = '1d';
         const decoded = this.jwtService.verify(token, {secret});
         if (decoded) {
-          return auth;
+          return true;
         }
         else  {
-          const newAuth = await this.createToken(createUserDto);
-          return newAuth;
+          return false;
         }
       }
-      return { message: 'User already exists' };
+      return true;
   }
-
+async verify2(token: string) {
+      const auth = await prisma.auth.findUnique({ where: { bearerToken: token } });
+      if (auth) {
+        const token = auth.bearerToken;
+        const secret = 'secret'; // private key for jwt should be in env
+        const expiresIn = '1d';
+        const decoded = this.jwtService.verify(token, {secret});
+        if (decoded) {
+          return decoded;
+        }
+        else  {
+          return false;
+        }
+      }
+      return true;
+  }
   async create(createUserDto: CreateAuthDto) {
     const data = {
       username: createUserDto.username,
@@ -118,9 +144,8 @@ async createToken(passport: any) {
       const user   =   await  prisma.user.findUnique({ where: { id: userId } }) 
       const authId = user.authid;
       const auth = await prisma.auth.findUnique({ where: { id: authId } });
-      if(auth && auth.bearerToken) {
-           await this.verifyToken(input)
-      }
+      if(auth && auth.bearerToken && await this.verifyToken(input) == true) 
+            return token;
       else 
       {
         const data: auth = {
@@ -133,6 +158,9 @@ async createToken(passport: any) {
           where: { id: userId },
           data: { authid: newAuth.id },
         });
+        if (auth) {
+          await prisma.auth.delete({ where: { id: auth.id } });
+        }
     }
   }
     
