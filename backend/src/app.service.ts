@@ -12,7 +12,6 @@ export class AppService {
     const data = {
       username: 'test',
     };
-    const output = prisma.user.create({ data: data });
     return { message: 'Hello World!' };
   }
 }

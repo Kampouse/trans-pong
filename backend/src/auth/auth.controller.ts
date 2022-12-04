@@ -7,12 +7,10 @@ import {
   Redirect,
   Res,
   Post,
-  Response,
   Session,
   Headers,
 } from '@nestjs/common';
-import { response, Express, Request } from 'express';
-import { request } from 'http';
+import {Response } from 'express';
 import { AuthService } from './auth.service';
 import { FortyTwoStrategy } from './utils/42strategy';
 import { GoogleAuthGuard, FortyTwoAuthGuard, LoginGuard } from './utils/Guards';
@@ -36,12 +34,15 @@ export class AuthController {
 
   @Get('who')
   @UseGuards(LoginGuard)
-  who(@Req() request: Request, @Headers() headers: Headers) {
+  who( @Res({ passthrough: true }) response: Response,@Req() request: Request, @Headers() headers: Headers) {
+    //stor the sid in the cookie
+      
     const sessionStore = request['sessionStore'];
     const type: SessionUser = sessionStore['sessions'];
     const groups = { ...type };
     const first = Object.values(groups)[0];
     if (first !== undefined) {
+
       const parsed = JSON.parse(first);
       const expire = parsed['cookie']['expires'];
       const passport = parsed['passport'];
@@ -54,9 +55,8 @@ export class AuthController {
       }
     }
   }
-
   @Get('verify')
-  handleLogin(@Req() request: Request, @Headers() headers: Headers) {
+  handleLogin(  @Res({ passthrough: true }) response, @Req() request: Request, @Headers() headers: Headers) {
     const sessionStore = request['sessionStore'];
     const type: SessionUser = sessionStore['sessions'];
     const groups = { ...type };
@@ -65,17 +65,12 @@ export class AuthController {
       const parsed = JSON.parse(first);
       const expire = parsed['cookie']['expires'];
       const passport = parsed['passport'];
-      if (expire < Date.now()) {
-        return {};
-      } else {
-        // ho
-
-        return { user: passport['user']['displayName'] };
-      }
+       const token = this.authService.createToken( passport['user']);
+       response.setHeader('Authorization',  `Bearer ${token}`);
+       return({200: 'ok'});
     }
     return { user: 'no user' };
   }
-
   @UseGuards(FortyTwoAuthGuard)
   @Get('42login')
   @Redirect()
@@ -90,16 +85,13 @@ export class AuthController {
           this.authService.create(request.user);
         }
       });
-      return { statCode: 302, url: url, message: 'Login42' };
+      return { statCode: 302, url: url};
     }
     if (!request.user) {
       const url = 'http://localhost:5173' + '/Login';
       return {
         statCode: 302,
-        url: url,
-        cookies: { hello: 'hello' },
-        Headers: { hello: 'hello' },
-        message: 'Login42',
+        url: url
       };
     }
   }

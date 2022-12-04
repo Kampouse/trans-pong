@@ -5,6 +5,7 @@ import '@styles/main.css'
 import { setDefaultResultOrder } from 'dns'
 import { useAtom, atom } from 'jotai'
 import { useLogin } from 'Router/Router'
+import { Cookie } from '@mui/icons-material'
 type DataIntput = {
   username: string
   email: string
@@ -38,35 +39,26 @@ export default function Login(Status) {
         return data
       })
   }
-
-  const check = async () => {
-    console.log(islogin)
-
-    fetch('http://localhost:3000/auth/verify', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': 'true'
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (
-          (islogin == 'should login' && data.user == 'no user') ||
-          (islogin == 'reset' && data.user != 'no user')
-        ) {
-          login()
-        } else {
-          if (islogin === 'should login' || islogin === 'signout') {
-            console.log('should login')
-            setLogin('login')
-            setNavi('/')
-          }
-        }
-        return data
-      })
+const localStorageLookup = async () => {
+  const data = localStorage.getItem('userData')
+  if (data) {
+     return true
   }
+  return false
+}
+  const check =  () => {
+    fetch ('http://localhost:3000/auth/verify').then((response) => response.json()).then((data) => {
+      if (data.user != 'no user') {
+         console.log(data)
+        setLogin('login')
+      }
+       else {
+         login()
+       }
+      return data.user
+    })
+  
+}
   const loginOffline = () => {
     setLogin('login')
   }
@@ -74,6 +66,7 @@ export default function Login(Status) {
   const login = async () => {
     window.location.href =
       'https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code'
+
   }
   useEffect(() => {
     navigate(Navi)
