@@ -6,6 +6,7 @@ import { setDefaultResultOrder } from 'dns'
 import { useAtom, atom } from 'jotai'
 import { useLogin } from 'Router/Router'
 import { Cookie } from '@mui/icons-material'
+import { Fetch } from 'utils'
 type DataIntput = {
   username: string
   email: string
@@ -48,26 +49,17 @@ const localStorageLookup = async () => {
   return ""
 }
   const check = async () => {
-      //create header with token
     const localdata = await localStorageLookup()
-     console.log("show up",localdata)
-    const header = {
-               'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': 'true',
-         'Authorization':   localdata
-    }
-    fetch ('http://localhost:3000/auth/verify',{headers:header}).then((response) => {
+    Fetch ('http://localhost:3000/auth/verify').then((response) => {
   if(response.status === 200) {
-     response.json().then((data) => {
+      let len = response.headers.get('Content-Length')
+    if(len  == '0')
+       login() 
+     response.json()?.then((data) => {
        if(data.status ==  "Unauthorized")
-        {
-           login()
-        }
+          login()
          if(!data.token)
-        {
           data.token = localdata
-        }
         localStorage.setItem('userData', data.token)
         setLogin('login')
      })
@@ -76,8 +68,8 @@ const localStorageLookup = async () => {
     login();
   }
   
-})   
-      
+}).catch((err) => { 
+}) 
 
       
   } 

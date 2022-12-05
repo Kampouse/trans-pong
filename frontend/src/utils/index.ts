@@ -9,11 +9,26 @@ export function generateSerial() {
   var randomSerial = ''
   var i: number
   var randomNumber: number
-
   for (i = 0; i < serialLength; i = i + 1) {
     randomNumber = Math.floor(Math.random() * chars.length)
     randomSerial += chars.substring(randomNumber, randomNumber + 1)
   }
-
   return randomSerial
+}
+
+export function Fetch(url: string) {
+
+  let  auth =  localStorage.getItem('userData') 
+   if(!auth || auth == 'undefined'){
+       auth = 'Bearer ' + ''; 
+   }
+    let  header = {
+      'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': 'true',
+         'Authorization':   auth
+    }
+     return fetch(url, {headers:header})
+  
+
 }

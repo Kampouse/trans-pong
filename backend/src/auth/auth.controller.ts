@@ -58,7 +58,6 @@ export class AuthController {
       const expire = parsed['cookie']['expires'];
       const passport = parsed['passport'];
        const token = await this.authService.createToken( passport['user']);
-        console.log(token);
         return  {200: 'ok', token: token};;
     }
     else {
