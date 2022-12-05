@@ -49,19 +49,25 @@ const localStorageLookup = async () => {
 }
   const check = async () => {
       //create header with token
-    const data = await localStorageLookup()
-     console.log("show up",data)
+    const localdata = await localStorageLookup()
+     console.log("show up",localdata)
     const header = {
                'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': 'true',
-         'Authorization':   data
+         'Authorization':   localdata
     }
     fetch ('http://localhost:3000/auth/verify',{headers:header}).then((response) => {
   if(response.status === 200) {
      response.json().then((data) => {
-       console.log(data)
-       //delete token from local storage
+       if(data.status ==  "Unauthorized")
+        {
+           login()
+        }
+         if(!data.token)
+        {
+          data.token = localdata
+        }
         localStorage.setItem('userData', data.token)
         setLogin('login')
      })
@@ -79,7 +85,7 @@ const localStorageLookup = async () => {
 
 /*
       if (data.status === 200) {
-        console.log('logged in')
+          sole.log('logged in')
         setLogin('login')
         localStorage.setItem('userData', JSON.stringify(data.user))
       }

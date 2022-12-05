@@ -9,9 +9,7 @@ export class AuthService {
   constructor(private jwtService: JwtService) {}
   
   async validate_token (input:string)  {
-     console.log(input)
   let token = input
-   //mak the shape of the token the same as the shape of the token that is created
   try {
     const    secret = 'secret'
     const decoded = this.jwtService.verify(token, {secret});
