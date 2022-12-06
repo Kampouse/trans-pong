@@ -20,6 +20,8 @@ import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
 import { generateSerial } from 'utils'
 import { useNavigate } from 'react-router'
 
+import { prisma } from '../../../backend/src/main'
+
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -147,6 +149,26 @@ export interface SearchUserProps {
 	searchInput: string;
 	userClicked: React.MutableRefObject<User | null>;
 }
+
+export const getStaticProps = async () => {
+	const feed = await prisma.profile.findMany({
+		include: {
+			// blockedBy
+		}
+	})
+  // const feed = await prisma.post.findMany({
+  //   where: { published: true },
+  //   include: {
+  //     author: {
+  //       select: { name: true },
+  //     },
+  //   },
+  // });
+  return {
+    props: { feed },
+    revalidate: 10,
+  };
+};
 
 export function SearchUser({ open, onClose, searchInput, userClicked }: SearchUserProps) {
 	const [users, setUsers] = useAtom(useUsers);

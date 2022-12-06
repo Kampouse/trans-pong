@@ -1,5 +1,5 @@
 import { Achievement, Matches, User } from 'components/types';
-import { Tabs, Tab, Box, Typography, IconButton, Dialog, Button, DialogContent, DialogTitle, DialogActions } from '@mui/material'
+import { Tabs, Tab, Box, Typography, IconButton, Dialog, Button, DialogContent, DialogTitle, DialogActions, Switch } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import React, { useState, useRef, ChangeEvent } from 'react';
 import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
@@ -261,6 +261,7 @@ export interface DeleteChannelProps {
 
 export function EditProfile({ open, onClose }: DeleteChannelProps) {
 	const [newDisplayName, setNewDisplayName] = useState('');
+	const [isChecked, setIsChecked] = useState(false);
 
 	return (
 		<Dialog onClose={onClose} open={open}>
@@ -279,6 +280,10 @@ export function EditProfile({ open, onClose }: DeleteChannelProps) {
 						<input hidden accept="image/*" type="file" id='image-input' />
 					</Button>
 					<p className='pl-2 h-fit my-auto'>No file uploaded</p>
+				</div>
+				<p className='pt-4 pb-1'>2-Way Authentification</p>
+				<div className='flex pl-8 h-fit w-fit'>
+					<Switch checked={isChecked} onChange={(evt) => {setIsChecked(evt.target.checked)}} />
 				</div>
 			</DialogContent>
 			<DialogActions className="bg-sky-200 flex">
