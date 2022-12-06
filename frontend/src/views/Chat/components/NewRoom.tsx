@@ -8,11 +8,17 @@ import {
 import { ChatRoom } from '@utils/types'
 import React, { useEffect, useState } from 'react'
 import { generateSerial } from 'utils'
-import { getUserDetails } from '../Chat'
+import { getUserDetails } from '@router/Router'
 
 export interface NewRoomProps {
-  open: boolean
-  onClose: (value: null | ChatRoom) => void
+  open: boolean;
+  onClose: (room: ChatRoom | null,
+						rooms: ChatRoom[],
+						setRooms: React.Dispatch<React.SetStateAction<ChatRoom[]>>,
+						setOpenNewRoom:  React.Dispatch<React.SetStateAction<boolean>>) => void;
+	rooms: ChatRoom[];
+	setRooms: React.Dispatch<React.SetStateAction<ChatRoom[]>>;
+	setOpenNewRoom:  React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function NewRoom({ open, onClose }: NewRoomProps) {

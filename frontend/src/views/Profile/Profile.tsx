@@ -1,6 +1,5 @@
 import { Achievement, Matches, User } from '@utils/types'
-import { getUserDetails } from '@views/Chat/Chat'
-import { Tabs, Tab, Box, Typography, IconButton } from '@mui/material'
+import { Tabs, Tab, Box, Typography, IconButton, Dialog, Button, DialogContent, DialogTitle, DialogActions } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import React, { useState, useRef } from 'react'
 import {
@@ -12,10 +11,15 @@ import {
   Lock,
   WorkspacePremium,
   CheckCircle,
-  Cancel
+  Cancel,
+	Edit
 } from '@mui/icons-material'
 import { UserOptions } from '@views/UserOptions'
 import { blue } from '@mui/material/colors'
+import { getUserDetails, useRoomCode, useRooms } from "@router/Router";
+import { handleSendMessage } from '@Chat/ChatHandlers'
+import { useAtom } from 'jotai';
+import { NavigateFunction } from 'react-router';
 
 function MatchResult({ userDetails }: { userDetails: User }) {
   return (
@@ -280,31 +284,94 @@ function Achievements({ userDetails }: { userDetails: User }) {
   )
 }
 
-export default function Profile() {
+export interface DeleteChannelProps {
+	open: boolean;
+	onClose: () => void;
+}
+
+export function EditProfile({ open, onClose }: DeleteChannelProps) {
+	const [newDisplayName, setNewDisplayName] = useState('');
+
+	return (
+		<Dialog onClose={onClose} open={open}>
+			<DialogTitle className="bg-sky-200 text-blue-700">
+				Edit Profile
+			</DialogTitle>
+			<DialogContent className="bg-sky-200">
+				<p className='pb-1'>Display Name</p>
+				<div className='pl-8 h-fit w-full'>
+					<input className='w-full' onChange={(e) => {setNewDisplayName(e.target.value)}} type="text" placeholder="Enter New Display Name" />
+				</div>
+				<p className='pt-4 pb-1'>Profile Image</p>
+				<div className='flex pl-8 h-fit w-fit'>
+					<Button variant="contained" component="label" className='pl-4'>
+						Upload
+						<input hidden accept="image/*" type="file" id='image-input' />
+					</Button>
+					<p className='pl-2 h-fit my-auto'>No file uploaded</p>
+				</div>
+			</DialogContent>
+			<DialogActions className="bg-sky-200 flex">
+				<Button onClick={onClose} sx={{ fontWeight: 'bold' }}>Save changes</Button>
+				<Button onClick={onClose} sx={{ fontWeight: 'bold' }}>Cancel changes</Button>
+			</DialogActions>
+		</Dialog>
+	);
+}
+
+export default function Profile({userClicked}: {userClicked: React.MutableRefObject<User | null>}) {
   const userDetails: User = getUserDetails()
   const [value, setValue] = useState('1')
   const [openUserOptions, setOpenUserOptions] = useState(false)
-  // const userClicked = useRef<User | null>(null);
+	const [hover, setHover] = useState(false);
+ 	const [openEditProfile, setOpenEditProfile] = useState(false);
+ 	const [rooms, setRooms] = useAtom(useRooms);
+ 	const setRoomCode = useAtom(useRoomCode)[1];
+ 	const [openNewRoom, setOpenNewRoom] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
 
-  // const handleUserOptionsClose = () => {
-  // 	setOpenUserOptions(false);
-  // }
+	const getAddFriendStatus = (): string => {
+		if (userDetails.friendList.find((user: User) => {return user.username === userClicked.current?.username}) !== undefined)
+			return 'Delete friend';
+		else if (userClicked.current?.friendRequests.find((user: User) => {return user.username === userDetails.username}) !== undefined ||
+						userDetails.friendRequests.find((user: User) => {return user.username === userClicked.current?.username}))
+			return 'Request sent';
+		else if (userClicked.current?.blockedUsers.find((user: User) => {return user.username === userDetails.username}) === undefined)
+			return 'Add friend';
+		else
+			return '';
+	}
+
+	const getAddFriendDisabled = (): boolean => {
+		return (getAddFriendStatus() === 'Request sent')
+	}
+
+  const handleUserOptionsClose = () => {
+  	setOpenUserOptions(false);
+  }
 
   return (
     <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit">
       <div className="w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto">
         <div className="w-full h-[25%] flex">
-          <div className="w-[50%] h-full flex items-center">
-            <img
-              className="rounded-full h-full border-4 border-blue-700 h-[75%] mx-auto"
-              src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
-              alt=""
-            />
-          </div>
+				<div className='w-[50%] h-full flex items-center justify-center'>
+						{ hover && 
+							<div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
+								<Edit sx={{color: blue[700], height: 35, width: 35}} />
+							</div>
+						}
+						<img 
+							className={`rounded-full h-full border-4 border-blue-700 h-[75%] mx-auto relative ${hover ? 'brightness-[.25] cursor-pointer' : ''}`}
+							src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+							alt="Edit"
+							onMouseEnter={() => setHover(true)}
+							onMouseLeave={() => setHover(false)}
+							onClick={() => {setOpenEditProfile(true); setHover(false)}}
+						/>
+					</div>
           <div className="w-[50%] h-full flex  mx-auto">
             <div className="h-fit my-auto">
               <p className="text-2xl font-bold ">{userDetails.username}</p>
@@ -377,7 +444,8 @@ export default function Profile() {
           </div>
         </TabContext>
       </div>
-      {/* <UserOptions open={openUserOptions} currentUser={userClicked.current} handleSendMessage={handleSendMessage} onClose={handleUserOptionsClose} /> */}
+			<EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} />
+			<UserOptions open={openUserOptions} currentUser={userClicked.current} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={(navigate) => {handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)}} onClose={handleUserOptionsClose} />
     </div>
   )
 }

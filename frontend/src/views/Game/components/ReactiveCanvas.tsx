@@ -39,12 +39,12 @@ const ReactiveCanvas = () => {
   }, [countdown])
 
   return (
-    <div className="m-auto ">
-      <div
-        id="container"
-        ref={div}
-        className="xl:w-[1200px] xl:h-[800px] lg:w-[900px] lg:h-[600px] md:w-[600px] md:h-[400px] sm:w-[600px] sm:h-[400px] w-[300px] h-[200px] pt-[50px]"
-      >
+    <div className="py-[50px] w-full m-auto max-h-screen overflow-y-scroll scrollbar-hide">
+ 			<div
+				id="container"
+				ref={div}
+				className="m-auto xl:w-[1200px] xl:h-[800px] lg:w-[900px] lg:h-[600px] md:w-[600px] md:h-[400px] sm:w-[600px] sm:h-[400px] w-[300px] h-[200px] pt-[50px]"
+			>
         <canvas
           id="myCanvas"
           ref={canvas}
@@ -59,7 +59,7 @@ const ReactiveCanvas = () => {
         />
         {/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}
       </div>
-      <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] pt-24 grid xl:grid-cols-6 lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-6 grid-cols-4 items-center justify-center">
+      <div className="m-auto xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] pt-24 grid xl:grid-cols-6 lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-6 grid-cols-4 items-center justify-center">
         <p className="text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-2xl text-xl font-bold mr-[10px] justify-end grid xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2">
           {player1}
         </p>

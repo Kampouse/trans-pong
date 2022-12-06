@@ -24,7 +24,7 @@ import {
 import { blue } from '@mui/material/colors'
 import React, { useRef } from 'react'
 import { ChatRoom, User } from '@utils/types'
-import { getUserDetails } from '@views/Chat/Chat'
+import { getUserDetails } from '@router/Router'
 import '@styles/main.css'
 
 export interface SidebarDetailsProps {
@@ -52,6 +52,7 @@ const generateOptions = (
       icon: <Image />,
       ownerOnly: false,
       adminOnly: true,
+			private: true,
       action: () => {}
     },
     {
@@ -59,6 +60,7 @@ const generateOptions = (
       icon: <MeetingRoom />,
       ownerOnly: false,
       adminOnly: false,
+			private: false,
       action: () => setOpenQuitChannel(true)
     },
     {
@@ -66,6 +68,7 @@ const generateOptions = (
       icon: <Delete />,
       ownerOnly: true,
       adminOnly: false,
+			private: false,
       action: () => setOpenDeleteChannel(true)
     },
     {
@@ -73,6 +76,7 @@ const generateOptions = (
       icon: <Lock />,
       ownerOnly: true,
       adminOnly: false,
+			private: false,
       action: () => setOpenNewPassword(true)
     }
   ]
