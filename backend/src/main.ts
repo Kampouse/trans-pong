@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import * as session from 'express-session';
 import { env } from 'process';
 import { cors } from 'cors';
+import * as cookieParser from 'cookie-parser';
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -26,7 +27,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: 'http://localhost:5173',
-    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: [
       'Content-Type',
@@ -35,9 +35,12 @@ async function bootstrap() {
       'Access-Control-Allow-Headers',
       'Access-Control-Allow-Methods',
       'Access-Control-Allow-Credentials',
+       
     ],
+    credentials: true
   });
   app.use(
+    cookieParser("trans"),
     session({
       secret: 'secret',
       resave: false,

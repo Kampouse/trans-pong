@@ -1,0 +1,34 @@
+
+> monorepo for transpong@0.1.0 build
+> (concurrently 'npm run frontend-build' 'npm run  backend-build')
+
+[1] 
+[1] > monorepo for transpong@0.1.0 backend-build
+[1] > cd ./backend/ && npm run build
+[1] 
+[0] 
+[0] > monorepo for transpong@0.1.0 frontend-build
+[0] > cd ./frontend/ && npm run build
+[0] 
+[0] 
+[0] > reactjs-vite-tailwindcss-boilerplate@0.1.0 build
+[0] > tsc && vite build --outDir dist
+[0] 
+[1] 
+[1] > pongy@0.0.1 prebuild
+[1] > rimraf dist
+[1] 
+[1] 
+[1] > pongy@0.0.1 build
+[1] > nest build
+[1] 
+[1] npm run  backend-build exited with code 0
+[0] vite v3.2.3 building for production...
+[0] transforming...
+[0] ✓ 11501 modules transformed.
+[0] rendering chunks...
+[0] dist/assets/medal.ecd008d6.ico   102.32 KiB
+[0] dist/index.html                  0.70 KiB
+[0] dist/assets/index.2c781c38.css   24.98 KiB / gzip: 5.49 KiB
+[0] dist/assets/index.e756f472.js    343.07 KiB / gzip: 108.14 KiB
+[0] npm run frontend-build exited with code 0

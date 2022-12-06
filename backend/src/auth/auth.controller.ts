@@ -7,17 +7,16 @@ import {
   Redirect,
   Res,
   Post,
-  Response,
   Session,
   Headers,
 } from '@nestjs/common';
-import { response, Express, Request } from 'express';
-import { request } from 'http';
+import {Response,Request } from 'express';
 import { AuthService } from './auth.service';
 import { FortyTwoStrategy } from './utils/42strategy';
-import { GoogleAuthGuard, FortyTwoAuthGuard, LoginGuard } from './utils/Guards';
+import { JwtGuard, FortyTwoAuthGuard } from './utils/Guards';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CreateAuthDto } from './dto/create-auth.dto';
+import { JwtService } from '@nestjs/jwt';
 type User = {
   id: string;
   username: string;
@@ -34,48 +33,56 @@ type RequestWithUser = Request & { user: User; response: any } & {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('who')
-  @UseGuards(LoginGuard)
-  who(@Req() request: Request, @Headers() headers: Headers) {
-    const sessionStore = request['sessionStore'];
-    const type: SessionUser = sessionStore['sessions'];
-    const groups = { ...type };
-    const first = Object.values(groups)[0];
-    if (first !== undefined) {
-      const parsed = JSON.parse(first);
-      const expire = parsed['cookie']['expires'];
-      const passport = parsed['passport'];
-      const user = passport['user']['username'];
-      if (expire < Date.now()) {
-        return {};
-      } else {
-        const data = this.authService.findOne(user);
-        return data;
-      }
-    }
-  }
-
+  //verify  with :id
   @Get('verify')
-  handleLogin(@Req() request: Request, @Headers() headers: Headers) {
+  async handleLogin(  @Res({ passthrough: true }) response, @Req() request: Request, @Headers() headers: Headers) {
     const sessionStore = request['sessionStore'];
     const type: SessionUser = sessionStore['sessions'];
     const groups = { ...type };
     const first = Object.values(groups)[0];
+    if(!request.headers.authorization ){
+      return({401: 'Unauthorized'});
+    }
+    if(request.headers.authorization ){
+        this.authService.validate_token(request.headers.authorization).then((data) => { 
+          if(data){
+            return({200: 'ok'});
+          }
+          else{
+            return({401: 'Unauthorized'});
+          }
+        })
+    }
     if (first !== undefined) {
       const parsed = JSON.parse(first);
       const expire = parsed['cookie']['expires'];
       const passport = parsed['passport'];
-      if (expire < Date.now()) {
-        return {};
-      } else {
-        // ho
-
-        return { user: passport['user']['displayName'] };
+       const token = await this.authService.createToken( passport['user']);
+        return  {200: 'ok', token: token};;
+    }
+    else {
+        try{
+           if( request.headers.authorization.length === 9){
+             return  {401: 'Unauthorized', status: 'Unauthorized'};
+           }
+           if(request.headers.authorization){
+            const  decoded = await this.authService.verify2(request.headers.authorization);
+        if(decoded){
+              let res = { token : request.headers.authorization,200: 'ok'};
+              headers['authorization'] = request.headers.authorization;
+             return { data: res ,Headers : { 'Content-Type': 'application/json' }, headers: headers};
+                  }
+        }
+      else{ 
+          response.status(401).send({message: 'Unauthorized'});
       }
     }
-    return { user: 'no user' };
+    catch{
+        response.status(401).send({message: 'Unauthorized', status: 'Unauthorized'});
+    }
+    }
   }
-
+   
   @UseGuards(FortyTwoAuthGuard)
   @Get('42login')
   @Redirect()
@@ -90,21 +97,18 @@ export class AuthController {
           this.authService.create(request.user);
         }
       });
-      return { statCode: 302, url: url, message: 'Login42' };
+      return { statCode: 302, url: url};
     }
     if (!request.user) {
       const url = 'http://localhost:5173' + '/Login';
       return {
         statCode: 302,
-        url: url,
-        cookies: { hello: 'hello' },
-        Headers: { hello: 'hello' },
-        message: 'Login42',
+        url: url
       };
     }
   }
   @Get('check')
-  @UseGuards(LoginGuard)
+  @UseGuards(JwtGuard)
   check(@Req() @Headers() headers: Headers) {
     return { hello: 'hello' };
   }

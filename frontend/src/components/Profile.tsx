@@ -1,9 +1,9 @@
-import { Achievement, Matches, User } from 'components/types';
+import { Achievement, Matches, User } from '../utils/types';
 import { Tabs, Tab, Box, Typography, IconButton, Dialog, Button, DialogContent, DialogTitle, DialogActions, Switch } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import React, { useState, useRef, ChangeEvent } from 'react';
 import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
-import { UserOptions } from "./UserOptions";
+import { UserOptions } from "../views/UserOptions/UserOptions";
 import { blue } from '@mui/material/colors';
 import { getUserDetails, useRoomCode, useRooms } from "components/App";
 import { handleSendMessage } from './Chat/ChatHandlers'
