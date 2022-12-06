@@ -1,7 +1,7 @@
 import { Person, Send } from '@mui/icons-material'
 import { Avatar, IconButton } from '@mui/material'
 import { grey } from '@mui/material/colors'
-import { ChatRoom, Messages, User } from 'components/types'
+import { ChatRoom, Messages, User } from '@utils/types'
 import { useState } from 'react'
 import { getUserDetails } from '../Chat'
 

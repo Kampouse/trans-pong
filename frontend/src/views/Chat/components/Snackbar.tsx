@@ -1,4 +1,3 @@
-import { Close } from '@mui/icons-material'
 import { Alert, AlertColor, IconButton, Snackbar } from '@mui/material'
 
 export interface SnackbarProps {

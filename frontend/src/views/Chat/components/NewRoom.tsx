@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogTitle
 } from '@mui/material'
-import { ChatRoom } from 'components/types'
+import { ChatRoom } from '@utils/types'
 import React, { useEffect, useState } from 'react'
 import { generateSerial } from 'utils'
 import { getUserDetails } from '../Chat'

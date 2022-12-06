@@ -7,7 +7,7 @@ import {
   Button
 } from '@mui/material'
 import { blue } from '@mui/material/colors'
-import { ChatRoom, User } from 'components/types'
+import { ChatRoom, User } from '@utils/types'
 import React from 'react'
 import { getUserDetails } from '@views/Chat/Chat'
 import { Link } from 'react-router-dom'
