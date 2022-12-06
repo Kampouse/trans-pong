@@ -14,14 +14,29 @@ import {
   Cancel,
 	Edit
 } from '@mui/icons-material'
-import { UserOptions } from '@views/UserOptions'
+import { UserOptions } from '@views/UserOptions/UserOptions'
 import { blue } from '@mui/material/colors'
 import { getUserDetails, useRoomCode, useRooms } from "@router/Router";
-import { handleSendMessage } from '@Chat/ChatHandlers'
+import { handleSendMessage } from '@views/Chat/ChatHandlers'
 import { useAtom } from 'jotai';
 import { NavigateFunction } from 'react-router';
 
-function MatchResult({ userDetails }: { userDetails: User }) {
+function MatchResult(
+	{
+		userDetails,
+		userClicked,
+		setOpenUserOptions
+	}: {
+		userDetails: User,
+		userClicked: React.MutableRefObject<User | null>,
+		setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>
+	}) {
+
+	function onUserClick(currentMatch: Matches) {
+		setOpenUserOptions(true);
+		userClicked.current = currentMatch.opponent;
+	}
+
   return (
     <div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
@@ -47,13 +62,21 @@ function MatchResult({ userDetails }: { userDetails: User }) {
                   <div className="flex w-[37%] my-auto items-center ml-2">
                     <div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
                       <img
-                        className="h-full w-full rounded-full"
+                        className={`h-full w-full rounded-full ${currentMatch.result === 'loss' ? 'cursor-pointer hover:border-2 border-pink-500' : ''}`}
                         src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
                         alt=""
+												onClick={() => (currentMatch.result === 'loss')
+																	? onUserClick(currentMatch)
+																	: undefined}
                       />
                     </div>
                     <div className="ml-2">
-                      <p className=" text-gray-900">
+                      <p
+												className={`text-gray-900 ${currentMatch.result === 'loss' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
+												onClick={() => (currentMatch.result === 'loss')
+																	? onUserClick(currentMatch)
+																	: undefined}
+											>
                         {currentMatch.result === 'win'
                           ? userDetails.username
                           : currentMatch.opponent.username}
@@ -78,7 +101,12 @@ function MatchResult({ userDetails }: { userDetails: User }) {
                   </div>
                   <div className="flex w-[37%] my-auto justify-end items-center mr-2">
                     <div className="mr-2">
-                      <p className=" text-gray-900">
+											<p 
+												className={`text-gray-900 ${currentMatch.result === 'win' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
+												onClick={() => (currentMatch.result === 'win')
+																	? onUserClick(currentMatch)
+																	: undefined}
+											>
                         {currentMatch.result === 'loss'
                           ? userDetails.username
                           : currentMatch.opponent.username}
@@ -86,9 +114,12 @@ function MatchResult({ userDetails }: { userDetails: User }) {
                     </div>
                     <div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
                       <img
-                        className="h-full w-full rounded-full"
+                        className={`h-full w-full rounded-full ${currentMatch.result === 'win' ? 'cursor-pointer hover:border-2 border-pink-500' : ''}`}
                         src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
                         alt=""
+												onClick={() => (currentMatch.result === 'win')
+																	? onUserClick(currentMatch)
+																	: undefined}
                       />
                     </div>
                   </div>
@@ -102,7 +133,17 @@ function MatchResult({ userDetails }: { userDetails: User }) {
   )
 }
 
-function FriendList({ userDetails }: { userDetails: User }) {
+function FriendList(
+	{
+		userDetails,
+		userClicked,
+		setOpenUserOptions
+	}: {
+		userDetails: User,
+		userClicked: React.MutableRefObject<User | null>,
+		setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>
+	}) {
+
   const ONLINE = 'text-green-600 text-md'
   const PLAYING = 'text-amber-500 text-md'
   const OFFLINE = 'text-red-600 text-md'
@@ -127,13 +168,23 @@ function FriendList({ userDetails }: { userDetails: User }) {
                   <div className="flex items-center space-x-4">
                     <div className="shrink-0">
                       <img
-                        className="h-12 w-12 border-2 border-blue-700 rounded-full"
+                        className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer"
                         src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
                         alt="Neil image"
+												onClick={() => {
+													setOpenUserOptions(true);
+													userClicked.current = currentUser;
+												}}
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600">
+                      <p 
+												className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2"
+												onClick={() => {
+													setOpenUserOptions(true);
+													userClicked.current = currentUser;
+												}}
+											>
                         {currentUser.username}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-slate-500">
@@ -152,7 +203,17 @@ function FriendList({ userDetails }: { userDetails: User }) {
   )
 }
 
-function FriendRequests({ userDetails }: { userDetails: User }): JSX.Element {
+function FriendRequests(
+	{
+		userDetails,
+		userClicked,
+		setOpenUserOptions
+	}: {
+		userDetails: User,
+		userClicked: React.MutableRefObject<User | null>,
+		setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>
+	}): JSX.Element {
+
   const [friendRequests, setFriendRequests] = useState<Array<User>>(
     userDetails.friendRequests
   )
@@ -191,13 +252,23 @@ function FriendRequests({ userDetails }: { userDetails: User }): JSX.Element {
                   <div className="flex items-center space-x-4">
                     <div className="shrink-0">
                       <img
-                        className="h-12 w-12 border-2 border-blue-700 rounded-full"
+                        className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer"
                         src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
                         alt="Neil image"
+												onClick={() => {
+													setOpenUserOptions(true);
+													userClicked.current = currentUser;
+												}}
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600">
+                      <p 
+												className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2"
+												onClick={() => {
+													setOpenUserOptions(true);
+													userClicked.current = currentUser;
+												}}
+											>
                         {currentUser.username}
                       </p>
                     </div>
@@ -284,12 +355,12 @@ function Achievements({ userDetails }: { userDetails: User }) {
   )
 }
 
-export interface DeleteChannelProps {
+export interface EditProfileProps {
 	open: boolean;
 	onClose: () => void;
 }
 
-export function EditProfile({ open, onClose }: DeleteChannelProps) {
+export function EditProfile({ open, onClose }: EditProfileProps) {
 	const [newDisplayName, setNewDisplayName] = useState('');
 
 	return (
@@ -428,13 +499,25 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
           <div className="grow overflow-hidden">
             <div className="max-h-[100%] overflow-y-scroll overflow-hidden">
               <TabPanel value="1">
-                <MatchResult userDetails={userDetails} />
+                <MatchResult
+									userDetails={userDetails}
+									userClicked={userClicked}
+									setOpenUserOptions={setOpenUserOptions}
+								/>
               </TabPanel>
               <TabPanel value="2">
-                <FriendList userDetails={userDetails} />
+                <FriendList
+									userDetails={userDetails}
+									userClicked={userClicked}
+									setOpenUserOptions={setOpenUserOptions}
+								/>
               </TabPanel>
               <TabPanel value="3">
-                <FriendRequests userDetails={userDetails} />
+                <FriendRequests
+									userDetails={userDetails}
+									userClicked={userClicked}
+									setOpenUserOptions={setOpenUserOptions}
+								/>
               </TabPanel>
               <TabPanel value="4">
                 <Achievements userDetails={userDetails} />

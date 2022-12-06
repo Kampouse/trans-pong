@@ -7,9 +7,9 @@ import {
   Button
 } from '@mui/material'
 import { blue } from '@mui/material/colors'
-import { ChatRoom, User } from '@utils/types'
+import { ChatRoom, User } from 'utils/types'
 import React from 'react'
-import { getUserDetails } from '@router/Router'
+import { getUserDetails } from 'router/Router'
 import { Link, useNavigate } from 'react-router-dom'
 
 export interface UserOptionsProps {
