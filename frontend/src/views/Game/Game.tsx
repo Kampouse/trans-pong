@@ -45,18 +45,18 @@ function Prev() {
 
 export function GameWatch() {
   return (
-    <div className=" w-[90%] pt-[50px] m-auto flex h-5/6 justify-center lg:flex-row ">
+    <div className="xl:w-[1200px] xl:h-[800px] lg:w-[900px] lg:h-[600px] md:w-[600px] md:h-[400px] sm:w-[600px] sm:h-[400px] w-[300px] h-[200px] mb-[50px] mt-[100px] m-auto flex justify-center lg:flex-row ">
       <div className=" flex  h-full flex-col justify-center rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm w-full ">
         <button className="absolute rounded-lg ">
-          {' '}
-          <Prev />{' '}
+          {" "}
+          <Prev />{" "}
         </button>
         <button className="absolute right-2 rounded-lg ">
-          {' '}
-          <Next />{' '}
+          {" "}
+          <Next />{" "}
         </button>
 
-        <canvas />
+        <canvas className="h-full w-full"/>
       </div>
     </div>
   )

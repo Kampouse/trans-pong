@@ -124,7 +124,7 @@ let player1: User = {
     { scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win' },
     { scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win' }
   ],
-  friendList: [player2, player3, player4],
+  friendList: [player2, player3, player4, player5, player6, player7],
   friendRequests: [player5, player6, player7, player8],
   achievements: initAchievement(),
   firstname: 'Gabriel',
@@ -133,7 +133,7 @@ let player1: User = {
 
 let userDetails: User = player1
 
-export const getUserDetails = () => {
+export const getUserDetails = () : User => {
   return userDetails
 }
 

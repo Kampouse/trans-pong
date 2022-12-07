@@ -1,14 +1,25 @@
 import {
   Button,
   ButtonGroup,
+  Checkbox,
   Dialog,
   DialogContent,
-  DialogTitle
+  DialogTitle,
+	FormControl,
+	InputLabel,
+	ListItemText,
+	MenuItem,
+	OutlinedInput,
+	Select,
+	SelectChangeEvent,
+	Theme,
+	useTheme
 } from '@mui/material'
 import { ChatRoom } from '@utils/types'
 import React, { useEffect, useState } from 'react'
 import { generateSerial } from 'utils'
 import { getUserDetails } from '@router/Router'
+import { User } from 'utils/types'
 
 export interface NewRoomProps {
   open: boolean;
@@ -21,7 +32,7 @@ export interface NewRoomProps {
 	setOpenNewRoom:  React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function NewRoom({ open, onClose }: NewRoomProps) {
+function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProps) {
   const [isNew, setIsNew] = useState(true)
   const [roomCode, setRoomCode] = useState('')
   const [status, setStatus] = useState('public')
@@ -30,6 +41,17 @@ function NewRoom({ open, onClose }: NewRoomProps) {
   const [repeatPassword, setRepeatPassword] = useState('')
   const [passwordMatch, setPasswordMatch] = useState(true)
   const [init, setInit] = useState(true)
+	const [usersSelect, setUsersSelect] = useState([] as User[])
+	const [usersSelectArr, setUsersSelectArr] = useState([] as string[])
+
+	const MenuProps = {
+		PaperProps: {
+			style: {
+				maxHeight: 250,
+				width: 200,
+			},
+		},
+	};
 
   const handleClose = (val: null | ChatRoom) => {
     setIsNew(true)
@@ -40,7 +62,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
     setRepeatPassword('')
     setPasswordMatch(true)
     setInit(true)
-    onClose(val)
+    onClose(val, rooms, setRooms, setOpenNewRoom)
   }
 
   useEffect(() => {
@@ -52,6 +74,29 @@ function NewRoom({ open, onClose }: NewRoomProps) {
       )
     setInit(false)
   }, [password, repeatPassword])
+
+
+
+	const handleChange = (event: SelectChangeEvent<typeof usersSelectArr>) => {
+    const {
+      target: { value },
+    } = event;
+    setUsersSelectArr(
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
+
+	const theme = useTheme();
+	const [personName, setPersonName] = React.useState<string[]>([]);
+	function getStyles(name: string, personName: string[], theme: Theme) {
+		return {
+			fontWeight:
+				personName.indexOf(name) === -1
+					? theme.typography.fontWeightRegular
+					: theme.typography.fontWeightMedium,
+		};
+	}
 
   return (
     <Dialog onClose={() => handleClose(null)} open={open}>
@@ -65,6 +110,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
                   setIsNew(true)
                   setPasswordMatch(true)
                   setStatus('public')
+									setUsersSelectArr([]);
                 }}
                 sx={[
                   isNew && {
@@ -80,6 +126,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
                 onClick={() => {
                   setIsNew(false)
                   setRoomCode('')
+									setUsersSelectArr([]);
                 }}
                 sx={[
                   !isNew && {
@@ -101,6 +148,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
                   onClick={() => {
                     setStatus('public')
                     setPasswordMatch(true)
+										setUsersSelectArr([]);
                   }}
                   sx={[
                     status === 'public' && {
@@ -116,6 +164,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
                   onClick={() => {
                     setStatus('private')
                     setPasswordMatch(true)
+										setUsersSelectArr([]);
                   }}
                   sx={[
                     status === 'private' && {
@@ -131,6 +180,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
                   onClick={() => {
                     setStatus('protected')
                     setPasswordMatch(false)
+										setUsersSelectArr([]);
                   }}
                   sx={[
                     status === 'protected' && {
@@ -162,7 +212,7 @@ function NewRoom({ open, onClose }: NewRoomProps) {
                   placeholder="Enter Password"
                 />
               </div>
-              <div className="py-4 m-auto w-fit">
+              <div className="pt-4 m-auto w-fit">
                 <input
                   onChange={(e) => {
                     setRepeatPassword(e.target.value)
@@ -171,6 +221,40 @@ function NewRoom({ open, onClose }: NewRoomProps) {
                   type="password"
                   placeholder="Repeat Password"
                 />
+              </div>
+							<div className="py-4 m-auto w-fit">
+								<FormControl>
+									<Select
+										labelId="demo-multiple-name-label"
+										id="demo-multiple-name"
+										displayEmpty
+										multiple={(status === "private") ? false : true}
+										value={usersSelectArr}
+										onChange={handleChange}
+										input={<OutlinedInput/>}
+										renderValue={(selected) => {
+											if (selected.length === 0) {
+												return <em>Select Friends</em>;
+											}
+											return selected.join(', ');
+										}}
+										MenuProps={MenuProps}
+										inputProps={{ 'aria-label': 'Without label' }}
+									>
+										<MenuItem disabled value="">
+											<em>Select Friends</em>
+										</MenuItem>
+										{getUserDetails().friendList.map((name : User) => (
+											<MenuItem
+												key={name.username}
+												value={name.username}
+											>
+												<Checkbox checked={usersSelectArr.indexOf(name.username) > -1} />
+              					<ListItemText primary={name.username} />
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
               </div>
               {password !== '' && !passwordMatch && (
                 <div className="m-auto w-fit">
