@@ -16,10 +16,12 @@ import {
 	useTheme
 } from '@mui/material'
 import { ChatRoom } from '@utils/types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { generateSerial } from 'utils'
 import { getUserDetails } from '@router/Router'
 import { User } from 'utils/types'
+import { handleSendMessage } from '../ChatHandlers'
+import { useNavigate } from 'react-router'
 
 export interface NewRoomProps {
   open: boolean;
@@ -27,22 +29,26 @@ export interface NewRoomProps {
 						rooms: ChatRoom[],
 						setRooms: React.Dispatch<React.SetStateAction<ChatRoom[]>>,
 						setOpenNewRoom:  React.Dispatch<React.SetStateAction<boolean>>) => void;
+	users: User[];
 	rooms: ChatRoom[];
 	setRooms: React.Dispatch<React.SetStateAction<ChatRoom[]>>;
+	setRoomCode: React.Dispatch<React.SetStateAction<string>>;
 	setOpenNewRoom:  React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProps) {
+function NewRoom({ open, onClose, users, rooms, setRooms, setRoomCode, setOpenNewRoom }: NewRoomProps) {
   const [isNew, setIsNew] = useState(true)
-  const [roomCode, setRoomCode] = useState('')
+  const [roomCodeInput, setRoomCodeInput] = useState('')
   const [status, setStatus] = useState('public')
   const [roomName, setRoomName] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
   const [passwordMatch, setPasswordMatch] = useState(true)
   const [init, setInit] = useState(true)
-	const [usersSelect, setUsersSelect] = useState([] as User[])
 	const [usersSelectArr, setUsersSelectArr] = useState([] as string[])
+	const userClicked = useRef<User | null>(null);
+
+	const navigate = useNavigate();
 
 	const MenuProps = {
 		PaperProps: {
@@ -55,7 +61,7 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
 
   const handleClose = (val: null | ChatRoom) => {
     setIsNew(true)
-    setRoomCode('')
+    setRoomCodeInput('')
     setRoomName('')
     setStatus('public')
     setPassword('')
@@ -111,6 +117,9 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
                   setPasswordMatch(true)
                   setStatus('public')
 									setUsersSelectArr([]);
+									setRoomName('');
+									setPassword('');
+									setRepeatPassword('');
                 }}
                 sx={[
                   isNew && {
@@ -125,8 +134,11 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
               <Button
                 onClick={() => {
                   setIsNew(false)
-                  setRoomCode('')
+                  setRoomCodeInput('')
 									setUsersSelectArr([]);
+									setRoomName('');
+									setPassword('');
+									setRepeatPassword('');
                 }}
                 sx={[
                   !isNew && {
@@ -149,6 +161,9 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
                     setStatus('public')
                     setPasswordMatch(true)
 										setUsersSelectArr([]);
+										setRoomName('');
+										setPassword('');
+										setRepeatPassword('');
                   }}
                   sx={[
                     status === 'public' && {
@@ -165,6 +180,9 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
                     setStatus('private')
                     setPasswordMatch(true)
 										setUsersSelectArr([]);
+										setRoomName('');
+										setPassword('');
+										setRepeatPassword('');
                   }}
                   sx={[
                     status === 'private' && {
@@ -181,6 +199,9 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
                     setStatus('protected')
                     setPasswordMatch(false)
 										setUsersSelectArr([]);
+										setRoomName('');
+										setPassword('');
+										setRepeatPassword('');
                   }}
                   sx={[
                     status === 'protected' && {
@@ -198,6 +219,7 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
                   onChange={(e) => {
                     setRoomName(e.target.value)
                   }}
+									disabled={status === 'private'}
                   type="text"
                   placeholder="Enter Room Name"
                 />
@@ -223,7 +245,7 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
                 />
               </div>
 							<div className="py-4 m-auto w-fit">
-								<FormControl>
+								<FormControl sx={{ width: 150 }}>
 									<Select
 										labelId="demo-multiple-name-label"
 										id="demo-multiple-name"
@@ -265,7 +287,7 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
           ) : (
             <div className="pb-4 m-auto w-fit">
               <input
-                value={roomCode}
+                value={roomCodeInput}
                 onChange={(e) => setRoomCode(e.target.value)}
                 type="text"
                 placeholder="Room Code"
@@ -275,7 +297,7 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
 
           <div className="m-auto w-fit">
             <Button
-              disabled={!passwordMatch}
+              disabled={!passwordMatch || usersSelectArr.length === 0 || (status !== 'private' && roomName === '')}
               sx={[
                 {
                   '&:hover': { backgroundColor: '#1d4ed8' },
@@ -284,18 +306,39 @@ function NewRoom({ open, onClose, rooms, setRooms, setOpenNewRoom }: NewRoomProp
                 }
               ]}
               onClick={() => {
-                if (isNew)
-                  handleClose({
-                    code: generateSerial(),
-                    name: roomName,
-                    users: [getUserDetails()],
-                    owner: getUserDetails(),
-                    admins: [getUserDetails()],
-                    status: status,
-                    password: password,
-                    messages: [],
-                    image: null
-                  })
+                if (isNew) {
+									if (status === "private") {
+										const user = users.find((user: User) => {return user.username === usersSelectArr.at(0)});
+										if (user !== undefined) {
+											userClicked.current = user;
+											handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate);
+										}
+									}
+									else {
+										let arrUsers : User[] = [];
+										usersSelectArr.forEach((userSelected: string) => {
+											const user = users.find((user: User) => {return user.username === userSelected});
+											if (user !== undefined) {
+												arrUsers.push(user);
+											}
+										})
+
+										const serial = generateSerial();
+										setRoomCode(serial);
+
+										handleClose({
+											code: serial,
+											name: roomName,
+											users: [getUserDetails(), ...arrUsers],
+											owner: getUserDetails(),
+											admins: [getUserDetails()],
+											status: status,
+											password: password,
+											messages: [],
+											image: null
+										})
+									}
+								}
                 // else
                 // joinRoom
               }}

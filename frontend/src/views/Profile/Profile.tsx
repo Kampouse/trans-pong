@@ -496,7 +496,7 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
             </Box>
           </div>
 
-          <div className="grow overflow-hidden">
+          <div className="grow overflow-hidden mb-1">
             <div className="max-h-[100%] overflow-y-scroll overflow-hidden">
               <TabPanel value="1">
                 <MatchResult

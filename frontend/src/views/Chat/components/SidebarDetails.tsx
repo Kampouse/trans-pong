@@ -162,7 +162,7 @@ export const SidebarMembers = ({
           </div>
         )}
       </div>
-      <div className="flex flex-grow overflow-y-hidden overflow-y-scroll w-full">
+      <div className="flex flex-grow overflow-y-hidden overflow-y-scroll w-full mb-1">
         <ListUsers
           roomDetails={roomDetails}
           setOpenNewPassword={setOpenNewPassword}
@@ -188,6 +188,13 @@ export const SidebarOptions = ({
 }: SidebarDetailsProps) => {
   const userDetails: User = getUserDetails()
 
+	const getOtherUser = (room : ChatRoom) => {
+		const otherUser = room.users.find((user: User) => user.username !== userDetails.username);
+		if (otherUser !== undefined)
+			return otherUser.username;
+		return '';
+	}
+
   return (
     <div className="col-span-5 md:col-span-2 row-span-4 md:row-span-6 border-t-0 border-r-0 border-l-[1px] border-b-[1px] md:border-t-[1px] md:border-r-[1px] md:border-l-0 md:border-b-0 border-slate-300">
       <div className="h-[50%] overflow-y-scroll scrollbar-hide flex w-full space-x-3">
@@ -200,7 +207,7 @@ export const SidebarOptions = ({
             {/* { !roomDetails.image ? (<Group />) : (<img src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" />) } */}
           </Avatar>
           <p className="flex text-xl font-bold justify-center w-full text-center">
-            {roomDetails.name}
+            {(roomDetails.status !== "private") ? roomDetails.name : getOtherUser(roomDetails)}
           </p>
           <p className="flex text-md font-bold justify-center w-full text-center">
             {roomDetails.code}
