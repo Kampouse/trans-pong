@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAtom,atom } from 'jotai'
-import { useLogin } from "@src/Router/Router";
+import { useLogin , getUserDetails } from "../Router/Router";
+
+
 import { TextField, FormControl, OutlinedInput } from "@mui/material";
-import { getUserDetails } from "components/App";
-import { User } from "./types";
+import { User } from "../utils/types";
 
 export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, setSearchUser}) {
   const [login, setLogin] = useAtom(useLogin)
