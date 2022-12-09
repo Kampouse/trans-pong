@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(cuid())
+  authid         String    @unique
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  profile        Profile?
+  auth           Auth      @relation(fields: [authid], references: [id])
+  blockedProfile Profile[] @relation("blockedProfile")
+}
+
+model Auth {
+  id           String @id @default(cuid())
+  accessToken  String @unique @default("")
+  refreshToken String @unique @default("")
+  bearerToken  String @unique @default("")
+  user         User?
+}
+
+model Stats {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile?
+}
+
+model Ranking {
+  id      String   @id @default(cuid())
+  win     Int      @default(0)
+  lose    Int      @default(0)
+  streak  Int      @default(0)
+  date    DateTime @default(now())
+  profile Profile?
+}
+
+model Profile {
+  id          String   @id @default(cuid())
+  username    String   @unique
+  displayName String
+  status      String   @default("ACTIVE")
+  image       String   @default("https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y")
+  userId      String   @unique
+  statsId     String   @unique
+  rankingId   String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  stats       Stats    @relation(fields: [statsId], references: [id])
+  ranking     Ranking  @relation(fields: [rankingId], references: [id])
+  blockedBy   User[]   @relation("blockedProfile")
+}

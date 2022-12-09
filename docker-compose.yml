@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    restart: unless-stopped
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PSW}
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    networks:
+      trans:
+        ipv4_address: 10.42.42.10
+    ports:
+      - 5432:5432
+
+  web-app:
+    depends_on:
+      - postgres
+    container_name: web-app
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - CALLBACK_URL=${CALLBACK_URL}
+    build:
+      context: ./srcs/.
+      dockerfile: Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+        - CLIENT_ID=${CLIENT_ID}
+        - CLIENT_SECRET=${CLIENT_SECRET}
+        - CALLBACK_URL=${CALLBACK_URL}
+    volumes:
+      - ./srcs:/app
+    networks:
+      trans:
+        ipv4_address: 10.42.42.11
+    ports:
+      - 5173:5173
+      - 3000:3000
+
+networks:
+  trans:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.42.42.0/24
+          gateway: 10.42.42.1

@@ -1,0 +1,48 @@
+{
+  "name": "monorepo for transpong",
+  "description": "monorepo for ",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "name": "João Paulo Moraes",
+    "email": "joaopaulomoraes@outlook.com",
+    "url": "https://github.com/joaopaulomoraes"
+  },
+  "bugs": {
+    "url": "https://github.com/joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate/issues",
+    "email": "joaopaulomoraes@outlook.com"
+  },
+  "scripts": {
+    "backend": "cd ./backend/ && npm run start",
+    "frontend": "cd ./frontend/ && npm run start",
+    "backend-install": "cd ./backend/ && npm i",
+    "frontend-install": "cd ./frontend/ && npm i",
+    "backend-build": "cd ./backend/ && npm run build",
+    "frontend-build": "cd ./frontend/ && npm run build",
+    "backend-prod": "cd ./backend/ && npm run prod",
+    "frontend-prod": "cd ./frontend/ && npm run prod",
+    "dev": "sh ./script.sh && concurrently 'npm run backend' 'npm run  frontend'",
+    "build": "(concurrently 'npm run frontend-build' 'npm run  backend-build')",
+    "prod": "(concurrently 'npm run frontend-prod' 'npm run  backend-prod')",
+    "install": "concurrently 'npm run backend-install' 'npm run frontend-install'",
+    "bootstrap": "npm i && concurrently 'npm run backend-install' 'npm run frontend-install'",
+    "start": "npm i && sh ./script.sh && concurrently 'npm run backend' 'npm run  frontend'"
+  },
+  "devDependencies": {
+    "@lightwing/eslint-config": "0.0.8",
+    "concurrently": "^7.5.0",
+    "eslint": "8.28.0",
+    "lint-staged": "13.0.3",
+    "pnpm": "7.16.1",
+    "rimraf": "3.0.2",
+    "simple-git-hooks": "2.8.1",
+    "typescript": "4.9.3",
+    "vite": "3.2.4",
+    "vite-plugin-doubleshot": "0.0.6"
+  },
+  "dependencies": {
+    "turbo": "^1.6.3",
+    "vite": "^3.2.4",
+    "vite-tsconfig-paths": "^3.6.0"
+  }
+}
