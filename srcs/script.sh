@@ -5,7 +5,6 @@ if [ ! -f ./backend/.env ]; then
     echo "CLIENT_SECRET=${CLIENT_SECRET}" >> ./backend/.env
     echo "CALLBACK_URL=${CALLBACK_URL}" >> ./backend/.env
     cat ./backend/.env
-    cd backend; npx prisma db pull && npx prisma generate
     exit 0
 fi
 
