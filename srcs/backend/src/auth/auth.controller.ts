@@ -17,6 +17,7 @@ import { JwtGuard, FortyTwoAuthGuard } from './utils/Guards';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { JwtService } from '@nestjs/jwt';
+
 type User = {
   id: string;
   username: string;
@@ -25,10 +26,13 @@ type User = {
   accessToken: string;
   refreshToken: string;
 };
+
 type SessionUser = { [key: string]: any };
+
 type RequestWithUser = Request & { user: User; response: any } & {
   session: { passport: { user: User } };
 };
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

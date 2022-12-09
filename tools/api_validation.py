@@ -3,9 +3,6 @@ import requests
 from dotenv import load_dotenv
 import os
 
-#####
-#### add pip install -r requirements.txt to the makefile to intall python-dotenv
-####
 site = "https://api.intra.42.fr"
 authorization = "https://api.intra.42.fr/oauth/token"
 def are_creds_valid():
