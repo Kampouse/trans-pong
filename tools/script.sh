@@ -18,6 +18,10 @@ NORMAL='\033[0m'
 printf "${RED}Starting ft_transcendence setup script\n\n${NORMAL}"
 sleep 0.5
 
+# =============== 	Install python deps	==================#
+printf "${RED}Installing python dependencies\n\n${NORMAL}"
+pip3 install -r requirements.txt --user
+sleep 0.5
 # ===============	Dependencies installation	=============== #
 printf "${BLUE}Step 1) resolving dependencies\n\n${NORMAL}"
 sleep 0.5
