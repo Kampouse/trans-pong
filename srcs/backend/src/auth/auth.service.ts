@@ -73,6 +73,7 @@ async verify2(token: string) {
     const  auth  = await prisma.auth.create({ data: {} });
     //create thee user with a auth relation 
     const user = await prisma.user.create({ data: {authid: auth.id} });
+
     // to add anything else to the profile, add it here
     //specify  by id of the elemement you want to add it to
 
