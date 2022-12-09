@@ -1,6 +1,7 @@
 dist
 dist-ssr
 *.local
+database
 
 # dependencies
 */node_modules
