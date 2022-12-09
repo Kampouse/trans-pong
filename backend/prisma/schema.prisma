@@ -12,8 +12,8 @@ model User {
   authid         String    @unique
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  auth           Auth      @relation(fields: [authid], references: [id])
   profile        Profile?
+  auth           Auth      @relation(fields: [authid], references: [id])
   blockedProfile Profile[] @relation("blockedProfile")
 }
 
@@ -52,8 +52,8 @@ model Profile {
   rankingId   String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  ranking     Ranking  @relation(fields: [rankingId], references: [id])
-  stats       Stats    @relation(fields: [statsId], references: [id])
   user        User     @relation(fields: [userId], references: [id])
+  stats       Stats    @relation(fields: [statsId], references: [id])
+  ranking     Ranking  @relation(fields: [rankingId], references: [id])
   blockedBy   User[]   @relation("blockedProfile")
 }
