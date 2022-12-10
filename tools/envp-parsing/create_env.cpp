@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:41:59 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/09 08:25:08 by aguay            ###   ########.fr       */
+/*   Updated: 2022/12/10 16:48:22 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ bool	create_api_info(void)
 	std::string		uid;
 	std::string		secret;
 	std::ofstream	file;
-	bool			run;
+	bool			run = true;
 
 	while (run)
 	{
