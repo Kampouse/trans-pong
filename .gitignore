@@ -7,6 +7,8 @@ database
 */node_modules
 node_modules
 /.pnp
+*/.pnpm-store
+
 .pnp.js
 
 # testing

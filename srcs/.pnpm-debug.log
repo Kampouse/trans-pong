@@ -1,0 +1,153 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "hello",
+      "description": "monorepo for ",
+      "version": "0.1.0",
+      "private": true,
+      "author": {
+        "name": "João Paulo Moraes",
+        "email": "joaopaulomoraes@outlook.com",
+        "url": "https://github.com/joaopaulomoraes"
+      },
+      "bugs": {
+        "url": "https://github.com/joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate/issues",
+        "email": "joaopaulomoraes@outlook.com"
+      },
+      "scripts": {
+        "start": "cd ./backend/ && pnpm run start"
+      },
+      "devDependencies": {
+        "@lightwing/eslint-config": "0.0.8",
+        "concurrently": "^7.5.0",
+        "eslint": "8.28.0",
+        "lint-staged": "13.0.3",
+        "pnpm": "7.16.1",
+        "rimraf": "3.0.2",
+        "simple-git-hooks": "2.8.1",
+        "typescript": "4.9.3",
+        "vite": "latest",
+        "vite-plugin-doubleshot": "0.0.6"
+      },
+      "dependencies": {
+        "turbo": "^1.6.3",
+        "vite": "latest",
+        "vite-tsconfig-paths": "^3.6.0"
+      }
+    },
+    "prefix": "/app"
+  },
+  "2 debug pnpm:context": {
+    "currentLockfileExists": false,
+    "storeDir": "/app/.pnpm-store/v3",
+    "virtualStoreDir": "/app/node_modules/.pnpm"
+  },
+  "3 debug pnpm:stage": {
+    "prefix": "/app",
+    "stage": "resolution_started"
+  },
+  "4 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/@lightwing/eslint-config/0.0.8",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@lightwing/eslint-config",
+      "rawSpec": "0.0.8"
+    }
+  },
+  "5 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/concurrently/7.6.0",
+    "wanted": {
+      "dependentId": ".",
+      "name": "concurrently",
+      "rawSpec": "^7.5.0"
+    }
+  },
+  "6 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/eslint/8.28.0",
+    "wanted": {
+      "dependentId": ".",
+      "name": "eslint",
+      "rawSpec": "8.28.0"
+    }
+  },
+  "7 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/lint-staged/13.0.3",
+    "wanted": {
+      "dependentId": ".",
+      "name": "lint-staged",
+      "rawSpec": "13.0.3"
+    }
+  },
+  "8 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/pnpm/7.16.1",
+    "wanted": {
+      "dependentId": ".",
+      "name": "pnpm",
+      "rawSpec": "7.16.1"
+    }
+  },
+  "9 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/rimraf/3.0.2",
+    "wanted": {
+      "dependentId": ".",
+      "name": "rimraf",
+      "rawSpec": "3.0.2"
+    }
+  },
+  "10 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/simple-git-hooks/2.8.1",
+    "wanted": {
+      "dependentId": ".",
+      "name": "simple-git-hooks",
+      "rawSpec": "2.8.1"
+    }
+  },
+  "11 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/typescript/4.9.3",
+    "wanted": {
+      "dependentId": ".",
+      "name": "typescript",
+      "rawSpec": "4.9.3"
+    }
+  },
+  "12 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/vite-plugin-doubleshot/0.0.6",
+    "wanted": {
+      "dependentId": ".",
+      "name": "vite-plugin-doubleshot",
+      "rawSpec": "0.0.6"
+    }
+  },
+  "13 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/turbo/1.6.3",
+    "wanted": {
+      "dependentId": ".",
+      "name": "turbo",
+      "rawSpec": "^1.6.3"
+    }
+  },
+  "14 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmjs.org/vite-tsconfig-paths/3.6.0",
+    "wanted": {
+      "dependentId": ".",
+      "name": "vite-tsconfig-paths",
+      "rawSpec": "^3.6.0"
+    }
+  },
+  "15 error pnpm": {
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "path": "/nix/tarball/tarballs/*.tgz",
+    "pkgsStack": [],
+    "err": {
+      "name": "pnpm",
+      "message": "ENOENT: no such file or directory, open '/nix/tarball/tarballs/*.tgz'",
+      "code": "ENOENT",
+      "stack": "pnpm: ENOENT: no such file or directory, open '/nix/tarball/tarballs/*.tgz'"
+    }
+  }
+}

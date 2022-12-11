@@ -1,7 +1,7 @@
 all: up
 
 up:	build
-	@docker-compose -f docker-compose.yml up -d
+	@docker-compose -f docker-compose.yml up  -d
 	@docker ps
 	@echo ""
 	@echo "http://localhost:5173 for web-serber"
@@ -9,8 +9,6 @@ up:	build
 	@echo "Please be patient, it can take some time for web-server to be"
 
 build:	docker-compose.yml
-	@sh tools/script.sh
-	@./tools/env_manager
 	@docker-compose -f docker-compose.yml build
 
 down:

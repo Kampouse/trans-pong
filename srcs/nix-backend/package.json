@@ -1,0 +1,37 @@
+{
+  "name": "hello",
+  "description": "monorepo for ",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "name": "João Paulo Moraes",
+    "email": "joaopaulomoraes@outlook.com",
+    "url": "https://github.com/joaopaulomoraes"
+  },
+  "bugs": {
+    "url": "https://github.com/joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate/issues",
+    "email": "joaopaulomoraes@outlook.com"
+  },
+  "scripts": {
+    "start": "cd ./backend/ && pnpm run start"
+  },
+
+  "devDependencies": {
+    "@lightwing/eslint-config": "0.0.8",
+    "concurrently": "^7.5.0",
+    "eslint": "8.28.0",
+    "lint-staged": "13.0.3",
+    "pnpm": "7.16.1",
+    "rimraf": "3.0.2",
+    "simple-git-hooks": "2.8.1",
+    "typescript": "4.9.3",
+    "vite": "latest",
+
+    "vite-plugin-doubleshot": "0.0.6"
+  },
+  "dependencies": {
+    "turbo": "^1.6.3",
+    "vite": "latest",
+    "vite-tsconfig-paths": "^3.6.0"
+  }
+}

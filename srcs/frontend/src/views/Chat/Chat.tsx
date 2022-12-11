@@ -18,7 +18,7 @@ import { QuitChannel } from './components/QuitChannel'
 import { AddUser } from './components/AddUser'
 import { AlertColor } from '@mui/material'
 import '@styles/main.css'
-import { UserOptions } from '@views/UserOptions/userOptions'
+import { UserOptions } from  "views/UserOptions/UserOptions"
 
 // export type UserContextType = {
 // 	userDetails: User;

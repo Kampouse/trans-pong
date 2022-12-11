@@ -13,8 +13,8 @@
     "email": "joaopaulomoraes@outlook.com"
   },
   "scripts": {
-    "dev": "vite --host",
-    "start": "vite --host",
+    "dev": "vite",
+    "start": "vite",
     "build": "tsc && vite build --outDir dist",
     "prod": "vite preview",
     "test": "jest",
@@ -35,6 +35,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-responsive-canvas": "^1.0.2",
+    "@babel/core": "^7.20.5",
     "react-router": "^6.3.0",
     "sass": "^1.55.0"
   },
