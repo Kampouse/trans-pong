@@ -17,6 +17,7 @@ build:	docker-compose.yml
 
 down:
 	@docker-compose -f docker-compose.yml down
+	@rm ./tools/env_manager
 	@docker ps
 
 clean:
