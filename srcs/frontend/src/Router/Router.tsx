@@ -133,10 +133,10 @@ let player1: User = {
 
 let userDetails: User = player1
 
-export const getUserDetails = () => {
+export const getUserDetails = () =>
+{
   return userDetails
 }
-
 
 export interface SearchUserProps {
 	open: boolean;
@@ -212,44 +212,8 @@ export default function App() {
         return data.user
       })
   }
-  useEffect(() => {
-    check()
-		setRooms([
-      {
-        code: generateSerial(),
-        name: 'Room1',
-        users: [player1, player2, player3, player4, player5, player6],
-        owner: player1,
-        admins: [player1, player2],
-        status: 'public',
-        password: '',
-        messages: [],
-        image: null
-      },
-      {
-        code: generateSerial(),
-        name: 'Room2',
-        users: [player1, player4],
-        owner: player4,
-        admins: [player4],
-        status: 'private',
-        password: '',
-        messages: [],
-        image: null
-      }
-    ])
 
-    setUsers([
-      player1,
-      player2,
-      player3,
-      player4,
-      player5,
-      player6,
-      player7,
-      player8
-    ])
-  }, [])
+useEffect(() => { check()}, [])
 
   return (
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
