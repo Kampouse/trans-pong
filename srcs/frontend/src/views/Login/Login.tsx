@@ -28,21 +28,7 @@ export default function Login(Status)
         func(inputs)
         const button: HTMLButtonElement = event.currentTarget
     }
-
-  const isLogged = async () => {
-     console.log('isLogged')
-    fetch('http://localhost:3000/auth/verify', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return data
-      })
-  }
+	
 const localStorageLookup = async () => {
   const data = localStorage.getItem('userData')
   if (data) {
@@ -50,7 +36,8 @@ const localStorageLookup = async () => {
   }
   return ""
 }
-  const check = async () => {
+
+const check = async () => {
     const localdata = await localStorageLookup()
     Fetch ('http://localhost:3000/auth/verify').then((response) => {
   if(response.status === 200) {
@@ -68,13 +55,11 @@ const localStorageLookup = async () => {
   }
   else {
     login();
-  }
-  
+}
+
 }).catch((err) => { 
 }) 
-
-      
-  } 
+} 
 
 
 /*

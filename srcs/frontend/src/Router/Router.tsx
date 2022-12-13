@@ -185,9 +185,10 @@ export const myProfile = atom({
   userId: ''
 })
 
-export default function App() {
-  const [user, setUser] = useState(myProfile)
-  const [login, setLogin] = useAtom(useLogin)
+export default function App()
+{
+	const [user, setUser] = useState(myProfile)
+	const [login, setLogin] = useAtom(useLogin)
 	const [openSearchUser, setOpenSearchUser] = useState(false);
 	const [searchUser, setSearchUser] = useState('');
 	const [users, setUsers] = useAtom(useUsers);
@@ -195,7 +196,9 @@ export default function App() {
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
 
-  const check = async () => {
+//  Here we check with the backend if the user is authentificated
+const check = async () =>
+{
     fetch('http://localhost:3000/auth/verify', {
       method: 'GET',
       headers: {
@@ -206,15 +209,17 @@ export default function App() {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.user != 'no user') {
-          setLogin('login')
+        if (data.response == "yes")
+        {
+            console.log("User is authentificated, proceed to open the dashboard")
+            setLogin('login')
         }
         return data.user
       })
-  }
+}
 
+//  If the user is authentificated, render the dashboard
 useEffect(() => { check()}, [])
-
   return (
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
       {login == 'login' ? (

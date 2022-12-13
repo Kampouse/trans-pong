@@ -17,21 +17,6 @@ services:
     ports:
       - 5432:5432
 
-  pgadmin:
-    container_name: pg-admin
-    image: dpage/pgadmin4
-    depends_on:
-      - postgres
-    ports:
-      - "5555:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-      PGADMIN_DEFAULT_PASSWORD: admin
-    restart: unless-stopped
-    networks:
-      trans:
-        ipv4_address: 10.42.42.11
-
   web-app:
     depends_on:
       - postgres
@@ -58,6 +43,7 @@ services:
     ports:
       - 5173:5173
       - 3000:3000
+      - 5555:5555
 
 networks:
   trans:

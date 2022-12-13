@@ -5,6 +5,7 @@ up:	build
 	@docker ps
 	@echo ""
 	@echo "http://localhost:5173 for web-serber"
+	@echo "http://localhost:5555 for prisma studio"
 	@echo ""
 	@echo "Please be patient, it can take some time for web-server to be"
 
@@ -17,7 +18,7 @@ build:	docker-compose.yml
 
 down:
 	@docker-compose -f docker-compose.yml down
-	@rm ./tools/env_manager
+	@rm -rf ./tools/env_manager
 	@docker ps
 
 clean:

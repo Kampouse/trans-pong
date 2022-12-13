@@ -9,6 +9,7 @@ datasource db {
 
 model User {
     userID              String      @id @default(cuid())
+    userNumber          Int         @unique @default(autoincrement())
     profile             Profile?
     auth                Auth?
     createdAt           DateTime    @default(now())
@@ -26,13 +27,13 @@ model Auth {
 model Profile {
     profileID           String      @id @default(cuid())
     user                User        @relation(fields: [profileID], references: [userID])
-    login42             String
+    login42             String      @unique
     username            String      @unique
     online              Boolean     @default(true)
-    coalition           String
-    imagePath           String
-    authentificator     Boolean
-    jwtToken            Json
+    coalition           String?
+    imagePath           String      @default("default_path")
+    authentificator     Boolean     @default(false)
+    jwtToken            Json?
     rightGame           Game[]      @relation(name: "rightPlayer")
     leftGame            Game[]      @relation(name: "leftPlayer")
     friendReqSent       Friend[]    @relation(name: "sent")
@@ -55,8 +56,11 @@ model Game{
     rightPlayerScore    Int         @default(0)
     active              Boolean     @default(true)
     winner              String      @default("Undefined")
+    createdAt           DateTime    @default(now())
+    updatedAt           DateTime    @updatedAt
 }
 
+//  Enum pour status ?
 model Friend{
     friendID            String      @id @default(cuid())
     senderProfile       Profile     @relation(name: "sent", fields: [senderID], references: [profileID])
@@ -64,6 +68,8 @@ model Friend{
     receiverProfile     Profile     @relation(name: "received" ,fields: [receiverID], references: [profileID])
     receiverID          String
     status              String      @default("Pending")
+    createdAt           DateTime    @default(now())
+    updatedAt           DateTime    @updatedAt
 }
 
 model Block{
@@ -73,6 +79,8 @@ model Block{
     blockedProfile      Profile     @relation(name: "blocked", fields: [blockedID], references: [profileID])
     blockedID           String
     reason              String      @default("None")
+    createdAt           DateTime    @default(now())
+    updatedAt           DateTime    @updatedAt
 }
 
 model Channel{
@@ -84,4 +92,6 @@ model Channel{
     ownerID             String
     users               Profile[]
     admin               Boolean     @default(false)
+    createdAt           DateTime    @default(now())
+    updatedAt           DateTime    @updatedAt
 }
