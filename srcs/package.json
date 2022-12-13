@@ -13,7 +13,7 @@
     "email": "joaopaulomoraes@outlook.com"
   },
   "scripts": {
-    "backend": "cd ./backend/ &&  pnpm  i && npx prisma generate && npx prisma db push   && pnpm run start ",
+    "backend": "cd ./backend/ &&  pnpm  i &&  npx prisma db push   && pnpm run start ",
     "frontend": "cd ./frontend/ && pnpm i &&  pnpx vite --host",
     "backend-install": "cd ./backend/ && pnpm i",
     "frontend-install": "cd ./frontend/ && pnpm i",
@@ -21,11 +21,11 @@
     "frontend-build": "cd ./frontend/ && pnpm run build",
     "backend-prod": "cd ./backend/ && pnpm run prod",
     "frontend-prod": "cd ./frontend/ && pnpm run prod",
-    "dev": "sh ./script.sh && concurrently 'pnpm run backend' 'pnpm run  frontend'",
+    "dev": "concurrently 'pnpm run backend' 'pnpm run  frontend'",
     "build": "(concurrently 'pnpm run frontend-build' 'pnpm run  backend-build')",
     "prod": "(concurrently 'pnpm run frontend-prod' 'pnpm run  backend-prod')",
     "bootstrap": "pnpm i && concurrently 'pnpm run backend-install' 'pnpm run frontend-install'",
-    "start": "pnpm run  frontend"
+    "start": " pnpm run build && pnpm run dev"
   },
   "devDependencies": {
     "@lightwing/eslint-config": "0.0.8",
