@@ -7,48 +7,37 @@ import { useAtom, atom } from 'jotai'
 import { useLogin } from 'Router/Router'
 import { Cookie } from '@mui/icons-material'
 import { Fetch } from 'utils'
+
 type DataIntput = {
   username: string
   email: string
 }
 
-export default function Login(Status) {
+export default function Login(Status)
+{
   const navigate = useNavigate()
   const [Navi, setNavi] = useState('/')
   const [islogin, setLogin] = useAtom(useLogin)
   const [inputs, setInputs] = useState<DataIntput>({ username: '', email: '' })
+
   const buttonHandler = (
     func: (input: DataIntput) => void,
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault()
-    func(inputs)
-    const button: HTMLButtonElement = event.currentTarget
-  }
-
-  const isLogged = async () => {
-     console.log('isLogged')
-    fetch('http://localhost:3000/auth/verify', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return data
-      })
-  }
+    event: React.MouseEvent<HTMLButtonElement>) =>
+    {
+        event.preventDefault()
+        func(inputs)
+        const button: HTMLButtonElement = event.currentTarget
+    }
+	
 const localStorageLookup = async () => {
   const data = localStorage.getItem('userData')
   if (data) {
-     
      return data
   }
   return ""
 }
-  const check = async () => {
+
+const check = async () => {
     const localdata = await localStorageLookup()
     Fetch ('http://localhost:3000/auth/verify').then((response) => {
   if(response.status === 200) {
@@ -66,13 +55,11 @@ const localStorageLookup = async () => {
   }
   else {
     login();
-  }
-  
+}
+
 }).catch((err) => { 
 }) 
-
-      
-  } 
+} 
 
 
 /*
@@ -95,12 +82,9 @@ const localStorageLookup = async () => {
   const login = async () => {
     window.location.href =
       'https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code'
-
   }
-  useEffect(() => {
-    navigate(Navi)
-  }, [])
 
+useEffect(() => { navigate(Navi)}, [])
   return (
     <div className="m-auto flex h-fit w-screen pb-[50px]">
       <div className="m-auto">

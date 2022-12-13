@@ -4,6 +4,7 @@ dist-ssr
 database
 tools/envp-parsing/header.hpp.gch
 tools/env-manager
+srcs/backend/prisma/migrations
 
 # dependencies
 */node_modules

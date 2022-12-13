@@ -13,7 +13,7 @@
     "email": "joaopaulomoraes@outlook.com"
   },
   "scripts": {
-    "backend": "cd ./backend/ &&  npm  i && npx prisma generate && npx prisma db push   && npm run start ",
+    "backend": "cd ./backend/ && npx prisma generate && npx prisma db push && npx prisma db seed && concurrently 'npm run start' 'npx prisma studio'",
     "frontend": "cd ./frontend/ && npm run start",
     "backend-install": "cd ./backend/ && npm i",
     "frontend-install": "cd ./frontend/ && npm i",

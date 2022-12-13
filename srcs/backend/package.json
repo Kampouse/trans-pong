@@ -8,11 +8,11 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "wipe": "prisma generate && prisma db push && nest start --debug --watch",
+    "wipe": "nest start --debug --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start --watch && npx prisma migrate dev --name init",
-    "start:dev": "nest start --watch && npx prisma migrate dev --name init",
-    "start:debug": "nest start --debug --watch && npx prisma migrate dev --name init",
+    "start": "nest start --watch",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
     "prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
@@ -90,5 +90,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "prisma" : {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
