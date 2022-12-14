@@ -19,6 +19,10 @@ import { AddUser } from './components/AddUser'
 import { AlertColor } from '@mui/material'
 import '@styles/main.css'
 import { UserOptions } from '@views/UserOptions/userOptions'
+import { NavigateFunction } from "react-router";
+import { useRooms, useUsers, useRoomCode, getUserDetails } from "../../Router/Router";
+import { handleNewRoomClose, handleSendMessage } from "./ChatHandlers";
+import { useAtom } from 'jotai'
 
 // export type UserContextType = {
 // 	userDetails: User;
@@ -32,143 +36,22 @@ import { UserOptions } from '@views/UserOptions/userOptions'
 
 // export const useUser = () => useContext(UserContext);
 
-let player2: User = {
-  username: 'jbadia',
-  id: 'OIWJKDJKR23',
-  blockedUsers: [],
-  status: 'Online',
-  matchHistory: [],
-  friendList: [],
-  friendRequests: [],
-  achievements: initAchievement(),
-  firstname: 'Justine',
-  lastname: 'Badia'
-}
-let player3: User = {
-  username: 'gcollet',
-  id: 'FIKJM32',
-  blockedUsers: [],
-  status: 'Online',
-  matchHistory: [],
-  friendList: [],
-  friendRequests: [],
-  achievements: initAchievement(),
-  firstname: 'Gab',
-  lastname: 'Collet'
-}
-let player4: User = {
-  username: 'mmondell',
-  id: 'UIDJKJ21',
-  blockedUsers: [],
-  status: 'Playing',
-  matchHistory: [],
-  friendList: [],
-  friendRequests: [],
-  achievements: initAchievement(),
-  firstname: 'Maxime',
-  lastname: 'Mondello'
-}
-let player5: User = {
-  username: 'aguay',
-  id: 'OIEK121',
-  blockedUsers: [],
-  status: 'Playing',
-  matchHistory: [],
-  friendList: [],
-  friendRequests: [],
-  achievements: initAchievement(),
-  firstname: 'Anthony',
-  lastname: 'Guay'
-}
-let player6: User = {
-  username: 'olabrecq',
-  id: 'DWAOIIK24R2',
-  blockedUsers: [],
-  status: 'Offline',
-  matchHistory: [],
-  friendList: [],
-  friendRequests: [],
-  achievements: initAchievement(),
-  firstname: 'Olivier',
-  lastname: 'Labrecque Lacasse'
-}
-let player7: User = {
-  username: 'mleblanc',
-  id: 'HIUWADKL32331',
-  blockedUsers: [],
-  status: 'Offline',
-  matchHistory: [],
-  friendList: [],
-  friendRequests: [],
-  achievements: initAchievement(),
-  firstname: 'Michael',
-  lastname: 'Leblanc'
-}
-let player8: User = {
-  username: 'tberube',
-  id: 'OAISJIK23',
-  blockedUsers: [],
-  status: 'Offline',
-  matchHistory: [],
-  friendList: [],
-  friendRequests: [],
-  achievements: initAchievement(),
-  firstname: 'Thomas',
-  lastname: 'Bérubé'
-}
-
-let player1: User = {
-  username: 'gasselin',
-  id: 'IOEHNJ323',
-  blockedUsers: [],
-  status: 'Online',
-  matchHistory: [
-    { scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win' },
-    { scoreUser: 2, scoreOpp: 5, opponent: player5, result: 'loss' },
-    { scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win' },
-    { scoreUser: 5, scoreOpp: 0, opponent: player2, result: 'win' },
-    { scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win' },
-    { scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win' },
-    { scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win' },
-    { scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win' },
-    { scoreUser: 5, scoreOpp: 4, opponent: player7, result: 'win' }
-  ],
-  friendList: [player2, player3, player4],
-  friendRequests: [player5, player6, player7, player8],
-  achievements: initAchievement(),
-  firstname: 'Gabriel',
-  lastname: 'Asselin'
-}
-
-let userDetails: User = player1
-
-export const getUserDetails = () => {
-  return userDetails
-}
-
 const Chat = () => {
-  const [openNewChat, setOpenNewChat] = useState(false)
+	const [openNewRoom, setOpenNewRoom] = useState(false);
   const [openNewPassword, setOpenNewPassword] = useState(false)
   const [openDeleteChannel, setOpenDeleteChannel] = useState(false)
   const [openQuitChannel, setOpenQuitChannel] = useState(false)
   const [openAddUser, setOpenAddUser] = useState(false)
   const [openUserOptions, setOpenUserOptions] = useState(false)
   const [openSnackbar, setOpenSnackbar] = useState(false)
-  const [users, setUsers] = useState([] as User[])
-  const [rooms, setRooms] = useState([] as ChatRoom[])
-  const [roomCode, setRoomCode] = useState('')
-  const userClicked = useRef<User | null>(null)
+  const [users, setUsers] = useAtom(useUsers);
+ 	const [rooms, setRooms] = useAtom(useRooms);
+ 	const [roomCode, setRoomCode] = useAtom(useRoomCode);
+ 	const userClicked = useRef<User | null>(null)
 
   const snackbarMsg = useRef('')
   const snackbarBG = useRef('')
   const snackbarSeverity = useRef<AlertColor | undefined>('success')
-
-  const handleNewRoomClose = (room: ChatRoom | null) => {
-    if (room) {
-      setRooms([...rooms, room])
-    }
-    setOpenNewChat(false)
-  }
 
   const handleAddUserClose = (user: string | null) => {
     const isUser = users.find((currUser: User) => currUser.username === user)
@@ -251,41 +134,6 @@ const Chat = () => {
     setOpenUserOptions(false)
   }
 
-  function checkPrivateRoom(currentRoom: ChatRoom) {
-    return (
-      currentRoom.status === 'private' &&
-      currentRoom.users.length === 2 &&
-      currentRoom.users.find(
-        (user1: User) => user1.username === getUserDetails().username
-      ) !== undefined &&
-      currentRoom.users.find(
-        (user2: User) => user2.username === userClicked.current!.username
-      ) !== undefined
-    )
-  }
-
-  const handleSendMessage = () => {
-    const privateRoom = rooms.find(checkPrivateRoom)
-
-    if (!privateRoom) {
-      const serial = generateSerial()
-      handleNewRoomClose({
-        code: serial,
-        name: 'Private Room',
-        users: [getUserDetails(), userClicked.current!],
-        owner: getUserDetails(),
-        admins: [getUserDetails(), userClicked.current!],
-        status: 'private',
-        password: '',
-        messages: [],
-        image: null
-      })
-      setRoomCode(serial)
-    } else {
-      setRoomCode(privateRoom.code)
-    }
-  }
-
   const getCurrentRoom = () => {
     return rooms.find((room: ChatRoom) => room.code === roomCode)
   }
@@ -296,49 +144,27 @@ const Chat = () => {
     )
   }
 
-  useEffect(() => {
-    setRooms([
-      {
-        code: generateSerial(),
-        name: 'Room1',
-        users: [player1, player2, player3],
-        owner: player1,
-        admins: [player1, player2],
-        status: 'public',
-        password: '',
-        messages: [],
-        image: null
-      },
-      {
-        code: generateSerial(),
-        name: 'Room2',
-        users: [player1, player4],
-        owner: player4,
-        admins: [player4],
-        status: 'private',
-        password: '',
-        messages: [],
-        image: null
-      }
-    ])
-    setUsers([
-      player1,
-      player2,
-      player3,
-      player4,
-      player5,
-      player6,
-      player7,
-      player8
-    ])
-  }, [])
+	const getAddFriendStatus = (): string => {
+		if (getUserDetails().friendList.find((user: User) => {return user.username === userClicked.current?.username}) !== undefined)
+			return 'Delete friend';
+		else if (userClicked.current?.friendRequests.find((user: User) => {return user.username === getUserDetails().username}) !== undefined)
+			return 'Request sent';
+		else if (userClicked.current?.blockedUsers.find((user: User) => {return user.username === getUserDetails().username}) === undefined)
+			return 'Add friend';
+		else
+			return '';
+	}
+
+	const getAddFriendDisabled = (): boolean => {
+		return (getAddFriendStatus() === 'Request sent')
+	}
 
   return (
     <div className="m-auto flex h-4/6 w-[90%] max-w-[1500px] rounded-2xl grid grid-cols-10 grid-rows-10">
       <SidebarRooms
         rooms={rooms}
         setRoomCode={setRoomCode}
-        setOpenNewChat={setOpenNewChat}
+        setOpenNewRoom={setOpenNewRoom}
       />
       {roomCode && roomCode !== '' ? (
         <React.Fragment>
@@ -371,7 +197,15 @@ const Chat = () => {
           </p>
         </div>
       )}
-      <NewRoom open={openNewChat} onClose={handleNewRoomClose} />
+      <NewRoom
+				open={openNewRoom}
+				onClose={handleNewRoomClose}
+				users={users}
+				rooms={rooms}
+				setRooms={setRooms}
+				setRoomCode={setRoomCode}
+				setOpenNewRoom={setOpenNewRoom}
+			/>
       <PasswordSettings
         open={openNewPassword}
         onClose={handleNewPasswordClose}
@@ -386,7 +220,9 @@ const Chat = () => {
         open={openUserOptions}
         currentUser={userClicked.current}
         currentRoom={getCurrentRoom()!}
-        handleSendMessage={handleSendMessage}
+				addFriendStatus={getAddFriendStatus()}
+				btnDisabled={getAddFriendDisabled()}
+        handleSendMessage={(navigate) => handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)}
         onClose={handleUserOptionsClose}
       />
       <GeneralSnackbar

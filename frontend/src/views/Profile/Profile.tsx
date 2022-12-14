@@ -1,7 +1,7 @@
 import { Achievement, Matches, User } from '@utils/types'
 import { Tabs, Tab, Box, Typography, IconButton, Dialog, Button, DialogContent, DialogTitle, DialogActions } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   History,
   Favorite,
@@ -20,6 +20,7 @@ import { getUserDetails, useRoomCode, useRooms } from "@router/Router";
 import { handleSendMessage } from '@views/Chat/ChatHandlers'
 import { useAtom } from 'jotai';
 import { NavigateFunction } from 'react-router';
+import { useParams } from 'react-router'
 
 function MatchResult(
 	{
@@ -399,6 +400,7 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
  	const [rooms, setRooms] = useAtom(useRooms);
  	const setRoomCode = useAtom(useRoomCode)[1];
  	const [openNewRoom, setOpenNewRoom] = useState(false);
+	const { username } = useParams();
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)

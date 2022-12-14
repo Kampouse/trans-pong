@@ -4,8 +4,8 @@ module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      backgroundImage: {
-        splash: "url('./splash.png')"
+			backgroundImage: {
+        'hero': "url('../frontend/public/splash.png')",
       },
       gridTemplateColumns: {
         14: 'repeat(14, minmax(0, 1fr))',

@@ -25,6 +25,8 @@ export const handleSendMessage = (
 		&& currentRoom.users.find((user2: User) => user2.username === userClicked.current!.username) !== undefined)
 	})
 	
+	setOpenNewRoom(false);
+
 	if (privateRoom === undefined) {
 		const serial = generateSerial();
 		handleNewRoomClose({code: serial, name: 'Private Room', users: [getUserDetails(), userClicked.current!], owner: getUserDetails(),

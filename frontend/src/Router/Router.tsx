@@ -16,8 +16,9 @@ import Chat from 'views/Chat/Chat'
 import { ChatRoom, initAchievement, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial } from 'utils/index'
+import { background } from '../../background.jpeg'
 
-export const useLogin = atom('should login')
+export const useLogin = atom('login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
 export const useRoomCode = atom('');
