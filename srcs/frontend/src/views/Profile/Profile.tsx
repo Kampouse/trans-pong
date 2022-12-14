@@ -1,7 +1,7 @@
 import { Achievement, Matches, User } from '../../utils/types';
 import { Tabs, Tab, Box, Typography, IconButton, Dialog, Button, DialogContent, DialogTitle, DialogActions, Switch } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
-import React, { useState, useRef, ChangeEvent } from 'react';
+import React, { useState, useRef, ChangeEvent, useEffect } from 'react';
 import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
 import { UserOptions } from "../UserOptions/UserOptions";
 import { blue } from '@mui/material/colors';
@@ -9,6 +9,7 @@ import { getUserDetails, useRoomCode, useRooms } from "@router/Router";
 import { handleSendMessage } from '../Chat/ChatHandlers'
 import { useAtom } from 'jotai';
 import { NavigateFunction } from 'react-router';
+import ProfileReq from "../../public/modelProfile.json"
 
 function MatchResult({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
   function onUserClick(currentMatch: Matches) {setOpenUserOptions(true); userClicked.current = currentMatch.opponent;}
@@ -304,6 +305,22 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 	const setRoomCode = useAtom(useRoomCode)[1];
 	const [openNewRoom, setOpenNewRoom] = useState(false);
 
+	const check = async () =>
+	{
+    fetch('', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': 'true'
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        return data
+      })
+	}
+
 	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -336,6 +353,7 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 						{ hover && 
 							<div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
 								<Edit sx={{color: blue[700], height: 35, width: 35}} />
+								{/* {ProfileReq.} */}
 							</div>
 						}
 						<img 
