@@ -56,6 +56,7 @@ export class ProfileService
         this.friendRequests = [];
         this.achievements = [];
         this.matchHistory = [];
+
         //  Build the response
 
         //  Look if the profile is the client connected
