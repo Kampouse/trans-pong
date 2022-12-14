@@ -6,32 +6,36 @@ import { ProfileResponse, Friend, FriendRequest, Match, Achievement, Statistics}
 @Injectable()
 export class ProfileService
 {
+    friendList: Friend[] = [];
+    friendRequests: FriendRequest[] = [];
+    matchHistory: Match[] = [];
+    achievements: Achievement[] = [];
 
-    insertFriend(friendList: Friend[], user: string, photo: string, status: string)
+    insertFriend(user: string, photo: string, status: string)
     {
         const newFriend = new Friend(user, photo, status);
-        friendList.push(newFriend);
+        this.friendList.push(newFriend);
     }
 
-    insertFriendRequest(friendRequests: FriendRequest[], from: string, photo: string)
+    insertFriendRequest(from: string, photo: string)
     {
         const newFriendRequest = new FriendRequest(from, photo);
-       friendRequests.push(newFriendRequest);
+        this.friendRequests.push(newFriendRequest);
     }
 
-    insertMatch(matchHistory: Match[], matchNum: number, leftPlayer: string, leftPhoto: string, leftScore: number,
+    insertMatch(matchNum: number, leftPlayer: string, leftPhoto: string, leftScore: number,
         rightPlayer: string, rightPhoto: string, rightScore: number,
         winner: string)
     {
         const newMatch = new Match(matchNum, leftPlayer, leftPhoto, leftScore, rightPlayer,
             rightPhoto, rightScore, winner);
-        matchHistory.push(newMatch);
+        this.matchHistory.push(newMatch);
     }
 
-    insertAchievement(achievements: Achievement[], title: string)
+    insertAchievement(title: string)
     {
         const newAchievement = new Achievement(title);
-        achievements.push(newAchievement);
+        this.achievements.push(newAchievement);
     }
 
     async getProfile(usernameParam: string): Promise<ProfileResponse>
@@ -69,8 +73,6 @@ export class ProfileService
             }
         })
 
-        const friendList = new Friend[friendSent.length + friendReceived.length];
-
         if (friendSent)
         {
             for (let i in friendSent)
@@ -81,7 +83,7 @@ export class ProfileService
                     }
                 })
                 if (friendUser)
-                    this.insertFriend(friendList, friendSent[i].receiver, friendUser.imagePath, friendUser.userStatus);
+                    this.insertFriend(friendSent[i].receiver, friendUser.imagePath, friendUser.userStatus);
             }
         }
 
@@ -95,7 +97,7 @@ export class ProfileService
                     }
                 })
                 if (friendUser)
-                    this.insertFriend(friendList, friendReceived[i].sender, friendUser.imagePath, friendUser.userStatus);
+                    this.insertFriend(friendReceived[i].sender, friendUser.imagePath, friendUser.userStatus);
             }
         }
 
@@ -108,8 +110,6 @@ export class ProfileService
             },
         })
 
-        const friendReuests = new FriendRequest[friendReqs.length];
-
         if (friendReqs)
         {
             for (let i in friendReqs)
@@ -120,7 +120,7 @@ export class ProfileService
                     }
                 })
                 if (senderUser)
-                    this.insertFriendRequest(friendReuests, senderUser.username, senderUser.imagePath);
+                    this.insertFriendRequest(senderUser.username, senderUser.imagePath);
             }
         }
 
@@ -138,8 +138,6 @@ export class ProfileService
                 active: false,
             },
         })
-
-        const matchHistory = new Match[matchLeft.length + matchRight.length];
 
         var leftPlayed = matchLeft.length;
         var leftWin = 0;
@@ -159,7 +157,7 @@ export class ProfileService
                 })
                 if (adversaire)
                 {
-                    this.insertMatch(matchHistory, matchLeft[i].gameNumber, user.username, user.imagePath,
+                    this.insertMatch(matchLeft[i].gameNumber, user.username, user.imagePath,
                         matchLeft[i].leftPlayerScore, adversaire.username,
                         adversaire.imagePath, matchLeft[i].rightPlayerScore,
                         matchLeft[i].winner);
@@ -180,7 +178,7 @@ export class ProfileService
                 })
                 if (adversaire)
                 {
-                    this.insertMatch(matchHistory, matchRight[i].gameNumber, adversaire.username,
+                    this.insertMatch(matchRight[i].gameNumber, adversaire.username,
                         adversaire.imagePath, matchRight[i].leftPlayerScore, user.username, user.imagePath,
                         matchRight[i].rightPlayerScore, matchRight[i].winner);
                 }
@@ -198,14 +196,14 @@ export class ProfileService
 
         // Order match in chronologic order
         var x = 0;
-        var longeur = matchHistory.length;
+        var longeur = this.matchHistory.length;
         while (x < longeur)
         {
-            if (x !== longeur - 1 && matchHistory[x].matchNum < matchHistory[x + 1].matchNum)
+            if (x !== longeur - 1 && this.matchHistory[x].matchNum < this.matchHistory[x + 1].matchNum)
             {
-                var temp = matchHistory[x];
-                matchHistory[x] = matchHistory[x + 1];
-                matchHistory[x + 1] = temp;
+                var temp = this.matchHistory[x];
+                this.matchHistory[x] = this.matchHistory[x + 1];
+                this.matchHistory[x + 1] = temp;
                 x = 0;
             }
             x = x + 1;
@@ -218,135 +216,134 @@ export class ProfileService
             },
         });
 
-        const achievements = new Achievement[30];
-
         //  Sorry for the spaguethi guys, time is an issue lol
         if (achievement)
         {
             if (achievement.achiev1 == true)
             {
-                this.insertAchievement(achievements, "achievement-1");
+                this.insertAchievement("achievement-1");
             }
             if (achievement.achiev2 == true)
             {
-                this.insertAchievement(achievements, "achievement-2");
+                this.insertAchievement("achievement-2");
             }
             if (achievement.achiev3 == true)
             {
-                this.insertAchievement(achievements, "achievement-3");
+                this.insertAchievement("achievement-3");
             }
             if (achievement.achiev4 == true)
             {
-                this.insertAchievement(achievements, "achievement-4");
+                this.insertAchievement("achievement-4");
             }
             if (achievement.achiev5 == true)
             {
-                this.insertAchievement(achievements, "achievement-5");
+                this.insertAchievement("achievement-5");
             }
             if (achievement.achiev6 == true)
             {
-                this.insertAchievement(achievements, "achievement-6");
+                this.insertAchievement("achievement-6");
             }
             if (achievement.achiev7 == true)
             {
-                this.insertAchievement(achievements, "achievement-7");
+                this.insertAchievement("achievement-7");
             }
             if (achievement.achiev8 == true)
             {
-                this.insertAchievement(achievements, "achievement-8");
+                this.insertAchievement("achievement-8");
             }
             if (achievement.achiev9 == true)
             {
-                this.insertAchievement(achievements, "achievement-9");
+                this.insertAchievement("achievement-9");
             }
             if (achievement.achiev10 == true)
             {
-                this.insertAchievement(achievements, "achievement-10");
+                this.insertAchievement("achievement-10");
             }
             if (achievement.achiev11 == true)
             {
-                this.insertAchievement(achievements, "achievement-11");
+                this.insertAchievement("achievement-11");
             }
             if (achievement.achiev12 == true)
             {
-                this.insertAchievement(achievements, "achievement-12");
+                this.insertAchievement("achievement-12");
             }
             if (achievement.achiev13 == true)
             {
-                this.insertAchievement(achievements, "achievement-13");
+                this.insertAchievement("achievement-13");
             }
             if (achievement.achiev14 == true)
             {
-                this.insertAchievement(achievements, "achievement-14");
+                this.insertAchievement("achievement-14");
             }
             if (achievement.achiev15 == true)
             {
-                this.insertAchievement(achievements, "achievement-15");
+                this.insertAchievement("achievement-15");
             }
             if (achievement.achiev16 == true)
             {
-                this.insertAchievement(achievements, "achievement-16");
+                this.insertAchievement("achievement-16");
             }
             if (achievement.achiev17 == true)
             {
-                this.insertAchievement(achievements, "achievement-17");
+                this.insertAchievement("achievement-17");
             }
             if (achievement.achiev18 == true)
             {
-                this.insertAchievement(achievements, "achievement-18");
+                this.insertAchievement("achievement-18");
             }
             if (achievement.achiev19 == true)
             {
-                this.insertAchievement(achievements, "achievement-19");
+                this.insertAchievement("achievement-19");
             }
             if (achievement.achiev20 == true)
             {
-                this.insertAchievement(achievements, "achievement-20");
+                this.insertAchievement("achievement-20");
             }
             if (achievement.achiev21 == true)
             {
-                this.insertAchievement(achievements, "achievement-21");
+                this.insertAchievement("achievement-21");
             }
             if (achievement.achiev22 == true)
             {
-                this.insertAchievement(achievements, "achievement-22");
+                this.insertAchievement("achievement-22");
             }
             if (achievement.achiev23 == true)
             {
-                this.insertAchievement(achievements, "achievement-23");
+                this.insertAchievement("achievement-23");
             }
             if (achievement.achiev24 == true)
             {
-                this.insertAchievement(achievements, "achievement-24");
+                this.insertAchievement("achievement-24");
             }
             if (achievement.achiev25 == true)
             {
-                this.insertAchievement(achievements, "achievement-25");
+                this.insertAchievement("achievement-25");
             }
             if (achievement.achiev26 == true)
             {
-                this.insertAchievement(achievements, "achievement-26");
+                this.insertAchievement("achievement-26");
             }
             if (achievement.achiev27 == true)
             {
-                this.insertAchievement(achievements, "achievement-27");
+                this.insertAchievement("achievement-27");
             }
             if (achievement.achiev28 == true)
             {
-                this.insertAchievement(achievements, "achievement-28");
+                this.insertAchievement("achievement-28");
             }
             if (achievement.achiev29 == true)
             {
-                this.insertAchievement(achievements, "achievement-29");
+                this.insertAchievement("achievement-29");
             }
             if (achievement.achiev30 == true)
             {
-                this.insertAchievement(achievements, "achievement-30");
+                this.insertAchievement("achievement-30");
             }
         }
 
         // At last, return the ProfileResponse
+        await prisma.$disconnect();
         return new ProfileResponse(false, clientPro, user.username, user.userStatus, user.imagePath,
-            friendList, friendReuests, matchHistory, achievements, stats, user.authentificator);
+            this.friendList, this.friendRequests, this.matchHistory, this.achievements , stats, user.authentificator);
     }
 }

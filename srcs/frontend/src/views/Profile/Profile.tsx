@@ -10,9 +10,27 @@ import { handleSendMessage } from '../Chat/ChatHandlers'
 import { useAtom } from 'jotai';
 import { NavigateFunction } from 'react-router';
 
+const check = async () =>
+{
+    fetch('http://localhost:3000/profile/gcollet', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': 'true'
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        return data
+      })
+}
+
 function MatchResult({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
   function onUserClick(currentMatch: Matches) {setOpenUserOptions(true); userClicked.current = currentMatch.opponent;}
 	
+    const reponse = check();
+    console.log(reponse);
 	return (
 		<div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">

@@ -3,7 +3,7 @@ import { ProfileResponse } from "./profile.model";
 import { ProfileService } from "./profile.service"
 
 @Controller('profile')
-export class AuthController {
+export class ProfileController {
     constructor(private readonly profileService : ProfileService) {}
 
     @Get(':username')
