@@ -42,8 +42,8 @@ services:
         ipv4_address: 10.42.42.12
     ports:
       - 5173:5173
-      - 5555:5555
       - 3000:3000
+      - 5555:5555
 
 networks:
   trans:
