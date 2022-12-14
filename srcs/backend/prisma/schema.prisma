@@ -8,90 +8,120 @@ datasource db {
 }
 
 model User {
-    userID              String      @id @default(cuid())
-    userNumber          Int         @unique @default(autoincrement())
-    profile             Profile?
+    userID              String                          @id @default(cuid())
+    userNumber          Int                             @unique @default(autoincrement())
     auth                Auth?
-    createdAt           DateTime    @default(now())
-    updatedAt           DateTime    @updatedAt
+    apiToken            Json?
+    login42             String                          @unique
+    username            String                          @unique
+    userStatus          userStatus                      @default(online)
+    imagePath           String                          @default("default_path")
+    authentificator     Boolean                         @default(false)
+    achievement         Achievement?
+    channels            Channel[]
+    createdAt           DateTime                        @default(now())
+    updatedAt           DateTime                        @updatedAt
+}
+
+model FriendRequest{
+    friendRequestID     String                          @id @default(cuid())
+    friendRequestNumber Int                             @unique @default(autoincrement())
+    sender              String
+    receiver            String
+    status              requestStatus                   @default(pending)
+    createdAt           DateTime                        @default(now())
+    updatedAt           DateTime                        @updatedAt
+    @@unique([sender, receiver])
 }
 
 model Auth {
-    authID              String      @id @default(cuid())
-    user                User        @relation(fields: [authID], references: [userID])
-    accessToken         String      @unique @default("")
-    refreshToken        String      @unique @default("")
-    bearerToken         String      @unique @default("")
-}
-
-model Profile {
-    profileID           String      @id @default(cuid())
-    user                User        @relation(fields: [profileID], references: [userID])
-    login42             String      @unique
-    username            String      @unique
-    online              Boolean     @default(true)
-    coalition           String?
-    imagePath           String      @default("default_path")
-    authentificator     Boolean     @default(false)
-    jwtToken            Json?
-    rightGame           Game[]      @relation(name: "rightPlayer")
-    leftGame            Game[]      @relation(name: "leftPlayer")
-    friendReqSent       Friend[]    @relation(name: "sent")
-    friendReqRece       Friend[]    @relation(name: "received")
-    blocked             Block[]     @relation(name: "blocker")
-    blockedBy           Block[]     @relation(name: "blocked")
-    channelOwned        Channel[]   @relation(name: "owner")
-    channels            Channel[]
-    createdAt           DateTime    @default(now())
-    updatedAt           DateTime    @updatedAt
+    authID              String                          @id @default(cuid())
+    user                User                            @relation(fields: [authID], references: [userID])
+    accessToken         String                          @unique @default("")
+    refreshToken        String                          @unique @default("")
+    bearerToken         String                          @unique @default("")
 }
 
 model Game{
-    gameID              String      @id @default(cuid())
-    leftPlayer          Profile     @relation(name: "leftPlayer", fields: [leftPlayerID], references: [profileID])
-    leftPlayerID        String
-    leftPlayerScore     Int         @default(0)
-    rightPlayer         Profile     @relation(name: "rightPlayer", fields: [rightPlayerID], references: [profileID])
-    rightPlayerID       String
-    rightPlayerScore    Int         @default(0)
-    active              Boolean     @default(true)
-    winner              String      @default("Undefined")
-    createdAt           DateTime    @default(now())
-    updatedAt           DateTime    @updatedAt
-}
-
-//  Enum pour status ?
-model Friend{
-    friendID            String      @id @default(cuid())
-    senderProfile       Profile     @relation(name: "sent", fields: [senderID], references: [profileID])
-    senderID            String
-    receiverProfile     Profile     @relation(name: "received" ,fields: [receiverID], references: [profileID])
-    receiverID          String
-    status              String      @default("Pending")
-    createdAt           DateTime    @default(now())
-    updatedAt           DateTime    @updatedAt
+    gameID              String                          @id @default(cuid())
+    gameNumber          Int                             @unique @default(autoincrement())
+    leftPlayer          String
+    leftPlayerScore     Int                             @default(0)
+    rightPlayer         String
+    rightPlayerScore    Int                             @default(0)
+    active              Boolean                         @default(true)
+    winner              String                          @default("Undefined")
+    createdAt           DateTime                        @default(now())
+    updatedAt           DateTime                        @updatedAt
 }
 
 model Block{
-    blockID             String      @id @default(cuid())
-    blockerProfile      Profile     @relation(name: "blocker", fields: [blockerID], references: [profileID])
-    blockerID           String
-    blockedProfile      Profile     @relation(name: "blocked", fields: [blockedID], references: [profileID])
-    blockedID           String
-    reason              String      @default("None")
-    createdAt           DateTime    @default(now())
-    updatedAt           DateTime    @updatedAt
+    blockID             String                          @id @default(cuid())
+    blocker             String
+    blocked             String
+    reason              String                          @default("None")
+    createdAt           DateTime                        @default(now())
+    updatedAt           DateTime                        @updatedAt
+
+    @@unique([blocker, blocked])
 }
 
 model Channel{
     channelID           String      @id @default(cuid())
+    channelNumber       Int         @unique @default(autoincrement())
     Name                String      @unique @default("Name not initialised")
     private             Boolean     @default(false)
     password            String
-    owner               Profile     @relation(name: "owner", fields: [ownerID], references: [profileID])
     ownerID             String
-    users               Profile[]
-    admin               Boolean     @default(false)
+    users               User[]
+    admin               String[]
     createdAt           DateTime    @default(now())
     updatedAt           DateTime    @updatedAt
+}
+
+model Achievement{
+    userID              String      @id @default(cuid())
+    profile             User        @relation(fields: [userID], references: [userID])
+    achiev1             Boolean     @default(false)
+    achiev2             Boolean     @default(false)
+    achiev3             Boolean     @default(false)
+    achiev4             Boolean     @default(false)
+    achiev5             Boolean     @default(false)
+    achiev6             Boolean     @default(false)
+    achiev7             Boolean     @default(false)
+    achiev8             Boolean     @default(false)
+    achiev9             Boolean     @default(false)
+    achiev10            Boolean     @default(false)
+    achiev11            Boolean     @default(false)
+    achiev12            Boolean     @default(false)
+    achiev13            Boolean     @default(false)
+    achiev14            Boolean     @default(false)
+    achiev15            Boolean     @default(false)
+    achiev16            Boolean     @default(false)
+    achiev17            Boolean     @default(false)
+    achiev18            Boolean     @default(false)
+    achiev19            Boolean     @default(false)
+    achiev20            Boolean     @default(false)
+    achiev21            Boolean     @default(false)
+    achiev22            Boolean     @default(false)
+    achiev23            Boolean     @default(false)
+    achiev24            Boolean     @default(false)
+    achiev25            Boolean     @default(false)
+    achiev26            Boolean     @default(false)
+    achiev27            Boolean     @default(false)
+    achiev28            Boolean     @default(false)
+    achiev29            Boolean     @default(false)
+    achiev30            Boolean     @default(false)
+}
+
+enum userStatus{
+    online
+    offline
+    playing
+}
+
+enum requestStatus{
+    pending
+    accepted
+    declined
 }
