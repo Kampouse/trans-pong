@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { match } from 'assert';
 import { ProfileResponse, Friend, FriendRequest, Match, Achievement, Statistics} from './profile.model';
 
 @Injectable()
@@ -50,12 +51,6 @@ export class ProfileService
         //  If he dosen't exist, return error true and everything at null
         if (!user)
             return new ProfileResponse(true, null, null, null, null, null, null, null, null, null, null);
-
-        //  Free the array's from previous values
-        this.friendList = [];
-        this.friendRequests = [];
-        this.achievements = [];
-        this.matchHistory = [];
 
         //  Build the response
 

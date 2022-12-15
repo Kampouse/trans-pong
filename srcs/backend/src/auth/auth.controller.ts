@@ -8,24 +8,8 @@ export class AuthController {
     @Get('verify')
     async verifyLogin()
     {
-        return ({"response" : "yes"});
-    }
-
-    @Post('signup')
-    signup()
-    {
-        return ('sign up route');
-    }
-
-    @Post('signin')
-    signin()
-    {
-        return ('sign in route');
-    }
-
-    @Post('signout')
-    signout()
-    {
-        return ('sign out route');
+        return ({
+            "response" : "yes"
+        })
     }
 }
