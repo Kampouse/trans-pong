@@ -49,7 +49,6 @@ export class Statistics{
 export class ProfileResponse {
     constructor(
         public error: boolean,
-        public clientProfile: boolean,
         public username: string,
         public status: string,
         public imagePath: string,
@@ -59,4 +58,16 @@ export class ProfileResponse {
         public achievement: Achievement[],
         public stats: Statistics,
         public authentificator: boolean){}
+}
+
+export class ProfileResponsePublic {
+    constructor(
+        public error: boolean,
+        public username: string,
+        public status: string,
+        public imagePath: string,
+        public friendList: Friend[],
+        public matchHistory: Match[],
+        public achievement: Achievement[],
+        public stats: Statistics){}
 }
