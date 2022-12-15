@@ -44,8 +44,8 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
           <Link to={`/Profile/${userDetails.username}`} className=" ml-2 pl-3 font-semibold text-white">
             Profile
           </Link>
-          <Link to="/API" className=" ml-2 pl-3 font-semibold text-white">
-            API
+          <Link to="/Test" className=" ml-2 pl-3 font-semibold text-white">
+            Test
           </Link>
           <ul className="  mr-auto flex flex-col pl-0"></ul>
         </div>
