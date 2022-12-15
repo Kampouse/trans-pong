@@ -9,29 +9,49 @@ import { getUserDetails, useRoomCode, useRooms } from "@router/Router";
 import { handleSendMessage } from '../Chat/ChatHandlers'
 import { useAtom } from 'jotai';
 import { NavigateFunction } from 'react-router';
-import ProfileReq from "../../public/modelProfile.json"
+import { useParams } from 'react-router';
 
 const check = async () =>
 {
-    fetch('http://localhost:3000/profile/gcollet', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': 'true'
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return data
-      })
+	fetch('http://localhost:3000/profile/gcollet', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Credentials': 'true'
+		}
+	})
+		.then((response) => response.json())
+		.then((data) => {
+			return data
+		})
+}
+
+const useFetch = async (username: string | undefined) => {
+	const [profileReq, setProfileReq] = useState(null);
+	
+	useEffect(() => {
+		fetch('http://localhost:3000/profile/' + username, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Credentials': 'true'
+			}
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				setProfileReq(data);
+			})
+	}, [username])
+	return {profileReq};
 }
 
 function MatchResult({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
   function onUserClick(currentMatch: Matches) {setOpenUserOptions(true); userClicked.current = currentMatch.opponent;}
 	
-    const reponse = check();
-    console.log(reponse);
+    // const reponse = check();
+    // console.log(reponse);
 	return (
 		<div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
@@ -323,21 +343,10 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 	const setRoomCode = useAtom(useRoomCode)[1];
 	const [openNewRoom, setOpenNewRoom] = useState(false);
 
-	const check = async () =>
-	{
-    fetch('', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': 'true'
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return data
-      })
-	}
+	const { username } = useParams();
+	const data = useFetch(username);
+
+	useEffect(() => { console.log(data) }, [data]);
 
 	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -363,6 +372,10 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 		setOpenUserOptions(false);
 	}
 
+	// useEffect(() => {
+	// 	console.log(data);
+	// }, [data])
+
   return (
     <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit">
 			<div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
@@ -371,7 +384,6 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 						{ hover && 
 							<div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
 								<Edit sx={{color: blue[700], height: 35, width: 35}} />
-								{/* {ProfileReq.} */}
 							</div>
 						}
 						<img 
