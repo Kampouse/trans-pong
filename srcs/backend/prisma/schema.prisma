@@ -37,8 +37,8 @@ model FriendRequest{
 model Auth {
     authID              String                          @id @default(cuid())
     user                User                            @relation(fields: [authID], references: [userID])
-    accessToken         String                          @unique @default("")
-    refreshToken        String                          @unique @default("")
+    accessToken         String                          @unique
+    refreshToken        String                          @unique
     bearerToken         String                          @unique @default("")
 }
 
