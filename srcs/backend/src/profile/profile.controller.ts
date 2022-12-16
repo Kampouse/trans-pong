@@ -54,5 +54,6 @@ export class ProfileController {
     async updateUsername() : Promise<any>
     {
         //  Add userID validation when auth is done by JP
+        
     }
 }

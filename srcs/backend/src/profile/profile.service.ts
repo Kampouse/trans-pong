@@ -639,17 +639,47 @@ export class ProfileService
             this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authentificator);
     }
 
-    async updateUsername() : Promise<any>
+    async updateUsername(userName: string, useID: string) : Promise<any>
     {
         const prisma = new PrismaClient();
 
+        const user = await prisma.user.findUnique({
+            where: {
+                userID: useID,
+            },
+        })
+
+        if (!user)
+        {
+            return ({error: "authentification failed"});
+        }
+
+        await prisma.user.update({
+            where: {
+                userID: useID,
+            },
+            data: {
+                username: userName,
+            }
+        })
         await prisma.$disconnect();
+        return ({success: "sucess"});
     }
 
     async updatePhoto(newFilePath: string, useID: string) : Promise<any>
     {
         const prisma = new PrismaClient();
 
+        const user = await prisma.user.findUnique({
+            where:{
+                userID: useID,
+            },
+        })
+        
+        if (!user)
+        {
+            return ({error: "authentification failed"});
+        }
         await prisma.user.update({
             where: {
                 userID: useID,
@@ -659,5 +689,6 @@ export class ProfileService
             }
         })
         await prisma.$disconnect();
+        return ({success: "sucess"});
     }
 }
