@@ -44,7 +44,7 @@ const useFetch = (username) => {
 	const [profileReq, setProfileReq] = useState<any>(null);
 	
 	useEffect(() => {
-		fetch('http://localhost:3000/profile/' + username, {
+		fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "") , {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ function MatchResult({data, username, userClicked, setOpenUserOptions}: {data: a
 											{/* ${currentMatch. === 'loss' ? 'cursor-pointer hover:border-2 border-pink-500' : ''} */}
 											<img
 												className={`h-full w-full rounded-full`}
-												src={((winner === "left") ? currentMatch.leftPhoto : currentMatch.rightPhoto).substring(14)}
+												src={(winner === "left") ? currentMatch.leftPhoto : currentMatch.rightPhoto}
 												alt=""
 												// onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
 											/>
@@ -119,7 +119,7 @@ function MatchResult({data, username, userClicked, setOpenUserOptions}: {data: a
 										<div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
 											<img
 												className={`h-full w-full rounded-full`}
-												src={((winner === "left") ? currentMatch.rightPhoto : currentMatch.leftPhoto).substring(14)}
+												src={(winner === "left") ? currentMatch.rightPhoto : currentMatch.leftPhoto}
 												alt=""
 												// onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
 											/>
@@ -344,7 +344,7 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 	const [openNewRoom, setOpenNewRoom] = useState(false);
 
 	const { username } = useParams();
-	const {profileReq: data} = useFetch(username || "gcollet");
+	const {profileReq: data} = useFetch(username);
 	console.log(data);
 	console.log(username);
 
@@ -387,7 +387,7 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 									}
 									<img 
 										className={`rounded-full h-full border-4 border-blue-700 h-[75%] mx-auto relative ${hover ? 'brightness-[.25] cursor-pointer' : ''}`}
-										src={(data.imagePath).substring(14)}
+										src={data.imagePath}
 										alt="Edit"
 										onMouseEnter={() => setHover(true)}
 										onMouseLeave={() => setHover(false)}
