@@ -11,6 +11,19 @@ import { useAtom } from 'jotai';
 import { NavigateFunction } from 'react-router';
 import { useParams } from 'react-router';
 
+const ONLINE = "text-green-600 text-md";
+const PLAYING = "text-amber-500 text-md";
+const OFFLINE = "text-red-600 text-md";
+
+const getStatusCSS = (status) => {
+	if (status === 'online')
+		return ONLINE;
+	else if (status === 'playing')
+		return PLAYING;
+	else
+		return OFFLINE;
+}
+
 const check = async () =>
 {
 	fetch('http://localhost:3000/profile/gcollet', {
@@ -27,8 +40,8 @@ const check = async () =>
 		})
 }
 
-const useFetch = async (username: string | undefined) => {
-	const [profileReq, setProfileReq] = useState(null);
+const useFetch = (username) => {
+	const [profileReq, setProfileReq] = useState<any>(null);
 	
 	useEffect(() => {
 		fetch('http://localhost:3000/profile/' + username, {
@@ -47,11 +60,9 @@ const useFetch = async (username: string | undefined) => {
 	return {profileReq};
 }
 
-function MatchResult({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
+function MatchResult({data, username, userClicked, setOpenUserOptions}: {data: any, username: string | undefined, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
   function onUserClick(currentMatch: Matches) {setOpenUserOptions(true); userClicked.current = currentMatch.opponent;}
 	
-    // const reponse = check();
-    // console.log(reponse);
 	return (
 		<div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
@@ -65,50 +76,52 @@ function MatchResult({userDetails, userClicked, setOpenUserOptions}: {userDetail
 							<div className="w-[26%] my-auto text-center"><p>Result</p></div>
 							<div className="w-[37%] my-auto text-center"><p>Loser</p></div>
 						</li>
-						{ userDetails.matchHistory.map((currentMatch: Matches) => {
+						{ data.matchHistory.map((currentMatch) => {
+							const winner = (currentMatch.leftScore > currentMatch.rightScore) ? "left" : "right";
 							return (
 								<li className="flex py-4">
 									<div className="flex w-[37%] my-auto items-center ml-2">
 										<div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
+											{/* ${currentMatch. === 'loss' ? 'cursor-pointer hover:border-2 border-pink-500' : ''} */}
 											<img
-												className={`h-full w-full rounded-full ${currentMatch.result === 'loss' ? 'cursor-pointer hover:border-2 border-pink-500' : ''}`}
-												src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+												className={`h-full w-full rounded-full`}
+												src={((winner === "left") ? currentMatch.leftPhoto : currentMatch.rightPhoto).substring(14)}
 												alt=""
-												onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
+												// onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
 											/>
 										</div>
 										<div className="ml-2">
 											<p
-												className={`text-gray-900 ${currentMatch.result === 'loss' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
-												onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
+												className={`text-gray-900 ${winner === 'left' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
+												// onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
 											>
-												{(currentMatch.result === 'win') ? userDetails.username : currentMatch.opponent.username}
+												{(winner == "left") ? currentMatch.leftPlayer : currentMatch.rightPlayer}
 											</p>
 										</div>
 									</div>
 									<div className="flex h-full w-[26%] my-auto">
 										<div className="w-[50%] my-auto">
-											<p className=" text-center text-gray-900">{(currentMatch.result === 'win') ? currentMatch.scoreUser : currentMatch.scoreOpp}</p>
+											<p className=" text-center text-gray-900">{(winner === 'left') ? currentMatch.leftScore : currentMatch.rightScore}</p>
 										</div>
 										<div className="w-[50%] my-auto">
-											<p className=" text-center text-gray-900">{(currentMatch.result === 'loss') ? currentMatch.scoreUser : currentMatch.scoreOpp}</p>
+											<p className=" text-center text-gray-900">{(winner === 'left') ? currentMatch.rightScore : currentMatch.leftScore}</p>
 										</div>
 									</div>
 									<div className="flex w-[37%] my-auto justify-end items-center mr-2">
 										<div className="mr-2">
 											<p 
-												className={`text-gray-900 ${currentMatch.result === 'win' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
-												onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
+												className={`text-gray-900 ${winner === 'right' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
+												// onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
 											>
-												{(currentMatch.result === 'loss') ? userDetails.username : currentMatch.opponent.username}
+												{(winner == "left") ? currentMatch.rightPlayer : currentMatch.leftPlayer}
 											</p>
 										</div>
 										<div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
 											<img
-												className={`h-full w-full rounded-full ${currentMatch.result === 'win' ? 'cursor-pointer hover:border-2 border-pink-500' : ''}`}
-												src="https://images.unsplash.com/photo-1601046668428-94ea13437736?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2167&q=80"
+												className={`h-full w-full rounded-full`}
+												src={((winner === "left") ? currentMatch.rightPhoto : currentMatch.leftPhoto).substring(14)}
 												alt=""
-												onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
+												// onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
 											/>
 										</div>
 									</div>
@@ -123,19 +136,6 @@ function MatchResult({userDetails, userClicked, setOpenUserOptions}: {userDetail
 }
 
 function FriendList({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
-
-	const ONLINE = "text-green-600 text-md";
-	const PLAYING = "text-amber-500 text-md";
-	const OFFLINE = "text-red-600 text-md";
-
-	const getStatusCSS = (currentUser: User) => {
-		if (currentUser.status === 'Online')
-			return ONLINE;
-		else if (currentUser.status === 'Playing')
-			return PLAYING;
-		else
-			return OFFLINE;
-	}
 
   return (
     <div className="flex h-[100%] flex-col -my-4">
@@ -344,9 +344,9 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 	const [openNewRoom, setOpenNewRoom] = useState(false);
 
 	const { username } = useParams();
-	const data = useFetch(username);
-
-	useEffect(() => { console.log(data) }, [data]);
+	const {profileReq: data} = useFetch(username || "gcollet");
+	console.log(data);
+	console.log(username);
 
 	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -372,62 +372,64 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 		setOpenUserOptions(false);
 	}
 
-	// useEffect(() => {
-	// 	console.log(data);
-	// }, [data])
-
   return (
-    <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit">
+		<div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit">
 			<div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
-				<div className='w-full h-[25%] flex'>
-					<div className='w-[50%] h-full flex items-center justify-center'>
-						{ hover && 
-							<div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
-								<Edit sx={{color: blue[700], height: 35, width: 35}} />
+				{data &&
+					(
+						<>
+							<div className='w-full h-[25%] flex'>
+								<div className='w-[50%] h-full flex items-center justify-center'>
+									{ hover && 
+										<div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
+											<Edit sx={{color: blue[700], height: 35, width: 35}} />
+										</div>
+									}
+									<img 
+										className={`rounded-full h-full border-4 border-blue-700 h-[75%] mx-auto relative ${hover ? 'brightness-[.25] cursor-pointer' : ''}`}
+										src={(data.imagePath).substring(14)}
+										alt="Edit"
+										onMouseEnter={() => setHover(true)}
+										onMouseLeave={() => setHover(false)}
+										onClick={() => {setOpenEditProfile(true); setHover(false)}}
+									/>
+								</div>
+								<div className='w-[50%] h-full flex  mx-auto'>
+									<div className='h-fit my-auto'>
+										<p className='text-2xl font-bold '>{ data.username }</p>
+										<p className="text-lg font-semibold"><span className={getStatusCSS(data.status)}>●</span> {data.status[0].toUpperCase() + data.status.substring(1)}</p>
+									</div>
+								</div>
 							</div>
-						}
-						<img 
-							className={`rounded-full h-full border-4 border-blue-700 h-[75%] mx-auto relative ${hover ? 'brightness-[.25] cursor-pointer' : ''}`}
-							src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
-							alt="Edit"
-							onMouseEnter={() => setHover(true)}
-							onMouseLeave={() => setHover(false)}
-							onClick={() => {setOpenEditProfile(true); setHover(false)}}
-						/>
-					</div>
-					<div className='w-[50%] h-full flex  mx-auto'>
-						<div className='h-fit my-auto'>
-							<p className='text-2xl font-bold '>{ userDetails.username }</p>
-							<p className="text-lg font-semibold"><span className="text-green-600">●</span> Online</p>
-						</div>
-					</div>
-				</div>
-				<TabContext value={value}>
-					<div className='w-[100%] h-fit p-1 mx-auto '>
-						<Box>
-							<TabList value={value} onChange={handleChange} variant='scrollable' allowScrollButtonsMobile scrollButtons>
-									<Tab icon={<History />} label="HISTORY" sx={{ fontWeight: 'bold' }} value="1" />
-									<Tab icon={<Favorite />} label="FRIENDS" sx={{ fontWeight: 'bold' }} value="2" />
-									<Tab icon={<PersonAdd />} label="REQUESTS" sx={{ fontWeight: 'bold' }} value="3" />
-									<Tab icon={<EmojiEvents />} label="TROPHIES" sx={{ fontWeight: 'bold' }} value="4" />
-									<Tab icon={<Equalizer />} label="STATS" sx={{ fontWeight: 'bold' }} value="5" />
-							</TabList>
-						</Box>
-					</div>
+							<TabContext value={value}>
+								<div className='w-[100%] h-fit p-1 mx-auto '>
+									<Box>
+										<TabList value={value} onChange={handleChange} variant='scrollable' allowScrollButtonsMobile scrollButtons>
+												<Tab icon={<History />} label="HISTORY" sx={{ fontWeight: 'bold' }} value="1" />
+												<Tab icon={<Favorite />} label="FRIENDS" sx={{ fontWeight: 'bold' }} value="2" />
+												<Tab icon={<PersonAdd />} label="REQUESTS" sx={{ fontWeight: 'bold' }} value="3" />
+												<Tab icon={<EmojiEvents />} label="TROPHIES" sx={{ fontWeight: 'bold' }} value="4" />
+												<Tab icon={<Equalizer />} label="STATS" sx={{ fontWeight: 'bold' }} value="5" />
+										</TabList>
+									</Box>
+								</div>
 
-					<div className='grow overflow-hidden'>
-						<div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
-							<TabPanel value="1"><MatchResult userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-							<TabPanel value="2"><FriendList userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-							<TabPanel value="3"><FriendRequests userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-							<TabPanel value="4"><Achievements userDetails={userDetails} /></TabPanel>
-							<TabPanel value="5">STATS</TabPanel>
-						</div>
-					</div>
-				</TabContext>
+								<div className='grow overflow-hidden'>
+									<div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
+										<TabPanel value="1"><MatchResult data={data} username={username} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+										<TabPanel value="2"><FriendList userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+										<TabPanel value="3"><FriendRequests userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+										<TabPanel value="4"><Achievements userDetails={userDetails} /></TabPanel>
+										<TabPanel value="5">STATS</TabPanel>
+									</div>
+								</div>
+							</TabContext>
+						</>
+					)
+				}
 			</div>
 			<EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} />
 			<UserOptions open={openUserOptions} currentUser={userClicked.current} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={(navigate) => {handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)}} onClose={handleUserOptionsClose} />
-		</div>
+			</div>
   );
 }
