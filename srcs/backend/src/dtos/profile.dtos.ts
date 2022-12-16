@@ -1,4 +1,4 @@
-export class Friend {
+export class FriendDto {
     constructor (
         public friendUser:         string,
         public friendPhoto:        string,
@@ -6,14 +6,14 @@ export class Friend {
     ){}
 }
 
-export class FriendRequest{
+export class FriendRequestDto{
     constructor(
         public fromUser:           string,
         public fromPhoto:          string
     ){}
 }
 
-export class Match{
+export class MatchDto{
     constructor(
         public matchNum:           number,
         public leftPlayer:         string,
@@ -26,13 +26,13 @@ export class Match{
     ){}
 }
 
-export class Achievement{
+export class AchievementDto{
     constructor(
         public title:              string,
     ){}
 }
 
-export class Statistics{
+export class StatisticsDto{
     constructor(
         public played:              number,
         public win:                 number,
@@ -46,17 +46,28 @@ export class Statistics{
     ){}
 }
 
-export class ProfileResponse {
+export class ProfileResponseDto {
     constructor(
         public error: boolean,
-        public clientProfile: boolean,
         public username: string,
         public status: string,
         public imagePath: string,
-        public friendList: Friend[],
-        public friendRequets: FriendRequest[],
-        public matchHistory: Match[],
-        public achievement: Achievement[],
-        public stats: Statistics,
+        public friendList: FriendDto[],
+        public friendRequets: FriendRequestDto[],
+        public matchHistory: MatchDto[],
+        public achievement: AchievementDto[],
+        public stats: StatisticsDto,
         public authentificator: boolean){}
+}
+
+export class ProfileResponsePublic {
+    constructor(
+        public error: boolean,
+        public username: string,
+        public status: string,
+        public imagePath: string,
+        public friendList: FriendDto[],
+        public matchHistory: MatchDto[],
+        public achievement: AchievementDto[],
+        public stats: StatisticsDto){}
 }
