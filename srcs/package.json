@@ -26,7 +26,7 @@
     "prod": "(concurrently 'npm run frontend-prod' 'npm run  backend-prod')",
     "install": "concurrently 'npm run backend-install' 'npm run frontend-install'",
     "bootstrap": "npm i && concurrently 'npm run backend-install' 'npm run frontend-install'",
-    "start": "npm i && sh ./script.sh && concurrently 'npm run backend' 'npm run  frontend'"
+    "start": "npm i && sh ./script.sh && concurrently 'npm run backend' 'npm run frontend'"
   },
   "devDependencies": {
     "@lightwing/eslint-config": "0.0.8",

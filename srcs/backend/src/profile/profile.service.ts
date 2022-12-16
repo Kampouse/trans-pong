@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { ProfileResponse, Friend, FriendRequest, Match, Achievement, Statistics, ProfileResponsePublic} from './profile.model';
-
+import { ProfileResponseDto, FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, ProfileResponsePublic} from '../dtos/profile.dtos';
+import { UpdateUsernameDto } from 'src/dtos/profileUpdate.dto';
 
 @Injectable()
 export class ProfileService
 {
-    friendList: Friend[] = [];
-    friendRequests: FriendRequest[] = [];
-    matchHistory: Match[] = [];
-    achievements: Achievement[] = [];
+    friendList: FriendDto[] = [];
+    friendRequests: FriendRequestDto[] = [];
+    matchHistory: MatchDto[] = [];
+    achievements: AchievementDto[] = [];
 
     insertFriend(user: string, photo: string, status: string)
     {
-        const newFriend = new Friend(user, photo, status);
+        const newFriend = new FriendDto(user, photo, status);
         this.friendList.push(newFriend);
     }
 
     insertFriendRequest(from: string, photo: string)
     {
-        const newFriendRequest = new FriendRequest(from, photo);
+        const newFriendRequest = new FriendRequestDto(from, photo);
         this.friendRequests.push(newFriendRequest);
     }
 
@@ -27,14 +27,14 @@ export class ProfileService
         rightPlayer: string, rightPhoto: string, rightScore: number,
         winner: string)
     {
-        const newMatch = new Match(matchNum, leftPlayer, leftPhoto, leftScore, rightPlayer,
+        const newMatch = new MatchDto(matchNum, leftPlayer, leftPhoto, leftScore, rightPlayer,
             rightPhoto, rightScore, winner);
         this.matchHistory.push(newMatch);
     }
 
     insertAchievement(title: string)
     {
-        const newAchievement = new Achievement(title);
+        const newAchievement = new AchievementDto(title);
         this.achievements.push(newAchievement);
     }
 
@@ -42,6 +42,7 @@ export class ProfileService
     {
         // Create prisma client and look if the username exist in the database
         const prisma = new PrismaClient();
+
         const user = await prisma.user.findUnique({
             where: {
                 username: usernameParam,
@@ -170,7 +171,7 @@ export class ProfileService
         var letfWinRatio = leftWin / leftPlayed;
         var rightWinRatio = rightWin / rightPlayed;
 
-        const stats = new Statistics(played, win, winRatio, rightPlayed,
+        const stats = new StatisticsDto(played, win, winRatio, rightPlayed,
                 rightWin, rightWinRatio, leftPlayed, leftWin, letfWinRatio);
 
         // Order match in chronologic order
@@ -185,7 +186,10 @@ export class ProfileService
                 this.matchHistory[x + 1] = temp;
                 x = 0;
             }
-            x = x + 1;
+            else
+            {
+                x = x + 1;
+            }
         }
 
         // Get all accomplished achievements
@@ -326,7 +330,7 @@ export class ProfileService
             this.friendList, this.matchHistory, this.achievements , stats);
     }
 
-    async getProfileEdit(useID: string): Promise<ProfileResponse>
+    async getProfileEdit(useID: string): Promise<ProfileResponseDto>
     {
         // Create prisma client and look if the username exist in the database
         const prisma = new PrismaClient();
@@ -338,7 +342,7 @@ export class ProfileService
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
-            return new ProfileResponse(true, null, null, null, null, null, null, null, null, null);
+            return new ProfileResponseDto(true, null, null, null, null, null, null, null, null, null);
 
         //  Free the array's from previous values
         this.friendList = [];
@@ -483,7 +487,7 @@ export class ProfileService
         var letfWinRatio = leftWin / leftPlayed;
         var rightWinRatio = rightWin / rightPlayed;
 
-        const stats = new Statistics(played, win, winRatio, rightPlayed,
+        const stats = new StatisticsDto(played, win, winRatio, rightPlayed,
                 rightWin, rightWinRatio, leftPlayed, leftWin, letfWinRatio);
 
         // Order match in chronologic order
@@ -498,7 +502,10 @@ export class ProfileService
                 this.matchHistory[x + 1] = temp;
                 x = 0;
             }
-            x = x + 1;
+            else
+            {
+                x = x + 1;
+            }
         }
 
         // Get all accomplished achievements
@@ -635,35 +642,46 @@ export class ProfileService
 
         // At last, return the ProfileResponse
         await prisma.$disconnect();
-        return new ProfileResponse(false, user.username, user.userStatus, user.imagePath,
+        return new ProfileResponseDto(false, user.username, user.userStatus, user.imagePath,
             this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authentificator);
     }
 
-    async updateUsername(userName: string, useID: string) : Promise<any>
+    async updateUsername(updateUsernameDto: UpdateUsernameDto) : Promise<any>
     {
         const prisma = new PrismaClient();
 
+        //  Change this part here for user authentification
+
         const user = await prisma.user.findUnique({
             where: {
-                userID: useID,
+                userID: updateUsernameDto.userID,
             },
         })
 
         if (!user)
         {
-            return ({error: "authentification failed"});
+            return (false);
         }
 
-        await prisma.user.update({
-            where: {
-                userID: useID,
-            },
-            data: {
-                username: userName,
-            }
-        })
+        try
+        {
+            await prisma.user.update({
+                where: {
+                    userID: updateUsernameDto.userID,
+                },
+                data: {
+                    username: updateUsernameDto.newUsername,
+                }
+            })
+        }
+        catch
+        {
+            await prisma.$disconnect();
+            return ({error: "prisma update username error"})
+        }
+
         await prisma.$disconnect();
-        return ({success: "sucess"});
+        return (true);
     }
 
     async updatePhoto(newFilePath: string, useID: string) : Promise<any>
@@ -680,14 +698,22 @@ export class ProfileService
         {
             return ({error: "authentification failed"});
         }
-        await prisma.user.update({
-            where: {
-                userID: useID,
-            },
-            data: {
-                imagePath: newFilePath,
-            }
-        })
+        const path = "../srcs/public/" + newFilePath;
+        try
+        {
+            await prisma.user.update({
+                where: {
+                    userID: useID,
+                },
+                data: {
+                    imagePath: path,
+                }
+            })
+        }
+        catch
+        {
+            return ({error: "update failed"});
+        }
         await prisma.$disconnect();
         return ({success: "sucess"});
     }

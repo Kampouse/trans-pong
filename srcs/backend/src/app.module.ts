@@ -13,7 +13,10 @@ import { MulterModule } from '@nestjs/platform-express';
 @Module({
   imports: [
     AuthModule,
-    MulterModule.register({ dest: '../srcs/public'})
+    MulterModule.register(
+    {
+        dest: '../srcs/public'
+    })
             ],
   controllers: [AuthController, ProfileController],
   providers: [AppService, AuthService, ProfileService],
