@@ -28,7 +28,10 @@
     "package.json": true,
     "package-lock.json": true,
     ".eslintrc": true,
-    "Dockerfile": true
+    "Dockerfile": true,
+    ".turbo": true,
+    "assets": true,
+    "backend/src/authBackup": true
   },
   "hide-files.files": [
     "backend/node_modules",
@@ -50,6 +53,9 @@
     "package.json",
     "package-lock.json",
     ".eslintrc",
-    "Dockerfile"
+    "Dockerfile",
+    ".turbo",
+    "assets",
+    "backend/src/authBackup"
   ]
 }

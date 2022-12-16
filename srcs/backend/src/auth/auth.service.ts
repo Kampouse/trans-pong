@@ -1,19 +1,12 @@
- import { Injectable } from '@nestjs/common';
- import { CreateAuthDto } from './dto/create-auth.dto';
- import { JwtService  } from '@nestjs/jwt';
- import { prisma } from '../main';
-
+import { Injectable } from '@nestjs/common';
  @Injectable()
  export class AuthService {
-   constructor(private jwtService: JwtService) {}
   
    async validate_token (input:string)
    {
      let token = input;
      try
      {
-         const   secret = 'secret';
-         const   decoded = this.jwtService.verify(token, {secret});
 
          return (true);
      }
@@ -22,7 +15,8 @@
          return (false);
      }
    }
-
+  }
+  /*
    async verifyToken(createUserDto: CreateAuthDto)
    {
     /*
@@ -54,8 +48,8 @@
      }
      return (true);
 */
-   }
-
+   
+/*
  async verify2(token: string)
  {
      const auth = await prisma.auth.findUnique({where: { bearerToken: token }});
@@ -117,7 +111,7 @@
      });
      */
      //return (profile);
-   }
+   
 /*
    async exists(username: string)
    {
@@ -214,4 +208,3 @@
    }
  }
 */
- }

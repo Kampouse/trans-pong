@@ -22,7 +22,7 @@ const user0 = await prisma.user.upsert({
         login42: 'jvigneau',
         username: 'jvigneau',
         userStatus: 'online',
-        imagePath: '../srcs/public/jvigneauPhoto.jpeg',
+        imagePath: '../assets/public/jvigneauPhoto.jpeg',
     },
 })
 
@@ -36,7 +36,7 @@ const user1 = await prisma.user.upsert({
         login42: 'mleblanc',
         username: 'mleblanc',
         userStatus: 'playing',
-        imagePath: '../srcs/public/mleblancPhoto.jpeg',
+        imagePath: '../assets/public/mleblancPhoto.jpeg',
     },
 })
 
@@ -50,7 +50,7 @@ const user2 = await prisma.user.upsert({
         login42: 'gcollet',
         username: 'gcollet',
         userStatus: 'online',
-        imagePath: '../srcs/public/gcolletPhoto.jpeg',
+        imagePath: '../assets/public/gcolletPhoto.jpeg',
     },
 })
 
@@ -64,7 +64,7 @@ const user3 = await prisma.user.upsert({
         login42: 'alvachon',
         username: 'alvachon',
         userStatus: 'offline',
-        imagePath: '../srcs/public/alvachonPhoto.jpeg',
+        imagePath: '../assets/public/alvachonPhoto.jpeg',
     },
 })
 
@@ -78,7 +78,7 @@ const user4 = await prisma.user.upsert({
         login42: 'jbadia',
         username: 'jbadia',
         userStatus: 'playing',
-        imagePath: '../srcs/public/jbadiaPhoto.jpeg',
+        imagePath: '../assets/public/jbadiaPhoto.jpeg',
     },
 })
 
@@ -92,7 +92,7 @@ const user5 = await prisma.user.upsert({
         login42: 'gehebert',
         username: 'gehebert',
         userStatus: 'offline',
-        imagePath: '../srcs/public/gehebertPhoto.jpeg',
+        imagePath: '../assets/public/gehebertPhoto.jpeg',
     },
 })
 
@@ -106,7 +106,7 @@ const user6 = await prisma.user.upsert({
         login42: 'tberube',
         username: 'tberube',
         userStatus: 'playing',
-        imagePath: '../srcs/public/tberubePhoto.jpeg',
+        imagePath: '../assets/public/tberubePhoto.jpeg',
     },
 })
 
@@ -120,7 +120,7 @@ const user7 = await prisma.user.upsert({
         login42: 'jvillefr',
         username: 'jvillefr',
         userStatus: 'online',
-        imagePath: '../srcs/public/jvillefrPhoto.jpeg',
+        imagePath: '../assets/public/jvillefrPhoto.jpeg',
     },
 })
 
@@ -134,7 +134,7 @@ const user8 = await prisma.user.upsert({
         login42: 'bperron',
         username: 'bperron',
         userStatus: 'playing',
-        imagePath: '../srcs/public/bperronPhoto.jpeg',
+        imagePath: '../assets/public/bperronPhoto.jpeg',
     },
 })
 
