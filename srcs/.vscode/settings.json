@@ -21,7 +21,14 @@
     "frontend/.babelrc": true,
     "frontend/.custom.d.ts": true,
     "frontend/.editorconfig": true,
-    "frontend/jest.config.js": true
+    "frontend/jest.config.js": true,
+    "vercel.json": true,
+    "turbo.json": true,
+    "script.sh": true,
+    "package.json": true,
+    "package-lock.json": true,
+    ".eslintrc": true,
+    "Dockerfile": true
   },
   "hide-files.files": [
     "backend/node_modules",
@@ -36,6 +43,13 @@
     "frontend/.babelrc",
     "frontend/.custom.d.ts",
     "frontend/.editorconfig",
-    "frontend/jest.config.js"
+    "frontend/jest.config.js",
+    "vercel.json",
+    "turbo.json",
+    "script.sh",
+    "package.json",
+    "package-lock.json",
+    ".eslintrc",
+    "Dockerfile"
   ]
 }
