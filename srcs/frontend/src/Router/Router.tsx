@@ -8,6 +8,7 @@ import { Menu } from 'views/Menu/menu'
 import Game, { GameWatch } from 'views/Game/Game'
 import CreateGame from 'views/Game/CreateGame'
 import PlayMenu from 'views/Game/PlayMenu'
+import Matchmaking from 'views/Game/matchmaking'
 import Login from 'views/Login/Login'
 import Profile from 'views/Profile/Profile'
 import SocketTest from 'views/Game/SocketTest'
@@ -232,6 +233,7 @@ return (
             <Route path="/CreateGame" element={<CreateGame />} />
             <Route path="/Watch" element={<GameWatch />} />
             <Route path="/PlayMenu" element={<PlayMenu />} />
+            <Route path="/matchmaking" element={<Matchmaking />} />
             <Route path="/Play" element={<Game />}></Route>
             <Route path="/Profile/:username" element={<Profile userClicked={userClicked} />}></Route>
             <Route path="/Chat" element={<Chat />}></Route>

@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
+const { SERVFAIL } = require('dns');
+
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
@@ -18,11 +20,14 @@ module.exports = {
       },
       gridRow: {
         'span-10': 'span 10 / span 10'
-      }
+      },
+      fontFamily: {
+        kaushan: ["Kaushan Script", "cursive"],
+        carattere: ["Carattere", "cursive"],
+        Raleway: ["Raleway", "sans-serif"],
+        Merriweather: ["Merriweather", "serif"]
     },
-    fontFamily: {
-      kaushan: 'Kaushan Script, cursive',
-      carattere: 'Carattere, cursive'
+
     }
   }
 }

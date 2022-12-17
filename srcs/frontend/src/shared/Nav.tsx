@@ -35,22 +35,22 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
           aria-label="Toggle navigation"
         ></button>
         <div className=" grow  " id="navbarSupportedContent1">
-          <Link to="/" className=" text-xl font-semibold text-white">
-            trans-pong
+          <Link to="/" className=" text-xl font-Merriweather text-white">
+            Transcendence
           </Link>
-          <Link to="/Play" className=" ml-2 pl-3 font-semibold text-white">
+          <Link to="/Matchmaking" className=" ml-2 pl-3 font-Merriweather text-white">
             Play
           </Link>
-          <Link to={`/Profile/${userDetails.username}`} className=" ml-2 pl-3 font-semibold text-white">
+          <Link to="/Profile" className=" ml-2 pl-3 font-Merriweather text-white">
             Profile
           </Link>
-          <Link to="/Test" className=" ml-2 pl-3 font-semibold text-white">
-            Test
+          <Link to="/Channel" className=" ml-2 pl-3 font-Merriweather text-white">
+            Channel
           </Link>
-          <ul className="  mr-auto flex flex-col pl-0"></ul>
+          <ul className="mr-auto flex flex-col pl-0"></ul>
         </div>
 
-        <div className="relative flex items-center">
+        <div className="relative flex items-center font-Merriweather">
 					<form onSubmit={(e) => {e.preventDefault(); if (searchUser !== '') setOpenSearchUser(true); }}>
 						<input value={searchUser} type="text" placeholder="Search User" onChange={e => setSearchUser(e.target.value)} className="w-[125px] rounded-sm text-gray-700" />
 					</form>
