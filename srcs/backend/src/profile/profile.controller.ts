@@ -6,7 +6,7 @@ import { diskStorage } from "multer";
 import { UploadedFile } from "@nestjs/common";
 import { extname } from "path";
 
-const useID = "clbqig2mb0002s8mjnsrn56mw"
+const useID = "clbr16khb0000p3mwrqf8q0pm"
 
 @Controller('profile')
 export class ProfileController {
@@ -41,7 +41,7 @@ export class ProfileController {
     @Post('upload/photo')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
-            destination: '../srcs/public',
+            destination: '../frontend/public',
             filename: (req, file, callback) => {
                 const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
                 const ext = extname(file.originalname);

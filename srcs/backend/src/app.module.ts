@@ -15,7 +15,7 @@ import { MulterModule } from '@nestjs/platform-express';
     AuthModule,
     MulterModule.register(
     {
-        dest: '../srcs/public'
+        dest: '../frontend/public'
     })
             ],
   controllers: [AuthController, ProfileController],

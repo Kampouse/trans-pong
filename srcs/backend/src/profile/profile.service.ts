@@ -698,7 +698,11 @@ export class ProfileService
         {
             return ({error: "authentification failed"});
         }
+<<<<<<< HEAD
         const path = "../srcs/public/" + newFilePath;
+=======
+        const path = "/" + newFilePath;
+>>>>>>> profile-backend2
         try
         {
             await prisma.user.update({
