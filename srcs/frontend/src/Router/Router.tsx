@@ -10,6 +10,7 @@ import CreateGame from 'views/Game/CreateGame'
 import PlayMenu from 'views/Game/PlayMenu'
 import Login from 'views/Login/Login'
 import Profile from 'views/Profile/Profile'
+import SocketTest from 'views/Game/SocketTest'
 import '@styles/main.css'
 import Error404 from 'views/Error/Error404'
 import Chat from 'views/Chat/Chat'
@@ -220,29 +221,25 @@ const check = async () =>
 
 //  If the user is authentificated, render the dashboard
 useEffect(() => { check()}, [])
-  return (
+return (
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
-      {login == 'login' ? (
         <>
           <main>
             <Nav Status={'f'} setStatus={setUser} setOpenSearchUser={setOpenSearchUser} searchUser={searchUser} setSearchUser={setSearchUser} />
           </main>
           <Routes>
-            <Route path="/" element={<Menu />} />
-            <Route path="/Menu" element={<Menu />} />
+            <Route path="" element={<Menu />} />
             <Route path="/CreateGame" element={<CreateGame />} />
             <Route path="/Watch" element={<GameWatch />} />
             <Route path="/PlayMenu" element={<PlayMenu />} />
             <Route path="/Play" element={<Game />}></Route>
             <Route path="/Profile/:username" element={<Profile userClicked={userClicked} />}></Route>
             <Route path="/Chat" element={<Chat />}></Route>
+            <Route path="/SocketTest" element={<SocketTest />}></Route>
             <Route path="*" element={<Error404 />}></Route>
           </Routes>
         </>
-      ) : (
-        <Login Status={login} />
-      )}
-			<SearchUser open={openSearchUser} onClose={() => {setOpenSearchUser(false); setSearchUser('')}} searchInput={searchUser} userClicked={userClicked} />
-    </div>
-  )
+            <SearchUser open={openSearchUser} onClose={() => {setOpenSearchUser(false); setSearchUser('')}} searchInput={searchUser} userClicked={userClicked} />
+
+    </div>)
 }

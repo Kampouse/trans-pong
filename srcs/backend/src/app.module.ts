@@ -7,18 +7,15 @@ import { AuthService } from './auth/auth.service';
 import { ProfileService } from './profile/profile.service';
 import { ProfileController } from './profile/profile.controller';
 import { MulterModule } from '@nestjs/platform-express';
-// import { AuthModule } from './auth/auth.module';
-// import { UsersModule } from './users/users.module';
+import { GameGateway } from './game/game.gateway';
 
 @Module({
-  imports: [
+  imports: 
+    [
     AuthModule,
-    MulterModule.register(
-    {
-        dest: '../srcs/public'
-    })
-            ],
+    MulterModule.register({dest: '../srcs/public'})
+    ],
   controllers: [AuthController, ProfileController],
-  providers: [AppService, AuthService, ProfileService],
+  providers: [AppService, AuthService, ProfileService, GameGateway],
 })
 export class AppModule {}
