@@ -19,6 +19,7 @@ export class AuthService {
     return false
   }
   }    
+  /*
   async verifyToken(createUserDto: CreateAuthDto) {
       const userFields = await prisma.profile.findUnique({
         where: { username: createUserDto.username },
@@ -42,6 +43,7 @@ export class AuthService {
       }
       return true;
   }
+  */
 async verify2(token: string) {
       const auth = await prisma.auth.findUnique({ where: { bearerToken: token } });
       if (auth) {
@@ -58,7 +60,9 @@ async verify2(token: string) {
       }
       return false;
   }
+  
   async create(createUserDto: CreateAuthDto) {
+     /*
     const data = {
       username: createUserDto.username,
       displayName: createUserDto.displayName,
@@ -86,18 +90,22 @@ async verify2(token: string) {
       },
     });
     return profile;
+    */
   }
+  
   async exists(username: string) {
+    /*
     const data = await prisma.profile.findUnique({
       where: { username: username },
     });
     if (data) {
     }
     return data;
+    */
   }
 
   async findOne(username: string) {
-    //return user profile
+    /*
     const data = await prisma.profile.findUnique({
       where: { username: username },
     });
@@ -109,8 +117,9 @@ async verify2(token: string) {
         userId: data.userId,
       };
       return data_shape;
+      
     }
-
+*/
     return {};
   }
   remove(id: number) {
@@ -118,6 +127,7 @@ async verify2(token: string) {
   }
 
 async createToken(passport: any) {
+  /*
     type passportType = {
        id : string,
         username: string,
@@ -160,10 +170,12 @@ async createToken(passport: any) {
           await prisma.auth.delete({ where: { id: auth.id } });
         }
     }
+    */
   }
     
   
   async validateUser(payload: any) {
-    return await this.findOne(payload.username);
+ //   return await this.findOne(payload.username);
+    return {};
   }
 }

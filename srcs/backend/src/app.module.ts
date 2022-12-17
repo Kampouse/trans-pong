@@ -7,8 +7,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
-// import { AuthModule } from './auth/auth.module';
-// import { UsersModule } from './users/users.module';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,6 +18,6 @@ import { AuthService } from './auth/auth.service';
     })
             ],
   controllers: [AuthController, ProfileController],
-  providers: [AppService, AuthService, ProfileService],
+  providers: [AppService, AuthService, ProfileService, AuthModule, JwtService],
 })
 export class AppModule {}
