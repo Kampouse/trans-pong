@@ -1,6 +1,8 @@
-export class CreateAuthDto {
+  export class CreateAuthDto {
   username: string;
-  displayName: string;
+  login42: string;
+  userStatus: string;
+  imagePath: string;
   constructor(partial: Partial<CreateAuthDto>) {
     Object.assign(this, partial);
   }

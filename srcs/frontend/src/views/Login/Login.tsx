@@ -38,6 +38,7 @@ const localStorageLookup = async () => {
 }
 const check = async () => {
     const localdata = await localStorageLookup()
+  login()
     Fetch ('http://localhost:3000/auth/verify').then((response) => {
   if(response.status === 200) {
     console.log(response)
@@ -73,7 +74,7 @@ const check = async () => {
   }
 
 useEffect(() => {
-  check()
+  //check()
    
   navigate(Navi)},
    [])

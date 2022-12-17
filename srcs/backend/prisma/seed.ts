@@ -5,19 +5,16 @@ const prisma = new PrismaClient();
 
 //  Create a seed which will create data in our database for testing
 async function main(){
-
+/*
 
 console.log("starting seed script")
 
 //  Create 9 users for test's
 console.log("Creating 9 users")
 
-const user0 = await prisma.user.upsert({
-    where: {
-        userNumber: 0,
-    },
-    update: {},
-    create: {
+const user0 = await prisma.user.create({
+
+    data: {
         userNumber: 0,
         login42: 'jvigneau',
         username: 'jvigneau',
@@ -794,7 +791,7 @@ const game29 = await prisma.game.upsert({
         winner: 'jvigneau',
     },
 })
-
+*/
 }
 
 //  Call the script then disconect prisma client after.
