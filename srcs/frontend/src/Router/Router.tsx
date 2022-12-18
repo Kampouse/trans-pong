@@ -241,7 +241,7 @@ return (
             <Route path="*" element={<Error404 />}></Route>
           </Routes>
         </>
-            <SearchUser open={openSearchUser} onClose={() => {setOpenSearchUser(false); setSearchUser('')}} searchInput={searchUser} userClicked={userClicked} />
+        <SearchUser open={openSearchUser} onClose={() => {setOpenSearchUser(false); setSearchUser('')}} searchInput={searchUser} userClicked={userClicked} />
 
     </div>)
 }

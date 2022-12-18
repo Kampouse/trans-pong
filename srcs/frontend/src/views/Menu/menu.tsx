@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { User } from '@utils/types'
 import { getUserDetails } from '@views/Chat/Chat'
+
 export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
@@ -47,7 +48,7 @@ export const Menu = (): React.ReactElement => {
         </div>
         <div className=" flex w-screen flex-wrap justify-center">
           <ContenterLarge>
-            <Link to="/PlayMenu" className="relative h-full w-full">
+            <Link to="/Matchmaking" className="relative h-full w-full">
               <div className="mt-32 flex justify-center">
                 <StartSVG />
               </div>
