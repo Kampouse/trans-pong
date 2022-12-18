@@ -44,7 +44,7 @@ export class AuthController {
     const groups = { ...type };
     const first = Object.values(groups)[0];
     if (!request.headers.authorization) {
-      return ({ 401: 'Unauthorized' });
+      response.status(401)
     }
     if (request.headers.authorization) {
       this.authService.validate_token(request.headers.authorization).then((data) => {
@@ -52,7 +52,7 @@ export class AuthController {
           return ({ 200: 'ok' });
         }
         else {
-          return ({ 401: 'Unauthorized' });
+            response.status(401)
         }
       })
     }
@@ -66,7 +66,7 @@ export class AuthController {
     else {
       try {
         if (request.headers.authorization.length === 9) {
-          return { 401: 'Unauthorized', status: 'Unauthorized' };
+          response.status(401)
         }
         if (request.headers.authorization) {
           const decoded = await this.authService.verify2(request.headers.authorization);
@@ -77,11 +77,12 @@ export class AuthController {
           }
         }
         else {
-          response.status(401).send({ message: 'Unauthorized' });
+          response.status(401).send({ message: 'Unauthorized', status: '401' });
         }
       }
       catch {
-        response.status(401).send({ message: 'Unauthorized', status: 'Unauthorized' });
+          response.status(401).send({ message: 'Unauthorized', status: '401' });
+ //       response.status(401).send({ message: 'Unauthorized', status: 'Unauthorized' });
       }
     }
   }

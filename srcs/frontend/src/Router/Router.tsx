@@ -206,30 +206,31 @@ const check = async () =>
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': 'true'
       }
+    }).then((res) => {
+       console.log(res)
+      if (res.status === 200)
+      {
+        res.json().then((data) => {
+           console.log(data)
+          
+        })
+      }
+      else
+        navigate('/login')
+    }).catch((err) => {
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.response == "yes")
-        {
-            console.log("User is authentificated, proceed to open the dashboard")
-            setLogin('login')
-        }
-        return data.user
-      })
 }
-
 //  If the user is authentificated, render the dashboard
 useEffect(() => { check()}, [])
   return (
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
-      {login == 'login' ? (
         <>
           <main>
             <Nav Status={'f'} setStatus={setUser} setOpenSearchUser={setOpenSearchUser} searchUser={searchUser} setSearchUser={setSearchUser} />
           </main>
           <Routes>
-            <Route path="/" element={<Menu />} />
-            <Route path="/Menu" element={<Menu />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/" element={<Menu /> } />
             <Route path="/CreateGame" element={<CreateGame />} />
             <Route path="/Watch" element={<GameWatch />} />
             <Route path="/PlayMenu" element={<PlayMenu />} />
@@ -239,9 +240,6 @@ useEffect(() => { check()}, [])
             <Route path="*" element={<Error404 />}></Route>
           </Routes>
         </>
-      ) : (
-        <Login Status={login} />
-      )}
 			<SearchUser open={openSearchUser} onClose={() => {setOpenSearchUser(false); setSearchUser('')}} searchInput={searchUser} userClicked={userClicked} />
     </div>
   )

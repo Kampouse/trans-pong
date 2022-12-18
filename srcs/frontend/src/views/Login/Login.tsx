@@ -49,8 +49,6 @@ const check = async () => {
 }).catch((err) => { 
 }) 
 } 
-
-
 /*
       if (data.status === 200) {
           sole.log('logged in')
@@ -67,7 +65,6 @@ const check = async () => {
   const loginOffline = () => {
     setLogin('login')
   }
-
   const login = async () => {
     window.location.href =
       'https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code'
@@ -75,8 +72,7 @@ const check = async () => {
 
 useEffect(() => {
   //check()
-   
-  navigate(Navi)},
+},
    [])
   return (
     <div className="m-auto flex h-fit w-screen pb-[50px]">
