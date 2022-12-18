@@ -19,7 +19,6 @@ down:
 
 clean:
 	@docker-compose -f docker-compose.yml down --rmi all
-	@rm ./tools/env_manager
 
 fclean:
 	@docker-compose -f docker-compose.yml down --rmi all
