@@ -199,15 +199,7 @@ export default function App()
 //  Here we check with the backend if the user is authentificated
 const check = async () =>
 {
-    fetch('http://localhost:3000/auth/who', {
-    }).then((res) => { 
-
-      res.json().then((data) => {
-         if(data.token)
-            document.cookie = `token=${data.token}`
-      })
-  })
-      
+    fetch('http://localhost:3000/auth/who').then((res) => { })
 }
 
 //  If the user is authentificated, render the dashboard

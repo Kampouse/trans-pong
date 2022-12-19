@@ -40,16 +40,15 @@ const localStorageLookup = async () => {
 const who = async () => {
   {
     const localdata = await localStorageLookup()
-    fetch ('http://localhost:3000/auth/who').then((response) => {
-  if(response.status === 200) {
-     console.log("hell",response)
-      let len = response.headers.get('Content-Length')
+  fetch('http://localhost:3000/auth/who', {
+    method: 'GET',
+    credentials: 'include',
+  }).then((response) => {
+    if(response.status === 200) {
+      console.log(response)
+    } 
+  })
 
-  }
-
-
-}).catch((err) => { 
-}) 
   fetch('http://localhost:3000/auth/42', {
     method: 'GET',
     credentials: 'include',

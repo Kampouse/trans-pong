@@ -52,7 +52,7 @@ export class AuthController {
       const passport = parsed['passport'];
       const token = await this.authService.createToken(passport['user']);
      console.log(request.res.getHeader('Set-Cookie'))
-    res.cookie('token',token,{httpOnly:false}).send();
+    res.cookie('token',token,{httpOnly:true,sameSite: 'None', secure : true }).send();
     }
   }
   //verify  with :id
