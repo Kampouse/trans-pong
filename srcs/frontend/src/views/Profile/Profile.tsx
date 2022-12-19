@@ -9,7 +9,9 @@ import { getUserDetails, useRoomCode, useRooms } from "@router/Router";
 import { handleSendMessage } from '../Chat/ChatHandlers'
 import { useAtom } from 'jotai';
 import { NavigateFunction } from 'react-router';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
+import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
+import { AlertColor } from '@mui/material';
 
 const ONLINE = "text-green-600 text-md";
 const PLAYING = "text-amber-500 text-md";
@@ -293,12 +295,15 @@ function Achievements({userDetails}: {userDetails: User}) {
 	);
 }
 
-export interface DeleteChannelProps {
+export interface EditProfileProps {
 	open: boolean;
 	onClose: () => void;
+	setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
+	snackbarMsg: React.MutableRefObject<string>;
+	snackbarSeverity: React.MutableRefObject<AlertColor | undefined>;
 }
 
-export function EditProfile({ open, onClose }: DeleteChannelProps) {
+export function EditProfile({ open, onClose, setOpenSnackbar, snackbarMsg, snackbarSeverity }: EditProfileProps) {
 	const [newDisplayName, setNewDisplayName] = useState('');
 	const [isChecked, setIsChecked] = useState(false);
 
@@ -312,23 +317,47 @@ export function EditProfile({ open, onClose }: DeleteChannelProps) {
 				<div className='pl-8 h-fit w-full'>
 					<input className='w-full' onChange={(e) => {setNewDisplayName(e.target.value)}} type="text" placeholder="Enter New Display Name" />
 				</div>
-				<p className='pt-4 pb-1'>Profile Image</p>
+				<div className='h-[32px] w-full'>
+					<button
+						className='float-right text-sm bg-[#1976d2] text-white rounded-md py-0.5 px-1 my-1'
+						onClick={() => {
+							setOpenSnackbar(true);
+							snackbarMsg.current = 'Error occured';
+							snackbarSeverity.current = 'error';
+						}}
+					>
+						APPLY
+					</button>
+				</div>
+				<p className='py-1'>Profile Image</p>
 				<div className='flex pl-8 h-fit w-fit'>
-					<Button variant="contained" component="label" className='pl-4'>
+					<Button
+						variant="contained"
+						component="label"
+						className='pl-4'
+					>
 						Upload
 						<input hidden accept="image/*" type="file" id='image-input' />
 					</Button>
 					<p className='pl-2 h-fit my-auto'>No file uploaded</p>
 				</div>
-				<p className='pt-4 pb-1'>2-Way Authentification</p>
+				<div className='h-[32px] w-full'>
+					<button
+						className='float-right text-sm bg-[#1976d2] text-white rounded-md py-0.5 px-1 my-1'
+						onClick={() => {
+							setOpenSnackbar(true);
+							snackbarMsg.current = 'Error occured';
+							snackbarSeverity.current = 'error';
+						}}
+					>
+						APPLY
+					</button>
+				</div>
+				<p className='py-1'>2-Way Authentification</p>
 				<div className='flex pl-8 h-fit w-fit'>
 					<Switch checked={isChecked} onChange={(evt) => {setIsChecked(evt.target.checked)}} />
 				</div>
 			</DialogContent>
-			<DialogActions className="bg-sky-200 flex">
-				<Button onClick={onClose} sx={{ fontWeight: 'bold' }}>Save changes</Button>
-				<Button onClick={onClose} sx={{ fontWeight: 'bold' }}>Cancel changes</Button>
-			</DialogActions>
 		</Dialog>
 	);
 }
@@ -343,10 +372,20 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 	const setRoomCode = useAtom(useRoomCode)[1];
 	const [openNewRoom, setOpenNewRoom] = useState(false);
 
+	const [openSnackbar, setOpenSnackbar] = useState(false);
+	const snackbarMsg = useRef('')
+  const snackbarSeverity = useRef<AlertColor | undefined>('success')
+
 	const { username } = useParams();
 	const {profileReq: data} = useFetch(username);
 	console.log(data);
 	console.log(username);
+
+	// const navigate = useNavigate()
+	// useEffect(() => {
+		// If username === logged in user
+		//	navigate('/Profile')
+	// }, [])
 
 	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -380,18 +419,18 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 						<>
 							<div className='w-full h-[25%] flex'>
 								<div className='w-[50%] h-full flex items-center justify-center'>
-									{ hover && 
+									{ username === undefined && hover && 
 										<div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
 											<Edit sx={{color: blue[700], height: 35, width: 35}} />
 										</div>
 									}
 									<img 
-										className={`rounded-full h-full border-4 border-blue-700 h-[75%] mx-auto relative ${hover ? 'brightness-[.25] cursor-pointer' : ''}`}
+										className={`rounded-full h-full border-4 border-blue-700 h-[75%] mx-auto relative ${username === undefined && hover ? 'brightness-[.25] cursor-pointer' : ''}`}
 										src={data.imagePath}
 										alt="Edit"
-										onMouseEnter={() => setHover(true)}
-										onMouseLeave={() => setHover(false)}
-										onClick={() => {setOpenEditProfile(true); setHover(false)}}
+										onMouseEnter={() => {if (username === undefined) setHover(true);} }
+										onMouseLeave={() => {if (username === undefined) setHover(false);} }
+										onClick={() => {if (username === undefined) {setOpenEditProfile(true); setHover(false);}}}
 									/>
 								</div>
 								<div className='w-[50%] h-full flex  mx-auto'>
@@ -407,7 +446,9 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 										<TabList value={value} onChange={handleChange} variant='scrollable' allowScrollButtonsMobile scrollButtons>
 												<Tab icon={<History />} label="HISTORY" sx={{ fontWeight: 'bold' }} value="1" />
 												<Tab icon={<Favorite />} label="FRIENDS" sx={{ fontWeight: 'bold' }} value="2" />
-												<Tab icon={<PersonAdd />} label="REQUESTS" sx={{ fontWeight: 'bold' }} value="3" />
+												{username === undefined &&
+													<Tab icon={<PersonAdd />} label="REQUESTS" sx={{ fontWeight: 'bold' }} value="3" />
+												}
 												<Tab icon={<EmojiEvents />} label="TROPHIES" sx={{ fontWeight: 'bold' }} value="4" />
 												<Tab icon={<Equalizer />} label="STATS" sx={{ fontWeight: 'bold' }} value="5" />
 										</TabList>
@@ -418,7 +459,9 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 									<div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
 										<TabPanel value="1"><MatchResult data={data} username={username} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
 										<TabPanel value="2"><FriendList userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-										<TabPanel value="3"><FriendRequests userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+										{username === undefined &&
+											<TabPanel value="3"><FriendRequests userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+										}
 										<TabPanel value="4"><Achievements userDetails={userDetails} /></TabPanel>
 										<TabPanel value="5">STATS</TabPanel>
 									</div>
@@ -428,8 +471,14 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 					)
 				}
 			</div>
-			<EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} />
+			<EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} />
 			<UserOptions open={openUserOptions} currentUser={userClicked.current} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={(navigate) => {handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)}} onClose={handleUserOptionsClose} />
-			</div>
+			<GeneralSnackbar
+        message={snackbarMsg.current}
+        open={openSnackbar}
+        severity={snackbarSeverity.current}
+        onClose={() => setOpenSnackbar(false)}
+      />
+		</div>
   );
 }
