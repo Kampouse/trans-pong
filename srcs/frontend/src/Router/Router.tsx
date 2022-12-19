@@ -145,10 +145,8 @@ export interface SearchUserProps {
 	userClicked: React.MutableRefObject<User | null>;
 }
 
-
 export function SearchUser({ open, onClose, searchInput, userClicked }: SearchUserProps) {
 	const [users, setUsers] = useAtom(useUsers);
-
 	const usersList: User[] = users.filter((user: User) => {return user.username.search(searchInput.toLowerCase()) > -1});
 
 	return (

@@ -5,8 +5,10 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as dtos from  "../dtos/profile.dtos"
 import { prisma } from '../main';
+
 @Injectable()
-export class AuthService {
+export class AuthService
+{
   constructor(private jwtService: JwtService) { }
 
   async validate_token(input: string) {
@@ -23,26 +25,34 @@ export class AuthService {
 
   async verify2(token: string) {
     const auth = await prisma.auth.findUnique({ where: { bearerToken: token } });
-    if (auth) {
+    if (auth)
+    {
       const token = auth.bearerToken;
       const secret = 'secret'; // private key for jwt should be in env
       const expiresIn = '1d';
       const decoded = this.jwtService.verify(token, { secret });
-      if (decoded) {
+      if (decoded)
+      {
         return decoded;
       }
-      else {
+      else
+      {
         return false;
       }
     }
     return false;
   }
+  
   async create(createUserDto: CreateAuthDto) {
-    try {
+    try
+    {
       const user = await this.exists(createUserDto.username)
       if (user)
+      {
         return false;
-      if (!user) {
+      }
+      if (!user)
+      {
         const user = await prisma.user.create({
           data:
           {
@@ -51,21 +61,24 @@ export class AuthService {
             imagePath: '/jvigneauPhoto.jpeg',
           }
         });
-         return true
-      }       
-    } catch (error) {
+        return true
+      }
+    } catch (error)
+    {
     }
   }
 
-  async exists(username: string) {
+  async exists(username: string)
+  {
     const data = await prisma.user.findUnique({ where: { username: username }});
-    if (data) {
+    if (data)
+    {
     }
     return data;
-
   }
 
-  async findOne(username: string) {
+  async findOne(username: string)
+  {
     /*
     const data = await prisma.profile.findUnique({
       where: { username: username },
@@ -83,11 +96,14 @@ export class AuthService {
 */
     return {};
   }
-  remove(id: number) {
+
+  remove(id: number)
+  {
     return `This action removes a #${id} user`;
   }
 
-  async createToken(passport: any) {
+  async createToken(passport: any)
+  {
       type passportType = {
          id : string,
           username: string,
@@ -102,11 +118,13 @@ export class AuthService {
       const secret = 'secret'; // private key for jwt should be in env
       const expiresIn = '1d'; 
       const token = this.jwtService.sign(payload, { secret, expiresIn });
-        return token
+      return token
       return this.validate_token(token)
-      }
-  async validateUser(payload: any) {
+    }
+  
+    async validateUser(payload: any)
+    {
+        return {};
     //   return await this.findOne(payload.username);
-    return {};
-  }
+    }
 }
