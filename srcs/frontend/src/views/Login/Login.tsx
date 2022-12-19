@@ -7,7 +7,6 @@ import { useAtom, atom } from 'jotai'
 import { useLogin } from 'Router/Router'
 import { Cookie } from '@mui/icons-material'
 import { Fetch } from 'utils'
-import { verify } from 'crypto'
 
 type DataIntput = {
   username: string
@@ -29,6 +28,7 @@ export default function Login(Status)
         func(inputs)
         const button: HTMLButtonElement = event.currentTarget
     }
+	
 const localStorageLookup = async () => {
   const data = localStorage.getItem('userData')
   if (data) {
@@ -36,19 +36,53 @@ const localStorageLookup = async () => {
   }
   return ""
 }
-const check = async () => {
+
+const who = async () => {
+  {
     const localdata = await localStorageLookup()
-  login()
+    fetch ('http://localhost:3000/auth/who').then((response) => {
+  if(response.status === 200) {
+     console.log("hell",response)
+      let len = response.headers.get('Content-Length')
+
+  }
+
+
+}).catch((err) => { 
+}) 
+  fetch('http://localhost:3000/auth/42', {
+    method: 'GET',
+    credentials: 'include',
+  })
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error(error));
+}
+
+}
+const check = async () => {
+
+    const localdata = await localStorageLookup()
     Fetch ('http://localhost:3000/auth/verify').then((response) => {
   if(response.status === 200) {
-    console.log(response)
+     console.log(response)
+
+
+      let len = response.headers.get('Content-Length')
+    if(len  == '0')
+       login() 
+       
+      
+
   }
-  else {
-    login();
-}
+  
+
+
 }).catch((err) => { 
 }) 
 } 
+
+
 /*
       if (data.status === 200) {
           sole.log('logged in')
@@ -65,15 +99,13 @@ const check = async () => {
   const loginOffline = () => {
     setLogin('login')
   }
+
   const login = async () => {
     window.location.href =
       'https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code'
   }
 
-useEffect(() => {
-  //check()
-},
-   [])
+useEffect(() => { navigate(Navi)}, [])
   return (
     <div className="m-auto flex h-fit w-screen pb-[50px]">
       <div className="m-auto">
@@ -93,6 +125,15 @@ useEffect(() => {
         >
           Login{' '}
         </button>
+        <button
+          className=" border-0  bg-slate-800 py-2 px-2.5 text-gray-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0"
+          onClick={(event) => buttonHandler(who, event)}
+          type="submit"
+        >
+          what{' '}
+        </button>
+
+
       </div>
     </div>
   )

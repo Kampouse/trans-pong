@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { JwtService } from '@nestjs/jwt';
+import * as dtos from  "../dtos/profile.dtos"
 import { prisma } from '../main';
 @Injectable()
 export class AuthService {
@@ -146,7 +147,7 @@ export class AuthService {
   }
 
   async createToken(passport: any) {
-    /*
+  
       type passportType = {
          id : string,
           username: string,
@@ -160,26 +161,35 @@ export class AuthService {
       const secret = 'secret'; // private key for jwt should be in env
       const expiresIn = '1d'; 
       const token = this.jwtService.sign(payload, { secret, expiresIn });
-       type auth = {
-         accessToken: string;
-         refreshToken: string;
-         bearerToken: string;
-         authid?: string;
-       };
-   const userFields =     await  prisma.profile.findUnique({ where: { username: username } })
-        const userId = userFields.userId;
-        const user   =   await  prisma.user.findUnique({ where: { id: userId } }) 
-        const authId = user.authid;
-        const auth = await prisma.auth.findUnique({ where: { id: authId } });
-        if(auth && auth.bearerToken && await this.verifyToken(input) == true) 
-              return token;
-        else 
-        {
-          const data: auth = {
-            accessToken: input.accessToken,
-            refreshToken: input.refreshToken,
-            bearerToken: token,
-          };
+        return token
+      type auth = {
+          accessToken: string;
+          refreshToken: string;
+          bearerToken: string;
+      };
+    const userFields  =     await  prisma.user.findUnique({ where: { username: username } })
+    const AnyAuth = await prisma.auth.findUnique({ where: { bearerToken: token } })
+    if (AnyAuth) {
+      return  this.validate_token(token)
+    }
+    else {
+      const data: auth = {
+        accessToken: input.accessToken,
+        refreshToken: input.refreshToken,
+        bearerToken: token,
+      };
+       /*
+      const newAuth = await prisma.auth.create({ data: data });
+      await prisma.user.update({
+        where: { userID: userFields.userID },
+        data: { auth: { connect: { authID: newAuth.authID } } },
+      });
+
+      */
+      return this.validate_token(token)
+     }
+
+          /*
           const newAuth = await prisma.auth.create({ data });
           await prisma.user.update({
             where: { id: userId },
@@ -188,9 +198,10 @@ export class AuthService {
           if (auth) {
             await prisma.auth.delete({ where: { id: auth.id } });
           }
+          */
       }
-      */
-  }
+    
+  
 
 
   async validateUser(payload: any) {
