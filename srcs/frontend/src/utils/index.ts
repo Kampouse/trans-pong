@@ -17,18 +17,12 @@ export function generateSerial() {
 }
 
 export function Fetch(url: string) {
-
-  let  auth =  localStorage.getItem('userData') 
-   if(!auth || auth == 'undefined'){
-       auth = 'Bearer ' + ''; 
-   }
     let  header = {
       'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': 'true',
-         'Authorization':   auth
     }
-     return fetch(url, {headers:header})
+     return fetch(url, {headers:header, credentials: 'include'})
   
 
 }

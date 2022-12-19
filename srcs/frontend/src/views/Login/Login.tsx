@@ -36,65 +36,21 @@ const localStorageLookup = async () => {
   }
   return ""
 }
-
-const who = async () => {
-  {
-    const localdata = await localStorageLookup()
-  fetch('http://localhost:3000/auth/who', {
-    method: 'GET',
-    credentials: 'include',
-  }).then((response) => {
-    if(response.status === 200) {
-      console.log(response)
-    } 
-  })
-
-  fetch('http://localhost:3000/auth/42', {
-    method: 'GET',
-    credentials: 'include',
-  })
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.error(error));
-}
-
-}
 const check = async () => {
 
     const localdata = await localStorageLookup()
-    Fetch ('http://localhost:3000/auth/verify').then((response) => {
+    Fetch ('http://localhost:3000/auth/who').then((response) => {
   if(response.status === 200) {
-     console.log(response)
-
-
-      let len = response.headers.get('Content-Length')
-    if(len  == '0')
-       login() 
        
       
 
   }
-  
-
-
+  else {
+       login() 
+  }
 }).catch((err) => { 
 }) 
 } 
-
-
-/*
-      if (data.status === 200) {
-          sole.log('logged in')
-        setLogin('login')
-        localStorage.setItem('userData', JSON.stringify(data.user))
-      }
-       else {
-        console.log('not logged in')
-         login()
-       }
-      return data.user
-    })
-  */
   const loginOffline = () => {
     setLogin('login')
   }
@@ -124,15 +80,6 @@ useEffect(() => { navigate(Navi)}, [])
         >
           Login{' '}
         </button>
-        <button
-          className=" border-0  bg-slate-800 py-2 px-2.5 text-gray-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0"
-          onClick={(event) => buttonHandler(who, event)}
-          type="submit"
-        >
-          what{' '}
-        </button>
-
-
       </div>
     </div>
   )
