@@ -36,7 +36,8 @@
     "react-dom": "^18.2.0",
     "react-responsive-canvas": "^1.0.2",
     "react-router": "^6.3.0",
-    "sass": "^1.55.0"
+    "sass": "^1.55.0",
+    "socket.io-client": "4.5.4"
   },
   "devDependencies": {
     "@babel/core": "latest",

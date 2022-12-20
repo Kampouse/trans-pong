@@ -6,6 +6,21 @@ import * as session from 'express-session';
 // import { env } from 'process';
 // import { cors } from 'cors';
 import * as cookieParser from 'cookie-parser';
+import { Socket, Server } from 'socket.io'
+
+const server = new Server(3001, {cors: {
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"]
+}});
+
+async function gameSocket() {
+  server.on('connection', (socket) => {
+      console.log("new connection");
+      socket.on("message", (message) => {
+        console.log("Message from " + socket.id + ": " +  message )
+      })
+  })
+}
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -53,3 +68,4 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
+gameSocket()
