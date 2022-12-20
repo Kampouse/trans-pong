@@ -18,8 +18,6 @@ import {
       signOptions: { expiresIn: '60s' },
     }),
   ],
-
-  controllers: [AuthController],
   providers: [
     AuthService,
     JwtService,

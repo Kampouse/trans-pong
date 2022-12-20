@@ -1,33 +1,9 @@
-import { prisma } from '../main';
 import { Controller, Get,Req,UseGuards, Redirect, Res} from '@nestjs/common';
 import { Request  } from 'express';
 import { AuthService } from './auth.service';
-import { FortyTwoStrategy } from './utils/42strategy';
 import { JwtGuard, FortyTwoAuthGuard } from './utils/Guards';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { JwtService } from '@nestjs/jwt';
-
-//  A user object expected in the request ?
-type User = {
-  id: string;
-  username: string;
-  displayName: string;
-  email: string;
-  accessToken: string;
-  refreshToken: string;
-  login42: string;
-  userStatus: string;
-  imagePath: string;
-};
-
-//  Session user to identify a client ?
-type SessionUser = { [key: string]: any };
-
-//  This is a request type expected from the front end
-type RequestWithUser = Request & { user: User; response: any } & {
-  session: { passport: { user: User } };
-};
+import { ApiResponse, User, RequestWithUser, SessionUser } from "src/dtos/auth.dtos";
 
 @Controller('auth')
 export class AuthController
@@ -84,9 +60,10 @@ export class AuthController
   {
     //  1) If the user dosen't exist, create one
     //  2) Redirect path sent in the response
-    if (request.user)
+    if (request)
     {
-      let isNewUser = await this.authService.create(request.user);
+      let isNewUser = await this.authService.create(request);
+      console.log(isNewUser);
       let path = isNewUser ? '/profile' : '/';
       return { statCode: 302, url: "http://localhost:5173" + path };
     }

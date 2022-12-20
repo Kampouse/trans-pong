@@ -17,6 +17,7 @@ import { ChatRoom, initAchievement, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial } from 'utils'
 import {Fetch} from 'utils'
+import dotenv from 'dotenv';
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -195,7 +196,11 @@ export default function App()
 	const navigate = useNavigate();
 
 //  Here we check with the backend if the user is authentificated
-const check = async () => Fetch('http://localhost:3000/auth/who').then((res) => { })
+const check = async () => Fetch('http://localhost:3000/auth/who').then((res) => 
+{
+    console.log(res.headers)
+})
+
 useEffect(() => { check()}, [])
   return (
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">

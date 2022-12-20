@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { ProfileResponseDto, FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, ProfileResponsePublic} from '../dtos/profile.dtos';
-import { UpdateUsernameDto } from 'src/dtos/profileUpdate.dto';
+import { ProfileResponseDto, FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, ProfileResponsePublic, UpdateUsernameDto } from '../dtos/profile.dtos';
 
 @Injectable()
 export class ProfileService
@@ -51,7 +50,10 @@ export class ProfileService
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
+        {
+            await prisma.$disconnect();
             return new ProfileResponsePublic(true, null, null, null, null, null, null, null);
+        }
 
         //  Free the array's from previous values
         this.friendList = [];
@@ -342,7 +344,10 @@ export class ProfileService
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
+        {
+            await prisma.$disconnect();
             return new ProfileResponseDto(true, null, null, null, null, null, null, null, null, null);
+        }
 
         //  Free the array's from previous values
         this.friendList = [];
@@ -660,6 +665,7 @@ export class ProfileService
 
         if (!user)
         {
+            await prisma.$disconnect();
             return (false);
         }
 
@@ -696,6 +702,7 @@ export class ProfileService
         
         if (!user)
         {
+            await prisma.$disconnect();
             return ({error: "authentification failed"});
         }
         const path = "/" + newFilePath;

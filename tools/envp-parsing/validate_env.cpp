@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:36:51 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/09 10:22:31 by aguay            ###   ########.fr       */
+/*   Updated: 2022/12/20 07:28:53 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ bool	validate_api(std::string api,std::string secret)
 
 bool	validate_callback(std::string callback)
 {
-	if (callback != "http://localhost:3000/auth/42login" || callback.size() == 0)
+	if (callback.size() < 10)
 	{
 		std::cout << "error var: callback: invalid" << std::endl;
 		return (false);

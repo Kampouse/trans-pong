@@ -1,72 +1,86 @@
-import { Console } from 'console';
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import * as dtos from  "../dtos/profile.dtos"
-import { prisma } from '../main';
+import { ApiResponse, User, RequestWithUser, SessionUser } from "src/dtos/auth.dtos";
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class AuthService
 {
-  constructor(private jwtService: JwtService) { }
+    constructor(private jwtService: JwtService) { }
 
-  async validate_token(input: string) {
-    let token = input
-    try {
-      const secret = 'secret'
-      const decoded = this.jwtService.verify(token, { secret });
-      return true
-    }
-    catch (error) {
-      return false
-    }
+    async validate_token(input: string)
+    {
+        let token = input
+        try
+        {
+            const secret = 'secret'
+            const decoded = this.jwtService.verify(token, { secret });
+            return true
+        }
+        catch (error)
+        {
+            return false
+        }
   }
 
-  async verify2(token: string) {
-    const auth = await prisma.auth.findUnique({ where: { bearerToken: token } });
-    if (auth)
+    async verify2(token: string)
     {
-      const token = auth.bearerToken;
-      const secret = 'secret'; // private key for jwt should be in env
-      const expiresIn = '1d';
-      const decoded = this.jwtService.verify(token, { secret });
-      if (decoded)
-      {
-        return decoded;
-      }
-      else
-      {
+        const auth = await prisma.auth.findUnique({ where: { bearerToken: token } });
+        if (auth)
+        {
+            const token = auth.bearerToken;
+            const secret = 'secret'; // private key for jwt should be in env
+            const expiresIn = '1d';
+            const decoded = this.jwtService.verify(token, { secret });
+            if (decoded)
+            {
+                return decoded;
+            }
+            else
+            {
+                return false;
+            }
+        }
         return false;
-      }
     }
-    return false;
-  }
-  
-  async create(createUserDto: CreateAuthDto) {
-    try
+
+    async create(apiResponse: RequestWithUser)
     {
-      const user = await this.exists(createUserDto.username)
-      if (user)
-      {
-        return false;
-      }
-      if (!user)
-      {
-        const user = await prisma.user.create({
-          data:
-          {
-            login42: createUserDto.username,
-            username: createUserDto.username,
-            imagePath: '/jvigneauPhoto.jpeg',
-          }
-        });
-        return true
-      }
-    } catch (error)
-    {
+        const prisma = new PrismaClient();
+
+        // Look in the database if the user exist
+        const user = await prisma.user.findUnique({
+            where:
+            {
+                login42: apiResponse.user.username
+            }
+        })
+
+        //  If he dosen't, create him
+        if (!user)
+        {
+            try
+            {
+                await prisma.user.create ({
+                    data: {
+                        login42: apiResponse.user.username,
+                        username: apiResponse.user.username,
+                        accessToken: apiResponse.user.accessToken,
+                        refreshToken: apiResponse.user.refreshToken
+                    }
+                })
+                await prisma.$disconnect();
+                return (apiResponse.user.username);
+            }
+            catch
+            {
+                await prisma.$disconnect();
+                return ({error: "User creation in the database failed."})
+            }
+        }
+        await prisma.$disconnect();
+        return (apiResponse.user.username)
     }
-  }
 
   async exists(username: string)
   {

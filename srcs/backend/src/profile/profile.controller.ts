@@ -1,6 +1,6 @@
 import { Controller, Get, Header, Param, Post, UseInterceptors, Body} from "@nestjs/common";
 import { ProfileService } from "./profile.service";
-import { UpdateUsernameDto } from "src/dtos/profileUpdate.dto";
+import { UpdateUsernameDto } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { UploadedFile } from "@nestjs/common";
