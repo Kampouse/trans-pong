@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:41:59 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/10 16:48:22 by aguay            ###   ########.fr       */
+/*   Updated: 2022/12/20 07:35:26 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ bool	create_api_info(void)
 {
 	std::string		uid;
 	std::string		secret;
+    std::string     redirect;
 	std::ofstream	file;
 	bool			run = true;
 
@@ -87,13 +88,15 @@ bool	create_api_info(void)
 		std::getline(std::cin, uid);
 		std::cout << "Intra 42 application secret: ";
 		std::getline(std::cin, secret);
+        std::cout << "Ok, now we I need the redirect URL that redirect to :\nhttp://localhost:3000/auth/42login" << std::endl;
+        std::getline(std::cin, redirect);
 		if (validate_api(uid, secret))
 			run = false;
 	}
 	file.open(".env", std::ofstream::app);
 	file << "CLIENT_ID=" << uid << '\n';
 	file << "CLIENT_SECRET=" << secret << '\n';
-	file << "CALLBACK_URL=http://localhost:3000/auth/42login";
+	file << "REDIRECT=" << redirect;
 	file.close();
 	return (true);
 }

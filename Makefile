@@ -10,6 +10,11 @@ up:	build
 	@echo "Please be patient, it can take some time for web-server to be"
 
 build:	docker-compose.yml
+	@sh tools/script.sh
+	@g++ ./tools/envp-parsing/create_env.cpp ./tools/envp-parsing/main.cpp ./tools/envp-parsing/validate_env.cpp ./tools/envp-parsing/header.hpp
+	@mv a.out ./tools/env_manager
+	@./tools/env_manager
+	@python3 ./tools/api_validation.py
 	@docker-compose -f docker-compose.yml build
 
 down:
