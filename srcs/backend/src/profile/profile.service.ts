@@ -59,6 +59,12 @@ export class ProfileService
         this.achievements = [];
         this.matchHistory = [];
 
+        //  Free the array's from previous values
+        this.friendList = [];
+        this.friendRequests = [];
+        this.achievements = [];
+        this.matchHistory = [];
+
         //  Build the response
 
         //  Get friends of user

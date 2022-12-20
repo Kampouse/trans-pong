@@ -7,7 +7,7 @@ import React, {
   useContext
 } from 'react'
 import NewRoom from './components/NewRoom'
-import { GeneralSnackbar } from './components/Snackbar'
+import { GeneralSnackbar } from '../Snackbar/Snackbar'
 import SidebarRooms from './components/SidebarRooms'
 import { SidebarOptions, SidebarMembers } from './components/SidebarDetails'
 import Rooms from './components/Rooms'
