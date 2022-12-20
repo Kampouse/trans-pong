@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:41:59 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/20 07:35:26 by aguay            ###   ########.fr       */
+/*   Updated: 2022/12/20 16:56:32 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ bool	create_api_info(void)
 		std::getline(std::cin, uid);
 		std::cout << "Intra 42 application secret: ";
 		std::getline(std::cin, secret);
-        std::cout << "Ok, now we I need the redirect URL that redirect to :\nhttp://localhost:3000/auth/42login" << std::endl;
+        std::cout << "Ok, now I need the redirect URL that redirect to :\nhttp://localhost:3000/auth/42login" << std::endl;
         std::getline(std::cin, redirect);
 		if (validate_api(uid, secret))
 			run = false;
