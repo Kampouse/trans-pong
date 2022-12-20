@@ -9,13 +9,13 @@ datasource db {
 
 model User {
     userID              String                          @id @default(cuid())
-    userNumber          Int                             @unique @default(autoincrement())
     auth                Auth?
-    apiToken            Json?
+    accessToken         String?
+    refreshToken        String?
     login42             String                          @unique
     username            String                          @unique
-    userStatus          userStatus                      @default(online)
-    imagePath           String                          @default("default_path")
+    userStatus          userStatus                      @default(offline)
+    imagePath           String                          @default("/defaultPhoto.png")
     authentificator     Boolean                         @default(false)
     achievement         Achievement?
     channels            Channel[]

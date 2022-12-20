@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useState } from 'react'
 import '@styles/main.css'
 import { setDefaultResultOrder } from 'dns'
+import { login } from './login.42api'
 import { useAtom, atom } from 'jotai'
 import { useLogin } from 'Router/Router'
 import { Cookie } from '@mui/icons-material'
@@ -36,53 +36,29 @@ const localStorageLookup = async () => {
   }
   return ""
 }
-
 const check = async () => {
+
     const localdata = await localStorageLookup()
-    Fetch ('http://localhost:3000/auth/verify').then((response) => {
-  if(response.status === 200) {
-      let len = response.headers.get('Content-Length')
-    if(len  == '0')
-       login() 
-     response.json()?.then((data) => {
-       if(data.status ==  "Unauthorized")
-          login()
-         if(!data.token)
-          data.token = localdata
-        localStorage.setItem('userData', data.token)
-        setLogin('login')
-     })
-  }
-  else {
-    login();
+    Fetch ('http://localhost:3000/auth/who').then((response) =>
+    {
+        if(response.status === 200)
+        {
+
+        }
+        else
+        {
+            login() 
+        }
+    }).catch((err) =>
+    {
+        
+    })
 }
 
-}).catch((err) => { 
-}) 
-} 
-
-
-/*
-      if (data.status === 200) {
-          sole.log('logged in')
-        setLogin('login')
-        localStorage.setItem('userData', JSON.stringify(data.user))
-      }
-       else {
-        console.log('not logged in')
-         login()
-       }
-      return data.user
-    })
-  */
-  const loginOffline = () => {
+const loginOffline = () =>
+{
     setLogin('login')
-  }
-
-  const login = async () => {
-    window.location.href =
-      'https://api.intra.42.fr/oauth/authorize?client_id=0b768d33ad33083e6f78a8ac6cf1f546be68c17d7fa5bf6479233bab2905f978&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code'
-  }
+}
 
 useEffect(() => { navigate(Navi)}, [])
   return (
