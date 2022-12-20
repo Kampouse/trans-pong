@@ -9,6 +9,15 @@ export type User =
     refreshToken: string;
 };
 
+export type passportType =
+{
+  id : string,
+  username: string,
+  displayName: string,
+  accessToken: string,
+  refreshToken: string
+}
+
 //  Session user to identify a client ?
 export type SessionUser = { [key: string]: any };
   

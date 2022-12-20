@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { create } from "domain";
 
 //  Create a seed which will create data in our database for testing
 async function main()
@@ -27,7 +26,6 @@ async function main()
     }
     catch{}
 
-
     try
     {
         var user1 = await prisma.user.upsert({
@@ -44,8 +42,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -64,7 +60,6 @@ async function main()
     }
     catch{}
 
-
     try
     {
         var user3 = await prisma.user.upsert({
@@ -81,7 +76,6 @@ async function main()
         })
     }
     catch{}
-
 
     try
     {
@@ -100,7 +94,6 @@ async function main()
     }
     catch{}
 
-
     try
     {
         var user5 = await prisma.user.upsert({
@@ -117,7 +110,6 @@ async function main()
         })
     }
     catch{}
-
 
     try
     {
@@ -136,7 +128,6 @@ async function main()
     }
     catch{}
 
-
     try
     {
         var user7 = await prisma.user.upsert({
@@ -154,7 +145,6 @@ async function main()
     }
     catch{}
 
-
     try
     {
         var user8 = await prisma.user.upsert({
@@ -171,7 +161,6 @@ async function main()
         })
     }
     catch{}
-
 
     //  Create a bunch of friend request's
 
@@ -193,7 +182,6 @@ async function main()
     }
     catch{}
 
-
     try
     {
         var friendRequest1 = await prisma.friendRequest.upsert({
@@ -210,8 +198,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -230,8 +216,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var friendRequest3 = await prisma.friendRequest.upsert({
@@ -248,8 +232,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -268,8 +250,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var friendRequest5 = await prisma.friendRequest.upsert({
@@ -286,8 +266,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -306,8 +284,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var friendRequest7 = await prisma.friendRequest.upsert({
@@ -324,7 +300,6 @@ async function main()
         })
     }
     catch{}
-
 
     try
     {
@@ -343,9 +318,6 @@ async function main()
     }
     catch{}
 
-
-
-
     try
     {
         var friendRequest9 = await prisma.friendRequest.upsert({
@@ -362,8 +334,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -382,7 +352,6 @@ async function main()
     }
     catch{}
 
-
     try
     {
         var friendRequest11 = await prisma.friendRequest.upsert({
@@ -400,8 +369,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var friendRequest12 = await prisma.friendRequest.upsert({
@@ -418,10 +385,6 @@ async function main()
         })
     }
     catch{}
-
-
-
-
 
     //  Creating a bunch of game's
 
@@ -447,7 +410,6 @@ async function main()
     }
     catch{}
 
-
     try
     {
         var game1 = await prisma.game.upsert({
@@ -467,8 +429,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -490,8 +450,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game3 = await prisma.game.upsert({
@@ -511,8 +469,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -534,8 +490,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game5 = await prisma.game.upsert({
@@ -555,8 +509,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -578,8 +530,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game7 = await prisma.game.upsert({
@@ -599,8 +549,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -622,8 +570,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game9 = await prisma.game.upsert({
@@ -643,8 +589,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -666,8 +610,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game11 = await prisma.game.upsert({
@@ -687,8 +629,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -710,8 +650,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game13 = await prisma.game.upsert({
@@ -731,8 +669,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -755,7 +691,6 @@ async function main()
     }
     catch{}
 
-
     try
     {
         var game15 = await prisma.game.upsert({
@@ -775,8 +710,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -798,8 +731,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game17 = await prisma.game.upsert({
@@ -819,8 +750,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -842,8 +771,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game19 = await prisma.game.upsert({
@@ -863,8 +790,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -886,8 +811,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game21 = await prisma.game.upsert({
@@ -907,8 +830,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -930,8 +851,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game23 = await prisma.game.upsert({
@@ -951,8 +870,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -974,8 +891,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game25 = await prisma.game.upsert({
@@ -995,8 +910,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {
@@ -1018,8 +931,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game27 = await prisma.game.upsert({
@@ -1040,8 +951,6 @@ async function main()
     }
     catch{}
 
-
-
     try
     {
         var game28 = await prisma.game.upsert({
@@ -1061,8 +970,6 @@ async function main()
         })
     }
     catch{}
-
-
 
     try
     {

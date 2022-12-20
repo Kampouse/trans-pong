@@ -17,7 +17,6 @@ import { ChatRoom, initAchievement, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial } from 'utils'
 import {Fetch} from 'utils'
-import dotenv from 'dotenv';
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -196,10 +195,23 @@ export default function App()
 	const navigate = useNavigate();
 
 //  Here we check with the backend if the user is authentificated
-const check = async () => Fetch('http://localhost:3000/auth/who').then((res) => 
+const check = async () =>
 {
-    console.log(res.headers)
-})
+    fetch('http://localhost:3000/auth/who')
+      .then((response) => response.status)
+      .then((status) =>
+      {
+        if (status == 200)
+        {
+            console.log("User is authentificated, proceed to open the dashboard")
+            setLogin('login')
+        }
+        else
+        {
+            console.log("No user logged, please login.")
+        }
+      })
+}
 
 useEffect(() => { check()}, [])
   return (

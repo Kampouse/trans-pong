@@ -10,8 +10,9 @@ datasource db {
 model User {
     userID              String                          @id @default(cuid())
     auth                Auth?
-    accessToken         String?
-    refreshToken        String?
+    accessToken42       String?
+    refreshToken42      String?
+    jwtToken            String?
     login42             String                          @unique
     username            String                          @unique
     userStatus          userStatus                      @default(offline)

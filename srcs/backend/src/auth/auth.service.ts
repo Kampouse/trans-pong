@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ApiResponse, User, RequestWithUser, SessionUser } from "src/dtos/auth.dtos";
+import { RequestWithUser, SessionUser, passportType } from "src/dtos/auth.dtos";
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
@@ -13,38 +13,86 @@ export class AuthService
         let token = input
         try
         {
-            const secret = 'secret'
+            const secret = 'secret';
             const decoded = this.jwtService.verify(token, { secret });
-            return true
+            return (true);
         }
         catch (error)
         {
-            return false
+            return (false);
         }
-  }
-
-    async verify2(token: string)
-    {
-        const auth = await prisma.auth.findUnique({ where: { bearerToken: token } });
-        if (auth)
-        {
-            const token = auth.bearerToken;
-            const secret = 'secret'; // private key for jwt should be in env
-            const expiresIn = '1d';
-            const decoded = this.jwtService.verify(token, { secret });
-            if (decoded)
-            {
-                return decoded;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        return false;
     }
 
-    async create(apiResponse: RequestWithUser)
+    async linkToken(token: any, username: string)
+    {
+        //  Look if the username in the tokken is valid
+        const prisma = new PrismaClient();
+
+        try
+        {
+            const newUser = await prisma.user.findUnique(
+                {
+                    where:
+                    {
+                        login42: username
+                    }
+                })
+
+            if (!newUser)
+            {
+                await prisma.$disconnect();
+                return (false)
+            }
+        }
+        catch
+        {
+            await prisma.$disconnect();
+            return (false)
+        }
+
+        try
+        {
+            await prisma.user.update({
+                where: {
+                    login42: username
+                },
+                data: {
+                    jwtToken: token
+                }
+            })
+            await prisma.$disconnect();
+            return (true);
+        }
+        catch
+        {
+            await prisma.$disconnect();
+            return (false);
+        }
+    }
+
+    async createToken(passport: any)
+    {
+        let input: passportType = passport;
+        const username = input.username;
+        if (username == undefined)
+        {
+            return (false);
+        }
+        const payload = { username };
+        const secret = 'secret'; // private key for jwt should be in env
+        const expiresIn = '1d'; 
+        const token = this.jwtService.sign(payload, { secret, expiresIn });
+        if (this.validate_token(token))
+        {
+            if (this.linkToken(token, username))
+            {
+                return (token);
+            }
+        }
+        return (false)
+    }
+
+    async createUser(apiResponse: RequestWithUser)
     {
         const prisma = new PrismaClient();
 
@@ -65,8 +113,8 @@ export class AuthService
                     data: {
                         login42: apiResponse.user.username,
                         username: apiResponse.user.username,
-                        accessToken: apiResponse.user.accessToken,
-                        refreshToken: apiResponse.user.refreshToken
+                        accessToken42: apiResponse.user.accessToken,
+                        refreshToken42: apiResponse.user.refreshToken
                     }
                 })
                 await prisma.$disconnect();
@@ -82,63 +130,25 @@ export class AuthService
         return (apiResponse.user.username)
     }
 
-  async exists(username: string)
-  {
-    const data = await prisma.user.findUnique({ where: { username: username }});
-    if (data)
+    async doesUserExist(apiResponse: RequestWithUser) : Promise<any>
     {
-    }
-    return data;
-  }
+        const prisma = new PrismaClient();
 
-  async findOne(username: string)
-  {
-    /*
-    const data = await prisma.profile.findUnique({
-      where: { username: username },
-    });
-    if (data) {
-      const data_shape = {
-        username: data.username,
-        displayName: data.displayName,
-        image: data.image,
-        userId: data.userId,
-      };
-      return data_shape;
-      
-    }
-*/
-    return {};
-  }
+        const user = await prisma.user.findUnique({
+            where:
+            {
+                login42: apiResponse.user.username
+            }
+        })
 
-  remove(id: number)
-  {
-    return `This action removes a #${id} user`;
-  }
-
-  async createToken(passport: any)
-  {
-      type passportType = {
-         id : string,
-          username: string,
-          displayName: string,
-          accessToken: string,
-          refreshToken: string
-      }
-
-      let input: passportType = passport 
-      const username = input.username;
-      const payload = { username };
-      const secret = 'secret'; // private key for jwt should be in env
-      const expiresIn = '1d'; 
-      const token = this.jwtService.sign(payload, { secret, expiresIn });
-      return token
-      return this.validate_token(token)
+        if (user)
+        {
+            const login42 = user.login42;
+            await prisma.$disconnect();
+            return (login42);
+        }
+        await prisma.$disconnect();
+        return (false);
     }
-  
-    async validateUser(payload: any)
-    {
-        return {};
-    //   return await this.findOne(payload.username);
-    }
+
 }

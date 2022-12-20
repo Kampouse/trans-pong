@@ -36,22 +36,20 @@ const localStorageLookup = async () => {
   }
   return ""
 }
-const check = async () => {
 
+//  Here we check if the client passed throught 42api
+const check = async () =>
+{
     const localdata = await localStorageLookup()
     Fetch ('http://localhost:3000/auth/who').then((response) =>
     {
         if(response.status === 200)
         {
-
         }
         else
         {
             login() 
         }
-    }).catch((err) =>
-    {
-        
     })
 }
 
