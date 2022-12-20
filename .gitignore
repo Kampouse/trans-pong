@@ -5,6 +5,7 @@ database
 tools/envp-parsing/header.hpp.gch
 tools/env-manager
 srcs/backend/prisma/migrations
+srcs/frontend/src/views/Login/login.42api.tsx
 
 # dependencies
 */node_modules

@@ -1,1 +1,0 @@
-export const login = async () => {window.location.href = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-b0cd1a3e9ee8bdccd1acca322d03b1ba88005f806660db0612dc0a1e8ebf2552&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F42login&response_type=code"}
