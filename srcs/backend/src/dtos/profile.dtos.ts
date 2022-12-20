@@ -53,7 +53,7 @@ export class ProfileResponseDto {
         public status: string,
         public imagePath: string,
         public friendList: FriendDto[],
-        public friendRequets: FriendRequestDto[],
+        public friendRequests: FriendRequestDto[],
         public matchHistory: MatchDto[],
         public achievement: AchievementDto[],
         public stats: StatisticsDto,

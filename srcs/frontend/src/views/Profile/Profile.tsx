@@ -26,24 +26,9 @@ const getStatusCSS = (status) => {
 		return OFFLINE;
 }
 
-const check = async () =>
-{
-	fetch('http://localhost:3000/profile/gcollet', {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Credentials': 'true'
-		}
-	})
-		.then((response) => response.json())
-		.then((data) => {
-			return data
-		})
-}
-
 const useFetch = (username) => {
 	const [profileReq, setProfileReq] = useState<any>(null);
+	// const [loggedinReq, setLoggedinReq] = useState<any>(null);
 	
 	useEffect(() => {
 		fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "") , {
@@ -94,7 +79,8 @@ function MatchResult({data, username, userClicked, setOpenUserOptions}: {data: a
 										</div>
 										<div className="ml-2">
 											<p
-												className={`text-gray-900 ${winner === 'left' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
+												//  ${loggedUser.username === ((winner === "left") ? currentMatch.leftPlayer : currentMatch.rightPlayer) ? 'font-bold' : 'cursor-pointer hover:underline underline-offset-2'}
+												className={`text-gray-900`}
 												// onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
 											>
 												{(winner == "left") ? currentMatch.leftPlayer : currentMatch.rightPlayer}
@@ -111,9 +97,10 @@ function MatchResult({data, username, userClicked, setOpenUserOptions}: {data: a
 									</div>
 									<div className="flex w-[37%] my-auto justify-end items-center mr-2">
 										<div className="mr-2">
-											<p 
-												className={`text-gray-900 ${winner === 'right' ? 'cursor-pointer hover:underline underline-offset-2' : 'font-bold'}`}
-												// onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
+											<p
+												// ${loggedUser.username === ((winner === "left") ? currentMatch.rightPlayer : currentMatch.leftPlayer) ? 'font-bold' : 'cursor-pointer hover:underline underline-offset-2'}
+												className={`text-gray-900`}
+												onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
 											>
 												{(winner == "left") ? currentMatch.rightPlayer : currentMatch.leftPlayer}
 											</p>
@@ -137,7 +124,7 @@ function MatchResult({data, username, userClicked, setOpenUserOptions}: {data: a
 	);
 }
 
-function FriendList({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
+function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
 
   return (
     <div className="flex h-[100%] flex-col -my-4">
@@ -147,15 +134,15 @@ function FriendList({userDetails, userClicked, setOpenUserOptions}: {userDetails
             role="list"
             className="divide-y divide-gray-500 dark:divide-slate-300"
           >
-						{ userDetails.friendList.map((currentUser: User) => {
+						{ data.friendList.map((currentUser) => {
 							return (
 								<li className="py-4">
 									<div className="flex items-center space-x-4">
 										<div className="shrink-0">
 											<img
 												className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer"
-												src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
-												alt="Neil image"
+												src={currentUser.friendPhoto}
+												alt=""
 												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
 											/>
 										</div>
@@ -164,9 +151,9 @@ function FriendList({userDetails, userClicked, setOpenUserOptions}: {userDetails
 												className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2"
 												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
 											>
-												{currentUser.username}
+												{currentUser.friendUser}
 											</p>
-											<p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentUser)}>●</span>{currentUser.status}</p>
+											<p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentUser.friendStatus)}>●</span> {currentUser.friendStatus[0].toUpperCase() + currentUser.friendStatus.substring(1)}</p>
 										</div>
 									</div>
 								</li>
@@ -179,24 +166,26 @@ function FriendList({userDetails, userClicked, setOpenUserOptions}: {userDetails
   );
 }
 
-function FriendRequests({userDetails, userClicked, setOpenUserOptions}: {userDetails: User, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
-	const [friendRequests, setFriendRequests ] = useState<Array<User>>(userDetails.friendRequests);
+function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
+	const [friendRequests, setFriendRequests ] = useState(data.friendRequests);
 
-	const deleteRequest = ({currentUser}: {currentUser: User}) => {
+	const deleteRequest = (currentUser) => {
 		setFriendRequests(
       friendRequests.filter((request) => {
-        return request.username != currentUser.username;
+        return request.fromUser != currentUser.fromUser;
       })
     );
 
-		const userIndex = userDetails.friendRequests.findIndex((user: User) => currentUser.username === user.username);
+		const userIndex = data.friendRequests.findIndex((user) => currentUser.fromUser === user.fromUser);
 		if (userIndex > -1) {
-			userDetails.friendRequests.splice(userIndex, 1);
+			// data.friendRequests.splice(userIndex, 1);
+			// Replace with push to delete request in queue
 		}
 	}
 
-	const handleAcceptRequest = ({currentUser}: {currentUser: User}) => {
-		userDetails.friendList.push(currentUser);
+	const handleAcceptRequest = (currentUser) => {
+		// data.friendList.push(currentUser);
+		// Replace with push to add friend to friendList
 		deleteRequest({currentUser});
 	}
 
@@ -208,24 +197,24 @@ function FriendRequests({userDetails, userClicked, setOpenUserOptions}: {userDet
             role="list"
             className="divide-y divide-gray-500 dark:divide-slate-300"
           >
-						{ friendRequests.map((currentUser: User) => {
+						{ friendRequests.map((currentUser) => {
 							return (
 								<li id='request' className="py-4">
 									<div className="flex items-center space-x-4">
 										<div className="shrink-0">
 											<img
 												className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer"
-												src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
-												alt="Neil image"
-												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
+												src={currentUser.fromPhoto}
+												alt=""
+												// onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
 											/>
 										</div>
 										<div className="min-w-0 flex-1">
 											<p 
 												className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2"
-												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
+												// onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
 											>
-												{currentUser.username}
+												{currentUser.fromUser}
 											</p>
 										</div>
 										<div className='flex w-fit justify-end'>
@@ -247,7 +236,7 @@ function FriendRequests({userDetails, userClicked, setOpenUserOptions}: {userDet
   );
 }
 
-function Achievements({userDetails}: {userDetails: User}) {
+function Achievements({data}: {data: any}) {
 	return (
 		<div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
@@ -256,7 +245,7 @@ function Achievements({userDetails}: {userDetails: User}) {
             role="list"
             className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg"
           >
-						{ userDetails.achievements.map((currentAchievement: Achievement) => {
+						{ data.achievement.map((currentAchievement) => {
 							return (
 								<li className="py-4">
 									<div className="flex items-center m-auto">
@@ -362,7 +351,7 @@ export function EditProfile({ open, onClose, setOpenSnackbar, snackbarMsg, snack
 	);
 }
 
-export default function Profile({userClicked}: {userClicked: React.MutableRefObject<User | null>}) {
+export default function Profile() {
 	const  userDetails: User = getUserDetails();
 	const [value, setValue] = useState("1");
 	const [openUserOptions, setOpenUserOptions] = useState(false);
@@ -371,6 +360,7 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 	const [rooms, setRooms] = useAtom(useRooms);
 	const setRoomCode = useAtom(useRoomCode)[1];
 	const [openNewRoom, setOpenNewRoom] = useState(false);
+	const userClicked = useRef(null);
 
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const snackbarMsg = useRef('')
@@ -378,7 +368,9 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 
 	const { username } = useParams();
 	const {profileReq: data} = useFetch(username);
+	// const {profileReq: loggedUser} = useFetch(undefined);
 	console.log(data);
+	// console.log(loggedUser);
 	console.log(username);
 
 	// const navigate = useNavigate()
@@ -392,15 +384,15 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
   };
 
 	const getAddFriendStatus = (): string => {
-		if (userDetails.friendList.find((user: User) => {return user.username === userClicked.current?.username}) !== undefined)
-			return 'Delete friend';
-		else if (userClicked.current?.friendRequests.find((user: User) => {return user.username === userDetails.username}) !== undefined ||
-						userDetails.friendRequests.find((user: User) => {return user.username === userClicked.current?.username}))
-			return 'Request sent';
-		else if (userClicked.current?.blockedUsers.find((user: User) => {return user.username === userDetails.username}) === undefined)
+		// if (data.friendList.find((user) => {return user.friendUser === userClicked.current}) !== undefined)
+		// 	return 'Delete friend';
+		// else if (userClicked.current?.friendRequests.find((user: User) => {return user.username === userDetails.username}) !== undefined ||
+		// 				userDetails.friendRequests.find((user: User) => {return user.username === userClicked.current?.username}))
+		// 	return 'Request sent';
+		// else if (userClicked.current?.blockedUsers.find((user: User) => {return user.username === userDetails.username}) === undefined)
 			return 'Add friend';
-		else
-			return '';
+		// else
+			// return '';
 	}
 
 	const getAddFriendDisabled = (): boolean => {
@@ -458,11 +450,11 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 								<div className='grow overflow-hidden'>
 									<div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
 										<TabPanel value="1"><MatchResult data={data} username={username} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-										<TabPanel value="2"><FriendList userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+										<TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
 										{username === undefined &&
-											<TabPanel value="3"><FriendRequests userDetails={userDetails} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+											<TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
 										}
-										<TabPanel value="4"><Achievements userDetails={userDetails} /></TabPanel>
+										<TabPanel value="4"><Achievements data={data} /></TabPanel>
 										<TabPanel value="5">STATS</TabPanel>
 									</div>
 								</div>
@@ -472,7 +464,7 @@ export default function Profile({userClicked}: {userClicked: React.MutableRefObj
 				}
 			</div>
 			<EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} />
-			<UserOptions open={openUserOptions} currentUser={userClicked.current} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={(navigate) => {handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)}} onClose={handleUserOptionsClose} />
+			{/* <UserOptions open={openUserOptions} currentUser={userClicked.current} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={(navigate) => {handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)}} onClose={handleUserOptionsClose} /> */}
 			<GeneralSnackbar
         message={snackbarMsg.current}
         open={openSnackbar}
