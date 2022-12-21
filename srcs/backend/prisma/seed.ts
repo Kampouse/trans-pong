@@ -20,7 +20,7 @@ async function main()
                 login42: 'jvigneau',
                 username: 'jvigneau',
                 userStatus: 'playing',
-                imagePath: '/mleblancPhoto.jpeg',
+                imagePath: '/jvigneauPhoto.jpeg',
             },
         })
     }
@@ -64,11 +64,11 @@ async function main()
     {
         var user3 = await prisma.user.upsert({
             where: {
-                login42: 'gcollet',
+                login42: 'alvachon',
             },
             update: {},
             create: {
-                login42: 'gcollet',
+                login42: 'alvachon',
                 username: 'alvachon',
                 userStatus: 'offline',
                 imagePath: '/alvachonPhoto.jpeg',
@@ -420,7 +420,7 @@ async function main()
             create: {
                 gameNumber: 1,
                 leftPlayer: 'jvigneau',
-                leftPlayerScore: 2,
+                leftPlayerScore: 200,
                 rightPlayer: 'tberube',
                 rightPlayerScore: 1,
                 active: false,
@@ -440,7 +440,7 @@ async function main()
             create: {
                 gameNumber: 2,
                 leftPlayer: 'tberube',
-                leftPlayerScore: 4,
+                leftPlayerScore: 40,
                 rightPlayer: 'jvigneau',
                 rightPlayerScore: 3,
                 active: false,
@@ -502,9 +502,9 @@ async function main()
                 leftPlayer: 'bperron',
                 leftPlayerScore: 45,
                 rightPlayer: 'jvigneau',
-                rightPlayerScore: 1,
+                rightPlayerScore: 8000,
                 active: false,
-                winner: 'bperron',
+                winner: 'jvigneau',
             },
         })
     }
@@ -863,9 +863,9 @@ async function main()
                 leftPlayer: 'tberube',
                 leftPlayerScore: 5,
                 rightPlayer: 'jvigneau',
-                rightPlayerScore: 2,
+                rightPlayerScore: 12,
                 active: false,
-                winner: 'tberube',
+                winner: 'jvigneau',
             },
         })
     }
@@ -881,11 +881,11 @@ async function main()
             create: {
                 gameNumber: 24,
                 leftPlayer: 'jvigneau',
-                leftPlayerScore: 4,
+                leftPlayerScore: 12,
                 rightPlayer: 'mleblanc',
                 rightPlayerScore: 6,
                 active: false,
-                winner: 'mleblanc',
+                winner: 'jvigneau',
             },
         })
     }

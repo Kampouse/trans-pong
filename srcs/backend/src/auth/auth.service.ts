@@ -212,17 +212,59 @@ export class AuthService
     public async authentificateSession(data: any) : Promise<string>
     {
         let request: RequestWithUser = data;
+
+        if (data == undefined)
+        {
+            return (null)
+        }
+
         const sessionStore = request['sessionStore'];
+
+        if (sessionStore == undefined)
+        {
+            return (null)
+        }
+
         const type: SessionUser = sessionStore['sessions'];
+
+        if (type == undefined)
+        {
+            return (null)
+        }
+
         const groups = { ...type };
+
+        if (groups == undefined)
+        {
+            return (null)
+        }
+
         const js = Object.values(groups)[0];
+
+        if (js == undefined)
+        {
+            return (null)
+        }
+
         const parsed = JSON.parse(js);
+
+        if (parsed == undefined)
+        {
+            return (null)
+        }
+
         const passport = parsed['passport'];
+
+        if (passport == undefined)
+        {
+            return (null)
+        }
+
         const username = passport.user.username;
 
         if (username == undefined)
         {
-            return (null);
+            return (null)
         }
 
         //  Validate if the username already has a tokken

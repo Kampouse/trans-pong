@@ -1,15 +1,12 @@
-import { Achievement, Matches, User } from '../../utils/types';
-import { Tabs, Tab, Box, Typography, IconButton, Dialog, Button, DialogContent, DialogTitle, DialogActions, Switch } from '@mui/material'
+import { Matches, User } from '../../utils/types';
+import { Tab, Box, IconButton, Dialog, Button, DialogContent, DialogTitle, Switch } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
-import React, { useState, useRef, ChangeEvent, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
-import { UserOptions } from "../UserOptions/UserOptions";
 import { blue } from '@mui/material/colors';
-import { getUserDetails, useRoomCode, useRooms } from "@router/Router";
-import { handleSendMessage } from '../Chat/ChatHandlers'
+import { useRoomCode, useRooms } from "Router/Router";
 import { useAtom } from 'jotai';
-import { NavigateFunction } from 'react-router';
-import { useParams, useNavigate } from 'react-router';
+import { useParams } from 'react-router';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 import { AlertColor } from '@mui/material';
 
@@ -39,7 +36,7 @@ const useFetch = (username) => {
 				'Access-Control-Allow-Credentials': 'true'
 			}
 		})
-			.then((response) => response.json())
+            .then((response) => response.json())
 			.then((data) => {
 				setProfileReq(data);
 			})
@@ -352,7 +349,6 @@ export function EditProfile({ open, onClose, setOpenSnackbar, snackbarMsg, snack
 }
 
 export default function Profile() {
-	const  userDetails: User = getUserDetails();
 	const [value, setValue] = useState("1");
 	const [openUserOptions, setOpenUserOptions] = useState(false);
 	const [hover, setHover] = useState(false);
@@ -369,9 +365,9 @@ export default function Profile() {
 	const { username } = useParams();
 	const {profileReq: data} = useFetch(username);
 	// const {profileReq: loggedUser} = useFetch(undefined);
-	console.log(data);
+	// console.log(data);
 	// console.log(loggedUser);
-	console.log(username);
+	// console.log(username);
 
 	// const navigate = useNavigate()
 	// useEffect(() => {

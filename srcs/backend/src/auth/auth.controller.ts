@@ -54,6 +54,6 @@ export class AuthController
         const user = await this.authService.createUser(request);
       }
     }
-    return {statCode: 302, url: "http://localhost:5173/Login" }
+    return {statCode: 302, url: "http://localhost:5173/Profile" }
   }
 }
