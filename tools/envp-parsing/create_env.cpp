@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:41:59 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/21 08:13:53 by aguay            ###   ########.fr       */
+/*   Updated: 2022/12/21 08:50:04 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ bool	create_api_info(void)
 	file << "CLIENT_ID=" << uid << '\n';
 	file << "CLIENT_SECRET=" << secret << '\n';
 	file << "REDIRECT=" << redirect << '\n';
-    file << "JWT_TOKEN=" << token;
+    file << "JWT_KEY=" << token;
 	file.close();
 	return (true);
 }

@@ -13,9 +13,13 @@ export class AuthService
         let token = input
         try
         {
-            const secret = 'secret';
+            const secret = process.env.JWT_KEY;
             const decoded = this.jwtService.verify(token, { secret });
-            return (true);
+            if (decoded)
+            {
+                return (true);
+            }
+            return (false);
         }
         catch (error)
         {
@@ -129,9 +133,10 @@ export class AuthService
 
         // Create a token for the user, and link it with him
         const payload = { username };
-        const secret = 'secret'; // private key for jwt should be in env
+        const secret = process.env.JWT_KEY; // private key for jwt should be in env
         const expiresIn = '1d'; 
         const token = this.jwtService.sign(payload, { secret, expiresIn });
+        console.log("token = " + token)
         if (this.validate_token(token))
         {
             if (this.linkToken(token, username))

@@ -24,6 +24,7 @@ export class AuthController
         const token = await this.authService.createToken(passport['user']);
         if (token != false)
         {
+            console.log("token valid, sending it back")
             res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true }).send();
         }
         else
@@ -33,6 +34,7 @@ export class AuthController
     }
     else
     {
+        console.log("there is no session values.")
         res.status(401).send({ message: 'Unauthorized', status: '401' });
     }
   }

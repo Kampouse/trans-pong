@@ -9,7 +9,6 @@ datasource db {
 
 model User {
     userID              String                          @id @default(cuid())
-    auth                Auth?
     accessToken42       String?
     refreshToken42      String?
     jwtToken            String?
@@ -33,14 +32,6 @@ model FriendRequest{
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
     @@unique([sender, receiver])
-}
-
-model Auth {
-    authID              String                          @id @default(cuid())
-    user                User                            @relation(fields: [authID], references: [userID])
-    accessToken         String                          @unique
-    refreshToken        String                          @unique
-    bearerToken         String                          @unique @default("")
 }
 
 model Game{

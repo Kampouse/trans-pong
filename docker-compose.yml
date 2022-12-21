@@ -27,7 +27,7 @@ services:
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
       - REDIRECT=${REDIRECT}
-      - JWT_TOKEN=${JWT_TOKEN}
+      - JWT_KEY=${JWT_KEY}
     build:
       context: ./srcs/.
       dockerfile: Dockerfile
@@ -36,7 +36,7 @@ services:
         - CLIENT_ID=${CLIENT_ID}
         - CLIENT_SECRET=${CLIENT_SECRET}
         - REDIRECT=${REDIRECT}
-        - JWT_TOKEN=${JWT_TOKEN}
+        - JWT_KEY=${JWT_KEY}
     volumes:
       - ./srcs:/app
     networks:
