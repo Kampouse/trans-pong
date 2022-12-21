@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { RequestWithUser, passportType } from "src/dtos/auth.dtos";
+import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { PrismaClient } from '@prisma/client';
+import { request } from 'http';
+import { group } from 'console';
+
 
 @Injectable()
 export class AuthService
 {
     constructor(private jwtService: JwtService) { }
 
-    async validate_token(input: string)
+    public async validate_token(input: string)
     {
         let token = input
         try
@@ -204,5 +207,51 @@ export class AuthService
         }
         await prisma.$disconnect();
         return (false);
+    }
+
+    public async authentificateSession(data: any) : Promise<string>
+    {
+        let request: RequestWithUser = data;
+        const sessionStore = request['sessionStore'];
+        const type: SessionUser = sessionStore['sessions'];
+        const groups = { ...type };
+        const js = Object.values(groups)[0];
+        const parsed = JSON.parse(js);
+        const passport = parsed['passport'];
+        const username = passport.user.username;
+
+        if (username == undefined)
+        {
+            return (null);
+        }
+
+        //  Validate if the username already has a tokken
+        const prisma = new PrismaClient();
+
+        const user = await prisma.user.findUnique({
+            where: {
+                login42: username
+            }
+        })
+
+        //  If the user did not dosent exist, username got spoof
+        if (!user)
+        {
+            //  Log ip of spoof try here in real life project and black list IP
+            await prisma.$disconnect();
+            return (null)
+        }
+
+        if (user.jwtToken)
+        {
+            if (this.validate_token(user.jwtToken))
+            {
+                //  Refresh token here if the tokken is valid
+                //  TODO: add refresh token here
+                await prisma.$disconnect();
+                return (username);
+            }
+        }
+        return (null)
     }
 }

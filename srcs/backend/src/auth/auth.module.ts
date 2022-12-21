@@ -12,13 +12,12 @@ import {
 } from './utils/Guards';
 
 @Module({
-  imports: [
-    JwtModule.register({
-      secret: "this is a secret",
-      signOptions: { expiresIn: '60s' },
-    }),
-  ],
-  providers: [
+  imports:
+    [
+    JwtModule.register({secret: "this is a secret",signOptions: { expiresIn: '60s' },}),
+    ],
+  providers:
+    [
     AuthService,
     JwtService,
     GoogleAuthGuard,
@@ -26,6 +25,10 @@ import {
     FortyTwoAuthGuard,
     SessionSerializer,
     JwtGuard,
-  ],
+    ],
+  controllers:
+    [
+        AuthController
+    ]
 })
 export class AuthModule {}
