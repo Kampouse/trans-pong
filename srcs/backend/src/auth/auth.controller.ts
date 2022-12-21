@@ -1,5 +1,4 @@
 import { Controller, Get,Req,UseGuards, Redirect, Res} from '@nestjs/common';
-import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { FortyTwoAuthGuard } from './utils/Guards';
 import { RequestWithUser, SessionUser } from "src/dtos/auth.dtos";

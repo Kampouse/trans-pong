@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { RequestWithUser, SessionUser, passportType } from "src/dtos/auth.dtos";
+import { RequestWithUser, passportType } from "src/dtos/auth.dtos";
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
@@ -72,12 +72,62 @@ export class AuthService
 
     async createToken(passport: any)
     {
+        //  Get the username of the session logged with 42api
         let input: passportType = passport;
         const username = input.username;
         if (username == undefined)
         {
             return (false);
         }
+
+        //  Validate if the username already has a tokken
+        const prisma = new PrismaClient();
+
+        const user = await prisma.user.findUnique({
+            where: {
+                login42: username
+            }
+        })
+
+        //  If the user did not dosent exist, username got spoof
+        if (!user)
+        {
+            //  Log ip of spoof try here in real life project and black list IP
+            await prisma.$disconnect();
+            return (false)
+        }
+
+        if (user.jwtToken)
+        {
+            if (this.validate_token(user.jwtToken))
+            {
+                //  Refresh token here if the tokken is valid
+                //  TODO: add refresh token here
+                await prisma.$disconnect();
+                return (user.jwtToken);
+            }
+            else
+            {
+                // Delete expired and create a new one after this
+                try
+                {
+                    await prisma.user.update({
+                        where: {
+                            login42: user.login42
+                        },
+                        data: {
+                            jwtToken: null
+                        }
+                    })
+                }
+                catch
+                {
+                    console.error("prisma error on deleting expired token of user " + user.login42);
+                }
+            }
+        }
+
+        // Create a token for the user, and link it with him
         const payload = { username };
         const secret = 'secret'; // private key for jwt should be in env
         const expiresIn = '1d'; 
@@ -150,5 +200,4 @@ export class AuthService
         await prisma.$disconnect();
         return (false);
     }
-
 }
