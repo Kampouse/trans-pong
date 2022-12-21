@@ -6,13 +6,13 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:41:59 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/20 16:56:32 by aguay            ###   ########.fr       */
+/*   Updated: 2022/12/21 08:13:53 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.hpp"
 
-std::string	create_db_username(void)
+static std::string	create_db_username(void)
 {
 	std::string	username;
 	bool		run = true;
@@ -27,7 +27,7 @@ std::string	create_db_username(void)
 	return (username);
 }
 
-std::string	create_db_password(void)
+static std::string	create_db_password(void)
 {
 	std::string	password;
 	bool		run = true;
@@ -42,7 +42,7 @@ std::string	create_db_password(void)
 	return (password);
 }
 
-std::string	create_db_name(void)
+static std::string	create_db_name(void)
 {
 	std::string	name;
 	bool		run = true;
@@ -57,7 +57,19 @@ std::string	create_db_name(void)
 	return (name);
 }
 
-void	create_database_info(void)
+static std::string create_jwt_token(void)
+{
+    std::string str("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+
+     std::random_device rd;
+     std::mt19937 generator(rd());
+
+     std::shuffle(str.begin(), str.end(), generator);
+
+     return (str.substr(0, 32));
+}
+
+static void	create_database_info(void)
 {
 	std::ofstream	file;
 
@@ -93,10 +105,12 @@ bool	create_api_info(void)
 		if (validate_api(uid, secret))
 			run = false;
 	}
+    std::string token = create_jwt_token();
 	file.open(".env", std::ofstream::app);
 	file << "CLIENT_ID=" << uid << '\n';
 	file << "CLIENT_SECRET=" << secret << '\n';
-	file << "REDIRECT=" << redirect;
+	file << "REDIRECT=" << redirect << '\n';
+    file << "JWT_TOKEN=" << token;
 	file.close();
 	return (true);
 }
