@@ -31,12 +31,20 @@ const ReactiveCanvas = () => {
         drawGameover({ canvas, mouse })
       }
       if (!gameover.current) {
-        update({ canvas, mouse }, { gameover })
+        update({ gameover })
         draw({ canvas, mouse })
       }
-    }, 1)
+    }, (1 / 60) * 1000)
     return () => clearInterval(interval)
   }, [countdown])
+
+	const handleKeyDown = event => {
+    console.log('User pressed: ', event.key);
+  };
+
+	const handleKeyUp = event => {
+    console.log('User released: ', event.key);
+  };
 
   return (
     <div className="m-auto ">
@@ -44,7 +52,10 @@ const ReactiveCanvas = () => {
         id="container"
         ref={div}
         className="xl:w-[1200px] xl:h-[800px] lg:w-[900px] lg:h-[600px] md:w-[600px] md:h-[400px] sm:w-[600px] sm:h-[400px] w-[300px] h-[200px] pt-[50px]"
-      >
+				tabIndex={0}
+				onKeyDownCapture={handleKeyDown}
+				onKeyUpCapture={handleKeyUp}
+			>
         <canvas
           id="myCanvas"
           ref={canvas}
@@ -52,8 +63,7 @@ const ReactiveCanvas = () => {
           onMouseMove={(evt) => {
             mouse.y =
               evt.clientY -
-              canvas.current!.getBoundingClientRect().top -
-              canvas.current!.height / 16
+              canvas.current!.getBoundingClientRect().top
           }}
           className="m-auto"
         />

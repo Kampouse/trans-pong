@@ -7,31 +7,27 @@ interface DrawProps {
   }
 }
 
-const ball = {
-  x: 0,
-  y: 0,
-  vX: 0.0,
-  vY: 0.0,
-  radius: 0,
-  dirX: 0.0,
-  dirY: 0.0,
-  speed: 0.0
+const gameBall = {
+  ballPosX: 0.0,
+  ballPosY: 0.0,
+  ballRadius: 0,
+  ballDirX: 0.0,
+  ballDirY: 0.0,
+  ballSpeed: 0.0
 }
 
-const user = {
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0,
-  score: 0
+const leftPlayer = {
+	playerUser: '',
+	playerPhoto: '',
+	playerScore: 0,
+	playerPos: 0
 }
 
-const com = {
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0,
-  score: 0
+const rightPlayer = {
+  playerUser: '',
+	playerPhoto: '',
+	playerScore: 0,
+	playerPos: 0
 }
 
 const canvasSize = {
@@ -61,25 +57,18 @@ export function init(props: DrawProps) {
   canvasSize.height = canvas.current!.height
   canvasSize.width = canvas.current!.width
 
-  ball.vX = 0.5
-  ball.vY = 0.5
-  ball.x = canvasSize.width / 2
-  ball.y = canvasSize.height / 2
-  user.width = Math.floor(canvasSize.width / 100)
-  com.width = Math.floor(canvasSize.width / 100)
-  user.height = Math.floor(canvasSize.height / 6)
-  com.height = Math.floor(canvasSize.height / 6)
-  user.y = (canvasSize.height - user.height) / 2
-  com.y = (canvasSize.height - com.height) / 2
-  com.x = canvasSize.width - com.width
-  ball.radius = canvasSize.width / 100
+  gameBall.ballPosX = 0.5
+  gameBall.ballPosY = 0.5
+	leftPlayer.playerPos = 0.5
+	rightPlayer.playerPos = 0.5
+  gameBall.ballRadius = 0.01
 
-  ball.speed = 1
+  gameBall.ballSpeed = 10.0
 
-  ball.dirX = -1.0
-  ball.dirY = 0.0
+  gameBall.ballDirX = -1.0
+  gameBall.ballDirY = 0.0
 
-  mouse.y = user.y
+  mouse.y = leftPlayer.playerPos
 }
 
 export function draw(props: DrawProps) {
@@ -98,15 +87,11 @@ export function draw(props: DrawProps) {
   ) {
     canvasSize.height = canvas.current!.height
     canvasSize.width = canvas.current!.width
-    ball.x = canvasSize.width * ball.vX
-    ball.y = canvasSize.height * ball.vY
-    user.width = Math.floor(canvasSize.width / 100)
-    com.width = Math.floor(canvasSize.width / 100)
-    user.height = Math.floor(canvasSize.height / 6)
-    com.height = Math.floor(canvasSize.height / 6)
-    com.x = canvasSize.width - com.width
-    ball.radius = canvasSize.width / 100
+    gameBall.ballRadius = canvasSize.width * 0.01
   }
+
+	const paddleWidth =  Math.floor(canvasSize.width * 0.01)
+	const paddleHeight =  Math.floor(canvasSize.height * 0.15)
 
   ctx.fillStyle = 'red'
   ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
@@ -116,24 +101,24 @@ export function draw(props: DrawProps) {
   if (canvasSize.width === 300) {
     ctx.font = '50px font'
     ctx.fillText(
-      user.score.toString(),
+      leftPlayer.playerScore.toString(),
       canvasSize.width / 4 - 10,
       canvasSize.height / 5
     )
     ctx.fillText(
-      com.score.toString(),
+      rightPlayer.playerScore.toString(),
       (3 * canvasSize.width) / 4 - 10,
       canvasSize.height / 5
     )
   } else {
     ctx.font = '75px font'
     ctx.fillText(
-      user.score.toString(),
+      leftPlayer.playerScore.toString(),
       canvasSize.width / 4 - 15,
       canvasSize.height / 5
     )
     ctx.fillText(
-      com.score.toString(),
+      rightPlayer.playerScore.toString(),
       (3 * canvasSize.width) / 4 - 15,
       canvasSize.height / 5
     )
@@ -142,11 +127,11 @@ export function draw(props: DrawProps) {
   for (let i = 0; i <= canvasSize.height; i += 15)
     ctx.fillRect((canvasSize.width - 2) / 2, i, 2, 10)
 
-  ctx.fillRect(user.x, user.y, user.width, user.height)
-  ctx.fillRect(com.x, com.y, com.width, com.height)
+  ctx.fillRect(0, (leftPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
+  ctx.fillRect(canvasSize.width - paddleWidth, (rightPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
 
   ctx.beginPath()
-  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2, true)
+  ctx.arc(canvasSize.width * gameBall.ballPosX, canvasSize.height * gameBall.ballPosY, canvasSize.width * gameBall.ballRadius, 0, Math.PI * 2, true)
   ctx.closePath()
   ctx.fill()
 }
@@ -169,7 +154,7 @@ export function drawGameover(props: DrawProps) {
 
   let playerWon: string
 
-  playerWon = user.score >= 5 ? 'Player 1 won!' : 'Player 2 won!'
+  playerWon = leftPlayer.playerScore >= 5 ? 'Player 1 won!' : 'Player 2 won!'
 
   ctx.fillStyle = '#FFF'
 
@@ -181,12 +166,12 @@ export function drawGameover(props: DrawProps) {
       canvasSize.height / 2 + 20
     )
     ctx.fillText(
-      user.score.toString(),
+      leftPlayer.playerScore.toString(),
       canvasSize.width / 4 - 10,
       canvasSize.height / 5
     )
     ctx.fillText(
-      com.score.toString(),
+      rightPlayer.playerScore.toString(),
       (3 * canvasSize.width) / 4 - 10,
       canvasSize.height / 5
     )
@@ -198,73 +183,64 @@ export function drawGameover(props: DrawProps) {
       canvasSize.height / 2 + 20
     )
     ctx.fillText(
-      user.score.toString(),
+      leftPlayer.playerScore.toString(),
       canvasSize.width / 4 - 15,
       canvasSize.height / 5
     )
     ctx.fillText(
-      com.score.toString(),
+      rightPlayer.playerScore.toString(),
       (3 * canvasSize.width) / 4 - 15,
       canvasSize.height / 5
     )
   }
 }
 
-export const update = (props: DrawProps, { gameover }) => {
-  const { canvas, mouse } = props
+export const update = ({ gameover }) => {
+	const playerHeight = 0.15
+	const playerWidth = 0.01
 
-  user.y = mouse.y
-  com.y += (ball.y - (com.y + com.height / 2)) * 0.1
+  leftPlayer.playerPos = 0.5
+  rightPlayer.playerPos += (gameBall.ballPosY - rightPlayer.playerPos) * 0.1
 
-  const canvasWidth = canvas.current!.width
-  const canvasHeight = canvas.current!.height
+  gameBall.ballPosX += (gameBall.ballDirX * gameBall.ballSpeed) / 1000
+  gameBall.ballPosY += (gameBall.ballDirY * gameBall.ballSpeed) / 1000
 
-  ball.vX += (ball.dirX * ball.speed) / 1000
-  ball.vY += (ball.dirY * ball.speed) / 1000
-
-  ball.x = canvasSize.width * ball.vX
-  ball.y = canvasSize.height * ball.vY
-
-  if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= canvasHeight) {
-    ball.dirY = -ball.dirY
+  if (gameBall.ballPosY <= 0.01 || gameBall.ballPosY >= 0.99) {
+    gameBall.ballDirY = -gameBall.ballDirY
   }
 
-  let player = ball.x < canvasWidth / 2 ? user : com
+  let player = gameBall.ballPosX < 0.5 ? leftPlayer : rightPlayer
 
   let bTop, bBottom, bLeft, bRight
   let pTop, pBottom, pLeft, pRight
 
-  bTop = ball.y - ball.radius
-  bBottom = ball.y + ball.radius
-  bLeft = ball.x - ball.radius
-  bRight = ball.x + ball.radius
+  bTop = gameBall.ballPosY - (gameBall.ballRadius / 3 * 2)
+  bBottom = gameBall.ballPosY + (gameBall.ballRadius / 3 * 2)
+  bLeft = gameBall.ballPosX - gameBall.ballRadius
+  bRight = gameBall.ballPosX + gameBall.ballRadius
 
-  pTop = player.y
-  pBottom = player.y + player.height
-  pLeft = player.x
-  pRight = player.x + player.width
+  pTop = player.playerPos - (playerHeight / 2)
+  pBottom = player.playerPos + (playerHeight / 2)
+  pLeft = (player === leftPlayer) ? 0 : 1 - playerWidth
+  pRight = (player === leftPlayer) ? playerWidth : 1
 
   if (pLeft < bRight && pTop < bBottom && pRight > bLeft && pBottom > bTop) {
-    let collidePoint = ball.y - (player.y + player.height / 2)
-    collidePoint = collidePoint / (player.height / 2)
+		let collidePoint = gameBall.ballPosY - player.playerPos
+    collidePoint = collidePoint / (playerHeight / 2)
 
     let angleRad = (Math.PI / 4) * collidePoint
 
-    let direction = ball.x < canvasWidth / 2 ? 1 : -1
+    let direction = gameBall.ballPosX < 0.5 ? 1 : -1
 
-    ball.dirX = direction * Math.cos(angleRad)
-    ball.dirY = Math.sin(angleRad)
-
-    ball.speed += 0.2
-  } else if (ball.x < ball.radius || ball.x + ball.radius > canvasWidth) {
-    if (ball.x < ball.radius) com.score++
-    else user.score++
-    ball.vX = 0.5
-    ball.vY = 0.5
-    ball.speed = 1
-    ball.dirX = ball.dirY < 0 ? 1.0 : -1.0
-    ball.dirY = 0.0
+    gameBall.ballDirX = direction * Math.cos(angleRad)
+    gameBall.ballDirY = Math.sin(angleRad)
+	} else if (gameBall.ballPosX <= gameBall.ballRadius || gameBall.ballPosX + gameBall.ballRadius >= 1) {
+    if (gameBall.ballPosX > 0.5) leftPlayer.playerScore++
+    else rightPlayer.playerScore++
+    gameBall.ballPosX = 0.5
+    gameBall.ballPosY = 0.5
+    gameBall.ballSpeed = 10.0
+    gameBall.ballDirX = gameBall.ballDirY < 0 ? 1.0 : -1.0
+    gameBall.ballDirY = 0.0
   }
-
-  if (user.score >= 5 || com.score >= 5) gameover.current = true
 }
