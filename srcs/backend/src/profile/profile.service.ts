@@ -1,11 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { ProfileResponseDto, FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, ProfileResponsePublic} from '../dtos/profile.dtos';
-import { UpdateUsernameDto } from 'src/dtos/profileUpdate.dto';
+import { ProfileResponseDto, FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, ProfileResponsePublic, UpdateUsernameDto } from '../dtos/profile.dtos';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class ProfileService
 {
+    @Inject(AuthService)
+    private readonly authService: AuthService
+
+    async authentificate(data: any)
+    {
+        return(await this.authService.authentificateSession(data));
+    }
+
     friendList: FriendDto[] = [];
     friendRequests: FriendRequestDto[] = [];
     matchHistory: MatchDto[] = [];
@@ -51,7 +59,10 @@ export class ProfileService
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
+        {
+            await prisma.$disconnect();
             return new ProfileResponsePublic(true, null, null, null, null, null, null, null);
+        }
 
         //  Free the array's from previous values
         this.friendList = [];
@@ -348,7 +359,10 @@ export class ProfileService
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
+        {
+            await prisma.$disconnect();
             return new ProfileResponseDto(true, null, null, null, null, null, null, null, null, null);
+        }
 
         //  Free the array's from previous values
         this.friendList = [];
@@ -652,7 +666,7 @@ export class ProfileService
             this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authentificator);
     }
 
-    async updateUsername(updateUsernameDto: UpdateUsernameDto) : Promise<any>
+    async updateUsername(newUsername: string, login42: string) : Promise<any>
     {
         const prisma = new PrismaClient();
 
@@ -660,12 +674,13 @@ export class ProfileService
 
         const user = await prisma.user.findUnique({
             where: {
-                userID: updateUsernameDto.userID,
+                login42: login42,
             },
         })
 
         if (!user)
         {
+            await prisma.$disconnect();
             return (false);
         }
 
@@ -673,10 +688,10 @@ export class ProfileService
         {
             await prisma.user.update({
                 where: {
-                    userID: updateUsernameDto.userID,
+                    login42: login42
                 },
                 data: {
-                    username: updateUsernameDto.newUsername,
+                    username: newUsername,
                 }
             })
         }
@@ -690,18 +705,19 @@ export class ProfileService
         return (true);
     }
 
-    async updatePhoto(newFilePath: string, useID: string) : Promise<any>
+    async updatePhoto(newFilePath: string, login42: string) : Promise<any>
     {
         const prisma = new PrismaClient();
 
         const user = await prisma.user.findUnique({
             where:{
-                userID: useID,
+                login42: login42,
             },
         })
         
         if (!user)
         {
+            await prisma.$disconnect();
             return ({error: "authentification failed"});
         }
         const path = "/" + newFilePath;
@@ -709,7 +725,7 @@ export class ProfileService
         {
             await prisma.user.update({
                 where: {
-                    userID: useID,
+                    login42: login42,
                 },
                 data: {
                     imagePath: path,

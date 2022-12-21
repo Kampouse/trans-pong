@@ -1,3 +1,10 @@
+export class UpdateUsernameDto
+{
+    constructor(
+        public newUsername: string,
+    ){};
+}
+
 export class FriendDto {
     constructor (
         public friendUser:         string,

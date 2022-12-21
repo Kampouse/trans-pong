@@ -16,7 +16,7 @@ import Chat from 'views/Chat/Chat'
 import { ChatRoom, initAchievement, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial } from 'utils'
-
+import {Fetch} from 'utils'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -145,10 +145,8 @@ export interface SearchUserProps {
 	userClicked: React.MutableRefObject<User | null>;
 }
 
-
 export function SearchUser({ open, onClose, searchInput, userClicked }: SearchUserProps) {
 	const [users, setUsers] = useAtom(useUsers);
-
 	const usersList: User[] = users.filter((user: User) => {return user.username.search(searchInput.toLowerCase()) > -1});
 
 	return (
@@ -199,26 +197,22 @@ export default function App()
 //  Here we check with the backend if the user is authentificated
 const check = async () =>
 {
-    fetch('http://localhost:3000/auth/verify', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': 'true'
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.response == "yes")
+    fetch('http://localhost:3000/auth/who')
+      .then((response) => response.status)
+      .then((status) =>
+      {
+        if (status == 200)
         {
             console.log("User is authentificated, proceed to open the dashboard")
             setLogin('login')
         }
-        return data.user
+        else
+        {
+            console.log("No user logged, please login.")
+        }
       })
 }
 
-//  If the user is authentificated, render the dashboard
 useEffect(() => { check()}, [])
   return (
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">

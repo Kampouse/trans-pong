@@ -20,15 +20,23 @@ build:	docker-compose.yml
 down:
 	@docker-compose -f docker-compose.yml down
 	@rm -rf ./tools/env_manager
+	@rm -rf ./srcs/backend/.env
+	@rm -rf ./srcs/frontend/src/views/Login/login.42api.tsx
 	@docker ps
 
 clean:
 	@docker-compose -f docker-compose.yml down --rmi all
-	@rm ./tools/env_manager
+	@rm -rf ./tools/env_manager
+	@rm -rf ./srcs/backend/.env
+	@rm -rf ./srcs/frontend/src/views/Login/login.42api.tsx
+	@docker ps
 
 fclean:
 	@docker-compose -f docker-compose.yml down --rmi all
-	@rm ./tools/env_manager
+	@rm -rf ./tools/env_manager
+	@rm -rf ./srcs/backend/.env
+	@rm -rf ./srcs/frontend/src/views/Login/login.42api.tsx
+	@docker ps
 
 re:	fclean all
 
