@@ -1,0 +1,158 @@
+{
+    "clientProfile" : false,
+    "username": "reponse",
+    "online": "reponse",
+    "imagePath": "reponse",
+    "friendList": [
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        },
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        },
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        },
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        },
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        },
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        },
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        },
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        },
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        },
+        {
+            "friendUser" : "value",
+            "friendPhoto" : "photo",
+            "friendStatus" : "value"
+        }
+    ],
+    "friendReqReceived": [
+        {
+            "fromUser" : "value",
+            "fromPhoto" : "photo"
+        },
+        {
+            "fromUser" : "value",
+            "fromPhoto" : "photo"
+        },
+        {
+            "fromUser" : "value",
+            "fromPhoto" : "photo"
+        },
+        {
+            "fromUser" : "value",
+            "fromPhoto" : "photo"
+        }
+        ],
+    "matchHistory": [
+        {
+            "leftPlayer" : "value",
+            "leftPhoto" : "value",
+            "leftScore" : 5,
+            "rightPlayer" : "value",
+            "rightPhoto" : "value",
+            "rightScore" : 6,
+            "winner" : "value"
+        },
+        {
+            "leftPlayer" : "value",
+            "leftPhoto" : "value",
+            "leftScore" : 8,
+            "rightPlayer" : "value",
+            "rightPhoto" : "value",
+            "rightScore" : 4,
+            "winner" : "value"
+        },
+        {
+            "leftPlayer" : "value",
+            "leftPhoto" : "value",
+            "leftScore" : 5,
+            "rightPlayer" : "value",
+            "rightPhoto" : "value",
+            "rightScore" : 8,
+            "winner" : "value"
+        },
+        {
+            "leftPlayer" : "value",
+            "leftPhoto" : "value",
+            "leftScore" : 3,
+            "rightPlayer" : "value",
+            "rightPhoto" : "value",
+            "rightScore" : 2,
+            "winner" : "value"
+        }
+    ],
+    "stats": {
+        "played" : 259,
+        "win": 123,
+        "win%": 0.47,
+        "playedRight": 1,
+        "winRight": "1",
+        "win%Right": "1",
+        "playedLeft": "258",
+        "winLeft": "122",
+        "win%Left": "0.47"
+    },
+    "achivement" : [
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false},
+        {"achivement": false}
+    ],
+    "authentificator": "boolean"
+}

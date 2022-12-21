@@ -228,7 +228,10 @@ useEffect(() => { check()}, [])
             <Route path="/Watch" element={<GameWatch />} />
             <Route path="/PlayMenu" element={<PlayMenu />} />
             <Route path="/Play" element={<Game />}></Route>
-            <Route path="/Profile/:username" element={<Profile userClicked={userClicked} />}></Route>
+						<Route path="/Profile">
+							<Route path=":username" element={<Profile />} />
+							<Route path="" element={<Profile />} />
+						</Route>
             <Route path="/Chat" element={<Chat />}></Route>
             <Route path="*" element={<Error404 />}></Route>
           </Routes>

@@ -58,7 +58,7 @@ const loginOffline = () =>
     setLogin('login')
 }
 
-useEffect(() => { navigate(Navi)}, [])
+// useEffect(() => { navigate(Navi)}, [])
   return (
     <div className="m-auto flex h-fit w-screen pb-[50px]">
       <div className="m-auto">

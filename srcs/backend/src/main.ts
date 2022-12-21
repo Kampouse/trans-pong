@@ -3,8 +3,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { PrismaClient } from '@prisma/client';
 import * as session from 'express-session';
-import { env } from 'process';
-import { cors } from 'cors';
+// import { env } from 'process';
+// import { cors } from 'cors';
 import * as cookieParser from 'cookie-parser';
 
 declare global {
