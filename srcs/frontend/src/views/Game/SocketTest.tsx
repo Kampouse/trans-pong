@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import * as io from 'socket.io-client';
 
+const userId = "clbuy4ib40000mmn854tpzlpk"
 const socket = io.connect("http://localhost:3001");
 export default function SocketTest()
 {
@@ -26,8 +27,10 @@ export default function SocketTest()
 function sendToSocket(e, message) {
     e.preventDefault();
     console.log("heyu");
-    socket.emit("message", message)
-
+    if(message != ""){
+        socket.emit("message", message)
+    }
+    socket.emit("registerId", {userId: userId, socketId: socket.id})
 }
 
 

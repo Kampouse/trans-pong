@@ -8,6 +8,9 @@ import { ProfileService } from './profile/profile.service';
 import { ProfileController } from './profile/profile.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { GameGateway } from './game/game.gateway';
+import { GameSocketIOController } from './game/game.controller';
+import { GameSocketIOModule } from './game/game.module';
+import { GameSocketIOService } from './game/game.services';
 
 @Module({
   imports: 
@@ -15,7 +18,7 @@ import { GameGateway } from './game/game.gateway';
     AuthModule,
     MulterModule.register({dest: '../srcs/public'})
     ],
-  controllers: [AuthController, ProfileController],
-  providers: [AppService, AuthService, ProfileService, GameGateway],
+  controllers: [AuthController, ProfileController, GameSocketIOController],
+  providers: [AppService, AuthService, ProfileService, GameGateway, GameSocketIOService],
 })
 export class AppModule {}
