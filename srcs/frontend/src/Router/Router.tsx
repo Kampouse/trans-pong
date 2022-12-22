@@ -40,7 +40,7 @@ export function SearchUser({ open, onClose, searchInput, userClicked }: SearchUs
 
 	return (
 		<Dialog open={open} onClose={onClose}>
-			<DialogTitle className= 'text-blue-700 bg-sky-200' sx={{width: 250}}>
+			<DialogTitle className='text-blue-700 bg-sky-200' sx={{width: 250}}>
 				Search Results
 			</DialogTitle>
 			<DialogContent sx={{height: 300, width: 250}} className='bg-sky-200'>
