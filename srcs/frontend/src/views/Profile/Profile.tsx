@@ -27,7 +27,6 @@ const getStatusCSS = (status) => {
 
 const useFetch = (username) => {
 	const [profileReq, setProfileReq] = useState<any>(null);
-	// const [loggedinReq, setLoggedinReq] = useState<any>(null);
 	
 	useEffect(() => {
 		fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "") , {
@@ -40,10 +39,7 @@ const useFetch = (username) => {
 		})
             .then((response) => response.json())
 			.then((data) => {
-				// if (data === {404: 'user not found.'})
-				// 	setProfileReq("Error")
-				// else
-					setProfileReq(data);
+				setProfileReq(data);
 			})
 	}, [username])
 	return {profileReq};
@@ -369,15 +365,10 @@ export default function Profile() {
 
 	const { username } = useParams();
 	const {profileReq: data} = useFetch(username);
-<<<<<<< HEAD
-	console.log(data);
-	console.log(username);
-=======
 	// const {profileReq: loggedUser} = useFetch(undefined);
-	// console.log(data);
+	console.log(data);
 	// console.log(loggedUser);
 	// console.log(username);
->>>>>>> origin/main
 
 	// const navigate = useNavigate()
 	// useEffect(() => {
@@ -477,7 +468,7 @@ export default function Profile() {
 					</div>
 				)
 			}
-			{ data && data.error === 'user not found.' && <UserNotFound />}
+			{ data && data.error === 'Authentification failed' && <UserNotFound />}
 		</>
   );
 }
