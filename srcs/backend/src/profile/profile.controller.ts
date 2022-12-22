@@ -7,46 +7,40 @@ import { UploadedFile } from "@nestjs/common";
 import { RequestWithUser } from "src/dtos/auth.dtos";
 import { extname } from "path";
 
-
 @Controller('profile')
 export class ProfileController {
     constructor(private readonly profileService : ProfileService) {}
 
     //  Get the private profile information of the user logged
     @Get()
-    async getProfileEdit(@Req() request: RequestWithUser, @Res() res) : Promise<any>
+    async getProfileEdit(@Req() request: RequestWithUser) : Promise<any>
     {
         const login42 =  await this.profileService.authentificate(request);
 
         if (!login42)
         {
-            res.status(401).send({ message: 'Unauthorized', status: '401' });
-            return;
+            return {error: "Authentification failed"};
         }
 
         //  Add userID validation when auth is done by JP
-        const reponse = this.profileService.getProfileEdit(login42);
-        if ((await reponse).error == true)
-            return ({404: 'user not found.'});
-        return reponse;
+        const privateProfile = await this.profileService.getProfileEdit(login42);
+        return (privateProfile);
     }
 
     //  Get the public profile information of the username in /username
     @Get(':username')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async getProfilePublic(@Param('username') username: string, @Req() request: RequestWithUser, @Res() res) : Promise<any>
+    async getProfilePublic(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<any>
     {
         const login42 =  await this.profileService.authentificate(request);
-
-        if (!login42)
+ 
+        if (login42 == null)
         {
-            res.status(401).send({ message: 'Unauthorized', status: '401' });
+            return ({error: "Authentification failed"});
         }
 
-        const reponse = this.profileService.getProfilePublic(username);
-        if ((await reponse).error == true)
-            res.status(404).send({ message: 'User not found', status: '404' });
-        return reponse;
+        const publicProfile = await this.profileService.getProfilePublic(username);
+        return (publicProfile);
     }
 
     //  Upload a photo and update photo path of a user

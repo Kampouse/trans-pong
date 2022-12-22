@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { User } from '@utils/types'
-import { getUserDetails } from '@views/Chat/Chat'
+
 export const Contenter = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
@@ -16,9 +15,6 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
 }
 // play menu
 export const Menu = (): React.ReactElement => {
-  const userDetails: User = getUserDetails()
-  const link = '/Profile/' + userDetails.username
-
   return (
     <>
       <div className="overflow-y-scroll scrollbar-hide h-fit max-h-screen m-auto pt-[50px]">
@@ -31,7 +27,7 @@ export const Menu = (): React.ReactElement => {
             </Link>
           </Contenter>
           <Contenter>
-            <Link to={link} className="relative h-full w-full">
+            <Link to="/Profile" className="relative h-full w-full">
               <div className="mt-32 flex justify-center">
                 <UserSVG />
               </div>
@@ -47,7 +43,7 @@ export const Menu = (): React.ReactElement => {
         </div>
         <div className=" flex w-screen flex-wrap justify-center">
           <ContenterLarge>
-            <Link to="/PlayMenu" className="relative h-full w-full">
+            <Link to="/MatchMaking" className="relative h-full w-full">
               <div className="mt-32 flex justify-center">
                 <StartSVG />
               </div>

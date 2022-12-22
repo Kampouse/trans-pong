@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { ProfileResponseDto, FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, ProfileResponsePublic, UpdateUsernameDto } from '../dtos/profile.dtos';
+import { FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
@@ -46,14 +46,14 @@ export class ProfileService
         this.achievements.push(newAchievement);
     }
 
-    async getProfilePublic(usernameParam: string): Promise<ProfileResponsePublic>
+    async getProfilePublic(login42: string): Promise<PublicProfileDto>
     {
         // Create prisma client and look if the username exist in the database
         const prisma = new PrismaClient();
 
         const user = await prisma.user.findUnique({
             where: {
-                username: usernameParam,
+                login42: login42,
             },
         });
 
@@ -61,7 +61,7 @@ export class ProfileService
         if (!user)
         {
             await prisma.$disconnect();
-            return new ProfileResponsePublic(true, null, null, null, null, null, null, null);
+            return new PublicProfileDto(true, null, null, null, null, null, null, null);
         }
 
         //  Free the array's from previous values
@@ -343,17 +343,17 @@ export class ProfileService
 
         // At last, return the ProfileResponse
         await prisma.$disconnect();
-        return new ProfileResponsePublic(false, user.username, user.userStatus, user.imagePath,
+        return new PublicProfileDto(false, user.username, user.userStatus, user.imagePath,
             this.friendList, this.matchHistory, this.achievements , stats);
     }
 
-    async getProfileEdit(useID: string): Promise<ProfileResponseDto>
+    async getProfileEdit(login42: string): Promise<PrivateProfileDto>
     {
         // Create prisma client and look if the username exist in the database
         const prisma = new PrismaClient();
         const user = await prisma.user.findUnique({
             where: {
-                userID: useID,
+                login42: login42
             },
         });
 
@@ -361,7 +361,7 @@ export class ProfileService
         if (!user)
         {
             await prisma.$disconnect();
-            return new ProfileResponseDto(true, null, null, null, null, null, null, null, null, null);
+            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null, null);
         }
 
         //  Free the array's from previous values
@@ -662,7 +662,7 @@ export class ProfileService
 
         // At last, return the ProfileResponse
         await prisma.$disconnect();
-        return new ProfileResponseDto(false, user.username, user.userStatus, user.imagePath,
+        return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
             this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authentificator);
     }
 
