@@ -21,44 +21,29 @@ const ReactiveCanvas = () => {
     y: 0
   }
 
-	const keyActions = {
-		up: false,
-		down: false
-	}
-
   useEffect(() => {
-    init({ canvas })
+    init({ canvas, mouse })
   }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (gameover.current) {
-        drawGameover({ canvas })
+        drawGameover({ canvas, mouse })
       }
       if (!gameover.current) {
-        update({ keyActions })
-        draw({ canvas })
+        update({ gameover })
+        draw({ canvas, mouse })
       }
     }, (1 / 60) * 1000)
     return () => clearInterval(interval)
   }, [countdown])
 
 	const handleKeyDown = event => {
-		event.preventDefault();
-		if (event.key === 'w' || event.key === 'ArrowUp')
-			keyActions.up = true;
-		if (event.key === 's' || event.key === 'ArrowDown')
-			keyActions.down = true;
-    // console.log('User pressed: ', event.key);
+    console.log('User pressed: ', event.key);
   };
 
 	const handleKeyUp = event => {
-		event.preventDefault();
-		if (event.key === 'w' || event.key === 'ArrowUp')
-			keyActions.up = false;
-		if (event.key === 's' || event.key === 'ArrowDown')
-			keyActions.down = false;
-    // console.log('User released: ', event.key);
+    console.log('User released: ', event.key);
   };
 
   return (
@@ -67,6 +52,9 @@ const ReactiveCanvas = () => {
         id="container"
         ref={div}
         className="xl:w-[1200px] xl:h-[800px] lg:w-[900px] lg:h-[600px] md:w-[600px] md:h-[400px] sm:w-[600px] sm:h-[400px] w-[300px] h-[200px] pt-[50px]"
+				tabIndex={0}
+				onKeyDownCapture={handleKeyDown}
+				onKeyUpCapture={handleKeyUp}
 			>
         <canvas
           id="myCanvas"
@@ -78,9 +66,6 @@ const ReactiveCanvas = () => {
               canvas.current!.getBoundingClientRect().top
           }}
           className="m-auto"
-					tabIndex={0}
-					onKeyDownCapture={handleKeyDown}
-					onKeyUpCapture={handleKeyUp}
         />
         {/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}
       </div>

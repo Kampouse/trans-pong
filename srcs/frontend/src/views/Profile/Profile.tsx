@@ -9,8 +9,6 @@ import { useAtom } from 'jotai';
 import { useParams } from 'react-router';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 import { AlertColor } from '@mui/material';
-import Error404 from 'views/Error/Error404';
-import UserNotFound from 'views/Error/UserNotFound';
 
 const ONLINE = "text-green-600 text-md";
 const PLAYING = "text-amber-500 text-md";
@@ -40,10 +38,7 @@ const useFetch = (username) => {
 		})
             .then((response) => response.json())
 			.then((data) => {
-				// if (data === {404: 'user not found.'})
-				// 	setProfileReq("Error")
-				// else
-					setProfileReq(data);
+				setProfileReq(data);
 			})
 	}, [username])
 	return {profileReq};
@@ -369,15 +364,10 @@ export default function Profile() {
 
 	const { username } = useParams();
 	const {profileReq: data} = useFetch(username);
-<<<<<<< HEAD
-	console.log(data);
-	console.log(username);
-=======
 	// const {profileReq: loggedUser} = useFetch(undefined);
 	// console.log(data);
 	// console.log(loggedUser);
 	// console.log(username);
->>>>>>> origin/main
 
 	// const navigate = useNavigate()
 	// useEffect(() => {
@@ -410,11 +400,11 @@ export default function Profile() {
 	}
 
   return (
-		<>
-			{data && data.error === false &&
-				(
-					<div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit">
-						<div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
+		<div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit">
+			<div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
+				{data &&
+					(
+						<>
 							<div className='w-full h-[25%] flex'>
 								<div className='w-[50%] h-full flex items-center justify-center'>
 									{ username === undefined && hover && 
@@ -465,19 +455,18 @@ export default function Profile() {
 									</div>
 								</div>
 							</TabContext>
-						</div>
-						<EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} />
-						{/* <UserOptions open={openUserOptions} currentUser={userClicked.current} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={(navigate) => {handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)}} onClose={handleUserOptionsClose} /> */}
-						<GeneralSnackbar
-							message={snackbarMsg.current}
-							open={openSnackbar}
-							severity={snackbarSeverity.current}
-							onClose={() => setOpenSnackbar(false)}
-						/>
-					</div>
-				)
-			}
-			{ data && data.error === 'user not found.' && <UserNotFound />}
-		</>
+						</>
+					)
+				}
+			</div>
+			<EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} />
+			{/* <UserOptions open={openUserOptions} currentUser={userClicked.current} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={(navigate) => {handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)}} onClose={handleUserOptionsClose} /> */}
+			<GeneralSnackbar
+        message={snackbarMsg.current}
+        open={openSnackbar}
+        severity={snackbarSeverity.current}
+        onClose={() => setOpenSnackbar(false)}
+      />
+		</div>
   );
 }
