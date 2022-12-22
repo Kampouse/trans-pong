@@ -147,7 +147,7 @@ export const getUserDetails = () => {
 }
 
 const Chat = () => {
-  const [openNewChat, setOpenNewChat] = useState(false)
+  const [openNewRoom, setOpenNewRoom] = useState(false)
   const [openNewPassword, setOpenNewPassword] = useState(false)
   const [openDeleteChannel, setOpenDeleteChannel] = useState(false)
   const [openQuitChannel, setOpenQuitChannel] = useState(false)
@@ -167,7 +167,7 @@ const Chat = () => {
     if (room) {
       setRooms([...rooms, room])
     }
-    setOpenNewChat(false)
+    setOpenNewRoom(false)
   }
 
   const handleAddUserClose = (user: string | null) => {
@@ -338,7 +338,7 @@ const Chat = () => {
       <SidebarRooms
         rooms={rooms}
         setRoomCode={setRoomCode}
-        setOpenNewRoom={setOpenNewChat}
+        setOpenNewRoom={setOpenNewRoom}
       />
       {roomCode && roomCode !== '' ? (
         <React.Fragment>
@@ -371,7 +371,15 @@ const Chat = () => {
           </p>
         </div>
       )}
-      <NewRoom open={openNewChat} onClose={handleNewRoomClose} />
+      <NewRoom
+				open={openNewRoom}
+				onClose={handleNewRoomClose}
+				users={users}
+				rooms={rooms}
+				setRooms={setRooms}
+				setRoomCode={setRoomCode}
+				setOpenNewRoom={setOpenNewRoom}
+			/>
       <PasswordSettings
         open={openNewPassword}
         onClose={handleNewPasswordClose}
