@@ -26,7 +26,8 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
-      - CALLBACK_URL=${CALLBACK_URL}
+      - REDIRECT=${REDIRECT}
+      - JWT_KEY=${JWT_KEY}
     build:
       context: ./srcs/.
       dockerfile: Dockerfile
@@ -34,7 +35,8 @@ services:
         - DATABASE_URL=${DATABASE_URL}
         - CLIENT_ID=${CLIENT_ID}
         - CLIENT_SECRET=${CLIENT_SECRET}
-        - CALLBACK_URL=${CALLBACK_URL}
+        - REDIRECT=${REDIRECT}
+        - JWT_KEY=${JWT_KEY}
     volumes:
       - ./srcs:/app
     networks:

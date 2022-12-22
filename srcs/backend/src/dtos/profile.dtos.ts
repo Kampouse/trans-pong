@@ -1,3 +1,10 @@
+export class UpdateUsernameDto
+{
+    constructor(
+        public newUsername: string,
+    ){};
+}
+
 export class FriendDto {
     constructor (
         public friendUser:         string,
@@ -46,7 +53,7 @@ export class StatisticsDto{
     ){}
 }
 
-export class ProfileResponseDto {
+export class PrivateProfileDto {
     constructor(
         public error: boolean,
         public username: string,
@@ -60,7 +67,7 @@ export class ProfileResponseDto {
         public authentificator: boolean){}
 }
 
-export class ProfileResponsePublic {
+export class PublicProfileDto {
     constructor(
         public error: boolean,
         public username: string,

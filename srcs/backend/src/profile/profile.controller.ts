@@ -1,12 +1,11 @@
-import { Controller, Get, Header, Param, Post, UseInterceptors, Body} from "@nestjs/common";
+import { Req, Res, Controller, Get, Header, Param, Post, UseInterceptors, Body} from "@nestjs/common";
 import { ProfileService } from "./profile.service";
-import { UpdateUsernameDto } from "src/dtos/profileUpdate.dto";
+import { UpdateUsernameDto } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { UploadedFile } from "@nestjs/common";
+import { RequestWithUser } from "src/dtos/auth.dtos";
 import { extname } from "path";
-
-const useID = "clbr49mbn0000s0hc6797101r"
 
 @Controller('profile')
 export class ProfileController {
@@ -14,25 +13,34 @@ export class ProfileController {
 
     //  Get the private profile information of the user logged
     @Get()
-    @Header('Content-type', 'application/json; charset=utf-8')
-    async getProfileEdit() : Promise<any>
+    async getProfileEdit(@Req() request: RequestWithUser) : Promise<any>
     {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (!login42)
+        {
+            return {error: "Authentification failed"};
+        }
+
         //  Add userID validation when auth is done by JP
-        const reponse = this.profileService.getProfileEdit(useID);
-        if ((await reponse).error == true)
-            return ({error: 'user not found.'});
-        return reponse;
+        const privateProfile = await this.profileService.getProfileEdit(login42);
+        return (privateProfile);
     }
 
     //  Get the public profile information of the username in /username
     @Get(':username')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async getProfilePublic(@Param('username') username: string) : Promise<any>
+    async getProfilePublic(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<any>
     {
-        const reponse = this.profileService.getProfilePublic(username);
-        if ((await reponse).error == true)
-            return ({error: 'user not found.'});
-        return reponse;
+        const login42 =  await this.profileService.authentificate(request);
+ 
+        if (login42 == null)
+        {
+            return ({error: "Authentification failed"});
+        }
+
+        const publicProfile = await this.profileService.getProfilePublic(username);
+        return (publicProfile);
     }
 
     //  Upload a photo and update photo path of a user
@@ -50,20 +58,32 @@ export class ProfileController {
             },
         })
     }))
-    async updatePhoto(@UploadedFile() file: Express.Multer.File) : Promise<any>
+    async updatePhoto(@UploadedFile() file: Express.Multer.File, @Req() request: RequestWithUser, @Res() res) : Promise<any>
     {
-        //  Add userID validation when auth is done by JP
-        this.profileService.updatePhoto(file.filename, useID);
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (!login42)
+        {
+            res.status(401).send({ message: 'Unauthorized', status: '401' });
+        }
+        this.profileService.updatePhoto(file.filename, login42);
         return ({success: "photo upload successful"});
     }
 
     //  Update the username of the user authentificated
     //  TODO: add authentification validation
     @Post('update/username')
-    async updateUsername(@Body() updateUsernameDto: UpdateUsernameDto) : Promise<any>
+    async updateUsername(@Body() updateUsernameDto: UpdateUsernameDto, @Req() request: RequestWithUser, @Res() res) : Promise<any>
     {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (!login42)
+        {
+            res.status(401).send({ message: 'Unauthorized', status: '401' });
+        }
+
         //  Add userID validation when auth is done by JP
-        const response = this.profileService.updateUsername(updateUsernameDto);
+        const response = this.profileService.updateUsername(updateUsernameDto.newUsername, login42);
         if (!response)
         {
             console.log(updateUsernameDto);

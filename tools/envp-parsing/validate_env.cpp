@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:36:51 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/09 10:22:31 by aguay            ###   ########.fr       */
+/*   Updated: 2022/12/21 08:11:53 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ bool	validate_api(std::string api,std::string secret)
 
 bool	validate_callback(std::string callback)
 {
-	if (callback != "http://localhost:3000/auth/42login" || callback.size() == 0)
+	if (callback.size() < 10)
 	{
 		std::cout << "error var: callback: invalid" << std::endl;
 		return (false);
@@ -139,9 +139,20 @@ bool	validate_callback(std::string callback)
 	return (true);
 }
 
+bool    validate_jwt(std::string jwt)
+{
+    if (jwt.size() != 32)
+	{
+		std::cout << "error var: jwt: invalid" << std::endl;
+		return (false);
+	}
+	return (true);
+}
+
+
 bool	validate_env(void)
 {
-	std::string		envStr[7];
+	std::string		envStr[8];
 	std::string		line;
 	std::ifstream 	env;
 
@@ -151,7 +162,7 @@ bool	validate_env(void)
 		std::cout << "error: could't open .env file" << std::endl;
 		return (false);
 	}	
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		getline(env, line);
 		envStr[i] = line.substr(line.find_first_of('=') + 1, std::string::npos);
@@ -168,6 +179,8 @@ bool	validate_env(void)
 	if (!validate_api(envStr[4], envStr[5]))
 		return (false);
 	if (!validate_callback(envStr[6]))
+		return (false);
+    if (!validate_jwt(envStr[7]))
 		return (false);
 	std::cout << ".env valid, let's proceed" << std::endl;
 	exit (0);

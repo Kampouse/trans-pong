@@ -9,13 +9,13 @@ datasource db {
 
 model User {
     userID              String                          @id @default(cuid())
-    userNumber          Int                             @unique @default(autoincrement())
-    auth                Auth?
-    apiToken            Json?
+    accessToken42       String?
+    refreshToken42      String?
+    jwtToken            String?
     login42             String                          @unique
     username            String                          @unique
-    userStatus          userStatus                      @default(online)
-    imagePath           String                          @default("default_path")
+    userStatus          userStatus                      @default(offline)
+    imagePath           String                          @default("/defaultPhoto.png")
     authentificator     Boolean                         @default(false)
     achievement         Achievement?
     channels            Channel[]
@@ -32,14 +32,6 @@ model FriendRequest{
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
     @@unique([sender, receiver])
-}
-
-model Auth {
-    authID              String                          @id @default(cuid())
-    user                User                            @relation(fields: [authID], references: [userID])
-    accessToken         String                          @unique
-    refreshToken        String                          @unique
-    bearerToken         String                          @unique @default("")
 }
 
 model Game{
