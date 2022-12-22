@@ -16,6 +16,7 @@ import Chat from 'views/Chat/Chat'
 import { ChatRoom, initAchievement, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial } from 'utils'
+import UserNotFound from 'views/Error/UserNotFound'
 
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])

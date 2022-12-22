@@ -2,9 +2,16 @@ import React from 'react'
 
 interface DrawProps {
   canvas: React.MutableRefObject<HTMLCanvasElement | null>
-  mouse: {
-    y: number
-  }
+  // mouse: {
+  //   y: number
+  // }
+}
+
+interface UpdateProps {
+	keyActions: {
+		up: boolean,
+		down: boolean
+	}
 }
 
 const gameBall = {
@@ -50,7 +57,7 @@ function getCanvasSize(props: DrawProps) {
 }
 
 export function init(props: DrawProps) {
-  const { canvas, mouse } = props
+  const { canvas } = props
 
   getCanvasSize(props)
 
@@ -68,7 +75,7 @@ export function init(props: DrawProps) {
   gameBall.ballDirX = -1.0
   gameBall.ballDirY = 0.0
 
-  mouse.y = leftPlayer.playerPos
+  // mouse.y = leftPlayer.playerPos
 }
 
 export function draw(props: DrawProps) {
@@ -195,11 +202,15 @@ export function drawGameover(props: DrawProps) {
   }
 }
 
-export const update = ({ gameover }) => {
+export const update = ({ keyActions }: UpdateProps) => {
 	const playerHeight = 0.15
 	const playerWidth = 0.01
 
-  leftPlayer.playerPos = 0.5
+	if (leftPlayer.playerPos > 0 && keyActions.up)
+  	leftPlayer.playerPos -= 0.01
+	if (leftPlayer.playerPos < 1 && keyActions.down)
+		leftPlayer.playerPos += 0.01
+
   rightPlayer.playerPos += (gameBall.ballPosY - rightPlayer.playerPos) * 0.1
 
   gameBall.ballPosX += (gameBall.ballDirX * gameBall.ballSpeed) / 1000

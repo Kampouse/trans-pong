@@ -20,7 +20,7 @@ export class ProfileController {
         //  Add userID validation when auth is done by JP
         const reponse = this.profileService.getProfileEdit(useID);
         if ((await reponse).error == true)
-            return ({404: 'user not found.'});
+            return ({error: 'user not found.'});
         return reponse;
     }
 
@@ -31,7 +31,7 @@ export class ProfileController {
     {
         const reponse = this.profileService.getProfilePublic(username);
         if ((await reponse).error == true)
-            return ({404: 'user not found.'});
+            return ({error: 'user not found.'});
         return reponse;
     }
 

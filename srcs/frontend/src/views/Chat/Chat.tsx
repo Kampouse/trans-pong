@@ -338,7 +338,7 @@ const Chat = () => {
       <SidebarRooms
         rooms={rooms}
         setRoomCode={setRoomCode}
-        setOpenNewChat={setOpenNewChat}
+        setOpenNewRoom={setOpenNewChat}
       />
       {roomCode && roomCode !== '' ? (
         <React.Fragment>
