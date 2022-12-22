@@ -74,8 +74,6 @@ export function init(props: DrawProps) {
 
   gameBall.ballDirX = -1.0
   gameBall.ballDirY = 0.0
-
-  // mouse.y = leftPlayer.playerPos
 }
 
 export function draw(props: DrawProps) {
