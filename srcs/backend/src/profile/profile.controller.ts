@@ -1,4 +1,4 @@
-import { Req, Res, Controller, Get, Header, Param, Post, UseInterceptors, Body} from "@nestjs/common";
+import { Req, Res, Controller, Get, Header, Param, Post, UseInterceptors, Body, Redirect} from "@nestjs/common";
 import { ProfileService } from "./profile.service";
 import { UpdateUsernameDto } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -73,22 +73,24 @@ export class ProfileController {
     //  Update the username of the user authentificated
     //  TODO: add authentification validation
     @Post('update/username')
+    @Redirect()
     async updateUsername(@Body() updateUsernameDto: UpdateUsernameDto, @Req() request: RequestWithUser, @Res() res) : Promise<any>
     {
         const login42 =  await this.profileService.authentificate(request);
 
-        if (!login42)
+        console.log(login42 + " asked to change username to " + updateUsernameDto.newUsername)
+
+        if (login42 == undefined || updateUsernameDto.newUsername == undefined)
         {
-            res.status(401).send({ message: 'Unauthorized', status: '401' });
+            return {statCode: 302, url: "http://localhost:5173/Profile" }
         }
 
         //  Add userID validation when auth is done by JP
         const response = this.profileService.updateUsername(updateUsernameDto.newUsername, login42);
         if (!response)
         {
-            console.log(updateUsernameDto);
-            return ({error: "authentification failed"});
+            return {statCode: 302, url: "http://localhost:5173/Profile" }
         }
-        return ({success: "username update successfull"});
+        return {statCode: 302, url: "http://localhost:5173/Profile" }
     }
 }

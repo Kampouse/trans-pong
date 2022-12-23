@@ -1,5 +1,5 @@
 import { Matches, User } from '../../utils/types';
-import { Tab, Box, IconButton, Dialog, Button, DialogContent, DialogTitle, Switch } from '@mui/material'
+import { Tab, Box, IconButton, Dialog, Button, DialogContent, DialogTitle, Switch, formControlClasses } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import React, { useState, useRef, useEffect } from 'react';
 import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
@@ -9,6 +9,15 @@ import { useAtom } from 'jotai';
 import { useParams } from 'react-router';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 import { AlertColor } from '@mui/material';
+import { rawListeners } from 'process';
+
+
+//  =============== User status         =============== //
+
+/*
+    Here, we have the text and the color to display user
+    status information
+*/
 
 const ONLINE = "text-green-600 text-md";
 const PLAYING = "text-amber-500 text-md";
@@ -22,6 +31,8 @@ const getStatusCSS = (status) => {
 	else
 		return OFFLINE;
 }
+
+//  =============== Fetch database info =============== //
 
 const useFetch = (username) => {
 	const [profileReq, setProfileReq] = useState<any>(null);
@@ -43,6 +54,8 @@ const useFetch = (username) => {
 	}, [username])
 	return {profileReq};
 }
+
+//  =============== Match history component     =============== //
 
 function MatchResult({data, username, userClicked, setOpenUserOptions}: {data: any, username: string | undefined, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
   function onUserClick(currentMatch: Matches) {setOpenUserOptions(true); userClicked.current = currentMatch.opponent;}
@@ -121,8 +134,10 @@ function MatchResult({data, username, userClicked, setOpenUserOptions}: {data: a
 	);
 }
 
-function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
+//  =============== Friend List component       =============== //
 
+function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>})
+{
   return (
     <div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
@@ -162,6 +177,8 @@ function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userCli
     </div>
   );
 }
+
+//  =============== Friend requests component   =============== //
 
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
 	const [friendRequests, setFriendRequests ] = useState(data.friendRequests);
@@ -233,6 +250,8 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
   );
 }
 
+//  =============== Achievement component       =============== //
+
 function Achievements({data}: {data: any}) {
 	return (
 		<div className="flex h-[100%] flex-col -my-4">
@@ -281,7 +300,11 @@ function Achievements({data}: {data: any}) {
 	);
 }
 
-export interface EditProfileProps {
+//  =============== Edit profile component      =============== //
+
+
+export interface EditProfileProps
+{
 	open: boolean;
 	onClose: () => void;
 	setOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
@@ -289,66 +312,65 @@ export interface EditProfileProps {
 	snackbarSeverity: React.MutableRefObject<AlertColor | undefined>;
 }
 
-export function EditProfile({ open, onClose, setOpenSnackbar, snackbarMsg, snackbarSeverity }: EditProfileProps) {
+export function EditProfile(
+    { open, onClose, setOpenSnackbar, snackbarMsg, snackbarSeverity } : EditProfileProps)
+{
 	const [newDisplayName, setNewDisplayName] = useState('');
 	const [isChecked, setIsChecked] = useState(false);
 
 	return (
-		<Dialog onClose={onClose} open={open}>
-			<DialogTitle className="bg-sky-200 text-blue-700">
-				Edit Profile
+		<Dialog onClose={onClose} open={open} className="font-Merriweather">
+        <div className=" w-96">
+			<DialogTitle className='bg-sky-200'>
+                <p className=' text-center font-Merriweather font-bold text-3xl '>
+                    Edit Profile
+                </p>
 			</DialogTitle>
-			<DialogContent className="bg-sky-200">
-				<p className='pb-1'>Display Name</p>
-				<div className='pl-8 h-fit w-full'>
-					<input className='w-full' onChange={(e) => {setNewDisplayName(e.target.value)}} type="text" placeholder="Enter New Display Name" />
-				</div>
-				<div className='h-[32px] w-full'>
-					<button
-						className='float-right text-sm bg-[#1976d2] text-white rounded-md py-0.5 px-1 my-1'
-						onClick={() => {
-							setOpenSnackbar(true);
-							snackbarMsg.current = 'Error occured';
-							snackbarSeverity.current = 'error';
-						}}
-					>
-						APPLY
-					</button>
-				</div>
-				<p className='py-1'>Profile Image</p>
-				<div className='flex pl-8 h-fit w-fit'>
-					<Button
-						variant="contained"
-						component="label"
-						className='pl-4'
-					>
-						Upload
-						<input hidden accept="image/*" type="file" id='image-input' />
-					</Button>
-					<p className='pl-2 h-fit my-auto'>No file uploaded</p>
-				</div>
-				<div className='h-[32px] w-full'>
-					<button
-						className='float-right text-sm bg-[#1976d2] text-white rounded-md py-0.5 px-1 my-1'
-						onClick={() => {
-							setOpenSnackbar(true);
-							snackbarMsg.current = 'Error occured';
-							snackbarSeverity.current = 'error';
-						}}
-					>
-						APPLY
-					</button>
-				</div>
-				<p className='py-1'>2-Way Authentification</p>
-				<div className='flex pl-8 h-fit w-fit'>
-					<Switch checked={isChecked} onChange={(evt) => {setIsChecked(evt.target.checked)}} />
-				</div>
+			<DialogContent className="bg-sky-200 flex flex-col">
+                <div className='my-2'>
+				    <p className='font-bold text-center my-2 px-1 text-lg'>
+                        Change username
+                    </p>
+				    <div className=''>
+                        <form action='http://localhost:3000/profile/update/username' method='POST'>
+					        <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-5 mx-[10%]' placeholder="Enter New Display Name"/>
+					        <button className='h-fit w-fit my-2 mx-[38%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
+                        </form>
+				    </div>
+                </div>
+                <div className='my-2'>
+				    <p className='font-bold text-center my-2 px-1 text-lg'>
+                        Profile Image
+                    </p>
+				    <div className='flex px-1 h-fit'>
+                        <Button variant="contained" component="label" className=' font-Merriweather'>
+						    Upload
+						    <input hidden accept="image/*" type="file" id='image-input' />
+					    </Button>
+					    <p className='mx-3 px-3 h-fit w-full my-auto bg-slate-100'>No file uploaded</p>
+				    </div>
+                    <div className='h-[32px] w-full'>
+                        <button className='h-fit w-fit my-2 mx-[38%] px-5 text-lg rounded-md  bg-[#1976d2] text-white' onClick={() => {setOpenSnackbar(true);snackbarMsg.current = 'Error occured';snackbarSeverity.current = 'error';}}>
+						    Apply
+					    </button>
+				    </div>
+                </div>
+                <div className='my-2'>
+				    <p className='py-1'>2-Way Authentification</p>
+				    <div className='flex pl-8 h-fit w-fit'>
+					    <Switch checked={isChecked} onChange={(evt) => {setIsChecked(evt.target.checked)}} />
+				    </div>
+                </div>
 			</DialogContent>
+        </div>
 		</Dialog>
 	);
 }
 
-export default function Profile() {
+//  =============== Profile component           =============== //
+
+export default function Profile()
+{
 	const [value, setValue] = useState("1");
 	const [openUserOptions, setOpenUserOptions] = useState(false);
 	const [hover, setHover] = useState(false);
@@ -358,49 +380,25 @@ export default function Profile() {
 	const [openNewRoom, setOpenNewRoom] = useState(false);
 	const userClicked = useRef(null);
 
+    //  Snackbar code for error handeling (maybe? ask gasselin)
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const snackbarMsg = useRef('')
-  const snackbarSeverity = useRef<AlertColor | undefined>('success')
+    const snackbarSeverity = useRef<AlertColor | undefined>('success')
 
+    //  Get the username with use params
 	const { username } = useParams();
+
+    //  Get the JSON data from the fetch method
 	const {profileReq: data} = useFetch(username);
-	// const {profileReq: loggedUser} = useFetch(undefined);
-	// console.log(data);
-	// console.log(loggedUser);
-	// console.log(username);
 
-	// const navigate = useNavigate()
-	// useEffect(() => {
-		// If username === logged in user
-		//	navigate('/Profile')
-	// }, [])
-
-	const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
-	const getAddFriendStatus = (): string => {
-		// if (data.friendList.find((user) => {return user.friendUser === userClicked.current}) !== undefined)
-		// 	return 'Delete friend';
-		// else if (userClicked.current?.friendRequests.find((user: User) => {return user.username === userDetails.username}) !== undefined ||
-		// 				userDetails.friendRequests.find((user: User) => {return user.username === userClicked.current?.username}))
-		// 	return 'Request sent';
-		// else if (userClicked.current?.blockedUsers.find((user: User) => {return user.username === userDetails.username}) === undefined)
-			return 'Add friend';
-		// else
-			// return '';
-	}
-
-	const getAddFriendDisabled = (): boolean => {
-		return (getAddFriendStatus() === 'Request sent')
-	}
-
-	const handleUserOptionsClose = () => {
-		setOpenUserOptions(false);
-	}
+    //  Handle the change of username
+	const handleChange = (event: React.SyntheticEvent, newValue: string) => 
+    {
+        setValue(newValue);
+    };
 
   return (
-		<div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit">
+		<div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit font-Merriweather">
 			<div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
 				{data &&
 					(
@@ -423,8 +421,8 @@ export default function Profile() {
 								</div>
 								<div className='w-[50%] h-full flex  mx-auto'>
 									<div className='h-fit my-auto'>
-										<p className='text-2xl font-bold '>{ data.username }</p>
-										<p className="text-lg font-semibold"><span className={getStatusCSS(data.status)}>●</span> {data.status[0].toUpperCase() + data.status.substring(1)}</p>
+										<p className='text-3xl font-bold '>{ data.username }</p>
+										<p className="text-lg"><span className={getStatusCSS(data.status)}>●</span> {data.status[0].toUpperCase() + data.status.substring(1)}</p>
 									</div>
 								</div>
 							</div>

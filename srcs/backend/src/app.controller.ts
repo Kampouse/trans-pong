@@ -1,7 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller} from '@nestjs/common';
 
 @Controller()
 export class AppController
 {
+    //  We should add user status verification with user jwt tokken here?
 }

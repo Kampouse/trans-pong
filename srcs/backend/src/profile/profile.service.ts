@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
+import { prisma } from 'src/main';
 
 @Injectable()
 export class ProfileService
@@ -49,7 +49,6 @@ export class ProfileService
     async getProfilePublic(login42: string): Promise<PublicProfileDto>
     {
         // Create prisma client and look if the username exist in the database
-        const prisma = new PrismaClient();
 
         const user = await prisma.user.findUnique({
             where: {
@@ -60,7 +59,6 @@ export class ProfileService
         //  If he dosen't exist, return error true and everything at null
         if (!user)
         {
-            await prisma.$disconnect();
             return new PublicProfileDto(true, null, null, null, null, null, null, null);
         }
 
@@ -342,7 +340,6 @@ export class ProfileService
         }
 
         // At last, return the ProfileResponse
-        await prisma.$disconnect();
         return new PublicProfileDto(false, user.username, user.userStatus, user.imagePath,
             this.friendList, this.matchHistory, this.achievements , stats);
     }
@@ -350,7 +347,6 @@ export class ProfileService
     async getProfileEdit(login42: string): Promise<PrivateProfileDto>
     {
         // Create prisma client and look if the username exist in the database
-        const prisma = new PrismaClient();
         const user = await prisma.user.findUnique({
             where: {
                 login42: login42
@@ -360,7 +356,6 @@ export class ProfileService
         //  If he dosen't exist, return error true and everything at null
         if (!user)
         {
-            await prisma.$disconnect();
             return new PrivateProfileDto(true, null, null, null, null, null, null, null, null, null);
         }
 
@@ -661,28 +656,34 @@ export class ProfileService
         }
 
         // At last, return the ProfileResponse
-        await prisma.$disconnect();
         return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
             this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authentificator);
     }
 
     async updateUsername(newUsername: string, login42: string) : Promise<any>
     {
-        const prisma = new PrismaClient();
-
-        //  Change this part here for user authentification
-
+        //  Find the user to update to
         const user = await prisma.user.findUnique({
             where: {
                 login42: login42,
             },
         })
-
         if (!user)
         {
-            await prisma.$disconnect();
             return (false);
         }
+
+        //  Parse username for valid entry
+        if (newUsername.length < 5)
+        {
+            return (false);
+        }
+
+        if (newUsername.length > 12)
+        {
+            return (false)
+        }
+
 
         try
         {
@@ -697,18 +698,14 @@ export class ProfileService
         }
         catch
         {
-            await prisma.$disconnect();
             return ({error: "prisma update username error"})
         }
 
-        await prisma.$disconnect();
         return (true);
     }
 
     async updatePhoto(newFilePath: string, login42: string) : Promise<any>
     {
-        const prisma = new PrismaClient();
-
         const user = await prisma.user.findUnique({
             where:{
                 login42: login42,
@@ -717,7 +714,6 @@ export class ProfileService
         
         if (!user)
         {
-            await prisma.$disconnect();
             return ({error: "authentification failed"});
         }
         const path = "/" + newFilePath;
@@ -736,7 +732,6 @@ export class ProfileService
         {
             return ({error: "update failed"});
         }
-        await prisma.$disconnect();
         return ({success: "sucess"});
     }
 }
