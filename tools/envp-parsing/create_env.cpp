@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:41:59 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/21 08:50:04 by aguay            ###   ########.fr       */
+/*   Updated: 2022/12/23 17:38:39 by jemartel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,12 @@ static std::string create_jwt_token(void)
 
      std::random_device rd;
      std::mt19937 generator(rd());
-
-     std::shuffle(str.begin(), str.end(), generator);
+#ifdef __linux__
+     shuffle(str.begin(), str.end(), generator);
+#else
+ 	std::shuffle(str.begin(), str.end(), generator);
+#endif
+ 
 
      return (str.substr(0, 32));
 }
