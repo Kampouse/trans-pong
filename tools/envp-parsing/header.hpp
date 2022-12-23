@@ -6,11 +6,10 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:35:38 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/21 08:03:26 by aguay            ###   ########.fr       */
+/*   Updated: 2022/12/23 17:40:24 by jemartel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
 
 #include <string.h>
 #include <unistd.h>
@@ -19,6 +18,11 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <algorithm>
+#include <iterator>
+#include <iostream>
+#include <vector>
+
 
 bool	validate_env(void);
 bool	validate_db_name(std::string name);
