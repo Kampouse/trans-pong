@@ -1,7 +1,6 @@
 import { AuthGuard, PassportSerializer } from '@nestjs/passport';
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as jwt from 'jsonwebtoken';
 import { doesNotMatch } from 'assert';
 
 type SessionUser = { [key: string]: any };
@@ -26,7 +25,7 @@ export class JwtGuard extends AuthGuard('jwt') {
     try {
         console.log('token', token);
         let parsedToken = token;
-        const decoded = jwt.verify(parsedToken, 'secret');
+        //const decoded = jwt.verify(parsedToken, 'secret');
       return true;
     } catch (err) {
       return false;

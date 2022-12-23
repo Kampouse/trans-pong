@@ -1,4 +1,4 @@
-{
+ {
     "name": "pongy",
     "version": "0.0.1",
     "description": "",
@@ -26,6 +26,7 @@
       "@nestjs/common": "^9.0.0",
       "@nestjs/core": "^9.0.0",
       "@nestjs/jwt": "^9.0.0",
+	  "jsonwebtoken": "^9.0.0",
       "@nestjs/mapped-types": "*",
       "@nestjs/passport": "^9.0.0",
       "@nestjs/platform-express": "^9.0.0",
@@ -99,4 +100,3 @@
       "seed": "ts-node prisma/seed.ts"
     }
   }
-  

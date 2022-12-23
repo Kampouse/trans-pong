@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:35:38 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/23 17:40:24 by jemartel         ###   ########.fr       */
+/*   Updated: 2022/12/23 17:44:29 by jemartel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 #include <iterator>
 #include <iostream>
 #include <vector>
-
 
 bool	validate_env(void);
 bool	validate_db_name(std::string name);
