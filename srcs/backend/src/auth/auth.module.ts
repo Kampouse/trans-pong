@@ -25,10 +25,6 @@ import {
     FortyTwoAuthGuard,
     SessionSerializer,
     JwtGuard,
-    ],
-  controllers:
-    [
-        AuthController
     ]
 })
 export class AuthModule {}
