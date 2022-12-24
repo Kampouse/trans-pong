@@ -1,5 +1,5 @@
 import { Matches, User } from '../../utils/types';
-import { Tab, Box, IconButton, Dialog, Button, DialogContent, DialogTitle, Switch, formControlClasses } from '@mui/material'
+import { Tab, Box, IconButton, Dialog, Button, DialogContent, DialogTitle, Switch } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import React, { useState, useRef, useEffect } from 'react';
 import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
@@ -254,19 +254,18 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
 function Achievements({data}: {data: any}) {
 	return (
 		<div className="flex h-[100%] flex-col -my-4">
-      <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
-        <div className="flow-root overflow-y-scroll scrollbar-hide">
-          <ul
-            role="list"
-            className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg"
-          >
-						{ data.achievement.map((currentAchievement) => {
+            <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
+                <div className="flow-root overflow-y-scroll scrollbar-hide">
+                    <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg">
+						{ data.achievement.map((currentAchievement) =>
+                        {
 							return (
 								<li className="py-4">
 									<div className="flex items-center m-auto">
-										{ (currentAchievement.achieved) ? (
-											<React.Fragment>
-												<div className="w-12 h-12">
+										{
+                                            (currentAchievement.achieved) ? 
+                                            ( <React.Fragment>
+											    <div className="w-12 h-12">
 													<div className="h-[32px] w-[32px]">
 														<WorkspacePremium sx={{ width: 32, height: 32, m: 1}} />
 													</div>
@@ -276,7 +275,9 @@ function Achievements({data}: {data: any}) {
 													<p className="text-sm text-gray-500 dark:text-slate-500">{currentAchievement.description}</p>
 												</div>
 											</React.Fragment>
-										) : (
+										    )
+                                            : 
+                                            (
 											<React.Fragment>
 												<div className="w-12 h-12">
 													<div className="h-[32px] w-[32px]">
@@ -287,16 +288,81 @@ function Achievements({data}: {data: any}) {
 													<p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600">Locked</p>
 												</div>
 											</React.Fragment>
-										)}
+										    )
+                                        }
 									</div>
 								</li>
 							);
 						})}
-          </ul>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-	);
+	    );
+}
+
+
+//  =============== Stats component       =============== //
+
+function Stats({data}: {data: any})
+{
+    var played = data.stats.played;
+    var win = data.stats.win;
+    var ratio = data.stats.winRatio;
+    ratio = ratio * 100 + ' %';
+    var leftPlayed = data.stats.leftPlayed;
+    var leftWin = data.stats.leftWin;
+    var leftRatio = data.stats.leftWinRatio;
+    leftRatio = (leftRatio * 100).toPrecision(2) + ' %'
+    var rightPlayed = data.stats.rightPlayed;
+    var rightWin = data.stats.rightWin;
+    var rightRatio = data.stats.rightWinRatio;
+    rightRatio = (rightRatio * 100).toPrecision(2) + ' %'
+    var classInfo = 'py-2 pl-16'
+
+    return (
+    <div className="h-[100%] my-1">
+        <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent font-Merriweather">
+            <div>
+                <div className={classInfo}>
+                    Total game played :
+                    <label className='float-right pr-16'> {played}</label>
+                </div>
+                <div className={classInfo}>
+                    Total game won :
+                    <label className='float-right pr-16'> {win}</label>
+                </div>
+                <div className={classInfo}>
+                    Win ratio :
+                    <label className='float-right pr-16'> {ratio}</label>
+                </div>
+                <div className={classInfo}>
+                    Right game played :
+                    <label className='float-right pr-16'> {rightPlayed}</label>
+                </div>
+                <div className={classInfo}>
+                    Right game won : 
+                    <label className='float-right pr-16'> {rightWin}</label>
+                </div>
+                <div className={classInfo}>
+                    Right game ratio : 
+                    <label className='float-right pr-16'> {rightRatio}</label>
+                </div>
+                <div className={classInfo}>
+                    Left game played : 
+                    <label className='float-right pr-16'> {leftPlayed}</label>
+                </div>
+                <div className={classInfo}>
+                    Left game won : 
+                    <label className='float-right pr-16'> {leftWin}</label>
+                </div>
+                <div className={classInfo}>
+                    Left game ratio : 
+                    <label className='float-right pr-16'> {leftRatio}</label>
+                </div>
+            </div>
+        </div>
+    </div>);
 }
 
 //  =============== Edit profile component      =============== //
@@ -443,7 +509,7 @@ export default function Profile()
 											<TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
 										}
 										<TabPanel value="4"><Achievements data={data} /></TabPanel>
-										<TabPanel value="5">STATS</TabPanel>
+										<TabPanel value="5"><Stats data={data} /></TabPanel>
 									</div>
 								</div>
 							</TabContext>

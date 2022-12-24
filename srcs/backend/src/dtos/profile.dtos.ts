@@ -49,7 +49,7 @@ export class StatisticsDto{
         public rightWinRatio:       number,
         public leftPlayed:          number,
         public leftWin:             number,
-        public letfWinRatio:        number,
+        public leftWinRatio:        number,
     ){}
 }
 
