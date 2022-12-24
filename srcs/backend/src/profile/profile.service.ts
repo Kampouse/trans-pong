@@ -52,7 +52,7 @@ export class ProfileService
 
         const user = await prisma.user.findUnique({
             where: {
-                login42: login42,
+                username: login42,
             },
         });
 
@@ -692,13 +692,13 @@ export class ProfileService
                     login42: login42
                 },
                 data: {
-                    username: newUsername,
+                    username: newUsername.toLowerCase(),
                 }
             })
         }
         catch
         {
-            return ({error: "prisma update username error"})
+            return (false)
         }
 
         return (true);

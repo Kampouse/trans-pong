@@ -47,6 +47,7 @@ export class ProfileController {
     //  send in body: content-type: form-data / key: file /value: file to upload
     //  TODO: add authentification validation
     @Post('upload/photo')
+    @Redirect()
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
             destination: '../frontend/public',
@@ -58,16 +59,18 @@ export class ProfileController {
             },
         })
     }))
-    async updatePhoto(@UploadedFile() file: Express.Multer.File, @Req() request: RequestWithUser, @Res() res) : Promise<any>
+    async updatePhoto(@UploadedFile() file: Express.Multer.File, @Req() request: RequestWithUser) : Promise<any>
     {
         const login42 =  await this.profileService.authentificate(request);
 
-        if (!login42)
+        if (!login42 || file == undefined)
         {
-            res.status(401).send({ message: 'Unauthorized', status: '401' });
+            return {statCode: 302, url: "http://localhost:5173/Profile" }
         }
+        console.log(login42);
         this.profileService.updatePhoto(file.filename, login42);
-        return ({success: "photo upload successful"});
+        console.log("Photo updated")
+        return {statCode: 302, url: "http://localhost:5173/Profile" }
     }
 
     //  Update the username of the user authentificated

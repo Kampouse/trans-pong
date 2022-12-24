@@ -9,7 +9,6 @@ import { useAtom } from 'jotai';
 import { useParams } from 'react-router';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 import { AlertColor } from '@mui/material';
-import { rawListeners } from 'process';
 
 
 //  =============== User status         =============== //
@@ -312,6 +311,7 @@ export interface EditProfileProps
 	snackbarSeverity: React.MutableRefObject<AlertColor | undefined>;
 }
 
+
 export function EditProfile(
     { open, onClose, setOpenSnackbar, snackbarMsg, snackbarSeverity } : EditProfileProps)
 {
@@ -340,20 +340,14 @@ export function EditProfile(
                 </div>
                 <div className='my-2'>
 				    <p className='font-bold text-center my-2 px-1 text-lg'>
-                        Profile Image
+                        Upload new Photo
                     </p>
-				    <div className='flex px-1 h-fit'>
-                        <Button variant="contained" component="label" className=' font-Merriweather'>
-						    Upload
-						    <input hidden accept="image/*" type="file" id='image-input' />
-					    </Button>
-					    <p className='mx-3 px-3 h-fit w-full my-auto bg-slate-100'>No file uploaded</p>
-				    </div>
-                    <div className='h-[32px] w-full'>
-                        <button className='h-fit w-fit my-2 mx-[38%] px-5 text-lg rounded-md  bg-[#1976d2] text-white' onClick={() => {setOpenSnackbar(true);snackbarMsg.current = 'Error occured';snackbarSeverity.current = 'error';}}>
-						    Apply
-					    </button>
-				    </div>
+                    <div>
+                        <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data'>
+                                <input accept="image/*" type="file" name='file' className=' justify-center'></input>
+                                <button className='h-fit w-fit my-2 mx-[38%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Upload</button>
+                        </form>
+                    </div>
                 </div>
                 <div className='my-2'>
 				    <p className='py-1'>2-Way Authentification</p>
@@ -404,7 +398,7 @@ export default function Profile()
 					(
 						<>
 							<div className='w-full h-[25%] flex'>
-								<div className='w-[50%] h-full flex items-center justify-center'>
+								<div className='w-fit h-full px-2 flex items-center justify-center'>
 									{ username === undefined && hover && 
 										<div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
 											<Edit sx={{color: blue[700], height: 35, width: 35}} />
