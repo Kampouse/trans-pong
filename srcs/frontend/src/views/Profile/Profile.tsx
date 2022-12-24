@@ -1,15 +1,13 @@
-import { Matches, User } from '../../utils/types';
-import { Tab, Box, IconButton, Dialog, Button, DialogContent, DialogTitle, Switch } from '@mui/material'
+import { User } from '../../utils/types';
+import { Tab, Box, IconButton, Dialog, DialogContent, DialogTitle, Switch } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import React, { useState, useRef, useEffect } from 'react';
 import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
 import { blue } from '@mui/material/colors';
-import { useRoomCode, useRooms } from "Router/Router";
-import { useAtom } from 'jotai';
 import { useParams } from 'react-router';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 import { AlertColor } from '@mui/material';
-
+import { UserOption } from '../UserOptions/User.Option'
 
 //  =============== User status         =============== //
 
@@ -22,13 +20,20 @@ const ONLINE = "text-green-600 text-md";
 const PLAYING = "text-amber-500 text-md";
 const OFFLINE = "text-red-600 text-md";
 
-const getStatusCSS = (status) => {
+const getStatusCSS = (status) =>
+{
 	if (status === 'online')
-		return ONLINE;
-	else if (status === 'playing')
-		return PLAYING;
-	else
-		return OFFLINE;
+    {
+        return ONLINE;
+    }
+    else if (status === 'playing')
+    {
+        return PLAYING;
+    }
+    else
+    {
+        return OFFLINE;
+    }
 }
 
 //  =============== Fetch database info =============== //
@@ -56,82 +61,63 @@ const useFetch = (username) => {
 
 //  =============== Match history component     =============== //
 
-function MatchResult({data, username, userClicked, setOpenUserOptions}: {data: any, username: string | undefined, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}) {
-  function onUserClick(currentMatch: Matches) {setOpenUserOptions(true); userClicked.current = currentMatch.opponent;}
-	
-	return (
-		<div className="flex h-[100%] flex-col -my-4">
-      <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
-        <div className="flow-root overflow-y-scroll scrollbar-hide">
-          <ul
-            role="list"
-            className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg"
-          >
-						<li className="flex h-[40px] w-full">
-							<div className="w-[37%] my-auto text-center"><p>Winner</p></div>
-							<div className="w-[26%] my-auto text-center"><p>Result</p></div>
-							<div className="w-[37%] my-auto text-center"><p>Loser</p></div>
-						</li>
-						{ data.matchHistory.map((currentMatch) => {
-							const winner = (currentMatch.leftScore > currentMatch.rightScore) ? "left" : "right";
-							return (
-								<li className="flex py-4">
-									<div className="flex w-[37%] my-auto items-center ml-2">
-										<div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
-											{/* ${currentMatch. === 'loss' ? 'cursor-pointer hover:border-2 border-pink-500' : ''} */}
-											<img
-												className={`h-full w-full rounded-full`}
-												src={(winner === "left") ? currentMatch.leftPhoto : currentMatch.rightPhoto}
-												alt=""
-												// onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
-											/>
-										</div>
-										<div className="ml-2">
-											<p
-												//  ${loggedUser.username === ((winner === "left") ? currentMatch.leftPlayer : currentMatch.rightPlayer) ? 'font-bold' : 'cursor-pointer hover:underline underline-offset-2'}
-												className={`text-gray-900`}
-												// onClick={() => (currentMatch.result === 'loss') ? onUserClick(currentMatch) : undefined}
-											>
-												{(winner == "left") ? currentMatch.leftPlayer : currentMatch.rightPlayer}
-											</p>
-										</div>
-									</div>
-									<div className="flex h-full w-[26%] my-auto">
-										<div className="w-[50%] my-auto">
-											<p className=" text-center text-gray-900">{(winner === 'left') ? currentMatch.leftScore : currentMatch.rightScore}</p>
-										</div>
-										<div className="w-[50%] my-auto">
-											<p className=" text-center text-gray-900">{(winner === 'left') ? currentMatch.rightScore : currentMatch.leftScore}</p>
-										</div>
-									</div>
-									<div className="flex w-[37%] my-auto justify-end items-center mr-2">
-										<div className="mr-2">
-											<p
-												// ${loggedUser.username === ((winner === "left") ? currentMatch.rightPlayer : currentMatch.leftPlayer) ? 'font-bold' : 'cursor-pointer hover:underline underline-offset-2'}
-												className={`text-gray-900`}
-												onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
-											>
-												{(winner == "left") ? currentMatch.rightPlayer : currentMatch.leftPlayer}
-											</p>
-										</div>
-										<div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
-											<img
-												className={`h-full w-full rounded-full`}
-												src={(winner === "left") ? currentMatch.rightPhoto : currentMatch.leftPhoto}
-												alt=""
-												// onClick={() => (currentMatch.result === 'win') ? onUserClick(currentMatch) : undefined}
-											/>
-										</div>
-									</div>
-								</li>
-							);
-						})}
-          </ul>
+function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>})
+{
+    function onUserClick(user: string)
+    {
+        console.log("open user option of " + user);
+        return (<UserOption user={user}></UserOption>);
+    }
+
+    return (
+    <div className="flex h-[100%] flex-col -my-4">
+        <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
+            <div className="flow-root overflow-y-scroll scrollbar-hide">
+                <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg">
+                    <li className="flex h-[40px] w-full" key="TopList">
+                    <div className="w-[37%] my-auto text-center"><p>Left Player</p></div>
+                    <div className="w-[26%] my-auto text-center"><p>Result</p></div>
+                    <div className="w-[37%] my-auto text-center"><p>Right Player</p></div>
+                    </li>
+                    {data.matchHistory.map((currentMatch) =>
+                    {
+                        return (
+                                    <li className="flex py-4" key={currentMatch.matchNum}>
+                                        <div className="flex w-[37%] my-auto items-center ml-2">
+                                            <div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
+                                                <img className={`h-full w-full rounded-full`} src={currentMatch.leftPhoto} alt="" />
+                                            </div>
+                                            <div className="ml-2">
+                                                <p className={`text-gray-900`} onClick={() => {onUserClick(currentMatch.leftPlayer)}}>
+                                                    {currentMatch.leftPlayer}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex h-full w-[26%] my-auto">
+                                            <div className="w-[50%] my-auto">
+                                                <p className=" text-center text-gray-900">{currentMatch.leftScore}</p>
+                                            </div>
+                                            <div className="w-[50%] my-auto">
+                                                <p className=" text-center text-gray-900">{currentMatch.rightScore}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex w-[37%] my-auto justify-end items-center mr-2">
+                                            <div className="mr-2">
+                                                <p className={`text-gray-900`} onClick={ () => {onUserClick(currentMatch.rightPlayer)}}>
+                                                    {currentMatch.rightPlayer}
+                                                </p>
+                                            </div>
+                                            <div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
+                                                <img className={`h-full w-full rounded-full`} src={currentMatch.rightPhoto} alt="" />
+                                            </div>
+                                        </div>
+                                    </li>
+                                );
+                    })}
+                </ul>
+            </div>
         </div>
-      </div>
-    </div>
-	);
-}
+    </div>);}
 
 //  =============== Friend List component       =============== //
 
@@ -139,40 +125,29 @@ function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userCli
 {
   return (
     <div className="flex h-[100%] flex-col -my-4">
-      <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
-        <div className="flow-root overflow-y-scroll scrollbar-hide">
-          <ul
-            role="list"
-            className="divide-y divide-gray-500 dark:divide-slate-300"
-          >
-						{ data.friendList.map((currentUser) => {
-							return (
-								<li className="py-4">
-									<div className="flex items-center space-x-4">
-										<div className="shrink-0">
-											<img
-												className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer"
-												src={currentUser.friendPhoto}
-												alt=""
-												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
-											/>
-										</div>
-										<div className="min-w-0 flex-1">
-											<p
-												className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2"
-												onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
-											>
-												{currentUser.friendUser}
-											</p>
-											<p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentUser.friendStatus)}>●</span> {currentUser.friendStatus[0].toUpperCase() + currentUser.friendStatus.substring(1)}</p>
-										</div>
-									</div>
-								</li>
-							);
-						})}
-          </ul>
+        <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
+            <div className="flow-root overflow-y-scroll scrollbar-hide">
+                <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
+                    {data.friendList.map((currentUser) =>
+                    {
+                        return (
+                            <li className="py-4">
+                                <div className="flex items-center space-x-4">
+                                    <div className="shrink-0">
+                                        <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentUser.friendPhoto} alt="" onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}/>
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}>
+                                            {currentUser.friendUser}
+                                        </p>
+                                        <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentUser.friendStatus)}>●</span> {currentUser.friendStatus[0].toUpperCase() + currentUser.friendStatus.substring(1)}</p>
+                                    </div>
+                                </div>
+                            </li>);
+                    })}
+                </ul>
+            </div>
         </div>
-      </div>
     </div>
   );
 }
@@ -309,15 +284,15 @@ function Stats({data}: {data: any})
     var played = data.stats.played;
     var win = data.stats.win;
     var ratio = data.stats.winRatio;
-    ratio = ratio * 100 + ' %';
+    ratio = (ratio * 100).toPrecision(4) + ' %';
     var leftPlayed = data.stats.leftPlayed;
     var leftWin = data.stats.leftWin;
     var leftRatio = data.stats.leftWinRatio;
-    leftRatio = (leftRatio * 100).toPrecision(2) + ' %'
+    leftRatio = (leftRatio * 100).toPrecision(4) + ' %'
     var rightPlayed = data.stats.rightPlayed;
     var rightWin = data.stats.rightWin;
     var rightRatio = data.stats.rightWinRatio;
-    rightRatio = (rightRatio * 100).toPrecision(2) + ' %'
+    rightRatio = (rightRatio * 100).toPrecision(4) + ' %'
     var classInfo = 'py-2 pl-16'
 
     return (
@@ -378,10 +353,8 @@ export interface EditProfileProps
 }
 
 
-export function EditProfile(
-    { open, onClose, setOpenSnackbar, snackbarMsg, snackbarSeverity } : EditProfileProps)
+export function EditProfile({ open, onClose} : EditProfileProps)
 {
-	const [newDisplayName, setNewDisplayName] = useState('');
 	const [isChecked, setIsChecked] = useState(false);
 
 	return (
@@ -435,9 +408,6 @@ export default function Profile()
 	const [openUserOptions, setOpenUserOptions] = useState(false);
 	const [hover, setHover] = useState(false);
 	const [openEditProfile, setOpenEditProfile] = useState(false);
-	const [rooms, setRooms] = useAtom(useRooms);
-	const setRoomCode = useAtom(useRoomCode)[1];
-	const [openNewRoom, setOpenNewRoom] = useState(false);
 	const userClicked = useRef(null);
 
     //  Snackbar code for error handeling (maybe? ask gasselin)
@@ -503,7 +473,7 @@ export default function Profile()
 
 								<div className='grow overflow-hidden'>
 									<div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
-										<TabPanel value="1"><MatchResult data={data} username={username} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+										<TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
 										<TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
 										{username === undefined &&
 											<TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
@@ -518,13 +488,7 @@ export default function Profile()
 				}
 			</div>
 			<EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} />
-			{/* <UserOptions open={openUserOptions} currentUser={userClicked.current} addFriendStatus={getAddFriendStatus()} btnDisabled={getAddFriendDisabled()} handleSendMessage={(navigate) => {handleSendMessage(userClicked, rooms, setRooms, setRoomCode, setOpenNewRoom, navigate)}} onClose={handleUserOptionsClose} /> */}
-			<GeneralSnackbar
-        message={snackbarMsg.current}
-        open={openSnackbar}
-        severity={snackbarSeverity.current}
-        onClose={() => setOpenSnackbar(false)}
-      />
+			<GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
 		</div>
   );
 }

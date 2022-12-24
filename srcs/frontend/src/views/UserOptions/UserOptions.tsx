@@ -1,11 +1,5 @@
 import { Person } from '@mui/icons-material'
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Avatar,
-  Button
-} from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Avatar, Button} from '@mui/material'
 import { blue } from '@mui/material/colors'
 import { ChatRoom, User } from 'components/types'
 import React from 'react'

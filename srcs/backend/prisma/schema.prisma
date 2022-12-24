@@ -14,7 +14,7 @@ model User {
     jwtToken            String?
     login42             String                          @unique
     username            String                          @unique
-    userStatus          userStatus                      @default(offline)
+    userStatus          userStatus                      @default(online)
     imagePath           String                          @default("/defaultPhoto.png")
     authentificator     Boolean                         @default(false)
     achievement         Achievement?

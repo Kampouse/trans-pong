@@ -440,7 +440,7 @@ async function main()
             create: {
                 gameNumber: 2,
                 leftPlayer: 'tberube',
-                leftPlayerScore: 40,
+                leftPlayerScore: 1,
                 rightPlayer: 'jvigneau',
                 rightPlayerScore: 3,
                 active: false,
