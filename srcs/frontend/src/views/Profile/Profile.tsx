@@ -61,14 +61,8 @@ const useFetch = (username) => {
 
 //  =============== Match history component     =============== //
 
-function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<User | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>})
+function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>})
 {
-    function onUserClick(user: string)
-    {
-        console.log("open user option of " + user);
-        return (<UserOption user={user}></UserOption>);
-    }
-
     return (
     <div className="flex h-[100%] flex-col -my-4">
         <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
@@ -85,10 +79,10 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                                     <li className="flex py-4" key={currentMatch.matchNum}>
                                         <div className="flex w-[37%] my-auto items-center ml-2">
                                             <div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full rounded-full`} src={currentMatch.leftPhoto} alt="" />
+                                                <img className={`h-full w-full rounded-full`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                             <div className="ml-2">
-                                                <p className={`text-gray-900`} onClick={() => {onUserClick(currentMatch.leftPlayer)}}>
+                                                <p className={`text-gray-900`} onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.leftPlayer}
                                                 </p>
                                             </div>
@@ -103,12 +97,12 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                                         </div>
                                         <div className="flex w-[37%] my-auto justify-end items-center mr-2">
                                             <div className="mr-2">
-                                                <p className={`text-gray-900`} onClick={ () => {onUserClick(currentMatch.rightPlayer)}}>
+                                                <p className={`text-gray-900`} onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.rightPlayer}
                                                 </p>
                                             </div>
                                             <div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full rounded-full`} src={currentMatch.rightPhoto} alt="" />
+                                                <img className={`h-full w-full rounded-full`} src={currentMatch.rightPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                         </div>
                                     </li>
@@ -117,7 +111,8 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                 </ul>
             </div>
         </div>
-    </div>);}
+    </div>);
+}
 
 //  =============== Friend List component       =============== //
 
@@ -134,10 +129,10 @@ function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userCli
                                 <li className="py-4" key={currentFriend.friendUser}>
                                     <div className="flex items-center space-x-4">
                                         <div className="shrink-0">
-                                            <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {setOpenUserOptions(true); userClicked.current = currentFriend;}}/>
+                                            <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true);}}/>
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {setOpenUserOptions(true); userClicked.current = currentFriend;}}>
+                                            <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true); }}>
                                                 {currentFriend.friendUser}
                                             </p>
                                             <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentFriend.friendStatus)}>●</span> {currentFriend.friendStatus[0].toUpperCase() + currentFriend.friendStatus.substring(1)}</p>
@@ -155,7 +150,6 @@ function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userCli
 //  =============== Friend requests component   =============== //
 
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
-    const [friendRequests, setFriendRequests ] = useState(data.friendRequests);
 
     return (
     <div className="flex h-[100%] flex-col -my-4">
@@ -168,11 +162,11 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
                     <li className="py-4" key={currentRequest.fromUser}>
                         <div className="flex items-center space-x-4">
                             <div className="shrink-0">
-                                <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentRequest.fromPhoto} alt="" // onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
+                                <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentRequest.fromPhoto} alt="" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
                                 />
                             </div>
                             <div className="min-w-0 flex-1">
-                                <p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" // onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
+                                <p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
                                 >
                                     {currentRequest.fromUser}
                                 </p>
@@ -188,7 +182,7 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
                                 <IconButton onClick={() => 
                                 {
                                     // TODO: Add form post request to update friendRequest here
-                                    console.log("Call request denyRequest for " + currentRequest.fromUser)
+                                    console.log("Call denyRequest for " + currentRequest.fromUser)
                                 }}>
                                     <Cancel sx={{ color: blue[700] }} />
                                 </IconButton>
@@ -273,8 +267,8 @@ function Stats({data}: {data: any})
     var classInfo = 'py-2 pl-16'
 
     return (
-    <div className="h-[100%] my-1">
-        <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent font-Merriweather">
+    <div className="h-[100%]">
+        <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent font-Raleway font-extrabold font-lg text-md">
             <div>
                 <div className={classInfo}>
                     Total game played :
@@ -329,32 +323,32 @@ export interface EditProfileProps
 }
 
 
-export function EditProfile({ open, onClose} : EditProfileProps)
+export function EditProfile({open, onClose} : EditProfileProps)
 {
-	const [isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
 
-	return (
-		<Dialog onClose={onClose} open={open} className="font-Merriweather">
+    return (
+        <Dialog onClose={onClose} open={open} className="font-Merriweather">
         <div className=" w-96">
-			<DialogTitle className='bg-sky-200'>
+            <DialogTitle className='bg-sky-200'>
                 <p className=' text-center font-Merriweather font-bold text-3xl '>
                     Edit Profile
                 </p>
-			</DialogTitle>
-			<DialogContent className="bg-sky-200 flex flex-col">
+            </DialogTitle>
+            <DialogContent className="bg-sky-200 flex flex-col">
                 <div className='my-2'>
-				    <p className='font-bold text-center my-2 px-1 text-lg'>
+                    <p className='font-bold text-center my-2 px-1 text-lg'>
                         Change username
                     </p>
-				    <div className=''>
+                    <div className=''>
                         <form action='http://localhost:3000/profile/update/username' method='POST'>
-					        <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-5 mx-[10%]' placeholder="Enter New Display Name"/>
-					        <button className='h-fit w-fit my-2 mx-[38%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
+                            <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-5 mx-[10%]' placeholder="Enter New Display Name"/>
+                            <button className='h-fit w-fit my-2 mx-[38%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                         </form>
-				    </div>
+                    </div>
                 </div>
                 <div className='my-2'>
-				    <p className='font-bold text-center my-2 px-1 text-lg'>
+                    <p className='font-bold text-center my-2 px-1 text-lg'>
                         Upload new Photo
                     </p>
                     <div>
@@ -365,15 +359,15 @@ export function EditProfile({ open, onClose} : EditProfileProps)
                     </div>
                 </div>
                 <div className='my-2'>
-				    <p className='py-1'>2-Way Authentification</p>
-				    <div className='flex pl-8 h-fit w-fit'>
-					    <Switch checked={isChecked} onChange={(evt) => {setIsChecked(evt.target.checked)}} />
-				    </div>
+                    <p className='py-1'>2-Way Authentification</p>
+                    <div className='flex pl-8 h-fit w-fit'>
+                        <Switch checked={isChecked} onChange={(evt) => {setIsChecked(evt.target.checked)}} />
+                    </div>
                 </div>
-			</DialogContent>
+            </DialogContent>
         </div>
-		</Dialog>
-	);
+        </Dialog>
+    );
 }
 
 //  =============== Profile component           =============== //
@@ -393,7 +387,7 @@ export default function Profile()
     */
 
     const [value, setValue] = useState("1");
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => { setValue(newValue);};
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {setValue(newValue);};
 
     //  =============== User options            =============== //
     /*
@@ -411,14 +405,13 @@ export default function Profile()
     const [openUserOptions, setOpenUserOptions] = useState(false);
 
     //  The user that is clicked (information to do logic with user options)
-    const userClicked = useRef(null);
+    const userClicked = useRef("none");
 
     //  Usestate on hover a user ?
     const [hover, setHover] = useState(false);
 
     //  =============== Edit Profile            =============== //
     const [openEditProfile, setOpenEditProfile] = useState(false);
-
 
     //  =============== ScnackBar               =============== //
 
@@ -465,7 +458,7 @@ export default function Profile()
 
 
     return (
-    <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Merriweather">
+    <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
         <div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
             {data && (
             <>
@@ -513,8 +506,9 @@ export default function Profile()
             </TabContext>
             </>)}
         </div>
+        <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked}></UserOption>
         <EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} />
         <GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
-        </div>
+    </div>
   );
 }
