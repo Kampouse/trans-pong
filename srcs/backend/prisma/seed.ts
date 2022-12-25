@@ -1024,8 +1024,8 @@ async function main()
             update: {},
             create: {
                 friendRequestNumber: 14,
-                sender: evaluatorUsername,
-                receiver: "mleblanc",
+                sender: "mleblanc",
+                receiver: evaluatorUsername,
                 status: "pending"
             }
         })
@@ -1041,8 +1041,8 @@ async function main()
             update: {},
             create: {
                 friendRequestNumber: 15,
-                sender: evaluatorUsername,
-                receiver: "gcollet",
+                sender: "gcollet",
+                receiver: evaluatorUsername,
                 status: "pending"
             }
         })
@@ -1058,8 +1058,8 @@ async function main()
             update: {},
             create: {
                 friendRequestNumber: 16,
-                sender: evaluatorUsername,
-                receiver: "alvachon",
+                sender: "alvachon",
+                receiver: evaluatorUsername,
                 status: "pending"
             }
         })
