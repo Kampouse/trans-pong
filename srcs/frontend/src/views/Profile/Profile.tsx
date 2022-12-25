@@ -157,15 +157,6 @@ function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userCli
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
     const [friendRequests, setFriendRequests ] = useState(data.friendRequests);
 
-    const handleAcceptRequest = (currentRequest) =>
-    {
-    }
-
-    const handleRefuseRequest = (currentRequest) =>
-    {
-
-    }
-
     return (
     <div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
@@ -177,7 +168,7 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
                     <li className="py-4" key={currentRequest.fromUser}>
                         <div className="flex items-center space-x-4">
                             <div className="shrink-0">
-                                <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentRequest.fromPhoto}alt="" // onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
+                                <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentRequest.fromPhoto} alt="" // onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
                                 />
                             </div>
                             <div className="min-w-0 flex-1">
@@ -187,10 +178,18 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
                                 </p>
                             </div>
                             <div className='flex w-fit justify-end'>
-                                <IconButton onClick={() => {handleAcceptRequest({currentRequest});}}>
+                                <IconButton onClick={() =>
+                                {
+                                    // TODO: Add form post request to update friendRequest here
+                                    console.log("Call acceptRequest for " + currentRequest.fromUser)
+                                }}>
                                     <CheckCircle sx={{ color: blue[700] }} />
                                 </IconButton>
-                                <IconButton onClick={() => {handleRefuseRequest({currentRequest});}}>
+                                <IconButton onClick={() => 
+                                {
+                                    // TODO: Add form post request to update friendRequest here
+                                    console.log("Call request denyRequest for " + currentRequest.fromUser)
+                                }}>
                                     <Cancel sx={{ color: blue[700] }} />
                                 </IconButton>
                             </div>
