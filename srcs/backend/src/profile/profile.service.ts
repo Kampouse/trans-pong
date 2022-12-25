@@ -684,7 +684,9 @@ export class ProfileService
             return (false)
         }
 
-
+        //  Put the username with a capital first letter and the rest in lowercase
+        newUsername = newUsername.toLowerCase();
+        newUsername = newUsername.at(0).toUpperCase() + newUsername.substring(1);
         try
         {
             await prisma.user.update({
@@ -692,7 +694,7 @@ export class ProfileService
                     login42: login42
                 },
                 data: {
-                    username: newUsername.toLowerCase(),
+                    username: newUsername,
                 }
             })
         }

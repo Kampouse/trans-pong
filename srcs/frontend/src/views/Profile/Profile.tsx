@@ -404,91 +404,141 @@ export function EditProfile({ open, onClose} : EditProfileProps)
 
 export default function Profile()
 {
-	const [value, setValue] = useState("1");
-	const [openUserOptions, setOpenUserOptions] = useState(false);
-	const [hover, setHover] = useState(false);
-	const [openEditProfile, setOpenEditProfile] = useState(false);
-	const userClicked = useRef(null);
 
-    //  Snackbar code for error handeling (maybe? ask gasselin)
-	const [openSnackbar, setOpenSnackbar] = useState(false);
-	const snackbarMsg = useRef('')
+    //  =============== View options            =============== //
+    /*
+        Value usestate is used to know what option is selected between profile information:
+
+            1 == Match history
+            2 == Friend request
+            3 == Friend Requests
+            4 == Achievements
+            5 == Game stats
+    */
+
+    const [value, setValue] = useState("1");
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => { setValue(newValue);};
+
+    //  =============== User options            =============== //
+    /*
+        User options is option's when you click on a user.
+        This is here that we want to possibly:
+
+        1) View user profile
+        2) Add this user
+        3) Invite this user to play a pong game
+        4) Invite this user to chat
+        5) Block this user
+    */
+
+    //  True or false (if we should render user option's)
+    const [openUserOptions, setOpenUserOptions] = useState(false);
+
+    //  The user that is clicked (information to do logic with user options)
+    const userClicked = useRef(null);
+
+    //  Usestate on hover a user ?
+    const [hover, setHover] = useState(false);
+
+    //  =============== Edit Profile            =============== //
+    const [openEditProfile, setOpenEditProfile] = useState(false);
+
+
+    //  =============== ScnackBar               =============== //
+
+    /*
+        Initially we were using snackbar for displaying succes or not
+        on user edit information. Right now the backend with edit option
+        is done, and since the page get refresh, the snackbar was not
+        displayed.
+
+        TODO :  Implement edit user information error message or success
+                on the snackbar after:
+
+                    1) User edit options
+                    2) Friend requests (sent or accepted)
+                    3) Block a user
+                    4) Invite to game's ?
+                    5) Invite to chat ?
+                    6) Matchmaking Queue status?
+                    7) Achievement unlocked displayed here?
+
+    */
+
+    //  Whether we open the snackbar or close it
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+    //  Snack Bar message displayed
+    const snackbarMsg = useRef('')
+
+    //  Snack Bar Severity difine the color of the snackbar
     const snackbarSeverity = useRef<AlertColor | undefined>('success')
 
-    //  Get the username with use params
-	const { username } = useParams();
+    //  =============== Profile information     =============== //
 
-    //  Get the JSON data from the fetch method
-	const {profileReq: data} = useFetch(username);
+    /*
+        If the user is on DNS/profile :
+            Get private profile information (edit options and friend requests)
 
-    //  Handle the change of username
-	const handleChange = (event: React.SyntheticEvent, newValue: string) => 
-    {
-        setValue(newValue);
-    };
+        If the user is on DNS/profile/username :
+            Get the public profile information (edit option disactivated)
+    */
 
-  return (
-		<div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[400px] w-fit font-Merriweather">
-			<div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
-				{data &&
-					(
-						<>
-							<div className='w-full h-[25%] flex'>
-								<div className='w-fit h-full px-2 flex items-center justify-center'>
-									{ username === undefined && hover && 
-										<div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
-											<Edit sx={{color: blue[700], height: 35, width: 35}} />
-										</div>
-									}
-									<img 
-										className={`rounded-full h-full border-4 border-blue-700 h-[75%] mx-auto relative ${username === undefined && hover ? 'brightness-[.25] cursor-pointer' : ''}`}
-										src={data.imagePath}
-										alt="Edit"
-										onMouseEnter={() => {if (username === undefined) setHover(true);} }
-										onMouseLeave={() => {if (username === undefined) setHover(false);} }
-										onClick={() => {if (username === undefined) {setOpenEditProfile(true); setHover(false);}}}
-									/>
-								</div>
-								<div className='w-[50%] h-full flex  mx-auto'>
-									<div className='h-fit my-auto'>
-										<p className='text-3xl font-bold '>{ data.username }</p>
-										<p className="text-lg"><span className={getStatusCSS(data.status)}>●</span> {data.status[0].toUpperCase() + data.status.substring(1)}</p>
-									</div>
-								</div>
-							</div>
-							<TabContext value={value}>
-								<div className='w-[100%] h-fit p-1 mx-auto '>
-									<Box>
-										<TabList value={value} onChange={handleChange} variant='scrollable' allowScrollButtonsMobile scrollButtons>
-												<Tab icon={<History />} label="HISTORY" sx={{ fontWeight: 'bold' }} value="1" />
-												<Tab icon={<Favorite />} label="FRIENDS" sx={{ fontWeight: 'bold' }} value="2" />
-												{username === undefined &&
-													<Tab icon={<PersonAdd />} label="REQUESTS" sx={{ fontWeight: 'bold' }} value="3" />
-												}
-												<Tab icon={<EmojiEvents />} label="TROPHIES" sx={{ fontWeight: 'bold' }} value="4" />
-												<Tab icon={<Equalizer />} label="STATS" sx={{ fontWeight: 'bold' }} value="5" />
-										</TabList>
-									</Box>
-								</div>
+    const { username } = useParams();
+    const {profileReq: data} = useFetch(username);
 
-								<div className='grow overflow-hidden'>
-									<div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
-										<TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-										<TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-										{username === undefined &&
-											<TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-										}
-										<TabPanel value="4"><Achievements data={data} /></TabPanel>
-										<TabPanel value="5"><Stats data={data} /></TabPanel>
-									</div>
-								</div>
-							</TabContext>
-						</>
-					)
-				}
-			</div>
-			<EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} />
-			<GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
-		</div>
+
+    return (
+    <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Merriweather">
+        <div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
+            {data && (
+            <>
+            <div className='w-full h-[30%] flex py-4 px-5'>
+                <div className='w-fit h-full flex'>
+                    {username === undefined && hover && 
+                    <div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
+                        <Edit sx={{color: blue[700], height: 35, width: 35}} />
+                    </div>}
+                    <img className={`rounded-full h-full border-4 border-blue-700 mx-auto relative ${username === undefined && hover ? 'brightness-[.25] cursor-pointer' : ''}`}
+                        src={data.imagePath}
+                        alt="Edit"
+                        onMouseEnter={() => {if (username === undefined) setHover(true);} }
+                        onMouseLeave={() => {if (username === undefined) setHover(false);} }
+                        onClick={() => {if (username === undefined) {setOpenEditProfile(true); setHover(false);}}}/>
+                </div>
+                <div className='w-[50%] h-full flex mx-auto'>
+                    <div className='h-fit my-auto'>
+                        <p className='text-4xl font-Merriweather '>{ data.username }</p>
+                        <p className="text-lg font-Merriweather pt-2"><span className={getStatusCSS(data.status)}>●</span> {data.status[0].toUpperCase() + data.status.substring(1)}</p>
+                    </div>
+                </div>
+            </div>
+            <TabContext value={value}>
+                <div className='w-[100%] h-fit p-1 mx-auto '>
+                    <Box>
+                        <TabList value={value} onChange={handleChange} variant='scrollable' allowScrollButtonsMobile scrollButtons>
+                            <Tab icon={<History />} label="Match History" sx={{ fontWeight: 'bold' }} value="1" />
+                            <Tab icon={<Favorite />} label="Friends" sx={{ fontWeight: 'bold' }} value="2" />
+                                {username === undefined && <Tab icon={<PersonAdd />} label="Friend Requests" sx={{ fontWeight: 'bold' }} value="3" />}
+                            <Tab icon={<EmojiEvents />} label="Achievements" sx={{ fontWeight: 'bold' }} value="4" />
+                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="5" />
+                        </TabList>
+                    </Box>
+                </div>
+                <div className='grow overflow-hidden'>
+                    <div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
+                        <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+                        <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+                            {username === undefined && <TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>}
+                        <TabPanel value="4"><Achievements data={data} /></TabPanel>
+                        <TabPanel value="5"><Stats data={data} /></TabPanel>
+                    </div>
+                </div>
+            </TabContext>
+            </>)}
+        </div>
+        <EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} />
+        <GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
+        </div>
   );
 }

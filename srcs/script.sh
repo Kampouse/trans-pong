@@ -5,6 +5,7 @@ if [ ! -f ./backend/.env ]; then
     echo "CLIENT_SECRET=${CLIENT_SECRET}" >> ./backend/.env
     echo "JWT_KEY=${JWT_KEY}" >> ./backend/.env
     echo "export const login = async () => {window.location.href = \""${REDIRECT}"\"}" >> ./frontend/src/views/Login/login.42api.tsx
+    sleep 2
     exit 0
 fi
 
