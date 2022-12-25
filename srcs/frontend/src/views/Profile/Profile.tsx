@@ -123,101 +123,80 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
 
 function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>})
 {
-  return (
-    <div className="flex h-[100%] flex-col -my-4">
-        <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
-            <div className="flow-root overflow-y-scroll scrollbar-hide">
-                <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
-                    {data.friendList.map((currentUser) =>
-                    {
-                        return (
-                            <li className="py-4">
-                                <div className="flex items-center space-x-4">
-                                    <div className="shrink-0">
-                                        <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentUser.friendPhoto} alt="" onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}/>
+    return (
+        <div className="flex h-[100%] flex-col -my-4">
+            <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
+                <div className="flow-root overflow-y-scroll scrollbar-hide">
+                    <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
+                        {data.friendList.map((currentFriend) =>
+                        {
+                            return (
+                                <li className="py-4" key={currentFriend.friendUser}>
+                                    <div className="flex items-center space-x-4">
+                                        <div className="shrink-0">
+                                            <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {setOpenUserOptions(true); userClicked.current = currentFriend;}}/>
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {setOpenUserOptions(true); userClicked.current = currentFriend;}}>
+                                                {currentFriend.friendUser}
+                                            </p>
+                                            <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentFriend.friendStatus)}>●</span> {currentFriend.friendStatus[0].toUpperCase() + currentFriend.friendStatus.substring(1)}</p>
+                                        </div>
                                     </div>
-                                    <div className="min-w-0 flex-1">
-                                        <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}>
-                                            {currentUser.friendUser}
-                                        </p>
-                                        <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentUser.friendStatus)}>●</span> {currentUser.friendStatus[0].toUpperCase() + currentUser.friendStatus.substring(1)}</p>
-                                    </div>
-                                </div>
-                            </li>);
-                    })}
-                </ul>
+                                </li>);
+                        })}
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-  );
+    );
 }
 
 //  =============== Friend requests component   =============== //
 
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
-	const [friendRequests, setFriendRequests ] = useState(data.friendRequests);
+    const [friendRequests, setFriendRequests ] = useState(data.friendRequests);
 
-	const deleteRequest = (currentUser) => {
-		setFriendRequests(
-      friendRequests.filter((request) => {
-        return request.fromUser != currentUser.fromUser;
-      })
-    );
+    const handleAcceptRequest = (currentUser) =>
+    {
+    }
 
-		const userIndex = data.friendRequests.findIndex((user) => currentUser.fromUser === user.fromUser);
-		if (userIndex > -1) {
-			// data.friendRequests.splice(userIndex, 1);
-			// Replace with push to delete request in queue
-		}
-	}
+    const handleRefuseRequest = (currentUser) =>
+    {
 
-	const handleAcceptRequest = (currentUser) => {
-		// data.friendList.push(currentUser);
-		// Replace with push to add friend to friendList
-		deleteRequest({currentUser});
-	}
+    }
 
-	return (
+    return (
     <div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
         <div className="flow-root overflow-y-scroll scrollbar-hide">
-          <ul
-            role="list"
-            className="divide-y divide-gray-500 dark:divide-slate-300"
-          >
-						{ friendRequests.map((currentUser) => {
-							return (
-								<li id='request' className="py-4">
-									<div className="flex items-center space-x-4">
-										<div className="shrink-0">
-											<img
-												className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer"
-												src={currentUser.fromPhoto}
-												alt=""
-												// onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
-											/>
-										</div>
-										<div className="min-w-0 flex-1">
-											<p 
-												className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2"
-												// onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
-											>
-												{currentUser.fromUser}
-											</p>
-										</div>
-										<div className='flex w-fit justify-end'>
-											<IconButton onClick={() => {handleAcceptRequest({currentUser});}}>
-												<CheckCircle sx={{ color: blue[700] }} />
-											</IconButton>
-											<IconButton onClick={() => {deleteRequest({currentUser});}}>
-												<Cancel sx={{ color: blue[700] }} />
-											</IconButton>
-										</div>
-									</div>
-								</li>
-							);
-						})}
-          </ul>
+          <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
+            { data.friendRequests.map((currentUser) =>
+            {
+                return (
+                    <li id='request' className="py-4">
+                        <div className="flex items-center space-x-4">
+                            <div className="shrink-0">
+                                <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentUser.fromPhoto}alt="" // onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
+                                />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" // onClick={() => {setOpenUserOptions(true); userClicked.current = currentUser;}}
+                                >
+                                    {currentUser.fromUser}
+                                </p>
+                            </div>
+                            <div className='flex w-fit justify-end'>
+                                <IconButton onClick={() => {handleAcceptRequest({currentUser});}}>
+                                    <CheckCircle sx={{ color: blue[700] }} />
+                                </IconButton>
+                                <IconButton onClick={() => {handleRefuseRequest({currentUser});}}>
+                                    <Cancel sx={{ color: blue[700] }} />
+                                </IconButton>
+                            </div>
+                        </div>
+                    </li>);})}
+            </ul>
         </div>
       </div>
     </div>
@@ -275,7 +254,6 @@ function Achievements({data}: {data: any}) {
         </div>
 	    );
 }
-
 
 //  =============== Stats component       =============== //
 
@@ -341,7 +319,6 @@ function Stats({data}: {data: any})
 }
 
 //  =============== Edit profile component      =============== //
-
 
 export interface EditProfileProps
 {
