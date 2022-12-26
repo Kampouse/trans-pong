@@ -736,4 +736,88 @@ export class ProfileService
         }
         return ({success: "sucess"});
     }
+
+    async addFriend(login42: string, newFriend: string)
+    {
+
+        //  First, find the login42 linked with the newFriend username
+        var user;
+
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: newFriend
+                }
+            })
+    
+            //  If the user dosent exist, return 
+            if (!user)
+            {
+                return;
+            }
+        }
+        catch{}
+
+        //  Then look if the two user pair in friend request already exist 
+        try
+        {
+            var requestExist = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver: {
+                        sender: login42,
+                        receiver: user.login42
+                    }
+                }
+            })
+
+            if (requestExist)
+            {
+                return;
+            }
+
+            if (!requestExist)
+            {
+                var requestExist = await prisma.friendRequest.findUnique({
+                    where: {
+                        sender_receiver: {
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }
+                })
+
+                if (requestExist)
+                {
+                    await prisma.friendRequest.update({
+                        where :
+                        {
+                            sender_receiver: {
+                                sender: user.login42,
+                                receiver: login42
+                            }
+                        },
+                        data: {
+                            status: "accepted"
+                        }
+                    })
+                    requestExist.status = "accepted"
+                    return;
+                }
+            }
+        }
+        catch{}
+
+        //  If we are here, the request dosen't exist so lets create it
+        try
+        {
+            await prisma.friendRequest.create({
+                data: {
+                    sender: login42,
+                    receiver: user.username
+                }
+            })
+        }
+        catch{}
+    }
 }

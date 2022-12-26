@@ -96,4 +96,20 @@ export class ProfileController {
         }
         return {statCode: 302, url: "http://localhost:5173/Profile" }
     }
+
+    @Get('/add/:username')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async addFriend(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<any>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        console.log(login42)
+        if (login42 == null)
+        {
+            return ({error: "Authentification failed"});
+        }
+
+        this.profileService.addFriend(login42 ,username);
+        return;
+    }
 }

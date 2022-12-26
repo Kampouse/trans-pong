@@ -1,4 +1,3 @@
-import { User } from '../../utils/types';
 import { Tab, Box, IconButton, Dialog, DialogContent, DialogTitle, Switch } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import React, { useState, useRef, useEffect } from 'react';
@@ -8,6 +7,7 @@ import { useParams } from 'react-router';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 import { AlertColor } from '@mui/material';
 import { UserOption } from '../UserOptions/User.Option'
+import Error404 from 'views/Error/Error404';
 
 //  =============== User status         =============== //
 
@@ -149,6 +149,15 @@ function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userCli
 
 //  =============== Friend requests component   =============== //
 
+//  Accept request GET request
+async function acceptRequest(username: string)
+{
+    await fetch('http://localhost:3000/profile/add/' + username)
+    .then(function(){})
+    .catch(function() {console.log("error");});
+    window.location.reload();
+}
+
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
 
     return (
@@ -172,11 +181,7 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
                                 </p>
                             </div>
                             <div className='flex w-fit justify-end'>
-                                <IconButton onClick={() =>
-                                {
-                                    // TODO: Add form post request to update friendRequest here
-                                    console.log("Call acceptRequest for " + currentRequest.fromUser)
-                                }}>
+                                <IconButton onClick={() => {acceptRequest(currentRequest.fromUser);}}>
                                     <CheckCircle sx={{ color: blue[700] }} />
                                 </IconButton>
                                 <IconButton onClick={() => 
@@ -456,6 +461,12 @@ export default function Profile()
     const { username } = useParams();
     const {profileReq: data} = useFetch(username);
 
+    if (data == null || data.error == true)
+    {
+        return (
+            <Error404></Error404>
+        )
+    }
 
     return (
     <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
