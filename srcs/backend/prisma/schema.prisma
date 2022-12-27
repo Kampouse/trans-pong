@@ -51,7 +51,6 @@ model Block{
     blockID             String                          @id @default(cuid())
     blocker             String
     blocked             String
-    reason              String                          @default("None")
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
 

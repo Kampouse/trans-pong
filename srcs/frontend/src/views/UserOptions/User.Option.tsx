@@ -14,7 +14,15 @@ export function UserOption({open, onClose, userClicked})
     {
         await fetch('http://localhost:3000/profile/add/' + username)
         .then(function(){})
-        .catch(function() {console.log("error");});
+        .catch(function() {console.log("error on adding " + username);});
+        window.location.reload();
+    }
+
+    async function blockUser(username: string)
+    {
+        await fetch('http://localhost:3000/profile/block/' + username)
+        .then(function(){})
+        .catch(function() {console.log("error on blocking " + username);});
         window.location.reload();
     }
 
@@ -58,7 +66,7 @@ export function UserOption({open, onClose, userClicked})
                 <div className='py-4 mb-2'>
                     <button name='blockUserEvent' className={buttonCss} onClick={() =>
                         {
-                            //  Event on click blockUserEvent
+                            blockUser(username);
                             console.log("Insert event block " + username)
                         }}>
                         Block user

@@ -37,7 +37,6 @@ const getStatusCSS = (status) =>
 }
 
 //  =============== Fetch database info =============== //
-
 const useFetch = (username) => {
 	const [profileReq, setProfileReq] = useState<any>(null);
 	// const [loggedinReq, setLoggedinReq] = useState<any>(null);
@@ -154,9 +153,18 @@ async function acceptRequest(username: string)
 {
     await fetch('http://localhost:3000/profile/add/' + username)
     .then(function(){})
-    .catch(function() {console.log("error");});
+    .catch(function() {console.log("error on accept friend request fetch");});
     window.location.reload();
 }
+
+async function denyRequest(username: string)
+{
+    await fetch('http://localhost:3000/profile/deny/' + username)
+    .then(function(){})
+    .catch(function() {console.log("error on deny request fetch");});
+    window.location.reload();
+}
+
 
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
 
@@ -184,11 +192,7 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
                                 <IconButton onClick={() => {acceptRequest(currentRequest.fromUser);}}>
                                     <CheckCircle sx={{ color: blue[700] }} />
                                 </IconButton>
-                                <IconButton onClick={() => 
-                                {
-                                    // TODO: Add form post request to update friendRequest here
-                                    console.log("Call denyRequest for " + currentRequest.fromUser)
-                                }}>
+                                <IconButton onClick={() => {denyRequest(currentRequest.fromUser);}}>
                                     <Cancel sx={{ color: blue[700] }} />
                                 </IconButton>
                             </div>
@@ -459,13 +463,11 @@ export default function Profile()
     */
 
     const { username } = useParams();
-    const {profileReq: data} = useFetch(username);
+	const {profileReq: data} = useFetch(username);
 
-    if (data == null || data.error == true)
+    if (data && data.error == true)
     {
-        return (
-            <Error404></Error404>
-        )
+        return (<Error404></Error404>);
     }
 
     return (

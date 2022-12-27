@@ -1,6 +1,6 @@
 import { Req, Res, Controller, Get, Header, Param, Post, UseInterceptors, Body, Redirect} from "@nestjs/common";
 import { ProfileService } from "./profile.service";
-import { UpdateUsernameDto } from "src/dtos/profile.dtos";
+import { PrivateProfileDto, PublicProfileDto, UpdateUsernameDto } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { UploadedFile } from "@nestjs/common";
@@ -13,32 +13,30 @@ export class ProfileController {
 
     //  Get the private profile information of the user logged
     @Get()
-    async getProfileEdit(@Req() request: RequestWithUser) : Promise<any>
+    async getProfileEdit(@Req() request: RequestWithUser) : Promise<PrivateProfileDto>
     {
         const login42 =  await this.profileService.authentificate(request);
 
-        if (!login42)
+        if (login42 == undefined)
         {
-            return {error: "Authentification failed"};
+            return (await this.profileService.getProfileEdit(undefined));
         }
 
-        //  Add userID validation when auth is done by JP
-        const privateProfile = await this.profileService.getProfileEdit(login42);
+        const privateProfile: PrivateProfileDto = await this.profileService.getProfileEdit(login42);
         return (privateProfile);
     }
 
     //  Get the public profile information of the username in /username
     @Get(':username')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async getProfilePublic(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<any>
+    async getProfilePublic(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<PublicProfileDto>
     {
         const login42 =  await this.profileService.authentificate(request);
  
-        if (login42 == null)
+        if (login42 == undefined || username == undefined)
         {
-            return ({error: "Authentification failed"});
+            return (await this.profileService.getProfilePublic(undefined));
         }
-
         const publicProfile = await this.profileService.getProfilePublic(username);
         return (publicProfile);
     }
@@ -63,7 +61,7 @@ export class ProfileController {
     {
         const login42 =  await this.profileService.authentificate(request);
 
-        if (!login42 || file == undefined)
+        if (login42 == undefined || file == undefined)
         {
             return {statCode: 302, url: "http://localhost:5173/Profile" }
         }
@@ -103,13 +101,42 @@ export class ProfileController {
     {
         const login42 =  await this.profileService.authentificate(request);
 
-        console.log(login42)
-        if (login42 == null)
+        if (login42 == undefined || username == undefined)
         {
             return ({error: "Authentification failed"});
         }
 
         this.profileService.addFriend(login42 ,username);
+        return;
+    }
+
+    @Get('/deny/:username')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async denyRequest(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<any>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined || username == undefined)
+        {
+            return ({error: "Authentification failed"});
+        }
+
+        this.profileService.denyRequest(login42 , username);
+        return;
+    }
+
+    @Get('/block/:username')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async blockUser(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<any>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined || username == undefined)
+        {
+            return ({error: "Authentification failed"});
+        }
+
+        this.profileService.blockUser(login42 , username);
         return;
     }
 }

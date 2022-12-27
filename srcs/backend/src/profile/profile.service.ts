@@ -820,4 +820,135 @@ export class ProfileService
         }
         catch{}
     }
+
+    async denyRequest(login42: string, sender: string)
+    {
+        //  First, find the login42 linked with the newFriend username
+        var user;
+
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: sender
+                }
+            })
+
+            //  If the user dosent exist, return 
+            if (!user)
+            {
+                return;
+            }
+        }
+        catch{}
+
+        //  Then, we look for the request this username -> login42 has sent an deny it
+        try
+        {
+            var requestExist = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver: {
+                        sender: user.login42,
+                        receiver: login42
+                    }
+                }
+            })
+
+            //  Then we change the request status to denied
+            if (requestExist)
+            {
+                await prisma.friendRequest.update({
+                    where: {
+                        sender_receiver: {
+                            sender:  user.login42,
+                            receiver: login42}},
+                    data: {
+                        status: "declined",
+                    }
+                })
+            }
+        }
+        catch {}
+        return;
+    }
+
+    async blockUser(login42: string, userToBlock: string)
+    {
+        //  First, find the user associated with userToBlock
+        var user;
+
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: userToBlock
+                }
+            })
+
+            //  If the user dosent exist, return
+            if (!user)
+            {
+                return;
+            }
+        }
+        catch{}
+
+        //  Create a block rule in the database
+        try
+        {
+            await prisma.block.create({
+                data: {
+                    blocker: login42,
+                    blocked: user.login42
+                }
+            })
+
+            //  Remove friend request if they were friends
+            var request = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver :{
+                        sender: login42,
+                        receiver: user.login42
+                    }
+                }
+            })
+
+            if (request)
+            {
+                await prisma.friendRequest.delete({
+                    where: {
+                        sender_receiver: {
+                            sender: login42,
+                            receiver: user.login42
+                        }
+                    }
+                })
+            }
+
+            if (!request)
+            {
+                request = await prisma.friendRequest.findUnique({
+                    where: {
+                        sender_receiver :{
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }
+                })
+            }
+
+            if (request)
+            {
+                await prisma.friendRequest.delete({
+                    where: {
+                        sender_receiver: {
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }
+                })
+            }
+        }
+        catch {}
+    }
 }
