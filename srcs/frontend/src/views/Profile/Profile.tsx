@@ -1,5 +1,6 @@
-import { Tab, Box, IconButton, Dialog, DialogContent, DialogTitle, Switch } from '@mui/material'
+import { Tab, Box, IconButton, Dialog, DialogContent, DialogTitle } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
+import { GoogleAuth } from 'views/GoogleAuth/google.auth';
 import React, { useState, useRef, useEffect } from 'react';
 import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
 import { blue } from '@mui/material/colors';
@@ -8,6 +9,7 @@ import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 import { AlertColor } from '@mui/material';
 import { UserOption } from '../UserOptions/User.Option'
 import Error404 from 'views/Error/Error404';
+
 
 //  =============== User status         =============== //
 
@@ -37,9 +39,9 @@ const getStatusCSS = (status) =>
 }
 
 //  =============== Fetch database info =============== //
-const useFetch = (username) => {
+const useFetch = (username) =>
+{
 	const [profileReq, setProfileReq] = useState<any>(null);
-	// const [loggedinReq, setLoggedinReq] = useState<any>(null);
 	
 	useEffect(() => {
 		fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "") , {
@@ -164,7 +166,6 @@ async function denyRequest(username: string)
     .catch(function() {console.log("error on deny request fetch");});
     window.location.reload();
 }
-
 
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
 
@@ -332,49 +333,58 @@ export interface EditProfileProps
 }
 
 
+
 export function EditProfile({open, onClose} : EditProfileProps)
 {
-    const [isChecked, setIsChecked] = useState(false);
+    //  =============== Google auth             =============== //
+    
+    const [openGoogleAuth, setOpenGoogleAuth] = useState(false);
+
+    //  Here, look if an authentificator already exist. Return in consequences.
 
     return (
-        <Dialog onClose={onClose} open={open} className="font-Merriweather">
+        <Dialog onClose={onClose} open={open} className="font-Raleway">
         <div className=" w-96">
             <DialogTitle className='bg-sky-200'>
-                <p className=' text-center font-Merriweather font-bold text-3xl '>
+                <p className=' text-center font-Raleway font-bold text-3xl '>
                     Edit Profile
                 </p>
             </DialogTitle>
             <DialogContent className="bg-sky-200 flex flex-col">
                 <div className='my-2'>
-                    <p className='font-bold text-center my-2 px-1 text-lg'>
+                    <p className=' font-Raleway font-bold text-center my-2 px-1 text-lg'>
                         Change username
                     </p>
                     <div className=''>
                         <form action='http://localhost:3000/profile/update/username' method='POST'>
-                            <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-5 mx-[10%]' placeholder="Enter New Display Name"/>
-                            <button className='h-fit w-fit my-2 mx-[38%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
+                            <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
+                            <button className='h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                         </form>
                     </div>
                 </div>
                 <div className='my-2'>
-                    <p className='font-bold text-center my-2 px-1 text-lg'>
+                    <p className='font-Raleway font-bold text-center my-2 px-1 text-lg'>
                         Upload new Photo
                     </p>
                     <div>
                         <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data'>
                                 <input accept="image/*" type="file" name='file' className=' justify-center'></input>
-                                <button className='h-fit w-fit my-2 mx-[38%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Upload</button>
+                                <button className='h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Upload</button>
                         </form>
                     </div>
                 </div>
-                <div className='my-2'>
-                    <p className='py-1'>2-Way Authentification</p>
-                    <div className='flex pl-8 h-fit w-fit'>
-                        <Switch checked={isChecked} onChange={(evt) => {setIsChecked(evt.target.checked)}} />
+                <div className=' text-center my-2 px-1 '>
+                    <p className='py-1 font-Raleway font-bold text-lg'>Google Auth</p>
+                    <p className='py-1 text-sm'></p>
+                    <div>
+                        <button className='h-fit w-fit my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white' onClick={() =>{setOpenGoogleAuth(true)}}>
+                            Activate
+                        </button>
                     </div>
                 </div>
             </DialogContent>
         </div>
+        <GoogleAuth open={openGoogleAuth} onClose={() => setOpenGoogleAuth(false)}></GoogleAuth>
         </Dialog>
     );
 }

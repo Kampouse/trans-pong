@@ -75,7 +75,7 @@ export class ProfileController {
     //  TODO: add authentification validation
     @Post('update/username')
     @Redirect()
-    async updateUsername(@Body() updateUsernameDto: UpdateUsernameDto, @Req() request: RequestWithUser, @Res() res) : Promise<any>
+    async updateUsername(@Body() updateUsernameDto: UpdateUsernameDto, @Req() request: RequestWithUser) : Promise<any>
     {
         const login42 =  await this.profileService.authentificate(request);
 
@@ -138,5 +138,35 @@ export class ProfileController {
 
         this.profileService.blockUser(login42 , username);
         return;
+    }
+
+    @Get('create/googleAuth')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async createAuth(@Req() request: RequestWithUser) : Promise<any>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined)
+        {
+            return ('failed');
+        }
+        return (this.profileService.createAuth(login42));
+    }
+
+    @Post('create/validation')
+    @Redirect()
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async validateCreation(@Body() token, @Req() request: RequestWithUser) : Promise<any>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined || token == undefined)
+        {
+            return {statCode: 302, url: "http://localhost:5173/Profile" }
+        }
+
+        console.log(token.token);
+        const status = this.profileService.creationValidation(login42, token.token)
+        return {statCode: 302, url: "http://localhost:5173/Profile" }
     }
 }

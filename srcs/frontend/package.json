@@ -29,6 +29,8 @@
       "@mui/lab": "5.0.0-alpha.109",
       "@mui/material": "^5.10.13",
       "@types/react-router": "^5.1.18",
+      "@types/qrcode": "^1.5.0",
+      "qrcode.react": "^3.1.0",
       "i": "^0.3.7",
       "jotai": "^1.9.1",
       "passport-42": "^1.2.6",

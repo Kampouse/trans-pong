@@ -7,7 +7,7 @@ export function UserOption({open, onClose, userClicked})
     var redirect = "http://localhost:5173/profile/" + username;
 
     //  CSS style for button
-    const buttonCss = 'bg-slate-100 text-2xl font-Raleway hover:bg-purple-100 ring-1 ring-slate-500 rounded-lg mx-[25%] w-[50%] h-12 bg-white'
+    const buttonCss = 'bg-slate-100 text-2xl font-Raleway hover:bg-purple-100 ring-1 ring-slate-500 rounded-lg mx-[25%] w-[50%] h-12'
 
     //  Get request for adding a friend
     async function addFriend(username: string)
@@ -38,10 +38,7 @@ export function UserOption({open, onClose, userClicked})
                     </button>
                 </div>
                 <div className='py-4'>
-                    <button name='addFriendButton' className={buttonCss} onClick={() =>
-                        {
-                            addFriend(username)
-                        }}>
+                    <button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username)}}>
                         Add friend
                     </button>
                 </div>

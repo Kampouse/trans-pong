@@ -17,6 +17,7 @@ model User {
     userStatus          userStatus                      @default(online)
     imagePath           String                          @default("/defaultPhoto.png")
     authentificator     Boolean                         @default(false)
+    authKey             String?
     achievement         Achievement?
     channels            Channel[]
     createdAt           DateTime                        @default(now())

@@ -951,4 +951,108 @@ export class ProfileService
         }
         catch {}
     }
+
+    async createAuth(login42: string)
+    {
+        'use strict';
+
+        var authentificator = require('authenticator');
+
+        var formattedKey = authentificator.generateKey();
+
+        var user;
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+
+            if (!user || user.authenticator == true)
+            {
+                return ({QRcode: 'failed'});
+            }
+
+            await prisma.user.update({
+                where: {
+                    login42: login42
+                },
+                data: {
+                    authKey: formattedKey
+                }
+            })
+
+            var otAuth = authentificator.generateTotpUri(formattedKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
+            return ({QRcode: otAuth});
+        }
+        catch
+        {}
+
+    }
+    
+    async creationValidation(login42: string, token: string)
+    {
+        'use strict';
+
+        var authentificator = require('authenticator');
+
+        //  Validate token entered and format it
+        token.trim();
+        if (token.length != 6 && !(token.length == 7 && token[3] == ' '))
+        {
+            return (null)
+        }
+
+        var formattedToken;
+
+        if (token.length == 7)
+        {
+            formattedToken = token.substring(0,3) + token.substring(4, 7);
+        }
+        else
+        {
+            formattedToken = token;
+        }
+
+        console.log(formattedToken);
+
+        var user;
+
+        //  Get user and protection
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+
+            if (!user || !user.authKey)
+            {
+                return (null);
+            }
+        }
+        catch{}
+
+        var status = authentificator.verifyToken(user.authKey, formattedToken);
+
+        if (status != null)
+        {
+            try
+            {
+                await prisma.user.update({
+                    where: {
+                        login42: login42
+                    },
+                    data: {
+                        authentificator: true
+                    }
+                })
+            }
+            catch{}
+        }
+        return (status)
+
+    }
 }
