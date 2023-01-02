@@ -14,9 +14,10 @@ model User {
     jwtToken            String?
     login42             String                          @unique
     username            String                          @unique
-    userStatus          userStatus                      @default(offline)
+    userStatus          userStatus                      @default(online)
     imagePath           String                          @default("/defaultPhoto.png")
     authentificator     Boolean                         @default(false)
+    authKey             String                          @default("none")
     achievement         Achievement?
     channels            Channel[]
     createdAt           DateTime                        @default(now())
@@ -51,7 +52,6 @@ model Block{
     blockID             String                          @id @default(cuid())
     blocker             String
     blocked             String
-    reason              String                          @default("None")
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
 

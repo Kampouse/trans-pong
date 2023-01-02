@@ -1,11 +1,14 @@
 import { PrismaClient } from "@prisma/client";
+import { exit } from "process";
 
 //  Create a seed which will create data in our database for testing
 async function main()
 {
     const prisma = new PrismaClient();
-    console.log("starting seed script")
+    console.log("Starting seed script.")
 
+    //  { is for hide all the code to be abble to add friend to the evaluator user
+    {
     //  Create 9 users for test's
     console.log("Creating 9 users")
 
@@ -440,7 +443,7 @@ async function main()
             create: {
                 gameNumber: 2,
                 leftPlayer: 'tberube',
-                leftPlayerScore: 40,
+                leftPlayerScore: 1,
                 rightPlayer: 'jvigneau',
                 rightPlayerScore: 3,
                 active: false,
@@ -987,6 +990,481 @@ async function main()
                 active: false,
                 winner: 'jvigneau',
             },
+        })
+    }
+    catch{}
+    }
+
+    //  Add evaluator login42 here for seed data
+    var     evaluatorUsername = 'evaluator'
+
+    var user;
+
+    try
+    {
+        user = await prisma.user.findUnique({
+            where: {
+                login42: evaluatorUsername
+            }
+        })
+    }
+    catch
+    {}
+
+    if (!user)
+    {
+        exit(0);
+    }
+    //  Add everyone as friend
+    try
+    {
+        await prisma.friendRequest.upsert({
+            where: {
+                friendRequestNumber: 13,
+            },
+            update: {},
+            create: {
+                friendRequestNumber: 13,
+                sender: evaluatorUsername,
+                receiver: "jvigneau",
+                status: "accepted"
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.upsert({
+            where: {
+                friendRequestNumber: 14,
+            },
+            update: {},
+            create: {
+                friendRequestNumber: 14,
+                sender: "mleblanc",
+                receiver: evaluatorUsername,
+                status: "pending"
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.upsert({
+            where: {
+                friendRequestNumber: 15,
+            },
+            update: {},
+            create: {
+                friendRequestNumber: 15,
+                sender: "gcollet",
+                receiver: evaluatorUsername,
+                status: "pending"
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.upsert({
+            where: {
+                friendRequestNumber: 16,
+            },
+            update: {},
+            create: {
+                friendRequestNumber: 16,
+                sender: "alvachon",
+                receiver: evaluatorUsername,
+                status: "pending"
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.upsert({
+            where: {
+                friendRequestNumber: 17,
+            },
+            update: {},
+            create: {
+                friendRequestNumber: 17,
+                sender: evaluatorUsername,
+                receiver: "jbadia",
+                status: "accepted"
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.upsert({
+            where: {
+                friendRequestNumber: 18,
+            },
+            update: {},
+            create: {
+                friendRequestNumber: 18,
+                sender: evaluatorUsername,
+                receiver: "gehebert",
+                status: "accepted"
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.upsert({
+            where: {
+                friendRequestNumber: 19,
+            },
+            update: {},
+            create: {
+                friendRequestNumber: 19,
+                sender: evaluatorUsername,
+                receiver: "tberube",
+                status: "accepted"
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.upsert({
+            where: {
+                friendRequestNumber: 20,
+            },
+            update: {},
+            create: {
+                friendRequestNumber: 20,
+                sender: evaluatorUsername,
+                receiver: "jvillefr",
+                status: "accepted"
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.upsert({
+            where: {
+                friendRequestNumber: 21,
+            },
+            update: {},
+            create: {
+                friendRequestNumber: 21,
+                sender: evaluatorUsername,
+                receiver: "bperron",
+                status: "accepted"
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 30,
+            },
+            update: {},
+            create: {
+                gameNumber: 30,
+                leftPlayer: evaluatorUsername,
+                leftPlayerScore: 5,
+                rightPlayer: "jvigneau",
+                rightPlayerScore: 4,
+                winner: evaluatorUsername,
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 31,
+            },
+            update: {},
+            create: {
+                gameNumber: 31,
+                leftPlayer: evaluatorUsername,
+                leftPlayerScore: 3,
+                rightPlayer: "jvigneau",
+                rightPlayerScore: 4,
+                winner: "jvigneau",
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 32,
+            },
+            update: {},
+            create: {
+                gameNumber: 32,
+                leftPlayer: "jvillefr",
+                leftPlayerScore: 5,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 3,
+                winner: "jvillefr",
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 33,
+            },
+            update: {},
+            create: {
+                gameNumber: 33,
+                leftPlayer: evaluatorUsername,
+                leftPlayerScore: 3,
+                rightPlayer: "tberube",
+                rightPlayerScore: 1,
+                winner: evaluatorUsername,
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 34,
+            },
+            update: {},
+            create: {
+                gameNumber: 34,
+                leftPlayer: "tberube",
+                leftPlayerScore: 5,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 4,
+                winner: "tberube",
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 35,
+            },
+            update: {},
+            create: {
+                gameNumber: 35,
+                leftPlayer: evaluatorUsername,
+                leftPlayerScore: 5,
+                rightPlayer: "jvigneau",
+                rightPlayerScore: 4,
+                winner: evaluatorUsername,
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 36,
+            },
+            update: {},
+            create: {
+                gameNumber: 36,
+                leftPlayer: "bperron",
+                leftPlayerScore: 2,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 4,
+                winner: evaluatorUsername,
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 37,
+            },
+            update: {},
+            create: {
+                gameNumber: 37,
+                leftPlayer: evaluatorUsername,
+                leftPlayerScore: 5,
+                rightPlayer: "gehebert",
+                rightPlayerScore: 4,
+                winner: evaluatorUsername,
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 38,
+            },
+            update: {},
+            create: {
+                gameNumber: 38,
+                leftPlayer: "gehebert",
+                leftPlayerScore: 2,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 1,
+                winner: "gehebert",
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 39,
+            },
+            update: {},
+            create: {
+                gameNumber: 39,
+                leftPlayer: evaluatorUsername,
+                leftPlayerScore: 4,
+                rightPlayer: "gcollet",
+                rightPlayerScore: 3,
+                winner: evaluatorUsername,
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 40,
+            },
+            update: {},
+            create: {
+                gameNumber: 40,
+                leftPlayer: "mleblanc",
+                leftPlayerScore: 5,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 4,
+                winner: "mleblanc",
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 41,
+            },
+            update: {},
+            create: {
+                gameNumber: 41,
+                leftPlayer: "mleblanc",
+                leftPlayerScore: 3,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 1,
+                winner: "mleblanc",
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 42,
+            },
+            update: {},
+            create: {
+                gameNumber: 42,
+                leftPlayer: evaluatorUsername,
+                leftPlayerScore: 4,
+                rightPlayer: "alvachon",
+                rightPlayerScore: 1,
+                winner: evaluatorUsername,
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 43,
+            },
+            update: {},
+            create: {
+                gameNumber: 43,
+                leftPlayer: "alvachon",
+                leftPlayerScore: 5,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 4,
+                winner: "alvachon",
+                active: false
+            }
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.upsert({
+            where: {
+                gameNumber: 44,
+            },
+            update: {},
+            create: {
+                gameNumber: 44,
+                leftPlayer: evaluatorUsername,
+                leftPlayerScore: 4,
+                rightPlayer: "bperron",
+                rightPlayerScore: 1,
+                winner: evaluatorUsername,
+                active: false
+            }
         })
     }
     catch{}

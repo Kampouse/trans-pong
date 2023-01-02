@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
+import { prisma } from 'src/main';
 
 @Injectable()
 export class ProfileService
@@ -49,18 +49,16 @@ export class ProfileService
     async getProfilePublic(login42: string): Promise<PublicProfileDto>
     {
         // Create prisma client and look if the username exist in the database
-        const prisma = new PrismaClient();
 
         const user = await prisma.user.findUnique({
             where: {
-                login42: login42,
+                username: login42,
             },
         });
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
         {
-            await prisma.$disconnect();
             return new PublicProfileDto(true, null, null, null, null, null, null, null);
         }
 
@@ -342,7 +340,6 @@ export class ProfileService
         }
 
         // At last, return the ProfileResponse
-        await prisma.$disconnect();
         return new PublicProfileDto(false, user.username, user.userStatus, user.imagePath,
             this.friendList, this.matchHistory, this.achievements , stats);
     }
@@ -350,7 +347,6 @@ export class ProfileService
     async getProfileEdit(login42: string): Promise<PrivateProfileDto>
     {
         // Create prisma client and look if the username exist in the database
-        const prisma = new PrismaClient();
         const user = await prisma.user.findUnique({
             where: {
                 login42: login42
@@ -360,7 +356,6 @@ export class ProfileService
         //  If he dosen't exist, return error true and everything at null
         if (!user)
         {
-            await prisma.$disconnect();
             return new PrivateProfileDto(true, null, null, null, null, null, null, null, null, null);
         }
 
@@ -661,29 +656,37 @@ export class ProfileService
         }
 
         // At last, return the ProfileResponse
-        await prisma.$disconnect();
         return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
             this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authentificator);
     }
 
     async updateUsername(newUsername: string, login42: string) : Promise<any>
     {
-        const prisma = new PrismaClient();
-
-        //  Change this part here for user authentification
-
+        //  Find the user to update to
         const user = await prisma.user.findUnique({
             where: {
                 login42: login42,
             },
         })
-
         if (!user)
         {
-            await prisma.$disconnect();
             return (false);
         }
 
+        //  Parse username for valid entry
+        if (newUsername.length < 5)
+        {
+            return (false);
+        }
+
+        if (newUsername.length > 12)
+        {
+            return (false)
+        }
+
+        //  Put the username with a capital first letter and the rest in lowercase
+        newUsername = newUsername.toLowerCase();
+        newUsername = newUsername.at(0).toUpperCase() + newUsername.substring(1);
         try
         {
             await prisma.user.update({
@@ -697,18 +700,14 @@ export class ProfileService
         }
         catch
         {
-            await prisma.$disconnect();
-            return ({error: "prisma update username error"})
+            return (false)
         }
 
-        await prisma.$disconnect();
         return (true);
     }
 
     async updatePhoto(newFilePath: string, login42: string) : Promise<any>
     {
-        const prisma = new PrismaClient();
-
         const user = await prisma.user.findUnique({
             where:{
                 login42: login42,
@@ -717,7 +716,6 @@ export class ProfileService
         
         if (!user)
         {
-            await prisma.$disconnect();
             return ({error: "authentification failed"});
         }
         const path = "/" + newFilePath;
@@ -736,7 +734,409 @@ export class ProfileService
         {
             return ({error: "update failed"});
         }
-        await prisma.$disconnect();
         return ({success: "sucess"});
+    }
+
+    async addFriend(login42: string, newFriend: string)
+    {
+
+        //  First, find the login42 linked with the newFriend username
+        var user;
+
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: newFriend
+                }
+            })
+    
+            //  If the user dosent exist, return 
+            if (!user)
+            {
+                return;
+            }
+        }
+        catch{}
+
+        //  Then look if the two user pair in friend request already exist 
+        try
+        {
+            var requestExist = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver: {
+                        sender: login42,
+                        receiver: user.login42
+                    }
+                }
+            })
+
+            if (requestExist)
+            {
+                return;
+            }
+
+            if (!requestExist)
+            {
+                var requestExist = await prisma.friendRequest.findUnique({
+                    where: {
+                        sender_receiver: {
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }
+                })
+
+                if (requestExist)
+                {
+                    await prisma.friendRequest.update({
+                        where :
+                        {
+                            sender_receiver: {
+                                sender: user.login42,
+                                receiver: login42
+                            }
+                        },
+                        data: {
+                            status: "accepted"
+                        }
+                    })
+                    requestExist.status = "accepted"
+                    return;
+                }
+            }
+        }
+        catch{}
+
+        //  If we are here, the request dosen't exist so lets create it
+        try
+        {
+            await prisma.friendRequest.create({
+                data: {
+                    sender: login42,
+                    receiver: user.username
+                }
+            })
+        }
+        catch{}
+    }
+
+    async denyRequest(login42: string, sender: string)
+    {
+        //  First, find the login42 linked with the newFriend username
+        var user;
+
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: sender
+                }
+            })
+
+            //  If the user dosent exist, return 
+            if (!user)
+            {
+                return;
+            }
+        }
+        catch{}
+
+        //  Then, we look for the request this username -> login42 has sent an deny it
+        try
+        {
+            var requestExist = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver: {
+                        sender: user.login42,
+                        receiver: login42
+                    }
+                }
+            })
+
+            //  Then we change the request status to denied
+            if (requestExist)
+            {
+                await prisma.friendRequest.update({
+                    where: {
+                        sender_receiver: {
+                            sender:  user.login42,
+                            receiver: login42}},
+                    data: {
+                        status: "declined",
+                    }
+                })
+            }
+        }
+        catch {}
+        return;
+    }
+
+    async blockUser(login42: string, userToBlock: string)
+    {
+        //  First, find the user associated with userToBlock
+        var user;
+
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: userToBlock
+                }
+            })
+
+            //  If the user dosent exist, return
+            if (!user)
+            {
+                return;
+            }
+        }
+        catch{}
+
+        //  Create a block rule in the database
+        try
+        {
+            await prisma.block.create({
+                data: {
+                    blocker: login42,
+                    blocked: user.login42
+                }
+            })
+
+            //  Remove friend request if they were friends
+            var request = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver :{
+                        sender: login42,
+                        receiver: user.login42
+                    }
+                }
+            })
+
+            if (request)
+            {
+                await prisma.friendRequest.delete({
+                    where: {
+                        sender_receiver: {
+                            sender: login42,
+                            receiver: user.login42
+                        }
+                    }
+                })
+            }
+
+            if (!request)
+            {
+                request = await prisma.friendRequest.findUnique({
+                    where: {
+                        sender_receiver :{
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }
+                })
+            }
+
+            if (request)
+            {
+                await prisma.friendRequest.delete({
+                    where: {
+                        sender_receiver: {
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }
+                })
+            }
+        }
+        catch {}
+    }
+
+    async createAuth(login42: string)
+    {
+        'use strict';
+
+        var authentificator = require('authenticator');
+
+        //  Look if the user already has a key generated
+
+        var user;
+
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+        }
+        catch{}
+
+        //  If the user already has a key, load a qr code associated
+        if (user.authKey != "none")
+        {
+            console.log("Key already exist")
+            var otAuth = authentificator.generateTotpUri(user.authKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
+            return ({QRcode: otAuth});
+        }
+
+        //  Else, create a new key
+
+        var formattedKey = authentificator.generateKey();
+
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+
+            if (!user || user.authenticator == true)
+            {
+                return ({QRcode: 'failed'});
+            }
+
+            await prisma.user.update({
+                where: {
+                    login42: login42
+                },
+                data: {
+                    authKey: formattedKey
+                }
+            })
+
+            var otAuth = authentificator.generateTotpUri(formattedKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
+            return ({QRcode: otAuth});
+        }
+        catch
+        {}
+
+    }
+    
+    async creationValidation(login42: string, token: string)
+    {
+        'use strict';
+
+        var authentificator = require('authenticator');
+
+        //  Validate token entered and format it
+        token.trim();
+        if (token.length != 6 && !(token.length == 7 && token[3] == ' '))
+        {
+            return (null)
+        }
+
+        var formattedToken;
+
+        if (token.length == 7)
+        {
+            formattedToken = token.substring(0,3) + token.substring(4, 7);
+        }
+        else
+        {
+            formattedToken = token;
+        }
+
+        var user;
+
+        //  Get user and protection
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+
+            if (!user || !user.authKey)
+            {
+                return (null);
+            }
+        }
+        catch{}
+
+        var status = authentificator.verifyToken(user.authKey, formattedToken);
+
+        if (status != null)
+        {
+            try
+            {
+                await prisma.user.update({
+                    where: {
+                        login42: login42
+                    },
+                    data: {
+                        authentificator: true
+                    }
+                })
+            }
+            catch{}
+        }
+        return (status)
+    }
+
+    async removeAuth(login42: string, token: string)
+    {
+
+        var authentificator = require('authenticator');
+
+        //  Validate token entered and format it
+        token.trim();
+        if (token.length != 6 && !(token.length == 7 && token[3] == ' '))
+        {
+            return (null)
+        }
+
+        var formattedToken;
+
+        if (token.length == 7)
+        {
+            formattedToken = token.substring(0,3) + token.substring(4, 7);
+        }
+        else
+        {
+            formattedToken = token;
+        }
+
+        var user;
+
+        //  Get user and protection
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+
+            if (!user || !user.authKey)
+            {
+                return (null);
+            }
+        }
+        catch{}
+
+        console.log(user.authKey, formattedToken);
+
+        var status = authentificator.verifyToken(user.authKey, formattedToken);
+
+        if (status != null)
+        {
+            try
+            {
+                await prisma.user.update({
+                    where: {
+                        login42: login42
+                    },
+                    data: {
+                        authentificator: false,
+                        authKey: "none"
+                    }
+                })
+            }
+            catch{}
+        }
+        return (status)
     }
 }

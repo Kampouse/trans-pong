@@ -2,9 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { PrismaClient } from '@prisma/client';
-import { request } from 'http';
-import { group } from 'console';
-
 
 @Injectable()
 export class AuthService

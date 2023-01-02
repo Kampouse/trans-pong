@@ -13,7 +13,7 @@ export const Contenter = ({ children }: { children: React.ReactNode }) => {
     </div>
   )
 }
-// play menu
+
 export const Menu = (): React.ReactElement => {
   return (
     <>

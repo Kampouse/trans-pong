@@ -1,5 +1,5 @@
 import { Group, GroupAdd, Lock } from "@mui/icons-material";
-import { Avatar, IconButton, styled, Switch, FormControlLabel } from '@mui/material';
+import { Avatar, IconButton } from '@mui/material';
 import { blue } from "@mui/material/colors";
 import React, { useState } from "react";
 import { ChatRoom, User } from '../types'

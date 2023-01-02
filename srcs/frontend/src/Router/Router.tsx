@@ -21,7 +21,6 @@ export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
 export const useRoomCode = atom('');
-// export const useUserClicked = atom<React.MutableRefObject<User | null>>(null);
 
 export const getUserDetails = () =>
 {

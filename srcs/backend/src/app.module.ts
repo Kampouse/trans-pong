@@ -10,16 +10,25 @@ import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 
-@Module({
-  imports: [
-    ConfigModule.forRoot(),
-    AuthModule,
-    MulterModule.register(
+@Module(
     {
-        dest: '../frontend/public'
-    })
-            ],
-  controllers: [AuthController, ProfileController],
-  providers: [AppService, AuthService, ProfileService, AuthModule, JwtService],
+        //  Module imports
+        imports:[
+            ConfigModule.forRoot(),
+            AuthModule,
+            MulterModule.register({dest: '../frontend/public'})],
+
+        //  Controllers imports
+        controllers:[
+            AuthController,
+            ProfileController],
+
+        //  Services imports
+        providers:[
+            AuthService,
+            ProfileService,
+            AuthService,
+            JwtService,
+            AppService,]
 })
 export class AppModule {}
