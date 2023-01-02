@@ -165,7 +165,6 @@ export class ProfileController {
             return {statCode: 302, url: "http://localhost:5173/Profile" }
         }
 
-        console.log(token.token);
         const status = this.profileService.creationValidation(login42, token.token)
         return {statCode: 302, url: "http://localhost:5173/Profile" }
     }

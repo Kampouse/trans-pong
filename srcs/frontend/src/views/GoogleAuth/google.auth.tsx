@@ -2,7 +2,8 @@ import { Dialog } from "@mui/material";
 import { useEffect, useState } from "react";
 import QRCode from 'qrcode.react';
 
-export function GoogleAuth({open, onClose}) {
+export function GoogleAuth({open, onClose})
+{
   const [qrCode, setQrCode] = useState<any>(null);
 
   useEffect(() => {
@@ -13,10 +14,10 @@ export function GoogleAuth({open, onClose}) {
       })
   }, []);
 
-  return (
+  return (  
     <Dialog onClose={onClose} open={open}>
         <div className="px-4 py-4 w-[300px] h-[320px] bg-sky-200">
-            <p className=" font-Merriweather text-center text-2xl">Google 2 way auth</p>
+            <p className=" font-Merriweather text-center text-2xl">Google Auth</p>
             <div className="my-3 h-[160px] w-[160px] ring-2 mx-[20%] ring-black" >
                 {qrCode && <QRCode value={qrCode} size={160} level="M" bgColor="#ffffff" fgColor="#000000" />}
             </div>
