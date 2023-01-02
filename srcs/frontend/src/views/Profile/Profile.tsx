@@ -375,7 +375,7 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                     </div>
                 </div>
                 <div className=' text-center my-2 px-1 '>
-                    <p className='py-1 font-Raleway font-bold text-lg'>Google Auth</p>
+                    <p className='py-1 font-Raleway font-bold text-lg'>Google Authenticator</p>
                     <p className='py-1 text-sm'></p>
                     <div>
                         <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'

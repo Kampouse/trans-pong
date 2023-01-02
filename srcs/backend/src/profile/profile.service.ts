@@ -958,9 +958,32 @@ export class ProfileService
 
         var authentificator = require('authenticator');
 
-        var formattedKey = authentificator.generateKey();
+        //  Look if the user already has a key generated
 
         var user;
+
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+        }
+        catch{}
+
+        //  If the user already has a key, load a qr code associated
+        if (user.authKey != "none")
+        {
+            console.log("Key already exist")
+            var otAuth = authentificator.generateTotpUri(user.authKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
+            return ({QRcode: otAuth});
+        }
+
+        //  Else, create a new key
+
+        var formattedKey = authentificator.generateKey();
+
         try
         {
             user = await prisma.user.findUnique({
@@ -1015,8 +1038,6 @@ export class ProfileService
             formattedToken = token;
         }
 
-        console.log(formattedToken);
-
         var user;
 
         //  Get user and protection
@@ -1053,6 +1074,69 @@ export class ProfileService
             catch{}
         }
         return (status)
+    }
 
+    async removeAuth(login42: string, token: string)
+    {
+
+        var authentificator = require('authenticator');
+
+        //  Validate token entered and format it
+        token.trim();
+        if (token.length != 6 && !(token.length == 7 && token[3] == ' '))
+        {
+            return (null)
+        }
+
+        var formattedToken;
+
+        if (token.length == 7)
+        {
+            formattedToken = token.substring(0,3) + token.substring(4, 7);
+        }
+        else
+        {
+            formattedToken = token;
+        }
+
+        var user;
+
+        //  Get user and protection
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+
+            if (!user || !user.authKey)
+            {
+                return (null);
+            }
+        }
+        catch{}
+
+        console.log(user.authKey, formattedToken);
+
+        var status = authentificator.verifyToken(user.authKey, formattedToken);
+
+        if (status != null)
+        {
+            try
+            {
+                await prisma.user.update({
+                    where: {
+                        login42: login42
+                    },
+                    data: {
+                        authentificator: false,
+                        authKey: "none"
+                    }
+                })
+            }
+            catch{}
+        }
+        return (status)
     }
 }

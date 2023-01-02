@@ -165,7 +165,25 @@ export class ProfileController {
             return {statCode: 302, url: "http://localhost:5173/Profile" }
         }
 
-        const status = this.profileService.creationValidation(login42, token.token)
+         this.profileService.creationValidation(login42, token.token)
+        return {statCode: 302, url: "http://localhost:5173/Profile" }
+    }
+
+    @Post('remove/authenticator')
+    @Redirect()
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async removeAuth(@Body() token, @Req() request: RequestWithUser) : Promise<any>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined || token == undefined)
+        {
+            return {statCode: 302, url: "http://localhost:5173/Profile" }
+        }
+
+        console.log(login42, token.token)
+        const status = this.profileService.removeAuth(login42, token.token)
+        console.log(status)
         return {statCode: 302, url: "http://localhost:5173/Profile" }
     }
 }
