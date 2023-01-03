@@ -2,6 +2,7 @@ import { defaultMaxListeners } from 'events'
 import React, { useEffect, useRef, useState } from 'react'
 import { init, draw, update, drawGameover } from './ReactiveDraw'
 
+
 const ReactiveCanvas = () => {
   const canvas = useRef<HTMLCanvasElement | null>(null)
   const div = useRef<HTMLDivElement | null>(null)
@@ -42,6 +43,7 @@ const ReactiveCanvas = () => {
     console.log('User pressed: ', event.key);
   };
 
+  
 	const handleKeyUp = event => {
     console.log('User released: ', event.key);
   };
@@ -119,3 +121,4 @@ const ReactiveCanvas = () => {
 }
 
 export default ReactiveCanvas
+

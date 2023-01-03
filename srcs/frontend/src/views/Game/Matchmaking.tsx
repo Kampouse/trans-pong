@@ -1,4 +1,4 @@
-
+import * as io from 'socket.io-client';
 export default function Matchmaking()
 {
     return (
@@ -9,11 +9,27 @@ export default function Matchmaking()
                     <button className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Singler Player
                     </button>
-                    <button className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
+                    <button type='button' id="multiplayer" onClick={(e) => startMultiplayerMatchmake(e)} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Multi Player
                     </button>
                 </div>
             </div>
     </div>
     )
+}
+
+async function launchMatchMake() {
+    
+}
+function startMultiplayerMatchmake(e){
+    e.preventDefault();
+    console.log("Creating socket");
+    document.getElementById("multiplayer").disabled = true;
+    const socket = io.connect("http://localhost:3001");
+    socket.on("roomIsReady", () => {
+        console.log("Match found! Redirecting to game.");
+    })
+    socket.emit("registerId", {userId: "aaaaaaaaaaaaa", socket: socket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+    socket.emit("searchGame"); //join new game
+    
 }

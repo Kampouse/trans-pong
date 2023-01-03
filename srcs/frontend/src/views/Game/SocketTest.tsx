@@ -2,7 +2,8 @@ import { useState } from 'react';
 import * as io from 'socket.io-client';
 
 const userId = "clbuy4ib40000mmn854tpzlpk"
-const socket = io.connect("http://localhost:3001");
+const socket = ""
+
 console.log(socket.connected)
 export default function SocketTest()
 {
