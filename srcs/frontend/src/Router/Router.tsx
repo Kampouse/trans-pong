@@ -7,6 +7,7 @@ import Nav from 'views/Nav/Nav'
 import { Menu } from 'views/Menu/menu'
 import Game, { GameWatch } from 'views/Game/Game'
 import Matchmaking from 'views/Game/Matchmaking'
+import SocketTest from 'views/Game/SocketTest'
 import CreateGame from 'views/Game/CreateGame'
 import PlayMenu from 'views/Game/PlayMenu'
 import Login from 'views/Login/Login'
@@ -123,6 +124,7 @@ useEffect(() => { check()}, [])
             </Route>
             <Route path="/Chat" element={<Chat />}></Route>
             <Route path="*" element={<Error404 />}></Route>
+            <Route path="/SocketTest" element={<SocketTest />}></Route>
           </Routes>
         </>
       ) : (

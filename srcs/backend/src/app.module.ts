@@ -9,6 +9,9 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import {GameSocketIOService} from './game/game.services'
+import {GameSocketIOController} from './game/game.controller'
+import {GameSocketIOModule} from './game/game.module'
 
 @Module(
     {
@@ -16,12 +19,14 @@ import { ConfigModule } from '@nestjs/config';
         imports:[
             ConfigModule.forRoot(),
             AuthModule,
-            MulterModule.register({dest: '../frontend/public'})],
+            MulterModule.register({dest: '../frontend/public'}),
+            ],
 
         //  Controllers imports
         controllers:[
             AuthController,
-            ProfileController],
+            ProfileController,
+            GameSocketIOController],
 
         //  Services imports
         providers:[
@@ -29,6 +34,7 @@ import { ConfigModule } from '@nestjs/config';
             ProfileService,
             AuthService,
             JwtService,
-            AppService,]
+            AppService,
+            GameSocketIOService]
 })
 export class AppModule {}
