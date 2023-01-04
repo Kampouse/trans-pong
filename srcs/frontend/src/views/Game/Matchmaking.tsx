@@ -1,6 +1,8 @@
+import { redirect, useNavigate, Navigate, NavigateFunction, RedirectFunction } from 'react-router-dom';
 import * as io from 'socket.io-client';
 export default function Matchmaking()
 {
+    const nav = useNavigate()
     return (
     <div className=" my-4 px-[10%] py-[10%] mx-2 w-[100%]">
             <div className="flex flex-col rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm px-20">
@@ -9,7 +11,7 @@ export default function Matchmaking()
                     <button className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Singler Player
                     </button>
-                    <button type='button' id="multiplayer" onClick={(e) => startMultiplayerMatchmake(e)} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
+                    <button type='button' id="multiplayer" onClick={(e) => startMultiplayerMatchmake(e, nav)} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Multi Player
                     </button>
                 </div>
@@ -19,7 +21,7 @@ export default function Matchmaking()
 }
 
 
-function startMultiplayerMatchmake(e){
+function startMultiplayerMatchmake(e, nav: NavigateFunction){
     e.preventDefault();
     console.log("Creating socket");
     document.getElementById("multiplayer").disabled = true;
@@ -27,7 +29,11 @@ function startMultiplayerMatchmake(e){
     socket.on("roomIsReady", (room) => {
         console.log(room);
         console.log("Match found! Redirecting to game.");
-        window.location.replace(`http://localhost:5173/game/${room}`);
+        //window.location.replace(`http://localhost:5173/game/${room}`);
+        nav(`/game/${room}`, {state:{socketid: socket.id}}); //pass socketid to retrieve it on the other side
+        //var path = `game/${room}`;
+        //return (<Navigate to={`${path}`} replace={true} />)
+        //return redirect(`http://localhost:5173/game/${room}`)
     })
     socket.on("connect", () => {
         console.log(socket.id)

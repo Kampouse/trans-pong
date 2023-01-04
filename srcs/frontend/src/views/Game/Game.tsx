@@ -1,12 +1,16 @@
 import Chat from './Chat/Chat'
 import ReactiveCanvas from './components/ReactiveCanvas'
 import { createRef, DetailedHTMLProps, HTMLAttributes } from 'react'
+import { useLocation } from 'react-router'
+import * as io from 'socket.io-client';
 
 function prepareGame(){
   console.log("Wee woo we joined the room")
 }
 
 export default function Game() {
+  const {state} = useLocation();
+  console.log(state)
   prepareGame()
   return <ReactiveCanvas />
 }
