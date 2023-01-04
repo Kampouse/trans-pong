@@ -34,6 +34,12 @@ export class GameSocketIOController {
                     server.to(roomName).emit("roomIsReady", roomName); //pass control to game execution
                 }
             })
+            socket.on("socketIsConnected", () => {
+                socket.emit("ack", socket.id)
+            })
+            socket.on("retrieveSocket", (userId) => { //retrieve original socketId after going to the game for sync
+
+            })
         })
 
         server.on("disconnect", () => {
