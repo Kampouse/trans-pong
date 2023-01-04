@@ -2,7 +2,12 @@ import Chat from './Chat/Chat'
 import ReactiveCanvas from './components/ReactiveCanvas'
 import { createRef, DetailedHTMLProps, HTMLAttributes } from 'react'
 
+function prepareGame(){
+  console.log("Wee woo we joined the room")
+}
+
 export default function Game() {
+  prepareGame()
   return <ReactiveCanvas />
 }
 

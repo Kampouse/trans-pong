@@ -1,5 +1,6 @@
-import { Controller } from "@nestjs/common";
+import { Controller, Get, Req, Redirect, Res, Param } from "@nestjs/common";
 import { GameRoom, GameSocketIOService, Player } from "./game.services";
+import { RequestWithUser } from "src/dtos/auth.dtos";
 
 @Controller()
 export class GameSocketIOController {
@@ -30,7 +31,7 @@ export class GameSocketIOController {
                 else{ //array isnt empty and there are rooms available
                     var roomName = this.gameSocketIO.makePlayerJoinRoom(new Player(this.getUserFromSocketId(gameSocketIO.socketMap, socket.id)));
                     socket.join(roomName); //all players are in the game, status is set to active
-                    server.to(roomName).emit("roomIsReady"); //pass control to game execution
+                    server.to(roomName).emit("roomIsReady", roomName); //pass control to game execution
                 }
             })
         })
@@ -52,5 +53,11 @@ export class GameSocketIOController {
                 return room;
         }
         return null;
+    }
+
+
+    @Get('game/:id')
+    printId(@Param('id') id: string){
+        console.log(`accessing game ${id}`);
     }
 }

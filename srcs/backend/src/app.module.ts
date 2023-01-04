@@ -26,7 +26,8 @@ import {GameSocketIOModule} from './game/game.module'
         controllers:[
             AuthController,
             ProfileController,
-            GameSocketIOController],
+            GameSocketIOController
+            ],
 
         //  Services imports
         providers:[

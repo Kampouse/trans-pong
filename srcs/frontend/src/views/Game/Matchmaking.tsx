@@ -26,8 +26,10 @@ function startMultiplayerMatchmake(e){
     console.log("Creating socket");
     document.getElementById("multiplayer").disabled = true;
     const socket = io.connect("http://localhost:3001");
-    socket.on("roomIsReady", () => {
+    socket.on("roomIsReady", (room) => {
+        console.log(room);
         console.log("Match found! Redirecting to game.");
+        window.location.replace(`http://localhost:5173/game/${room}`);
     })
     socket.emit("registerId", {userId: "aaaaaaaaaaaaa", socket: socket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
     socket.emit("searchGame"); //join new game

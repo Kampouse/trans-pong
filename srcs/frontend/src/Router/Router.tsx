@@ -125,6 +125,9 @@ useEffect(() => { check()}, [])
             <Route path="/Chat" element={<Chat />}></Route>
             <Route path="*" element={<Error404 />}></Route>
             <Route path="/SocketTest" element={<SocketTest />}></Route>
+            <Route path="/game">
+                <Route path=":id" element={<Game/>}></Route>
+            </Route>
           </Routes>
         </>
       ) : (
