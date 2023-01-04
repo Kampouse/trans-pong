@@ -9,15 +9,18 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { WebSocketsModule } from '@nestjs/websockets';
+import { ChatGateway } from './chat/chat.gateway';
 
 @Module(
     {
         //  Module imports
         imports:[
             ConfigModule.forRoot(),
+            WebSocketsModule.forRoot([ChatGateway]),
             AuthModule,
-            MulterModule.register({dest: '../frontend/public'})],
-
+    MulterModule.register({ dest: '../frontend/public' }),
+            
         //  Controllers imports
         controllers:[
             AuthController,

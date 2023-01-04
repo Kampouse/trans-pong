@@ -22,6 +22,8 @@ model User {
     channels            Channel[]
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
+    rooms               DirectChatRoom[]
+    messages            ChatMessage[]
 }
 
 model FriendRequest{
@@ -117,3 +119,43 @@ enum requestStatus{
     accepted
     declined
 }
+
+enum ChatRoomType{
+    PUBLIC 
+    PRIVATE 
+}
+
+model ChatMessage{
+    id              String         @id
+    content         String
+    sender          User        @relation(fields: [senderId], references: [userID])
+    senderId        String
+    chatRoom        ChatRoom    @relation(fields: [chatRoomId], references: [id])
+    chatRoomId      String
+    
+    
+    @@map("chatmessages")
+}
+
+model DirectChatRoom{
+    user        User            @relation(fields: [userId], references: [userID])
+    userId      String
+    chatRoom    ChatRoom        @relation(fields: [chatRoomId], references: [id])
+    chatRoomId  String
+
+    @@id([userId, chatRoomId])
+    @@map("directchatrooms")
+}
+
+model ChatRoom{
+    id          String          @id @default(uuid())
+    name        String     
+    chatRoomType ChatRoomType   @default(PUBLIC)
+    hashPassword String?
+   
+    users       DirectChatRoom[]              
+    messages    ChatMessage[]   
+
+    @@map("chatrooms")
+}
+
