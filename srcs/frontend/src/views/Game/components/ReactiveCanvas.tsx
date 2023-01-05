@@ -1,6 +1,7 @@
 import { defaultMaxListeners } from 'events'
 import React, { useEffect, useRef, useState } from 'react'
 import { init, draw, update, drawGameover } from './ReactiveDraw'
+import {usersocket} from '../Matchmaking'
 
 
 const ReactiveCanvas = () => {
@@ -40,12 +41,15 @@ const ReactiveCanvas = () => {
   }, [countdown])
 
 	const handleKeyDown = event => {
-    console.log('User pressed: ', event.key);
+    //console.log('User pressed: ', event.key);
+    if(event.key == "ArrowUp" || event.key == "ArrowDown")
+      usersocket.emit("updatePlayerPosition", {direction: event.key}); //need to find a way to emit this only once until a keyup event is fired
   };
 
   
 	const handleKeyUp = event => {
-    console.log('User released: ', event.key);
+    //console.log('User released: ', event.key);
+    usersocket.emit("stopUpdatePlayerPosition")
   };
 
   return (

@@ -1,8 +1,10 @@
 import { redirect, useNavigate, Navigate, NavigateFunction, RedirectFunction } from 'react-router-dom';
 import * as io from 'socket.io-client';
+export var usersocket: io.Socket = io.connect();
 export default function Matchmaking()
 {
     const nav = useNavigate()
+    usersocket.disconnect(); //automatically disconnect socket on render
     return (
     <div className=" my-4 px-[10%] py-[10%] mx-2 w-[100%]">
             <div className="flex flex-col rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm px-20">
@@ -25,23 +27,24 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction){
     e.preventDefault();
     console.log("Creating socket");
     document.getElementById("multiplayer").disabled = true;
-    var socket = io.connect("http://localhost:3001");
-    socket.on("roomIsReady", (room) => {
+    usersocket.disconnect();
+    usersocket = io.connect("http://localhost:3001");
+    usersocket.on("roomIsReady", (room) => {
         console.log(room);
         console.log("Match found! Redirecting to game.");
         //window.location.replace(`http://localhost:5173/game/${room}`);
-        nav(`/game/${room}`, {state:{socketid: socket.id}}); //pass socketid to retrieve it on the other side
+        nav(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
         //var path = `game/${room}`;
         //return (<Navigate to={`${path}`} replace={true} />)
         //return redirect(`http://localhost:5173/game/${room}`)
     })
-    socket.on("connect", () => {
-        console.log(socket.id)
-        socket.emit("socketIsConnected");
+    usersocket.on("connect", () => {
+        console.log(usersocket.id)
+        usersocket.emit("socketIsConnected");
     })
-    socket.on("ack", (socketId) => {
-        socket.emit("registerId", {userId: "aaaaaaaaaaaaa", socket: socket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
-        socket.emit("searchGame"); //join new game
+    usersocket.on("ack", (socketId) => {
+        usersocket.emit("registerId", {userId: "aaaaaaaaaaaaa", socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+        usersocket.emit("searchGame"); //join new game
     })
     
 }

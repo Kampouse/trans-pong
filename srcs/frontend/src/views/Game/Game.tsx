@@ -3,16 +3,21 @@ import ReactiveCanvas from './components/ReactiveCanvas'
 import { createRef, DetailedHTMLProps, HTMLAttributes } from 'react'
 import { useLocation } from 'react-router'
 import * as io from 'socket.io-client';
+import {usersocket} from "./Matchmaking"
 
+var onlyonce = 0; //prevent functions being called twice
 function prepareGame(){
   console.log("Wee woo we joined the room")
+  usersocket.emit("joinedGame")
 }
 
 export default function Game() {
-  const {state} = useLocation();
-  console.log(state)
-  prepareGame()
-  return <ReactiveCanvas />
+  if (onlyonce == 0)
+  {
+    prepareGame();
+    onlyonce = 1;
+    return <ReactiveCanvas />
+  }
 }
 
 function Next() {

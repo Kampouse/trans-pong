@@ -37,6 +37,9 @@ export class GameSocketIOController {
             socket.on("socketIsConnected", () => {
                 socket.emit("ack", socket.id)
             })
+            socket.on(("joinedGame"), () => {
+                console.log(`Socket ${socket.id} landed on the game`)
+            })
             socket.on("retrieveSocket", (userId) => { //retrieve original socketId after going to the game for sync
 
             })
