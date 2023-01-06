@@ -1,4 +1,5 @@
 import React from 'react'
+import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 
 interface DrawProps {
   canvas: React.MutableRefObject<HTMLCanvasElement | null>
@@ -71,7 +72,7 @@ export function init(props: DrawProps) {
   mouse.y = leftPlayer.playerPos
 }
 
-export function draw(props: DrawProps) {
+export function draw(props: DrawProps, gameData: UpdateGameDto) {
   const { canvas } = props
   var ctx = canvas!.current!.getContext('2d')
 
@@ -87,7 +88,7 @@ export function draw(props: DrawProps) {
   ) {
     canvasSize.height = canvas.current!.height
     canvasSize.width = canvas.current!.width
-    gameBall.ballRadius = canvasSize.width * 0.01
+    gameData.gameBall.ballRadius = canvasSize.width * 0.01
   }
 
 	const paddleWidth =  Math.floor(canvasSize.width * 0.01)
@@ -101,24 +102,24 @@ export function draw(props: DrawProps) {
   if (canvasSize.width === 300) {
     ctx.font = '50px font'
     ctx.fillText(
-      leftPlayer.playerScore.toString(),
+      gameData.leftPlayer.playerScore.toString(),
       canvasSize.width / 4 - 10,
       canvasSize.height / 5
     )
     ctx.fillText(
-      rightPlayer.playerScore.toString(),
+      gameData.rightPlayer.playerScore.toString(),
       (3 * canvasSize.width) / 4 - 10,
       canvasSize.height / 5
     )
   } else {
     ctx.font = '75px font'
     ctx.fillText(
-      leftPlayer.playerScore.toString(),
+      gameData.leftPlayer.playerScore.toString(),
       canvasSize.width / 4 - 15,
       canvasSize.height / 5
     )
     ctx.fillText(
-      rightPlayer.playerScore.toString(),
+      gameData.rightPlayer.playerScore.toString(),
       (3 * canvasSize.width) / 4 - 15,
       canvasSize.height / 5
     )
@@ -127,11 +128,11 @@ export function draw(props: DrawProps) {
   for (let i = 0; i <= canvasSize.height; i += 15)
     ctx.fillRect((canvasSize.width - 2) / 2, i, 2, 10)
 
-  ctx.fillRect(0, (leftPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
-  ctx.fillRect(canvasSize.width - paddleWidth, (rightPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
+  ctx.fillRect(0, (gameData.leftPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
+  ctx.fillRect(canvasSize.width - paddleWidth, (gameData.rightPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
 
   ctx.beginPath()
-  ctx.arc(canvasSize.width * gameBall.ballPosX, canvasSize.height * gameBall.ballPosY, canvasSize.width * gameBall.ballRadius, 0, Math.PI * 2, true)
+  ctx.arc(canvasSize.width * gameData.gameBall.ballPosX, canvasSize.height * gameData.gameBall.ballPosY, canvasSize.width * gameData.gameBall.ballRadius, 0, Math.PI * 2, true)
   ctx.closePath()
   ctx.fill()
 }

@@ -1,31 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateGameDto, GamePlayerDto, BallDto } from '../dtos/gameUpdate.dtos';
 
-interface UpdateProps {
+export interface UpdateProp {
 	keyActions: {
 		up: boolean,
 		down: boolean
 	}
 }
 
+export interface UpdateProps{
+	keyActionsPlayer1:UpdateProp,
+	keyActionsPlayer2:UpdateProp
+}
+
 @Injectable()
 export class GameUpdate
 {
-	leftPlayer = new GamePlayerDto('', '', 0, 0.5)
-	rightPlayer = new GamePlayerDto('', '', 0, 0.5)
-	gameBall = new BallDto(0.5, 0.5, 0.01, 10, -1, 0)
-	updateGame = new UpdateGameDto(this.leftPlayer, this.rightPlayer, this.gameBall, false, '')
+	leftPlayer: GamePlayerDto;
+	rightPlayer:GamePlayerDto;
+	gameBall: BallDto;
+	updateGame:UpdateGameDto;
 
-	update = ({ keyActions }: UpdateProps) => {
+	constructor() {
+		this.leftPlayer = new GamePlayerDto('', '', 0, 0.5)
+		this.rightPlayer = new GamePlayerDto('', '', 0, 0.5)
+		this.gameBall = new BallDto(0.5, 0.5, 0.01, 10, -1, 0)
+		this.updateGame = new UpdateGameDto(this.leftPlayer, this.rightPlayer, this.gameBall, false, '')
+	}
+	update = ({ keyActionsPlayer1, keyActionsPlayer2}: UpdateProps) => {
 		const playerHeight = 0.15
 		const playerWidth = 0.01
 	
-		if (this.leftPlayer.playerPos > 0 && keyActions.up)
+		if (this.leftPlayer.playerPos > 0 && keyActionsPlayer1.keyActions.up)
 			this.leftPlayer.playerPos -= 0.01
-		if (this.leftPlayer.playerPos < 1 && keyActions.down)
+		if (this.leftPlayer.playerPos < 1 && keyActionsPlayer1.keyActions.down)
 			this.leftPlayer.playerPos += 0.01
+		
+		if (this.rightPlayer.playerPos > 0 && keyActionsPlayer2.keyActions.up)
+			this.rightPlayer.playerPos -= 0.01
+		if (this.rightPlayer.playerPos < 1 && keyActionsPlayer2.keyActions.down)
+			this.rightPlayer.playerPos += 0.01
 	
-		this.rightPlayer.playerPos += (this.gameBall.ballPosY - this.rightPlayer.playerPos) * 0.1
+		//this.rightPlayer.playerPos += (this.gameBall.ballPosY - this.rightPlayer.playerPos) * 0.1 //used only for localplay
 	
 		this.gameBall.ballPosX += (this.gameBall.ballDirX * this.gameBall.ballSpeed) / 1000
 		this.gameBall.ballPosY += (this.gameBall.ballDirY * this.gameBall.ballSpeed) / 1000
@@ -68,5 +84,10 @@ export class GameUpdate
 			this.gameBall.ballDirX = this.gameBall.ballDirY < 0 ? 1.0 : -1.0
 			this.gameBall.ballDirY = 0.0
 		}
+	}
+	public updateGameUpdateDto(){
+		this.updateGame.gameBall = this.gameBall;
+		this.updateGame.leftPlayer = this.leftPlayer;
+		this.updateGame.rightPlayer = this.rightPlayer;
 	}
 }

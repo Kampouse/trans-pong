@@ -1,16 +1,54 @@
 import { Injectable } from "@nestjs/common";
+import {GameUpdate, UpdateProps, UpdateProp} from './object.game'
 import * as io from 'socket.io'
+import { UpdateGameDto } from "src/dtos/gameUpdate.dtos";
 
 
 export class Player {
     private userId: string
     private points: number
+    private socket: io.Socket; //for id
+    private actions: UpdateProp = {keyActions:{up: false, down:false}};
     public status: string
 
-    constructor(userId) {
+    constructor(userId, socket:io.Socket) {
         this.userId = userId;
         this.points = 0;
         this.status = "waiting";
+        this.socket = socket;
+        socket.on("updatePlayerPosition", (keyActions) => {
+            console.log(keyActions);
+            if(keyActions.direction == "ArrowUp"){
+                this.setKeyArrowUp();
+            }
+            if(keyActions.direction == "ArrowDown"){
+                this.setKeyArrowDown();
+            }
+        })
+        socket.on("stopUpdatePlayerPosition", () => {
+            this.unsetKeyArrowDown();
+            this.unsetKeyArrowUp();
+        })
+        socket.on("playerReady", () => {
+            console.log("this player is ready");
+            this.status = "ready";
+        })
+    }
+    public setKeyArrowUp() {
+        this.actions.keyActions.up = true;
+    }
+    public unsetKeyArrowUp() {
+        this.actions.keyActions.up = false;
+    }
+    public setKeyArrowDown() {
+        this.actions.keyActions.down = true;
+    }
+    public unsetKeyArrowDown() {
+        this.actions.keyActions.down = false;
+    }
+
+    public getKeyActionCurrentState():UpdateProp {
+        return this.actions;
     }
 
 }
@@ -19,14 +57,28 @@ export class GameRoom {
     private roomName: string
     private player1: Player
     private player2: Player
+    private updateInterval;
+    private tempWaitForPlayerReadyInterval
+    private gameUpdateObject: GameUpdate
+    private server: io.Server
 
     public status: string
 
-    constructor(player1: Player) {
+    constructor(player1: Player, server: io.Server) {
         this.roomName = this.makeid(10); //default
         this.player1 = player1;
         this.status = "waiting" //default status
+        this.gameUpdateObject = new GameUpdate()
+        this.updateInterval = null;
+        this.server = server
         console.log(`Lobby ${this.roomName} instanciated, waiting for second player`)
+        this.tempWaitForPlayerReadyInterval = setInterval(() => {
+            if(this.player1.status == "ready" && this.player2.status == "ready")
+            {
+                clearInterval(this.tempWaitForPlayerReadyInterval);
+                this.startGameUpdateInterval(this.server)
+            }
+        }, 500) //every 500 milliseconds the interval will check if players are ready
     }
 
     public makeid(length): string { //generating random room id's
@@ -49,6 +101,14 @@ export class GameRoom {
     }
     public getRoomName() {
         return this.roomName;
+    }
+    public startGameUpdateInterval(server: io.Server) {
+        this.updateInterval = setInterval(() => {
+            this.gameUpdateObject.update({keyActionsPlayer1: this.player1.getKeyActionCurrentState(), keyActionsPlayer2: this.player2.getKeyActionCurrentState()})
+            this.gameUpdateObject.updateGameUpdateDto(); //should change the object properties hopefully
+            console.log(this.gameUpdateObject.updateGame);
+            server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
+        }, (1/60) * 1000) //60 fps
     }
 }
 

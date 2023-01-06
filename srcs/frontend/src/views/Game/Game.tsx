@@ -8,16 +8,13 @@ import {usersocket} from "./Matchmaking"
 var onlyonce = 0; //prevent functions being called twice
 function prepareGame(){
   console.log("Wee woo we joined the room")
-  usersocket.emit("joinedGame")
+  usersocket.emit("playerReady");
 }
 
 export default function Game() {
-  if (onlyonce == 0)
-  {
-    prepareGame();
-    onlyonce = 1;
-    return <ReactiveCanvas />
-  }
+  prepareGame();
+  onlyonce = 1;
+  return <ReactiveCanvas />
 }
 
 function Next() {

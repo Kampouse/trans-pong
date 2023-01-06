@@ -24,12 +24,12 @@ export class GameSocketIOController {
             socket.on("searchGame", () => {
                 var room = this.tryGetAvailableRoom(gameSocketIO.roomMap)
                 if(gameSocketIO.roomMap.length == 0 || room == null){ //no room found, add new room
-                    var newRoom: GameRoom = new GameRoom(new Player(this.getUserFromSocketId(gameSocketIO.socketMap, socket.id)))
+                    var newRoom: GameRoom = new GameRoom(new Player(this.getUserFromSocketId(gameSocketIO.socketMap, socket.id), socket), gameSocketIO.getServer())
                     gameSocketIO.roomMap.push(newRoom); //adds new room to list
                     socket.join(newRoom.getRoomName()); //make client socket join room
                 }
                 else{ //array isnt empty and there are rooms available
-                    var roomName = this.gameSocketIO.makePlayerJoinRoom(new Player(this.getUserFromSocketId(gameSocketIO.socketMap, socket.id)));
+                    var roomName = this.gameSocketIO.makePlayerJoinRoom(new Player(this.getUserFromSocketId(gameSocketIO.socketMap, socket.id), socket));
                     socket.join(roomName); //all players are in the game, status is set to active
                     server.to(roomName).emit("roomIsReady", roomName); //pass control to game execution
                 }
@@ -39,9 +39,6 @@ export class GameSocketIOController {
             })
             socket.on(("joinedGame"), () => {
                 console.log(`Socket ${socket.id} landed on the game`)
-            })
-            socket.on("retrieveSocket", (userId) => { //retrieve original socketId after going to the game for sync
-
             })
         })
 
