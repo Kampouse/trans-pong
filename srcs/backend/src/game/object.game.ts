@@ -83,6 +83,8 @@ export class GameUpdate
 			this.gameBall.ballSpeed = 10.0
 			this.gameBall.ballDirX = this.gameBall.ballDirY < 0 ? 1.0 : -1.0
 			this.gameBall.ballDirY = 0.0
+			this.leftPlayer.playerPos = 0.5
+			this.rightPlayer.playerPos = 0.5
 		}
 	}
 	public updateGameUpdateDto(){

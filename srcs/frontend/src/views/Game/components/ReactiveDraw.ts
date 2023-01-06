@@ -236,8 +236,12 @@ export const update = ({ gameover }) => {
     gameBall.ballDirX = direction * Math.cos(angleRad)
     gameBall.ballDirY = Math.sin(angleRad)
 	} else if (gameBall.ballPosX <= gameBall.ballRadius || gameBall.ballPosX + gameBall.ballRadius >= 1) {
-    if (gameBall.ballPosX > 0.5) leftPlayer.playerScore++
-    else rightPlayer.playerScore++
+    if (gameBall.ballPosX > 0.5){
+      leftPlayer.playerScore++
+    }
+    else{
+      rightPlayer.playerScore++
+    }
     gameBall.ballPosX = 0.5
     gameBall.ballPosY = 0.5
     gameBall.ballSpeed = 10.0

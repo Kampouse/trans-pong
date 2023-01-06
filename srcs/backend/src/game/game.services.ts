@@ -108,6 +108,9 @@ export class GameRoom {
             this.gameUpdateObject.updateGameUpdateDto(); //should change the object properties hopefully
             console.log(this.gameUpdateObject.updateGame);
             server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
+            if (this.gameUpdateObject.leftPlayer.playerScore == 5 || this.gameUpdateObject.rightPlayer.playerScore == 5){
+                clearInterval(this.updateInterval);
+            }
         }, (1/60) * 1000) //60 fps
     }
 }
