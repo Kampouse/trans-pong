@@ -23,10 +23,12 @@ export class GameSocketIOController {
 
             socket.on("searchGame", () => {
                 var room = this.tryGetAvailableRoom(gameSocketIO.roomMap)
-                if(gameSocketIO.roomMap.length == 0 || room == null){ //no room found, add new room
+                console.log(gameSocketIO.roomMap.size)
+                if(gameSocketIO.roomMap.size == 0 || room == null){ //no room found, add new room
                     var newRoom: GameRoom = new GameRoom(new Player(this.getUserFromSocketId(gameSocketIO.socketMap, socket.id), socket), gameSocketIO.getServer())
-                    gameSocketIO.roomMap.push(newRoom); //adds new room to list
+                    gameSocketIO.roomMap.set(newRoom.getRoomName(), newRoom) //adds new room to list
                     socket.join(newRoom.getRoomName()); //make client socket join room
+                    //console.log(gameSocketIO.roomMap)
                 }
                 else{ //array isnt empty and there are rooms available
                     var roomName = this.gameSocketIO.makePlayerJoinRoom(new Player(this.getUserFromSocketId(gameSocketIO.socketMap, socket.id), socket));
@@ -53,10 +55,10 @@ export class GameSocketIOController {
                 return key;
         }
     }
-    tryGetAvailableRoom(gameRoom: Array<GameRoom>) {
+    tryGetAvailableRoom(gameRoom: Map<string, GameRoom>) {
         for(let room of gameRoom){
-            if(room.status == "waiting") //room has available slot
-                return room;
+            if(room[1].status == "waiting") //room has available slot
+                return room[1];
         }
         return null;
     }

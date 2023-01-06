@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import {GameUpdate, UpdateProps, UpdateProp} from './object.game'
 import * as io from 'socket.io'
 import { UpdateGameDto } from "src/dtos/gameUpdate.dtos";
+import { Game } from "@prisma/client";
 
 
 export class Player {
@@ -107,10 +108,14 @@ export class GameRoom {
             this.gameUpdateObject.update({keyActionsPlayer1: this.player1.getKeyActionCurrentState(), keyActionsPlayer2: this.player2.getKeyActionCurrentState()})
             this.gameUpdateObject.updateGameUpdateDto(); //should change the object properties hopefully
             console.log(this.gameUpdateObject.updateGame);
-            server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
             if (this.gameUpdateObject.leftPlayer.playerScore == 5 || this.gameUpdateObject.rightPlayer.playerScore == 5){
+                //posting data stuff maybe ?
+                this.status = "finished"
+                this.gameUpdateObject.updateGame.gameOver = true;
+                this.gameUpdateObject.updateGame.winner = this.gameUpdateObject.leftPlayer.playerScore == 5 ? this.gameUpdateObject.leftPlayer.playerUser : this.gameUpdateObject.rightPlayer.playerUser
                 clearInterval(this.updateInterval);
             }
+            server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
         }, (1/60) * 1000) //60 fps
     }
 }
@@ -119,8 +124,10 @@ export class GameRoom {
 export class GameSocketIOService {
 
     private server: io.Server
+    private gameRoomUpdateInterval
     public socketMap: Map<string, io.Socket> //userid, socketid
-    public roomMap: Array<GameRoom>
+    //public roomMap: Array<GameRoom>
+    public roomMap: Map<string, GameRoom>
 
     constructor() {
         this.server = new io.Server(3001, {cors: {
@@ -128,8 +135,19 @@ export class GameSocketIOService {
             methods: ["GET", "POST", "PUT", "DELETE"]
           }});
         this.socketMap = new Map<string, io.Socket> //userid, socketid
-        this.roomMap = new Array<GameRoom>
+        //this.roomMap = new Array<GameRoom>
+        this.roomMap = new Map<string, GameRoom>
         console.log("Multiplayer socket instance started")
+        this.gameRoomUpdateInterval = setInterval(() => {
+            var i = 0;
+            for(let gameroom of this.roomMap.entries()){
+                //check statuses for finished games first
+                if(gameroom[1].status == "finished"){
+                    this.roomMap.delete(gameroom[0])
+                }
+            }
+            console.log(this.roomMap)
+        }, 500)
     }
 
     public getServer(): io.Server {
@@ -138,10 +156,10 @@ export class GameSocketIOService {
     public makePlayerJoinRoom(player2: Player) { //returning room name
         var i = 0;
         for(let room of this.roomMap){
-            if(room.status == "waiting"){
-                this.roomMap[i].setPlayer2(player2); //assign player2 since player1 is already present
-                this.roomMap[i].status = "active"; //change room status to active
-                return this.roomMap[i].getRoomName(); //return name to make socket join room
+            if(room[1].status == "waiting"){
+                room[1].setPlayer2(player2) //assign player2 since player1 is already present
+                room[1].status= "active"; //change room status to active
+                return room[1].getRoomName(); //return room name to make socket join
             }
             i++;
         }
