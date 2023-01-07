@@ -8,8 +8,18 @@ export class AuthController
 {
   constructor(private readonly authService: AuthService) {}
   
+
+
+
+@Get('ping')
+async ping(@Req() request: RequestWithUser, @Res() res) 
+{
+  console.log(request,res)
+  return { 200 : "ok"}
+}
+
   @Get('who')
-  async whoAmI(@Req() request: RequestWithUser, @Res() res)
+  async whoAmI(@Req() request: RequestWithUser, @Res() res) 
   {
     const sessionStore = request['sessionStore'];
     const type: SessionUser = sessionStore['sessions'];
@@ -19,6 +29,8 @@ export class AuthController
     //  Look if the 42api was used
     if (first != undefined)
     {
+      console.log(request)
+
         const parsed = JSON.parse(first);
         const passport = parsed['passport'];
         const token = await this.authService.createToken(passport['user']);
@@ -54,6 +66,6 @@ export class AuthController
         const user = await this.authService.createUser(request);
       }
     }
-    return {statCode: 302, url: "http://localhost:5173/Profile" }
+    return {statCode: 302, url: "http://localhost:5173/" }
   }
 }
