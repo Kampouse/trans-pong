@@ -157,7 +157,8 @@ async function acceptRequest(username: string)
     await fetch('http://localhost:3000/profile/add/' + username)
     .then(function(){})
     .catch(function() {console.log("error on accept friend request fetch");});
-    window.location.reload();
+    //window.location.reload();
+     console.log("FIX ME CANT LEAVE this")
 }
 
 async function denyRequest(username: string)
@@ -165,7 +166,8 @@ async function denyRequest(username: string)
     await fetch('http://localhost:3000/profile/deny/' + username)
     .then(function(){})
     .catch(function() {console.log("error on deny request fetch");});
-    window.location.reload();
+    // window.location.reload();
+     console.log("FIX ME CANT LEAVE THIS")
 }
 
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
@@ -342,6 +344,7 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
     const [openGoogleReset, setGoogleReset] = useState(false);
 
     //  Edit profile without authentificator activated
+
 
     return (
         <Dialog onClose={onClose} open={open} className="font-Raleway">
