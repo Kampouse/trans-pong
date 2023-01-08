@@ -1,4 +1,4 @@
-import { Controller, Get,Req,UseGuards, Redirect, Res} from '@nestjs/common';
+import { Controller, Get,Req,UseGuards, Redirect, Res, Headers} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { FortyTwoAuthGuard } from './utils/Guards';
 import { RequestWithUser, SessionUser } from "src/dtos/auth.dtos";
@@ -12,43 +12,35 @@ export class AuthController
 
 
 @Get('ping')
-async ping(@Req() request: RequestWithUser, @Res() res) 
+async ping(@Req() request: RequestWithUser, @Res() res,)
 {
-  console.log(request,res)
   return { 200 : "ok"}
 }
 
   @Get('who')
-  async whoAmI(@Req() request: RequestWithUser, @Res() res) 
+  async whoAmI(@Req() request: RequestWithUser, @Res() res , @Headers() headers) 
   {
-    const sessionStore = request['sessionStore'];
-    const type: SessionUser = sessionStore['sessions'];
-    const groups = { ...type };
-    const first = Object.values(groups)[0];
 
-    //  Look if the 42api was used
-    if (first != undefined)
-    {
-      console.log(request)
+    if(headers.cookie)
+       {
+            let token = headers.cookie.split("=")[1]
+            console.log(token)
+            let isTokenValid = await this.authService.validate_token(token)
+            console.log(isTokenValid)
+            if (isTokenValid)
+            {
+               res.status(200);
+              return res.send({ message: 'Authorized', status: '200'});
+            }
+            else 
+            {
+              res.status(401).send({ message: 'Unauthorized', status: '401' });
+            }
+       }
+       
 
-        const parsed = JSON.parse(first);
-        const passport = parsed['passport'];
-        const token = await this.authService.createToken(passport['user']);
-        if (token != false)
-        {
-            console.log("token valid, sending it back")
-            res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true }).send();
-        }
-        else
-        {
-            res.status(401).send({ message: 'Unauthorized', status: '401' });
-        }
-    }
-    else
-    {
-        console.log("there is no session values.")
         res.status(401).send({ message: 'Unauthorized', status: '401' });
-    }
+    
   }
 
   @UseGuards(FortyTwoAuthGuard)
@@ -66,6 +58,9 @@ async ping(@Req() request: RequestWithUser, @Res() res)
         const user = await this.authService.createUser(request);
       }
     }
+ let     token = await this.authService.createToken(request.user);
+  console.log("token: -> " + token)
+     res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true })
     return {statCode: 302, url: "http://localhost:5173/" }
   }
 }
