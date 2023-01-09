@@ -1,6 +1,6 @@
 import { defaultMaxListeners } from 'events'
 import React, { useEffect, useRef, useState } from 'react'
-import { init, draw, update, drawGameover } from './ReactiveDraw'
+import { init, draw, drawMultiGameover } from './ReactiveDraw'
 import {usersocket} from '../Matchmaking'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 
@@ -10,7 +10,6 @@ const ReactiveCanvas = () => {
   const div = useRef<HTMLDivElement | null>(null)
 
   const [countdown, setCountdown] = useState(true)
-  const gameover = useRef(false)
 
   const player1 = 'Player1'
   const player2 = 'Player2'
@@ -38,7 +37,8 @@ const ReactiveCanvas = () => {
     */
     usersocket.on("gameUpdate", (gameData: UpdateGameDto) => {
       if(gameData.gameOver){
-        drawGameover({canvas});
+				console.log(gameData)
+        drawMultiGameover({canvas}, gameData);
       }
       if(!gameData.gameOver){
         //update({gameover: gameData.gameOver});

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import {GameUpdate, UpdateProps, UpdateProp} from './object.game'
 import * as io from 'socket.io'
-import { Prisma } from "@prisma/client";
+import { prisma } from 'src/main';
 
 
 export class Player {

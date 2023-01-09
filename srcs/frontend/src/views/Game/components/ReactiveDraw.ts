@@ -193,8 +193,8 @@ export function draw(props: DrawProps, gameData: UpdateGameDto) {
   ctx.fill()
 }
 
-export function drawGameover(props: DrawProps) {
-  const { canvas } = props
+function drawGameover(props: DrawProps, playerWon: string, leftScore: number, rightScore: number) {
+	const { canvas } = props
   var ctx = canvas!.current!.getContext('2d')
 
   if (!ctx) {
@@ -209,47 +209,55 @@ export function drawGameover(props: DrawProps) {
   ctx.fillStyle = '#6e6767'
   ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
 
-  let playerWon: string
-
-  playerWon = leftPlayer.playerScore >= 5 ? 'Player 1 won!' : 'Player 2 won!'
-
-  ctx.fillStyle = '#FFF'
+	ctx.fillStyle = '#FFF'
 
   if (canvasSize.width === 300) {
     ctx.font = '50px font'
     ctx.fillText(
-      playerWon,
+      playerWon + " won!",
       (canvasSize.width - 280) / 2,
       canvasSize.height / 2 + 20
     )
     ctx.fillText(
-      leftPlayer.playerScore.toString(),
+      leftScore.toString(),
       canvasSize.width / 4 - 10,
       canvasSize.height / 5
     )
     ctx.fillText(
-      rightPlayer.playerScore.toString(),
+      rightScore.toString(),
       (3 * canvasSize.width) / 4 - 10,
       canvasSize.height / 5
     )
   } else {
     ctx.font = '75px font'
     ctx.fillText(
-      playerWon,
+      playerWon + " won!",
       (canvasSize.width - 415) / 2,
       canvasSize.height / 2 + 20
     )
     ctx.fillText(
-      leftPlayer.playerScore.toString(),
+      leftScore.toString(),
       canvasSize.width / 4 - 15,
       canvasSize.height / 5
     )
     ctx.fillText(
-      rightPlayer.playerScore.toString(),
+      rightScore.toString(),
       (3 * canvasSize.width) / 4 - 15,
       canvasSize.height / 5
     )
   }
+}
+
+export function drawSingleGameover(props: DrawProps) {
+	let playerWon: string
+  playerWon = leftPlayer.playerScore >= 5 ? "You" : "Computer"
+  drawGameover(props, playerWon, leftPlayer.playerScore, rightPlayer.playerScore)
+}
+
+export function drawMultiGameover(props: DrawProps, gameData: UpdateGameDto) {
+  let playerWon: string
+  playerWon = gameData.leftPlayer.playerScore >= 5 ? gameData.leftPlayer.playerUser : gameData.rightPlayer.playerUser
+  drawGameover(props, playerWon, gameData.leftPlayer.playerScore, gameData.rightPlayer.playerScore)
 }
 
 export const update = ({ gameover, keyActions }) => {
@@ -260,7 +268,6 @@ export const update = ({ gameover, keyActions }) => {
 		leftPlayer.playerPos -= 0.01
 	if (leftPlayer.playerPos < 1 && keyActions.down)
 		leftPlayer.playerPos += 0.01
-
 
   rightPlayer.playerPos += (gameBall.ballPosY - rightPlayer.playerPos) * 0.1
 
@@ -303,6 +310,8 @@ export const update = ({ gameover, keyActions }) => {
     else{
       rightPlayer.playerScore++
     }
+		if (leftPlayer.playerScore >= 5 || rightPlayer.playerScore >= 5)
+			gameover.current = true;
     gameBall.ballPosX = 0.5
     gameBall.ballPosY = 0.5
     gameBall.ballSpeed = 10.0

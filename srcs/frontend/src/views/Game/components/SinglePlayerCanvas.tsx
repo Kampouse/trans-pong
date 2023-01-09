@@ -1,6 +1,7 @@
 import { defaultMaxListeners } from 'events'
 import React, { useEffect, useRef, useState } from 'react'
-import { init, draw, update, drawGameover, singlePlayerDraw } from './ReactiveDraw'
+import { init, draw, update, drawSingleGameover, singlePlayerDraw } from './ReactiveDraw'
+import Robot from "../../../../../assets/public/robot.png"
 import {usersocket} from '../Matchmaking'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 
@@ -32,7 +33,7 @@ const SinglePlayerCanvas = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (gameover.current) {
-        drawGameover({ canvas })
+        drawSingleGameover({ canvas })
       }
       if (!gameover.current) {
         update({ gameover, keyActions })
@@ -110,7 +111,7 @@ const SinglePlayerCanvas = () => {
         >
           <img
             className="h-full w-full rounded-full"
-            src="/robot.png"
+            src={Robot}
             alt=""
           />
         </div>
@@ -122,5 +123,5 @@ const SinglePlayerCanvas = () => {
   )
 }
 
-export default ReactiveCanvas
+export default SinglePlayerCanvas
 
