@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { exit } from "process";
 
 //  Create a seed which will create data in our database for testing
 async function main()
@@ -8,7 +7,7 @@ async function main()
     console.log("Starting seed script.")
 
     //  Add evaluator login42 here for seed data
-    var     evaluatorUsername = 'aguay'
+    var     evaluatorUsername = process.env.LOGIN;
 
     //  { is for hide all the code to be abble to add friend to the evaluator user
     {
@@ -998,26 +997,6 @@ async function main()
     catch{}
     }
 
-    //  Add evaluator login42 here for seed data
-    var     evaluatorUsername = 'gasselin'
-
-    var user;
-
-    try
-    {
-        user = await prisma.user.findUnique({
-            where: {
-                login42: evaluatorUsername
-            }
-        })
-    }
-    catch
-    {}
-
-    if (!user)
-    {
-        exit(0);
-    }
     //  Add everyone as friend
     try
     {
