@@ -1,4 +1,4 @@
-import { Req, Res, Controller, Get, Header, Param, Post, UseInterceptors, Body, Redirect} from "@nestjs/common";
+import { Req, Controller, Get, Header, Param, Post, UseInterceptors, Body, Redirect} from "@nestjs/common";
 import { ProfileService } from "./profile.service";
 import { PrivateProfileDto, PublicProfileDto, UpdateUsernameDto } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -186,6 +186,7 @@ export class ProfileController {
         console.log(status)
         return {statCode: 302, url: "http://localhost:5173/Profile" }
     }
+
     //  Get currently logged in user ID
     @Get('/get/userid')
     @Header('Content-type', 'application/json; charset=utf-8')
@@ -206,4 +207,22 @@ export class ProfileController {
         //console.log(userId)
         return (userId);
     }
+
+        //  Get currently logged in user ID
+    @Get('/play/solo')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async getClientInfo(@Req() request: RequestWithUser) : Promise<any>
+    {
+        console.log("test")
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined)
+        {
+            return("undefined user!")
+        }
+
+        const userId = await this.profileService.getSinglePlayerData(login42);
+        return (userId);
+    }
+
 }

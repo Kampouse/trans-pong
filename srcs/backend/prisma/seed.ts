@@ -7,6 +7,9 @@ async function main()
     const prisma = new PrismaClient();
     console.log("Starting seed script.")
 
+    //  Add evaluator login42 here for seed data
+    var     evaluatorUsername = 'aguay'
+
     //  { is for hide all the code to be abble to add friend to the evaluator user
     {
     //  Create 9 users for test's

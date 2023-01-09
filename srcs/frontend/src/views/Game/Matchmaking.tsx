@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { redirect, useNavigate, Navigate, NavigateFunction, RedirectFunction } from 'react-router-dom';
 import * as io from 'socket.io-client';
 import { Fetch } from 'utils';
@@ -6,6 +7,7 @@ export default function Matchmaking()
 {
     const nav = useNavigate()
     usersocket.disconnect(); //automatically disconnect socket on render
+    const userid = fetchUserId();
     return (
     <div className=" my-4 px-[10%] py-[10%] mx-2 w-[100%]">
             <div className="flex flex-col rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm px-20">
@@ -38,20 +40,26 @@ function startSinglePlayer(e, nav: NavigateFunction){
 	nav('/game');
 }
 
+function fetchUserId() {
+    const [userId, setUserId] = useState<any>(null);
 
-function startMultiplayerMatchmake(e, nav: NavigateFunction){
+    useEffect(() => {
+		Fetch ('http://localhost:3000/profile/get/userid')
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.userid);
+            setUserId(data.userid);
+        })
+	})
+    return(userId)
+}
+
+function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string){
     e.preventDefault();
     console.log("Creating socket");
-    var userid;
     document.getElementById("multiplayer").disabled = true;
     usersocket.disconnect();
     usersocket = io.connect("http://localhost:3001");
-    Fetch ('http://localhost:3000/profile/get/userid')
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data.userid);
-        userid = data
-    })
     
     usersocket.on("roomIsReady", (room) => {
         console.log(room);

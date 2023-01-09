@@ -1156,4 +1156,27 @@ export class ProfileService
         }
         return(undefined);
     }
+
+    async getSinglePlayerData(login42: string)
+    {
+        var user;
+
+        try{
+            user = await prisma.user.findUnique( {
+               where: {login42: login42} 
+            } )
+        }
+        catch{}
+
+        if (user != undefined)
+        {
+            var login = user.login42;
+            var photo = user.imagePath;
+            return({
+                login: login,
+                photo: photo
+            });
+        }
+        return (undefined);
+    }
 }
