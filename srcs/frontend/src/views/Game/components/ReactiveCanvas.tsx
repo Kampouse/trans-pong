@@ -65,14 +65,16 @@ const ReactiveCanvas = () => {
   };
 
   return (
-    <div className="m-auto ">
+    <div
+			className="mx-auto w-full h-full pt-[50px]"
+			tabIndex={0}
+			onKeyDownCapture={handleKeyDown}
+			onKeyUpCapture={handleKeyUp}
+		>
       <div
         id="container"
         ref={div}
-        className="xl:w-[1200px] xl:h-[800px] lg:w-[900px] lg:h-[600px] md:w-[600px] md:h-[400px] sm:w-[600px] sm:h-[400px] w-[300px] h-[200px] pt-[50px]"
-				tabIndex={0}
-				onKeyDownCapture={handleKeyDown}
-				onKeyUpCapture={handleKeyUp}
+        className="xl:w-[1200px] xl:h-[800px] lg:w-[900px] lg:h-[600px] md:w-[600px] md:h-[400px] sm:w-[600px] sm:h-[400px] w-[300px] h-[200px] pt-[50px] mx-auto"
 			>
         <canvas
           id="myCanvas"
@@ -87,7 +89,7 @@ const ReactiveCanvas = () => {
         />
         {/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}
       </div>
-      <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] pt-24 grid xl:grid-cols-6 lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-6 grid-cols-4 items-center justify-center">
+      <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] pt-24 grid xl:grid-cols-6 lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-6 grid-cols-4 items-center justify-center mx-auto">
         <p className="text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-2xl text-xl font-bold mr-[10px] justify-end grid xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2">
           {player1}
         </p>
@@ -125,7 +127,7 @@ const ReactiveCanvas = () => {
           {player2}
         </p>
       </div>
-      <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] h-fit justify-center m-auto pt-2">
+      <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] h-fit justify-center m-auto pt-8">
         <div className="grid justify-center m-auto">
           <button className="font-carattere bg-pink-500 text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl w-fit text-lg font-bold py-2 px-4 rounded">
             Give Up
