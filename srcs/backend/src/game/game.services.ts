@@ -106,7 +106,7 @@ export class GameRoom {
         this.updateInterval = setInterval(() => {
             this.gameUpdateObject.update({keyActionsPlayer1: this.player1.getKeyActionCurrentState(), keyActionsPlayer2: this.player2.getKeyActionCurrentState()})
             this.gameUpdateObject.updateGameUpdateDto(); //should change the object properties hopefully
-            console.log(this.gameUpdateObject.updateGame);
+            //console.log(this.gameUpdateObject.updateGame);
             if (this.gameUpdateObject.leftPlayer.playerScore == 5 || this.gameUpdateObject.rightPlayer.playerScore == 5){
                 //posting data stuff maybe ?
                 this.status = "finished"

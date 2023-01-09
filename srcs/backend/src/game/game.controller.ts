@@ -6,7 +6,7 @@ import { RequestWithUser } from "src/dtos/auth.dtos";
 export class GameSocketIOController {
     constructor(private gameSocketIO: GameSocketIOService){
         const server = this.gameSocketIO.getServer();
-        console.log(server)
+        //console.log(server)
         server.on("connection", (socket) => {
             console.log("New socket: "  + socket.id);
 
@@ -23,7 +23,7 @@ export class GameSocketIOController {
 
             socket.on("searchGame", () => {
                 var room = this.tryGetAvailableRoom(gameSocketIO.roomMap)
-                console.log(gameSocketIO.roomMap.size)
+                //console.log(gameSocketIO.roomMap.size)
                 if(gameSocketIO.roomMap.size == 0 || room == null){ //no room found, add new room
                     var newRoom: GameRoom = new GameRoom(new Player(this.getUserFromSocketId(gameSocketIO.socketMap, socket.id), socket), gameSocketIO.getServer())
                     gameSocketIO.roomMap.set(newRoom.getRoomName(), newRoom) //adds new room to list
