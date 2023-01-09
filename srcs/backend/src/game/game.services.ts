@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import {GameUpdate, UpdateProps, UpdateProp} from './object.game'
 import * as io from 'socket.io'
-import { UpdateGameDto } from "src/dtos/gameUpdate.dtos";
-import { Game } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 
 
