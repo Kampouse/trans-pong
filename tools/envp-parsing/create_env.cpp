@@ -102,7 +102,7 @@ bool	create_api_info(void)
 
 	while (run)
 	{
-        std::cout << "Please enter your'e Login 42 : ";
+        std::cout << "Please enter your Login 42 : ";
         std::getline(std::cin, login42);
         std::cout << "Now, please create an API application on the 42 intra website." << std::endl;
         std::cout << "Do you want a tutorial how to do it ? (Y for yes)";
@@ -144,6 +144,6 @@ void	create_env(void)
 	create_api_info();
 	if (validate_env())
 		exit (0);
-	std::cout << "error: envp invalid, you can delete it and make again to create one or edit your'e .env file" << std::endl;
+	std::cout << "error: envp invalid, you can delete it and make again to create one or edit your .env file" << std::endl;
 	exit(1);
 }

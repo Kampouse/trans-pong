@@ -23,7 +23,7 @@ export class GameSocketIOController {
                 //console.log(this.getUserFromSocketId(this.gameSocketIO.socketMap, socket.id))
             })
 
-            socket.on("searchGame", () => {
+            socket.on("searchGame", async () => {
                 var room = this.tryGetAvailableRoom(gameSocketIO.roomMap)
                 //console.log(gameSocketIO.roomMap.size)
                 if(gameSocketIO.roomMap.size == 0 || room == null){ //no room found, add new room
@@ -33,7 +33,8 @@ export class GameSocketIOController {
                     //console.log(gameSocketIO.roomMap)
                 }
                 else{ //array isnt empty and there are rooms available
-                    var roomName = this.gameSocketIO.makePlayerJoinRoom(new Player(this.gameSocketIO.socketMap[socket.id], socket));
+                    var roomName = await this.gameSocketIO.makePlayerJoinRoom(new Player(this.gameSocketIO.socketMap[socket.id], socket));
+                    //var roomname = this.gameSocketIO.getRoomForPlayer()
                     socket.join(roomName); //all players are in the game, status is set to active
                     server.to(roomName).emit("roomIsReady", roomName); //pass control to game execution
                 }

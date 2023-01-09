@@ -27,6 +27,9 @@ export class GameUpdate
 		this.gameBall = new BallDto(0.5, 0.5, 0.01, 10, -1, 0)
 		this.updateGame = new UpdateGameDto(this.leftPlayer, this.rightPlayer, this.gameBall, false, '')
 	}
+	public createUpdateGameDto(){ //to recreate a new updateGame after the two players are changed
+		this.updateGame = new UpdateGameDto(this.leftPlayer, this.rightPlayer, this.gameBall, false, '')
+	}
 	update = ({ keyActionsPlayer1, keyActionsPlayer2}: UpdateProps) => {
 		const playerHeight = 0.15
 		const playerWidth = 0.01

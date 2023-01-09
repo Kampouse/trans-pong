@@ -33,6 +33,9 @@ export class Player {
             console.log("this player is ready");
             this.status = "ready";
         })
+        socket.on("disconnect", () => {
+            this.status = "disconnected"
+        })
     }
     public setKeyArrowUp() {
         this.actions.keyActions.up = true;
@@ -75,8 +78,6 @@ export class GameRoom {
         this.updateInterval = null;
         this.server = server
 
-
-
         console.log(`Lobby ${this.roomName} instanciated, waiting for second player`)
         this.tempWaitForPlayerReadyInterval = setInterval(() => {
             if(this.player1.status == "ready" && this.player2.status == "ready")
@@ -97,13 +98,29 @@ export class GameRoom {
         return result;
     }
 
-    public setPlayer1(player: Player){
-        if(this.player1 == null) //prevent possible reassignments from players who might try to trash the room
-            this.player1 = player;
+    async setPlayer1(){ //set Player1 info into game update object
+        try{
+            var user = await prisma.user.findUnique({where: {userID: this.player1.getUserId()}})
+            this.gameUpdateObject.rightPlayer.playerPhoto = user.imagePath
+            this.gameUpdateObject.rightPlayer.playerUser = user.login42
+        }
+        catch(e){
+            console.log(e)
+        }
     }
-    public setPlayer2(player: Player){
-        if(this.player2 == null) //prevent possible reassignments from players who might try to trash the room
+    
+    async setPlayer2(player: Player){
+        if(this.player2 == null){ //prevent possible reassignments from players who might try to trash the room
             this.player2 = player;
+            try{
+                var user = await prisma.user.findUnique({where: {userID: player.getUserId()}})
+                this.gameUpdateObject.rightPlayer.playerPhoto = user.imagePath
+                this.gameUpdateObject.rightPlayer.playerUser = user.login42
+            }
+            catch(e){
+                console.log(e)
+            }
+        }
     }
 
     public getPlayer1Id(){
@@ -116,7 +133,7 @@ export class GameRoom {
         return this.roomName;
     }
     public startGameUpdateInterval(server: io.Server) {
-        this.updateInterval = setInterval(() => {
+        this.updateInterval = setInterval(async () => {
             this.gameUpdateObject.update({keyActionsPlayer1: this.player1.getKeyActionCurrentState(), keyActionsPlayer2: this.player2.getKeyActionCurrentState()})
             this.gameUpdateObject.updateGameUpdateDto(); //should change the object properties hopefully
             //console.log(this.gameUpdateObject.updateGame);
@@ -127,12 +144,20 @@ export class GameRoom {
                 this.gameUpdateObject.updateGame.gameOver = true;
                 this.gameUpdateObject.updateGame.winner = this.gameUpdateObject.leftPlayer.playerScore == 5 ? this.gameUpdateObject.leftPlayer.playerUser : this.gameUpdateObject.rightPlayer.playerUser
                 clearInterval(this.updateInterval);
-                prisma.game.update({where: {gameID: this.getRoomName()}, 
+                await prisma.game.update({where: {gameID: this.getRoomName()}, 
                     data: {
                         leftPlayerScore: this.gameUpdateObject.leftPlayer.playerScore,
                         rightPlayerScore: this.gameUpdateObject.rightPlayer.playerScore,
                         active: false,
                         winner: this.gameUpdateObject.updateGame.winner
+                    }})
+                await prisma.user.update({where: {userID: this.getPlayer1Id()}, 
+                    data: {
+                        userStatus: "online"
+                    }})
+                await prisma.user.update({where: {userID: this.getPlayer2Id()}, 
+                    data: {
+                        userStatus: "online"
                     }})
             }
             server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
@@ -173,19 +198,40 @@ export class GameSocketIOService {
     public getServer(): io.Server {
         return this.server;
     }
-    public makePlayerJoinRoom(player2: Player) { //returning room name
+    public getRoomForPlayer(player: Player) {
+
+    }
+    async makePlayerJoinRoom(player2: Player) { //returning room name
         var i = 0;
         for(let room of this.roomMap){
             if(room[1].status == "waiting"){
                 room[1].setPlayer2(player2) //assign player2 since player1 is already present
+                room[1].setPlayer1();
                 room[1].status= "active"; //change room status to active
-                prisma.game.create(
-                    {data: {
-                        gameID: room[1].getRoomName(),
-                        leftPlayer: room[1].getPlayer1Id(),
-                        rightPlayer: room[1].getPlayer2Id(),
-                        active: true,
+                try {
+                    var leftuser = await prisma.user.findUnique({where: {userID: room[1].getPlayer1Id()}})
+                    var rightuser = await prisma.user.findUnique({where: {userID: room[1].getPlayer2Id()}})
+                    
+                    await prisma.game.create(
+                        {data: {
+                            leftPlayer: leftuser.login42,
+                            rightPlayer: rightuser.login42,
+                            gameNumber: 30,
+                            active: true,
+                        }})
+                    await prisma.user.update({where: {userID: room[1].getPlayer1Id()}, 
+                    data: {
+                        userStatus: "playing"
                     }})
+                    await prisma.user.update({where: {userID: room[1].getPlayer2Id()}, 
+                    data: {
+                        userStatus: "playing"
+                    }})
+                    console.log("game created")
+                }
+                catch(e) {
+                    console.log(e)
+                }
                 return room[1].getRoomName(); //return room name to make socket join
             }
             i++;
