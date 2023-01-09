@@ -8,7 +8,7 @@ async function main()
     console.log("Starting seed script.")
 
     //  Add evaluator login42 here for seed data
-    var     evaluatorUsername = 'evaluator'
+    var     evaluatorUsername = 'aguay'
 
     //  { is for hide all the code to be abble to add friend to the evaluator user
     {
