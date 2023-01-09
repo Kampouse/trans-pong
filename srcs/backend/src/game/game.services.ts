@@ -173,7 +173,6 @@ export class GameSocketIOService {
     public getServer(): io.Server {
         return this.server;
     }
-    public 
     public makePlayerJoinRoom(player2: Player) { //returning room name
         var i = 0;
         for(let room of this.roomMap){
