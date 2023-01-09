@@ -15,15 +15,11 @@ const gameBall = {
 }
 
 const leftPlayer = {
-	playerUser: '',
-	playerPhoto: '',
 	playerScore: 0,
 	playerPos: 0
 }
 
 const rightPlayer = {
-  playerUser: '',
-	playerPhoto: '',
 	playerScore: 0,
 	playerPos: 0
 }
@@ -256,11 +252,16 @@ export function drawGameover(props: DrawProps) {
   }
 }
 
-export const update = ({ gameover }) => {
+export const update = ({ gameover, keyActions }) => {
 	const playerHeight = 0.15
 	const playerWidth = 0.01
 
-  leftPlayer.playerPos = 0.5
+  if (leftPlayer.playerPos > 0 && keyActions.up)
+		leftPlayer.playerPos -= 0.01
+	if (leftPlayer.playerPos < 1 && keyActions.down)
+		leftPlayer.playerPos += 0.01
+
+
   rightPlayer.playerPos += (gameBall.ballPosY - rightPlayer.playerPos) * 0.1
 
   gameBall.ballPosX += (gameBall.ballDirX * gameBall.ballSpeed) / 1000

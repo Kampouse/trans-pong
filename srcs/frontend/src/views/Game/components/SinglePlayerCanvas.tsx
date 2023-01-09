@@ -20,9 +20,10 @@ const SinglePlayerCanvas = () => {
   const player2_img =
     'https://flowbite.com/docs/images/people/profile-picture-1.jpg'
 
-  const mouse = {
-    y: 0
-  }
+	const keyActions = {
+		up: false,
+		down: false
+	}
 
   useEffect(() => {
     init({ canvas })
@@ -34,32 +35,29 @@ const SinglePlayerCanvas = () => {
         drawGameover({ canvas })
       }
       if (!gameover.current) {
-        update({ gameover })
+        update({ gameover, keyActions })
         singlePlayerDraw({ canvas })
       }
     }, (1 / 60) * 1000)
-    usersocket.on("gameUpdate", (gameData: UpdateGameDto) => {
-      if(gameData.gameOver){
-        drawGameover({canvas});
-      }
-      if(!gameData.gameOver){
-        //update({gameover: gameData.gameOver});
-        singlePlayerDraw({canvas});
-      }
-    })
-    //return () => clearInterval(interval)
+    return () => clearInterval(interval)
   }, [countdown])
 
 	const handleKeyDown = event => {
-    console.log('User pressed: ', event.key);
-    if(event.key == "ArrowUp" || event.key == "ArrowDown")
-      usersocket.emit("updatePlayerPosition", {direction: event.key}); //need to find a way to emit this only once until a keyup event is fired
+		event.preventDefault();
+		if (event.key === 'w' || event.key === 'ArrowUp')
+			keyActions.up = true;
+		if (event.key === 's' || event.key === 'ArrowDown')
+			keyActions.down = true;
+    // console.log('User pressed: ', event.key);
   };
 
-  
 	const handleKeyUp = event => {
-    console.log('User released: ', event.key);
-    usersocket.emit("stopUpdatePlayerPosition")
+		event.preventDefault();
+		if (event.key === 'w' || event.key === 'ArrowUp')
+			keyActions.up = false;
+		if (event.key === 's' || event.key === 'ArrowDown')
+			keyActions.down = false;
+    // console.log('User released: ', event.key);
   };
 
   return (
@@ -78,11 +76,6 @@ const SinglePlayerCanvas = () => {
           id="myCanvas"
           ref={canvas}
           style={{ border: '1px solid #000' }}
-          onMouseMove={(evt) => {
-            mouse.y =
-              evt.clientY -
-              canvas.current!.getBoundingClientRect().top
-          }}
           className="m-auto"
         />
         {/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}

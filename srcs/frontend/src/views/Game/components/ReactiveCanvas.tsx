@@ -20,12 +20,8 @@ const ReactiveCanvas = () => {
   const player2_img =
     'https://flowbite.com/docs/images/people/profile-picture-1.jpg'
 
-  const mouse = {
-    y: 0
-  }
-
   useEffect(() => {
-    init({ canvas, mouse })
+    init({ canvas })
   }, [])
 
   useEffect(() => {
@@ -42,11 +38,11 @@ const ReactiveCanvas = () => {
     */
     usersocket.on("gameUpdate", (gameData: UpdateGameDto) => {
       if(gameData.gameOver){
-        drawGameover({canvas, mouse});
+        drawGameover({canvas});
       }
       if(!gameData.gameOver){
         //update({gameover: gameData.gameOver});
-        draw({canvas, mouse}, gameData);
+        draw({canvas}, gameData);
       }
     })
     //return () => clearInterval(interval)
@@ -80,11 +76,6 @@ const ReactiveCanvas = () => {
           id="myCanvas"
           ref={canvas}
           style={{ border: '1px solid #000' }}
-          onMouseMove={(evt) => {
-            mouse.y =
-              evt.clientY -
-              canvas.current!.getBoundingClientRect().top
-          }}
           className="m-auto"
         />
         {/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}
