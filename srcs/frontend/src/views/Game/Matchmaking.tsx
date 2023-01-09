@@ -1,5 +1,6 @@
 import { redirect, useNavigate, Navigate, NavigateFunction, RedirectFunction } from 'react-router-dom';
 import * as io from 'socket.io-client';
+import { Fetch } from 'utils';
 export var usersocket: io.Socket = io.connect();
 export default function Matchmaking()
 {
@@ -26,9 +27,17 @@ export default function Matchmaking()
 function startMultiplayerMatchmake(e, nav: NavigateFunction){
     e.preventDefault();
     console.log("Creating socket");
+    var userid;
     document.getElementById("multiplayer").disabled = true;
     usersocket.disconnect();
     usersocket = io.connect("http://localhost:3001");
+    Fetch ('http://localhost:3000/profile/get/userid')
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data.userid);
+        userid = data
+    })
+    
     usersocket.on("roomIsReady", (room) => {
         console.log(room);
         console.log("Match found! Redirecting to game.");
@@ -43,7 +52,8 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction){
         usersocket.emit("socketIsConnected");
     })
     usersocket.on("ack", (socketId) => {
-        usersocket.emit("registerId", {userId: "aaaaaaaaaaaaa", socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+        console.log(userid)
+        usersocket.emit("registerId", {userId: userid, socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
         usersocket.emit("searchGame"); //join new game
     })
     

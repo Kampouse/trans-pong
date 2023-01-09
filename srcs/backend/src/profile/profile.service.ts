@@ -1139,4 +1139,21 @@ export class ProfileService
         }
         return (status)
     }
+
+    async getUserId(login42: string)
+    {
+        var user;
+
+        try{
+            user = await prisma.user.findUnique( {
+               where: {login42: login42} 
+            } )
+        }
+        catch{}
+
+        if(user != undefined){
+            return({userid: user.userID});
+        }
+        return(undefined);
+    }
 }

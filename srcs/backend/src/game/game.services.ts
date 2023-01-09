@@ -3,6 +3,7 @@ import {GameUpdate, UpdateProps, UpdateProp} from './object.game'
 import * as io from 'socket.io'
 import { UpdateGameDto } from "src/dtos/gameUpdate.dtos";
 import { Game } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 
 export class Player {
@@ -145,8 +146,8 @@ export class GameSocketIOService {
                 if(gameroom[1].status == "finished"){
                     this.roomMap.delete(gameroom[0])
                 }
+                //add a check for rooms with disconnected sockets or just plain empty for any type of status
             }
-            console.log(this.roomMap)
         }, 500)
     }
 
