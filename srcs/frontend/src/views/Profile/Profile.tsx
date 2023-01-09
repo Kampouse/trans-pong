@@ -358,7 +358,7 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                     </p>
                     <div className=''>
                         <form action='http://localhost:3000/profile/update/username' method='POST'>
-                            <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
+                            <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-[80%] my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
                             <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                         </form>
                     </div>
@@ -500,7 +500,7 @@ export default function Profile()
             {data && (
             <>
             <div className='w-full h-[30%] flex py-4 px-5'>
-                <div className='w-fit h-full flex'>
+                <div className='w-fit h-full flex items-center justify-center'>
                     {username === undefined && hover && 
                     <div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
                         <Edit sx={{color: blue[700], height: 35, width: 35}} />

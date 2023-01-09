@@ -996,7 +996,7 @@ async function main()
     }
 
     //  Add evaluator login42 here for seed data
-    var     evaluatorUsername = 'evaluator'
+    var     evaluatorUsername = 'gasselin'
 
     var user;
 
