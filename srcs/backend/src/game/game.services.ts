@@ -52,6 +52,9 @@ export class Player {
     public getKeyActionCurrentState():UpdateProp {
         return this.actions;
     }
+    public getUserId(){
+        return this.userId;
+    }
 
 }
 
@@ -73,6 +76,9 @@ export class GameRoom {
         this.gameUpdateObject = new GameUpdate()
         this.updateInterval = null;
         this.server = server
+
+
+
         console.log(`Lobby ${this.roomName} instanciated, waiting for second player`)
         this.tempWaitForPlayerReadyInterval = setInterval(() => {
             if(this.player1.status == "ready" && this.player2.status == "ready")
@@ -101,6 +107,13 @@ export class GameRoom {
         if(this.player2 == null) //prevent possible reassignments from players who might try to trash the room
             this.player2 = player;
     }
+
+    public getPlayer1Id(){
+        return this.player1.getUserId()
+    }
+    public getPlayer2Id(){
+        return this.player2.getUserId();
+    }
     public getRoomName() {
         return this.roomName;
     }
@@ -111,10 +124,18 @@ export class GameRoom {
             //console.log(this.gameUpdateObject.updateGame);
             if (this.gameUpdateObject.leftPlayer.playerScore == 5 || this.gameUpdateObject.rightPlayer.playerScore == 5){
                 //posting data stuff maybe ?
+                server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //send event to make client sockets leave room as security measure
                 this.status = "finished"
                 this.gameUpdateObject.updateGame.gameOver = true;
                 this.gameUpdateObject.updateGame.winner = this.gameUpdateObject.leftPlayer.playerScore == 5 ? this.gameUpdateObject.leftPlayer.playerUser : this.gameUpdateObject.rightPlayer.playerUser
                 clearInterval(this.updateInterval);
+                prisma.game.update({where: {gameID: this.getRoomName()}, 
+                    data: {
+                        leftPlayerScore: this.gameUpdateObject.leftPlayer.playerScore,
+                        rightPlayerScore: this.gameUpdateObject.rightPlayer.playerScore,
+                        active: false,
+                        winner: this.gameUpdateObject.updateGame.winner
+                    }})
             }
             server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
         }, (1/60) * 1000) //60 fps
@@ -126,7 +147,7 @@ export class GameSocketIOService {
 
     private server: io.Server
     private gameRoomUpdateInterval
-    public socketMap: Map<string, io.Socket> //userid, socketid
+    public socketMap: Map<string, string> //socketid, userid, maps socket id's to user id's for easy retrieval
     //public roomMap: Array<GameRoom>
     public roomMap: Map<string, GameRoom>
 
@@ -135,7 +156,7 @@ export class GameSocketIOService {
             origin: "http://localhost:5173",
             methods: ["GET", "POST", "PUT", "DELETE"]
           }});
-        this.socketMap = new Map<string, io.Socket> //userid, socketid
+        this.socketMap = new Map<string, string> //userid, socketid
         //this.roomMap = new Array<GameRoom>
         this.roomMap = new Map<string, GameRoom>
         console.log("Multiplayer socket instance started")
@@ -154,12 +175,20 @@ export class GameSocketIOService {
     public getServer(): io.Server {
         return this.server;
     }
+    public 
     public makePlayerJoinRoom(player2: Player) { //returning room name
         var i = 0;
         for(let room of this.roomMap){
             if(room[1].status == "waiting"){
                 room[1].setPlayer2(player2) //assign player2 since player1 is already present
                 room[1].status= "active"; //change room status to active
+                prisma.game.create(
+                    {data: {
+                        gameID: room[1].getRoomName(),
+                        leftPlayer: room[1].getPlayer1Id(),
+                        rightPlayer: room[1].getPlayer2Id(),
+                        active: true,
+                    }})
                 return room[1].getRoomName(); //return room name to make socket join
             }
             i++;
