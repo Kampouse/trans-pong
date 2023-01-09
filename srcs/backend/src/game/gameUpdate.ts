@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateGameDto, GamePlayerDto, BallDto } from '../dtos/gameUpdate.dtos';
+import { Player } from './game.services';
+import {prisma} from 'src/main'
 
 interface UpdateProps {
 	keyActions: {
@@ -11,11 +13,18 @@ interface UpdateProps {
 @Injectable()
 export class GameUpdate
 {
-	leftPlayer = new GamePlayerDto('', '', 0, 0.5)
-	rightPlayer = new GamePlayerDto('', '', 0, 0.5)
-	gameBall = new BallDto(0.5, 0.5, 0.01, 10, -1, 0)
-	updateGame = new UpdateGameDto(this.leftPlayer, this.rightPlayer, this.gameBall, false, '')
-
+	leftPlayer: GamePlayerDto;
+	rightPlayer: GamePlayerDto;
+	gameBall: BallDto;
+	updateGame: UpdateGameDto;
+	constructor(player1: Player){
+		this.leftPlayer = new GamePlayerDto(player1.getUserId(), '', 0, 0.5)
+		this.gameBall = new BallDto(0.5, 0.5, 0.01, 10, -1, 0)
+		this.updateGame = new UpdateGameDto(this.leftPlayer, this.rightPlayer, this.gameBall, false, '')
+	}
+	public setPlayerRight(player: Player){
+		this.rightPlayer = this.leftPlayer = new GamePlayerDto(player.getUserId(), '', 0, 0.5)
+	}
 	update = ({ keyActions }: UpdateProps) => {
 		const playerHeight = 0.15
 		const playerWidth = 0.01
