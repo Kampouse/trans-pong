@@ -1,8 +1,17 @@
 import React from 'react'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
+import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
 
 interface DrawProps {
   canvas: React.MutableRefObject<HTMLCanvasElement | null>
+}
+
+interface UpdateProps {
+	gameover: React.MutableRefObject<boolean>,
+	keyActions: {
+		up: boolean,
+		down: boolean
+	}
 }
 
 const gameBall = {
@@ -193,7 +202,7 @@ export function draw(props: DrawProps, gameData: UpdateGameDto) {
   ctx.fill()
 }
 
-function drawGameover(props: DrawProps, playerWon: string, leftScore: number, rightScore: number) {
+function drawGameover(props: DrawProps, leftScore: number, rightScore: number) {
 	const { canvas } = props
   var ctx = canvas!.current!.getContext('2d')
 
@@ -214,7 +223,7 @@ function drawGameover(props: DrawProps, playerWon: string, leftScore: number, ri
   if (canvasSize.width === 300) {
     ctx.font = '50px font'
     ctx.fillText(
-      playerWon + " won!",
+      "Game Over!",
       (canvasSize.width - 280) / 2,
       canvasSize.height / 2 + 20
     )
@@ -231,7 +240,7 @@ function drawGameover(props: DrawProps, playerWon: string, leftScore: number, ri
   } else {
     ctx.font = '75px font'
     ctx.fillText(
-      playerWon + " won!",
+      "Game Over!",
       (canvasSize.width - 415) / 2,
       canvasSize.height / 2 + 20
     )
@@ -248,25 +257,23 @@ function drawGameover(props: DrawProps, playerWon: string, leftScore: number, ri
   }
 }
 
-export function drawSingleGameover(props: DrawProps) {
-	let playerWon: string
-  playerWon = leftPlayer.playerScore >= 5 ? "You" : "Computer"
-  drawGameover(props, playerWon, leftPlayer.playerScore, rightPlayer.playerScore)
+export function drawSingleGameover(props: DrawProps, winner: React.MutableRefObject<string>) {
+  winner.current = leftPlayer.playerScore >= 5 ? "You" : "Computer"
+  drawGameover(props, leftPlayer.playerScore, rightPlayer.playerScore);
 }
 
-export function drawMultiGameover(props: DrawProps, gameData: UpdateGameDto) {
-  let playerWon: string
-  playerWon = gameData.leftPlayer.playerScore >= 5 ? gameData.leftPlayer.playerUser : gameData.rightPlayer.playerUser
-  drawGameover(props, playerWon, gameData.leftPlayer.playerScore, gameData.rightPlayer.playerScore)
+export function drawMultiGameover(props: DrawProps, gameData: UpdateGameDto, winner: React.MutableRefObject<string>) {
+  winner.current = gameData.leftPlayer.playerScore >= 5 ? gameData.leftPlayer.playerUser : gameData.rightPlayer.playerUser
+  drawGameover(props, gameData.leftPlayer.playerScore, gameData.rightPlayer.playerScore)
 }
 
-export const update = ({ gameover, keyActions }) => {
+export const update = (props: UpdateProps) => {
 	const playerHeight = 0.15
 	const playerWidth = 0.01
 
-  if (leftPlayer.playerPos > 0 && keyActions.up)
+  if (leftPlayer.playerPos > 0 && props.keyActions.up)
 		leftPlayer.playerPos -= 0.01
-	if (leftPlayer.playerPos < 1 && keyActions.down)
+	if (leftPlayer.playerPos < 1 && props.keyActions.down)
 		leftPlayer.playerPos += 0.01
 
   rightPlayer.playerPos += (gameBall.ballPosY - rightPlayer.playerPos) * 0.1
@@ -311,7 +318,7 @@ export const update = ({ gameover, keyActions }) => {
       rightPlayer.playerScore++
     }
 		if (leftPlayer.playerScore >= 5 || rightPlayer.playerScore >= 5)
-			gameover.current = true;
+			props.gameover.current = true;
     gameBall.ballPosX = 0.5
     gameBall.ballPosY = 0.5
     gameBall.ballSpeed = 10.0

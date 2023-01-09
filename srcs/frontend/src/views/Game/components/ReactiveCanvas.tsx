@@ -3,13 +3,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import { init, draw, drawMultiGameover } from './ReactiveDraw'
 import {usersocket} from '../Matchmaking'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
-
+import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
 
 const ReactiveCanvas = () => {
   const canvas = useRef<HTMLCanvasElement | null>(null)
   const div = useRef<HTMLDivElement | null>(null)
 
   const [countdown, setCountdown] = useState(true)
+
+	const winner = useRef('')
+	const snackbarMsg = useRef('')
+	const [openSnackbar, setOpenSnackbar] = useState(false)
 
   const player1 = 'Player1'
   const player2 = 'Player2'
@@ -18,10 +22,6 @@ const ReactiveCanvas = () => {
     'https://flowbite.com/docs/images/people/profile-picture-1.jpg'
   const player2_img =
     'https://flowbite.com/docs/images/people/profile-picture-1.jpg'
-
-  useEffect(() => {
-    init({ canvas })
-  }, [])
 
   useEffect(() => {
     /*
@@ -38,7 +38,9 @@ const ReactiveCanvas = () => {
     usersocket.on("gameUpdate", (gameData: UpdateGameDto) => {
       if(gameData.gameOver){
 				console.log(gameData)
-        drawMultiGameover({canvas}, gameData);
+        drawMultiGameover({canvas}, gameData, winner);
+				snackbarMsg.current = winner.current + " won!";
+				setOpenSnackbar(true);
       }
       if(!gameData.gameOver){
         //update({gameover: gameData.gameOver});
@@ -125,6 +127,12 @@ const ReactiveCanvas = () => {
           </button>
         </div>
       </div>
+			<GeneralSnackbar
+				message={snackbarMsg.current}
+        open={openSnackbar}
+        severity={'info'}
+        onClose={() => setOpenSnackbar(false)}
+			/>
     </div>
   )
 }
