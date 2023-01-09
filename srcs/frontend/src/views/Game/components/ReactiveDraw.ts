@@ -3,9 +3,6 @@ import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 
 interface DrawProps {
   canvas: React.MutableRefObject<HTMLCanvasElement | null>
-  mouse: {
-    y: number
-  }
 }
 
 const gameBall = {
@@ -51,7 +48,7 @@ function getCanvasSize(props: DrawProps) {
 }
 
 export function init(props: DrawProps) {
-  const { canvas, mouse } = props
+  const { canvas } = props
 
   getCanvasSize(props)
 
@@ -68,8 +65,71 @@ export function init(props: DrawProps) {
 
   gameBall.ballDirX = -1.0
   gameBall.ballDirY = 0.0
+}
 
-  mouse.y = leftPlayer.playerPos
+export function singlePlayerDraw(props: DrawProps){
+	const { canvas } = props
+  var ctx = canvas!.current!.getContext('2d')
+
+  if (!ctx) {
+    return
+  }
+
+  getCanvasSize(props)
+
+  if (
+    canvas.current!.height !== canvasSize.height ||
+    canvas.current!.width !== canvasSize.width
+  ) {
+    canvasSize.height = canvas.current!.height
+    canvasSize.width = canvas.current!.width
+    gameBall.ballRadius = canvasSize.width * 0.01
+  }
+
+	const paddleWidth =  Math.floor(canvasSize.width * 0.01)
+	const paddleHeight =  Math.floor(canvasSize.height * 0.15)
+
+  ctx.fillStyle = 'red'
+  ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
+
+  ctx.fillStyle = '#FFF'
+
+  if (canvasSize.width === 300) {
+    ctx.font = '50px font'
+    ctx.fillText(
+      leftPlayer.playerScore.toString(),
+      canvasSize.width / 4 - 10,
+      canvasSize.height / 5
+    )
+    ctx.fillText(
+      rightPlayer.playerScore.toString(),
+      (3 * canvasSize.width) / 4 - 10,
+      canvasSize.height / 5
+    )
+  } else {
+    ctx.font = '75px font'
+    ctx.fillText(
+      leftPlayer.playerScore.toString(),
+      canvasSize.width / 4 - 15,
+      canvasSize.height / 5
+    )
+    ctx.fillText(
+      rightPlayer.playerScore.toString(),
+      (3 * canvasSize.width) / 4 - 15,
+      canvasSize.height / 5
+    )
+  }
+
+  for (let i = 0; i <= canvasSize.height; i += 15)
+    ctx.fillRect((canvasSize.width - 2) / 2, i, 2, 10)
+
+  ctx.fillRect(0, (leftPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
+  ctx.fillRect(canvasSize.width - paddleWidth, (rightPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
+
+  ctx.beginPath()
+  ctx.arc(canvasSize.width * gameBall.ballPosX, canvasSize.height * gameBall.ballPosY, canvasSize.width * gameBall.ballRadius, 0, Math.PI * 2, true)
+  ctx.closePath()
+  ctx.fill()
 }
 
 export function draw(props: DrawProps, gameData: UpdateGameDto) {
