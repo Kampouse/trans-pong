@@ -12,6 +12,7 @@ import CreateGame from 'views/Game/CreateGame'
 import PlayMenu from 'views/Game/PlayMenu'
 import Login from 'views/Login/Login'
 import Profile from 'views/Profile/Profile'
+import SinglePlayerCanvas from 'views/Game/components/SinglePlayerCanvas'
 import '@styles/main.css'
 import Error404 from 'views/Error/Error404'
 import Chat from 'views/Chat/Chat'
@@ -22,6 +23,10 @@ export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
 export const useRoomCode = atom('');
+
+export const useBallColor = atom('#ffffff')
+export const useBackgroundColor = atom('#ff0000')
+export const usePaddleColor = atom('#ffffff')
 
 export const getUserDetails = () =>
 {
@@ -83,6 +88,10 @@ export default function App()
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
 
+	// const [ballColor, setBallColor] = useAtom(useBallColor)
+	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
+	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
+
 //  Here we check with the backend if the user is authentificated
 const check = async () =>
 {
@@ -126,6 +135,7 @@ useEffect(() => { check()}, [])
             <Route path="*" element={<Error404 />}></Route>
             <Route path="/SocketTest" element={<SocketTest />}></Route>
             <Route path="/game">
+                <Route path="" element={<SinglePlayerCanvas/>}></Route>
                 <Route path=":id" element={<Game/>}></Route>
             </Route>
           </Routes>
