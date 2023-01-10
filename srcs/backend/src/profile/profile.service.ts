@@ -31,12 +31,12 @@ export class ProfileService
         this.friendRequests.push(newFriendRequest);
     }
 
-    insertMatch(matchNum: number, leftPlayer: string, leftPhoto: string, leftScore: number,
+    insertMatch(leftPlayer: string, leftPhoto: string, leftScore: number,
         rightPlayer: string, rightPhoto: string, rightScore: number,
-        winner: string)
+        winner: string, updated: Date)
     {
-        const newMatch = new MatchDto(matchNum, leftPlayer, leftPhoto, leftScore, rightPlayer,
-            rightPhoto, rightScore, winner);
+        const newMatch = new MatchDto(leftPlayer, leftPhoto, leftScore, rightPlayer,
+            rightPhoto, rightScore, winner, updated);
         this.matchHistory.push(newMatch);
     }
 
@@ -152,10 +152,10 @@ export class ProfileService
                 })
                 if (adversaire)
                 {
-                    this.insertMatch(matchLeft[i].gameNumber, user.username, user.imagePath,
+                    this.insertMatch(user.username, user.imagePath,
                         matchLeft[i].leftPlayerScore, adversaire.username,
                         adversaire.imagePath, matchLeft[i].rightPlayerScore,
-                        matchLeft[i].winner);
+                        matchLeft[i].winner,matchLeft[i].updatedAt);
                 }
             }
         }
@@ -173,9 +173,9 @@ export class ProfileService
                 })
                 if (adversaire)
                 {
-                    this.insertMatch(matchRight[i].gameNumber, adversaire.username,
+                    this.insertMatch(adversaire.username,
                         adversaire.imagePath, matchRight[i].leftPlayerScore, user.username, user.imagePath,
-                        matchRight[i].rightPlayerScore, matchRight[i].winner);
+                        matchRight[i].rightPlayerScore, matchRight[i].winner, matchRight[i].updatedAt);
                 }
             }
         }
@@ -194,7 +194,7 @@ export class ProfileService
         var longeur = this.matchHistory.length;
         while (x < longeur)
         {
-            if (x !== longeur - 1 && this.matchHistory[x].matchNum < this.matchHistory[x + 1].matchNum)
+            if (x !== longeur - 1 && this.matchHistory[x].updatedAt < this.matchHistory[x + 1].updatedAt)
             {
                 var temp = this.matchHistory[x];
                 this.matchHistory[x] = this.matchHistory[x + 1];
@@ -468,10 +468,10 @@ export class ProfileService
                 })
                 if (adversaire)
                 {
-                    this.insertMatch(matchLeft[i].gameNumber, user.username, user.imagePath,
+                    this.insertMatch(user.username, user.imagePath,
                         matchLeft[i].leftPlayerScore, adversaire.username,
                         adversaire.imagePath, matchLeft[i].rightPlayerScore,
-                        matchLeft[i].winner);
+                        matchLeft[i].winner, matchLeft[i].updatedAt);
                 }
             }
         }
@@ -489,9 +489,9 @@ export class ProfileService
                 })
                 if (adversaire)
                 {
-                    this.insertMatch(matchRight[i].gameNumber, adversaire.username,
+                    this.insertMatch(adversaire.username,
                         adversaire.imagePath, matchRight[i].leftPlayerScore, user.username, user.imagePath,
-                        matchRight[i].rightPlayerScore, matchRight[i].winner);
+                        matchRight[i].rightPlayerScore, matchRight[i].winner, matchRight[i].updatedAt);
                 }
             }
         }
@@ -510,7 +510,7 @@ export class ProfileService
         var longeur = this.matchHistory.length;
         while (x < longeur)
         {
-            if (x !== longeur - 1 && this.matchHistory[x].matchNum < this.matchHistory[x + 1].matchNum)
+            if (x !== longeur - 1 && this.matchHistory[x].updatedAt < this.matchHistory[x + 1].updatedAt)
             {
                 var temp = this.matchHistory[x];
                 this.matchHistory[x] = this.matchHistory[x + 1];
@@ -804,6 +804,14 @@ export class ProfileService
                     requestExist.status = "accepted"
                     return;
                 }
+
+                await prisma.friendRequest.create({
+                    data: {
+                        sender: login42,
+                        receiver: user.login42
+                    }
+                })
+
             }
         }
         catch{}
@@ -1078,6 +1086,7 @@ export class ProfileService
 
     async removeAuth(login42: string, token: string)
     {
+        'use strict';
 
         var authentificator = require('authenticator');
 
@@ -1154,7 +1163,7 @@ export class ProfileService
         if(user != undefined){
             return({userid: user.userID});
         }
-        return(undefined);
+        return (undefined);
     }
 
     async getSinglePlayerData(login42: string)
