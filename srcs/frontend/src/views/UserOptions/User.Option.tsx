@@ -15,7 +15,8 @@ export function UserOption({open, onClose, userClicked})
         await fetch('http://localhost:3000/profile/add/' + username)
         .then(function(){})
         .catch(function() {console.log("error on adding " + username);});
-        window.location.reload();
+        //window.location.reload();
+        console.log("CANT LEAVE THIS FIX ME Your in a SPA")
     }
 
     async function blockUser(username: string)
@@ -23,7 +24,8 @@ export function UserOption({open, onClose, userClicked})
         await fetch('http://localhost:3000/profile/block/' + username)
         .then(function(){})
         .catch(function() {console.log("error on blocking " + username);});
-        window.location.reload();
+ //       window.location.reload();
+        console.log("FIX ME CANT leave this your in a SPA")
     }
 
     return (

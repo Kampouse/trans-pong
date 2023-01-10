@@ -1,3 +1,5 @@
+import { Header } from '@nestjs/common';
+import { RequestWithUser } from 'src/dtos/auth.dtos';
 import { Inject, Injectable } from '@nestjs/common';
 import { FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
@@ -9,9 +11,10 @@ export class ProfileService
     @Inject(AuthService)
     private readonly authService: AuthService
 
-    async authentificate(data: any)
+    async authentificate(data:  RequestWithUser, header?: Headers ): Promise<string>
     {
-        return(await this.authService.authentificateSession(data));
+          let value = this.authService.authenticate(header);
+        return(value.username);
     }
 
     friendList: FriendDto[] = [];
@@ -347,6 +350,7 @@ export class ProfileService
     async getProfileEdit(login42: string): Promise<PrivateProfileDto>
     {
         // Create prisma client and look if the username exist in the database
+        console.log(login42)
         const user = await prisma.user.findUnique({
             where: {
                 login42: login42

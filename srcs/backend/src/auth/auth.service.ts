@@ -1,296 +1,116 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,Headers } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { PrismaClient } from '@prisma/client';
+import {prisma } from 'src/main'
 
+type auth_output = {username : string, iat: string, exp: string}
 @Injectable()
+
 export class AuthService
 {
-    constructor(private jwtService: JwtService) { }
+
+    constructor(private jwtService: JwtService) { 
+    }
 
     public async validate_token(input: string)
     {
-        let token = input
-        try
-        {
-            const secret = process.env.JWT_KEY;
-            const decoded = this.jwtService.verify(token, { secret });
-            if (decoded)
-            {
-                return (true);
-            }
-            return (false);
-        }
-        catch (error)
-        {
-            return (false);
-        }
+        if( !input)
+            return false
+        const token = input
+        const secret = process.env.JWT_KEY;
+         try {
+             this.jwtService.verify(token, { secret })
+             return (true)
+         }
+          catch {
+                return false
+          }
+    }
+        
+    public  authenticate  (auth_header): auth_output | null 
+    {
+        let  input   = auth_header?.cookie.split("=")[1]
+        if( !input)
+            return null
+        const token = input
+        const secret = process.env.JWT_KEY;
+         try {
+            const decoded = this.jwtService.verify(token, { secret })
+
+             return (decoded)
+         }
+          catch {
+                return  null
+          }
     }
 
-    async linkToken(token: any, username: string)
+//to do
+    refresh_token(input: string)
     {
-        //  Look if the username in the tokken is valid
-        const prisma = new PrismaClient();
-
-        try
-        {
-            const newUser = await prisma.user.findUnique(
-                {
-                    where:
-                    {
-                        login42: username
-                    }
-                })
-
-            if (!newUser)
-            {
-                await prisma.$disconnect();
-                return (false)
-            }
+        const token = input
+        const secret = process.env.JWT_KEY;
+        const expiresIn = '1d';
+        try {
+            const decoded = this.jwtService.verify(token, { secret })
+            const payload = { username: decoded.username };
+            const new_token = this.jwtService.sign(payload, { secret, expiresIn }); 
         }
-        catch
-        {
-            await prisma.$disconnect();
-            return (false)
-        }
-
-        try
-        {
-            await prisma.user.update({
-                where: {
-                    login42: username
-                },
-                data: {
-                    jwtToken: token
-                }
-            })
-            await prisma.$disconnect();
-            return (true);
-        }
-        catch
-        {
-            await prisma.$disconnect();
-            return (false);
-        }
+         catch {}
     }
-
-    async createToken(passport: any)
+    async createToken(input:  passportType )
     {
-        //  Get the username of the session logged with 42api
-        let input: passportType = passport;
-        const username = input.username;
-        if (username == undefined)
-        {
-            return (false);
-        }
-
-        //  Validate if the username already has a tokken
-        const prisma = new PrismaClient();
-
-        const user = await prisma.user.findUnique({
-            where: {
-                login42: username
-            }
-        })
-
-        //  If the user did not dosent exist, username got spoof
-        if (!user)
-        {
-            //  Log ip of spoof try here in real life project and black list IP
-            await prisma.$disconnect();
-            return (false)
-        }
-
-        if (user.jwtToken)
-        {
-            if (this.validate_token(user.jwtToken))
+        const username =  input.username;
+        if(!username)
             {
-                //  Refresh token here if the tokken is valid
-                //  TODO: add refresh token here
-                await prisma.$disconnect();
-                return (user.jwtToken);
+            throw new Error("user is nobody?");
+                return  null
             }
-            else
-            {
-                // Delete expired and create a new one after this
-                try
-                {
-                    await prisma.user.update({
-                        where: {
-                            login42: user.login42
-                        },
-                        data: {
-                            jwtToken: null
-                        }
-                    })
-                }
-                catch
-                {
-                    console.error("prisma error on deleting expired token of user " + user.login42);
-                }
-            }
-        }
-
-        // Create a token for the user, and link it with him
+       this.doesUserExist(input).then().catch(() => { Error("Failed to find user in database")})
         const payload = { username };
         const secret = process.env.JWT_KEY; // private key for jwt should be in env
         const expiresIn = '1d'; 
         const token = this.jwtService.sign(payload, { secret, expiresIn });
-        console.log("token = " + token)
-        if (this.validate_token(token))
+        const is_valid = await this.validate_token(token)
+        if (is_valid === true)
         {
-            if (this.linkToken(token, username))
-            {
-                return (token);
-            }
-        }
-        return (false)
-    }
-
-    async createUser(apiResponse: RequestWithUser)
-    {
-        const prisma = new PrismaClient();
-
-        // Look in the database if the user exist
-        const user = await prisma.user.findUnique({
-            where:
-            {
-                login42: apiResponse.user.username
-            }
-        })
-
-        //  If he dosen't, create him
-        if (!user)
-        {
-            try
-            {
-                await prisma.user.create ({
-                    data: {
-                        login42: apiResponse.user.username,
-                        username: apiResponse.user.username,
-                        accessToken42: apiResponse.user.accessToken,
-                        refreshToken42: apiResponse.user.refreshToken
-                    }
-                })
-                await prisma.$disconnect();
-                return (apiResponse.user.username);
-            }
-            catch
-            {
-                await prisma.$disconnect();
-                return ({error: "User creation in the database failed."})
-            }
-        }
-        await prisma.$disconnect();
-        return (apiResponse.user.username)
-    }
-
-    async doesUserExist(apiResponse: RequestWithUser) : Promise<any>
-    {
-        const prisma = new PrismaClient();
-
-        const user = await prisma.user.findUnique({
-            where:
-            {
-                login42: apiResponse.user.username
-            }
-        })
-
-        if (user)
-        {
-            const login42 = user.login42;
-            await prisma.$disconnect();
-            return (login42);
-        }
-        await prisma.$disconnect();
-        return (false);
-    }
-
-    public async authentificateSession(data: any) : Promise<string>
-    {
-        let request: RequestWithUser = data;
-
-        if (data == undefined)
-        {
-            return (null)
-        }
-
-        const sessionStore = request['sessionStore'];
-
-        if (sessionStore == undefined)
-        {
-            return (null)
-        }
-
-        const type: SessionUser = sessionStore['sessions'];
-
-        if (type == undefined)
-        {
-            return (null)
-        }
-
-        const groups = { ...type };
-
-        if (groups == undefined)
-        {
-            return (null)
-        }
-
-        const js = Object.values(groups)[0];
-
-        if (js == undefined)
-        {
-            return (null)
-        }
-
-        const parsed = JSON.parse(js);
-
-        if (parsed == undefined)
-        {
-            return (null)
-        }
-
-        const passport = parsed['passport'];
-
-        if (passport == undefined)
-        {
-            return (null)
-        }
-
-        const username = passport.user.username;
-
-        if (username == undefined)
-        {
-            return (null)
-        }
-
-        //  Validate if the username already has a tokken
-        const prisma = new PrismaClient();
-
-        const user = await prisma.user.findUnique({
-            where: {
-                login42: username
-            }
-        })
-
-        //  If the user did not dosent exist, username got spoof
-        if (!user)
-        {
-            //  Log ip of spoof try here in real life project and black list IP
-            await prisma.$disconnect();
-            return (null)
-        }
-
-        if (user.jwtToken)
-        {
-            if (this.validate_token(user.jwtToken))
-            {
-                //  Refresh token here if the tokken is valid
-                //  TODO: add refresh token here
-                await prisma.$disconnect();
-                return (username);
-            }
+                prisma.user.update({ 
+                where : {
+                    login42: username
+                }, 
+                data: {accessToken42: token}}).then((token) => { return  token})
+                    .catch(() => { Error("Failed to update token in database")})
+                     return token
         }
         return (null)
+    }
+
+    async createUser(apiResponse: passportType)
+    {
+     this.doesUserExist(apiResponse).then ( (user) => { 
+        if(user)
+             return (true)// should we return anything?
+         prisma.user.create ({
+            data: {
+                login42: apiResponse.username,
+                username: apiResponse.username,
+                accessToken42: apiResponse.accessToken,
+                refreshToken42: apiResponse.refreshToken
+            }
+        }).then ( () => {
+             return (true) }).catch(() => 
+            {
+                 return (false) }) // should it return anything?
+        })
+    }
+
+    async doesUserExist(apiResponse: passportType) : Promise<any>
+    {
+        const username = apiResponse.username
+        if(!username)
+            return null
+        const user = await prisma.user.findUnique({
+            where: {login42: username}
+        })
     }
 }
