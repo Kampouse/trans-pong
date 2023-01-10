@@ -23,9 +23,10 @@ async ping(@Req() request: RequestWithUser, @Res() res,)
 
     if(headers.cookie)
        {
+          console .log(headers.cookie)
             let token = headers.cookie.split("=")[1]
-            console.log(token)
-            let isTokenValid = await this.authService.validate_token(token)
+
+            let isTokenValid =  this.authService.validate_token(token)
             console.log(isTokenValid)
             if (isTokenValid)
             {
@@ -37,8 +38,7 @@ async ping(@Req() request: RequestWithUser, @Res() res,)
               res.status(401).send({ message: 'Unauthorized', status: '401' });
             }
        }
-       
-
+       console.log("no cookie")
         res.status(401).send({ message: 'Unauthorized', status: '401' });
     
   }
@@ -48,19 +48,19 @@ async ping(@Req() request: RequestWithUser, @Res() res,)
   @Redirect()
   async handleLogin42(@Req() request: RequestWithUser, @Res() res)
   {
-    // Create the user with the 42api response
+     let isNew = "";
     if (request)
     {
-      let isOldUser = await this.authService.doesUserExist(request);
-
+      let isOldUser = await this.authService.doesUserExist(request.user);
       if (!isOldUser)
       {
-        const user = await this.authService.createUser(request);
+        await this.authService.createUser(request.user);
+        isNew = "Profile";
       }
     }
  let     token = await this.authService.createToken(request.user);
   console.log("token: -> " + token)
      res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true })
-    return {statCode: 302, url: "http://localhost:5173/" }
+    return {statCode: 302, url: "http://localhost:5173/" + isNew }
   }
 }

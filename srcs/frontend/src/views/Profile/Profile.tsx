@@ -10,7 +10,7 @@ import { AlertColor } from '@mui/material';
 import { UserOption } from '../UserOptions/User.Option'
 import { GoogleReset } from 'views/GoogleAuth/google.reset';
 import Error404 from 'views/Error/Error404';
-
+import {Fetch } from 'utils'
 
 //  =============== User status         =============== //
 
@@ -45,14 +45,7 @@ const useFetch = (username) =>
 	const [profileReq, setProfileReq] = useState<any>(null);
 	
 	useEffect(() => {
-		fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "") , {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Credentials': 'true'
-			}
-		})
+		Fetch('http://localhost:3000/profile' + ((username) ? "/" + username : ""))
             .then((response) => response.json())
 			.then((data) => {
 				setProfileReq(data);
@@ -157,8 +150,7 @@ async function acceptRequest(username: string)
     await fetch('http://localhost:3000/profile/add/' + username)
     .then(function(){})
     .catch(function() {console.log("error on accept friend request fetch");});
-    //window.location.reload();
-     console.log("FIX ME CANT LEAVE this")
+    window.location.reload();
 }
 
 async function denyRequest(username: string)
@@ -166,8 +158,7 @@ async function denyRequest(username: string)
     await fetch('http://localhost:3000/profile/deny/' + username)
     .then(function(){})
     .catch(function() {console.log("error on deny request fetch");});
-    // window.location.reload();
-     console.log("FIX ME CANT LEAVE THIS")
+    window.location.reload();
 }
 
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
@@ -345,7 +336,6 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
 
     //  Edit profile without authentificator activated
 
-
     return (
         <Dialog onClose={onClose} open={open} className="font-Raleway">
         <div className=" w-96">
@@ -414,7 +404,6 @@ export default function Profile()
     //  =============== View options            =============== //
     /*
         Value usestate is used to know what option is selected between profile information:
-
             1 == Match history
             2 == Friend request
             3 == Friend Requests
@@ -429,7 +418,6 @@ export default function Profile()
     /*
         User options is option's when you click on a user.
         This is here that we want to possibly:
-
         1) View user profile
         2) Add this user
         3) Invite this user to play a pong game
@@ -456,10 +444,8 @@ export default function Profile()
         on user edit information. Right now the backend with edit option
         is done, and since the page get refresh, the snackbar was not
         displayed.
-
         TODO :  Implement edit user information error message or success
                 on the snackbar after:
-
                     1) User edit options
                     2) Friend requests (sent or accepted)
                     3) Block a user
@@ -467,7 +453,6 @@ export default function Profile()
                     5) Invite to chat ?
                     6) Matchmaking Queue status?
                     7) Achievement unlocked displayed here?
-
     */
 
     //  Whether we open the snackbar or close it
@@ -484,7 +469,6 @@ export default function Profile()
     /*
         If the user is on DNS/profile :
             Get private profile information (edit options and friend requests)
-
         If the user is on DNS/profile/username :
             Get the public profile information (edit option disactivated)
     */
