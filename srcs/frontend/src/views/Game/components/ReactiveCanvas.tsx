@@ -4,10 +4,16 @@ import { init, draw, drawMultiGameover } from './ReactiveDraw'
 import {usersocket} from '../Matchmaking'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
+import { useBallColor, useBackgroundColor, usePaddleColor } from 'Router/Router'
+import { useAtom } from 'jotai'
 
 const ReactiveCanvas = () => {
   const canvas = useRef<HTMLCanvasElement | null>(null)
   const div = useRef<HTMLDivElement | null>(null)
+
+	const [ballColor, setBallColor] = useAtom(useBallColor)
+	const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
+	const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
 
 	const [gameDataGen, setGameDataGen] = useState<any>(null);
 
@@ -46,7 +52,7 @@ const ReactiveCanvas = () => {
       }
       if(!gameData.gameOver){
         //update({gameover: gameData.gameOver});
-        draw({canvas}, gameData);
+        draw({canvas}, gameData, {ballColor, backgroundColor, paddleColor});
       }
     })
     //return () => clearInterval(interval)

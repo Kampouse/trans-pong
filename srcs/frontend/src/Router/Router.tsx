@@ -24,6 +24,10 @@ export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
 export const useRoomCode = atom('');
 
+export const useBallColor = atom('#ffffff')
+export const useBackgroundColor = atom('#ff0000')
+export const usePaddleColor = atom('#ffffff')
+
 export const getUserDetails = () =>
 {
 }
@@ -83,6 +87,10 @@ export default function App()
 	const [rooms, setRooms] = useAtom(useRooms);
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
+
+	// const [ballColor, setBallColor] = useAtom(useBallColor)
+	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
+	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
 
 //  Here we check with the backend if the user is authentificated
 const check = async () =>

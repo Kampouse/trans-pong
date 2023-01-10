@@ -1,6 +1,8 @@
 import React from 'react'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
+import { useBallColor, useBackgroundColor, usePaddleColor } from 'Router/Router'
+import { useAtom } from 'jotai'
 
 interface DrawProps {
   canvas: React.MutableRefObject<HTMLCanvasElement | null>
@@ -12,6 +14,12 @@ interface UpdateProps {
 		up: boolean,
 		down: boolean
 	}
+}
+
+interface ColorProps {
+	ballColor: string,
+	backgroundColor: string,
+	paddleColor: string
 }
 
 const gameBall = {
@@ -74,7 +82,7 @@ export function init(props: DrawProps) {
   gameBall.ballDirY = 0.0
 }
 
-export function singlePlayerDraw(props: DrawProps){
+export function singlePlayerDraw(props: DrawProps, colors: ColorProps){
 	const { canvas } = props
   var ctx = canvas!.current!.getContext('2d')
 
@@ -96,7 +104,7 @@ export function singlePlayerDraw(props: DrawProps){
 	const paddleWidth =  Math.floor(canvasSize.width * 0.01)
 	const paddleHeight =  Math.floor(canvasSize.height * 0.15)
 
-  ctx.fillStyle = 'red'
+  ctx.fillStyle = colors.backgroundColor
   ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
 
   ctx.fillStyle = '#FFF'
@@ -130,17 +138,19 @@ export function singlePlayerDraw(props: DrawProps){
   for (let i = 0; i <= canvasSize.height; i += 15)
     ctx.fillRect((canvasSize.width - 2) / 2, i, 2, 10)
 
+	ctx.fillStyle = colors.paddleColor
   ctx.fillRect(0, (leftPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
   ctx.fillRect(canvasSize.width - paddleWidth, (rightPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
 
+	ctx.fillStyle = colors.ballColor
   ctx.beginPath()
   ctx.arc(canvasSize.width * gameBall.ballPosX, canvasSize.height * gameBall.ballPosY, canvasSize.width * gameBall.ballRadius, 0, Math.PI * 2, true)
   ctx.closePath()
   ctx.fill()
 }
 
-export function draw(props: DrawProps, gameData: UpdateGameDto) {
-  const { canvas } = props
+export function draw(props: DrawProps, gameData: UpdateGameDto, colors: ColorProps) {
+	const { canvas } = props
   var ctx = canvas!.current!.getContext('2d')
 
   if (!ctx) {
@@ -161,7 +171,7 @@ export function draw(props: DrawProps, gameData: UpdateGameDto) {
 	const paddleWidth =  Math.floor(canvasSize.width * 0.01)
 	const paddleHeight =  Math.floor(canvasSize.height * 0.15)
 
-  ctx.fillStyle = 'red'
+  ctx.fillStyle = colors.backgroundColor
   ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
 
   ctx.fillStyle = '#FFF'
@@ -195,9 +205,11 @@ export function draw(props: DrawProps, gameData: UpdateGameDto) {
   for (let i = 0; i <= canvasSize.height; i += 15)
     ctx.fillRect((canvasSize.width - 2) / 2, i, 2, 10)
 
+	ctx.fillStyle = colors.paddleColor
   ctx.fillRect(0, (gameData.leftPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
   ctx.fillRect(canvasSize.width - paddleWidth, (gameData.rightPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
 
+	ctx.fillStyle = colors.ballColor
   ctx.beginPath()
   ctx.arc(canvasSize.width * gameData.gameBall.ballPosX, canvasSize.height * gameData.gameBall.ballPosY, canvasSize.width * gameData.gameBall.ballRadius, 0, Math.PI * 2, true)
   ctx.closePath()

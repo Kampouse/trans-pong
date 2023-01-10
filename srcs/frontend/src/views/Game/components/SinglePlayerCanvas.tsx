@@ -5,6 +5,8 @@ import Robot from "../../../../../assets/public/robot.png"
 import {usersocket} from '../Matchmaking'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
+import { useBallColor, useBackgroundColor, usePaddleColor } from 'Router/Router'
+import { useAtom } from 'jotai'
 
 let keyActions = {
 	up: false,
@@ -37,6 +39,10 @@ const useFetch = () =>
 const SinglePlayerCanvas = () => {
 	const canvas = useRef<HTMLCanvasElement | null>(null)
   const div = useRef<HTMLDivElement | null>(null)
+
+	const [ballColor, setBallColor] = useAtom(useBallColor)
+	const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
+	const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
 	
   const [countdown, setCountdown] = useState(true)
   const gameover = useRef(false)
@@ -60,7 +66,7 @@ const SinglePlayerCanvas = () => {
       }
       if (!gameover.current) {
         update({ gameover, keyActions })
-        singlePlayerDraw({ canvas })
+        singlePlayerDraw({ canvas }, {ballColor, backgroundColor, paddleColor})
       }
     }, (1 / 60) * 1000)
 
