@@ -26,7 +26,6 @@ model User {
 
 model FriendRequest{
     friendRequestID     String                          @id @default(cuid())
-    friendRequestNumber Int                             @unique @default(autoincrement())
     sender              String
     receiver            String
     status              requestStatus                   @default(pending)
@@ -37,7 +36,6 @@ model FriendRequest{
 
 model Game{
     gameID              String                          @id @default(cuid())
-    gameNumber          Int                             @unique @default(autoincrement())
     leftPlayer          String
     leftPlayerScore     Int                             @default(0)
     rightPlayer         String

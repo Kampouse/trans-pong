@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { exit } from 'process';
 
 //  Create a seed which will create data in our database for testing
 async function main()
@@ -6,23 +7,30 @@ async function main()
     const prisma = new PrismaClient();
     console.log("Starting seed script.")
 
-    //  Add evaluator login42 here for seed data
     var     evaluatorUsername = process.env.LOGIN;
-    console.log(evaluatorUsername);
 
-    //  { is for hide all the code to be abble to add friend to the evaluator user
-    {
+    //  Look if the seed already has been called, exit if it does
+    try {
+        var test = await prisma.user.findUnique({
+            where: {
+                login42: 'jvigneau'
+            }
+        })
+
+        if (test != undefined)
+        {
+            exit (0);
+        }
+    }
+    catch{}
+
     //  Create 9 users for test's
     console.log("Creating 9 users")
 
     try
     {
-        var user0 = await prisma.user.upsert({
-            where: {
-                login42: 'jvigneau',
-            },
-            update: {},
-            create: {
+        var user0 = await prisma.user.create({
+            data: {
                 login42: 'jvigneau',
                 username: 'jvigneau',
                 userStatus: 'playing',
@@ -34,12 +42,8 @@ async function main()
 
     try
     {
-        var user1 = await prisma.user.upsert({
-            where: {
-                login42: 'mleblanc',
-            },
-            update: {},
-            create: {
+        var user1 = await prisma.user.create({
+        data: {
                 login42: 'mleblanc',
                 username: 'mleblanc',
                 userStatus: 'playing',
@@ -175,9 +179,7 @@ async function main()
     try
     {
         var friendRequest0 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 0,
-            },
+            where: {},
             update: {},
             create: {
                 sender: 'bperron',
@@ -191,12 +193,9 @@ async function main()
     try
     {
         var friendRequest1 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 1,
-            },
+            where: { },
             update: {},
             create: {
-                friendRequestNumber: 1,
                 sender: 'jvigneau',
                 receiver: 'gehebert',
                 status: 'accepted',
@@ -208,12 +207,9 @@ async function main()
     try
     {
         var friendRequest2 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 2,
-            },
+            where: { },
             update: {},
             create: {
-                friendRequestNumber: 2,
                 sender: 'gehebert',
                 receiver: 'gcollet',
                 status: 'accepted',
@@ -225,12 +221,9 @@ async function main()
     try
     {
         var friendRequest3 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 3,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 3,
                 sender: 'tberube',
                 receiver: 'jvillefr',
                 status: 'accepted',
@@ -242,12 +235,9 @@ async function main()
     try
     {
         var friendRequest4 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 4,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 4,
                 sender: 'tberube',
                 receiver: 'mleblanc',
                 status: 'pending',
@@ -259,12 +249,9 @@ async function main()
     try
     {
         var friendRequest5 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 5,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 5,
                 sender: 'gcollet',
                 receiver: 'tberube',
                 status: 'accepted',
@@ -276,12 +263,9 @@ async function main()
     try
     {
         var friendRequest6 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 6,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 6,
                 sender: 'tberube',
                 receiver: 'bperron',
                 status: 'accepted',
@@ -293,12 +277,9 @@ async function main()
     try
     {
         var friendRequest7 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 7,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 7,
                 sender: 'bperron',
                 receiver: 'jvigneau',
                 status: 'declined',
@@ -310,12 +291,9 @@ async function main()
     try
     {
         var friendRequest8 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 8,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 8,
                 sender: 'jbadia',
                 receiver: 'gcollet',
                 status: 'accepted',
@@ -327,12 +305,9 @@ async function main()
     try
     {
         var friendRequest9 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 9,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 9,
                 sender: 'gcollet',
                 receiver: 'mleblanc',
                 status: 'pending',
@@ -344,12 +319,9 @@ async function main()
     try
     {
         var friendRequest10 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 10,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 10,
                 sender: 'mleblanc',
                 receiver: 'alvachon',
                 status: 'accepted',
@@ -361,12 +333,9 @@ async function main()
     try
     {
         var friendRequest11 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 11,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 11,
                 sender: 'alvachon',
                 receiver: 'jvillefr',
                 status: 'accepted',
@@ -378,12 +347,9 @@ async function main()
     try
     {
         var friendRequest12 = await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 12,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 12,
                 sender: 'jvillefr',
                 receiver: 'jbadia',
                 status: 'accepted',
@@ -399,12 +365,9 @@ async function main()
     try
     {
         var game0 = await prisma.game.upsert({
-            where: {
-                gameNumber: 0,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 0,
                 leftPlayer: 'jbadia',
                 leftPlayerScore: 5,
                 rightPlayer: 'gcollet',
@@ -419,12 +382,9 @@ async function main()
     try
     {
         var game1 = await prisma.game.upsert({
-            where: {
-                gameNumber: 1,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 1,
                 leftPlayer: 'jvigneau',
                 leftPlayerScore: 200,
                 rightPlayer: 'tberube',
@@ -439,12 +399,9 @@ async function main()
     try
     {
         var game2 = await prisma.game.upsert({
-            where: {
-                gameNumber: 2,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 2,
                 leftPlayer: 'tberube',
                 leftPlayerScore: 1,
                 rightPlayer: 'jvigneau',
@@ -459,12 +416,9 @@ async function main()
     try
     {
         var game3 = await prisma.game.upsert({
-            where: {
-                gameNumber: 3,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 3,
                 leftPlayer: 'tberube',
                 leftPlayerScore: 2,
                 rightPlayer: 'gcollet',
@@ -479,12 +433,9 @@ async function main()
     try
     {
         var game4 = await prisma.game.upsert({
-            where: {
-                gameNumber: 4,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 4,
                 leftPlayer: 'bperron',
                 leftPlayerScore: 1,
                 rightPlayer: 'jvigneau',
@@ -498,13 +449,8 @@ async function main()
 
     try
     {
-        var game5 = await prisma.game.upsert({
-            where: {
-                gameNumber: 5,
-            },
-            update: {},
-            create: {
-                gameNumber: 5,
+        var game5 = await prisma.game.create({
+            data: {
                 leftPlayer: 'bperron',
                 leftPlayerScore: 45,
                 rightPlayer: 'jvigneau',
@@ -518,13 +464,8 @@ async function main()
 
     try
     {
-        var game6 = await prisma.game.upsert({
-            where: {
-                gameNumber: 6,
-            },
-            update: {},
-            create: {
-                gameNumber: 6,
+        var game6 = await prisma.game.create({
+            data: {
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 5,
                 rightPlayer: 'gcollet',
@@ -539,12 +480,9 @@ async function main()
     try
     {
         var game7 = await prisma.game.upsert({
-            where: {
-                gameNumber: 7,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 7,
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 2,
                 rightPlayer: 'jbadia',
@@ -559,12 +497,9 @@ async function main()
     try
     {
         var game8 = await prisma.game.upsert({
-            where: {
-                gameNumber: 8,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 8,
                 leftPlayer: 'alvachon',
                 leftPlayerScore: 2,
                 rightPlayer: 'gcollet',
@@ -579,12 +514,9 @@ async function main()
     try
     {
         var game9 = await prisma.game.upsert({
-            where: {
-                gameNumber: 9,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 9,
                 leftPlayer: 'jbadia',
                 leftPlayerScore: 2,
                 rightPlayer: 'alvachon',
@@ -599,12 +531,9 @@ async function main()
     try
     {
         var game10 = await prisma.game.upsert({
-            where: {
-                gameNumber: 10,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 10,
                 leftPlayer: 'gehebert',
                 leftPlayerScore: 2,
                 rightPlayer: 'mleblanc',
@@ -619,12 +548,9 @@ async function main()
     try
     {
         var game11 = await prisma.game.upsert({
-            where: {
-                gameNumber: 11,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 11,
                 leftPlayer: 'gehebert',
                 leftPlayerScore: 1,
                 rightPlayer: 'jvigneau',
@@ -639,12 +565,9 @@ async function main()
     try
     {
         var game12 = await prisma.game.upsert({
-            where: {
-                gameNumber: 12,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 12,
                 leftPlayer: 'jvillefr',
                 leftPlayerScore: 2,
                 rightPlayer: 'gehebert',
@@ -659,12 +582,9 @@ async function main()
     try
     {
         var game13 = await prisma.game.upsert({
-            where: {
-                gameNumber: 13,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 13,
                 leftPlayer: 'gehebert',
                 leftPlayerScore: 5,
                 rightPlayer: 'jvillefr',
@@ -679,12 +599,9 @@ async function main()
     try
     {
         var game14 = await prisma.game.upsert({
-            where: {
-                gameNumber: 14,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 14,
                 leftPlayer: 'jvillefr',
                 leftPlayerScore: 12,
                 rightPlayer: 'gehebert',
@@ -700,12 +617,9 @@ async function main()
     try
     {
         var game15 = await prisma.game.upsert({
-            where: {
-                gameNumber: 15,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 15,
                 leftPlayer: 'bperron',
                 leftPlayerScore: 5,
                 rightPlayer: 'gcollet',
@@ -720,12 +634,9 @@ async function main()
     try
     {
         var game16 = await prisma.game.upsert({
-            where: {
-                gameNumber: 16,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 16,
                 leftPlayer: 'jbadia',
                 leftPlayerScore: 1,
                 rightPlayer: 'bperron',
@@ -740,12 +651,9 @@ async function main()
     try
     {
         var game17 = await prisma.game.upsert({
-            where: {
-                gameNumber: 17,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 17,
                 leftPlayer: 'bperron',
                 leftPlayerScore: 2,
                 rightPlayer: 'tberube',
@@ -760,12 +668,9 @@ async function main()
     try
     {
         var game18 = await prisma.game.upsert({
-            where: {
-                gameNumber: 18,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 18,
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 4,
                 rightPlayer: 'alvachon',
@@ -780,12 +685,9 @@ async function main()
     try
     {
         var game19 = await prisma.game.upsert({
-            where: {
-                gameNumber: 19,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 19,
                 leftPlayer: 'alvachon',
                 leftPlayerScore: 2,
                 rightPlayer: 'mleblanc',
@@ -800,12 +702,9 @@ async function main()
     try
     {
         var game20 = await prisma.game.upsert({
-            where: {
-                gameNumber: 20,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 20,
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 6,
                 rightPlayer: 'gcollet',
@@ -820,12 +719,9 @@ async function main()
     try
     {
         var game21 = await prisma.game.upsert({
-            where: {
-                gameNumber: 21,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 21,
                 leftPlayer: 'gcollet',
                 leftPlayerScore: 2,
                 rightPlayer: 'jbadia',
@@ -840,12 +736,9 @@ async function main()
     try
     {
         var game22 = await prisma.game.upsert({
-            where: {
-                gameNumber: 22,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 22,
                 leftPlayer: 'tberube',
                 leftPlayerScore: 12,
                 rightPlayer: 'jbadia',
@@ -860,12 +753,9 @@ async function main()
     try
     {
         var game23 = await prisma.game.upsert({
-            where: {
-                gameNumber: 23,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 23,
                 leftPlayer: 'tberube',
                 leftPlayerScore: 5,
                 rightPlayer: 'jvigneau',
@@ -880,12 +770,9 @@ async function main()
     try
     {
         var game24 = await prisma.game.upsert({
-            where: {
-                gameNumber: 24,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 24,
                 leftPlayer: 'jvigneau',
                 leftPlayerScore: 12,
                 rightPlayer: 'mleblanc',
@@ -900,12 +787,9 @@ async function main()
     try
     {
         var game25 = await prisma.game.upsert({
-            where: {
-                gameNumber: 25,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 25,
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 5,
                 rightPlayer: 'gehebert',
@@ -920,12 +804,9 @@ async function main()
     try
     {
         var game26 = await prisma.game.upsert({
-            where: {
-                gameNumber: 26,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 26,
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 4,
                 rightPlayer: 'gehebert',
@@ -940,12 +821,9 @@ async function main()
     try
     {
         var game27 = await prisma.game.upsert({
-            where: {
-                gameNumber: 27,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 27,
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 12,
                 rightPlayer: 'bperron',
@@ -960,12 +838,9 @@ async function main()
     try
     {
         var game28 = await prisma.game.upsert({
-            where: {
-                gameNumber: 28,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 28,
                 leftPlayer: 'bperron',
                 leftPlayerScore: 11,
                 rightPlayer: 'jvigneau',
@@ -980,12 +855,9 @@ async function main()
     try
     {
         var game29 = await prisma.game.upsert({
-            where: {
-                gameNumber: 29,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 29,
                 leftPlayer: 'jvigneau',
                 leftPlayerScore: 25,
                 rightPlayer: 'gehebert',
@@ -996,18 +868,15 @@ async function main()
         })
     }
     catch{}
-    }
 
-    //  Add everyone as friend
+
+    //  Add friend request's for test's
     try
     {
         await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 13,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 13,
                 sender: evaluatorUsername,
                 receiver: "jvigneau",
                 status: "accepted"
@@ -1019,12 +888,9 @@ async function main()
     try
     {
         await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 14,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 14,
                 sender: "mleblanc",
                 receiver: evaluatorUsername,
                 status: "pending"
@@ -1036,12 +902,9 @@ async function main()
     try
     {
         await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 15,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 15,
                 sender: "gcollet",
                 receiver: evaluatorUsername,
                 status: "pending"
@@ -1053,12 +916,9 @@ async function main()
     try
     {
         await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 16,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 16,
                 sender: "alvachon",
                 receiver: evaluatorUsername,
                 status: "pending"
@@ -1070,12 +930,9 @@ async function main()
     try
     {
         await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 17,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 17,
                 sender: evaluatorUsername,
                 receiver: "jbadia",
                 status: "accepted"
@@ -1087,12 +944,9 @@ async function main()
     try
     {
         await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 18,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 18,
                 sender: evaluatorUsername,
                 receiver: "gehebert",
                 status: "accepted"
@@ -1104,12 +958,9 @@ async function main()
     try
     {
         await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 19,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 19,
                 sender: evaluatorUsername,
                 receiver: "tberube",
                 status: "accepted"
@@ -1121,12 +972,9 @@ async function main()
     try
     {
         await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 20,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 20,
                 sender: evaluatorUsername,
                 receiver: "jvillefr",
                 status: "accepted"
@@ -1138,12 +986,9 @@ async function main()
     try
     {
         await prisma.friendRequest.upsert({
-            where: {
-                friendRequestNumber: 21,
-            },
+            where: {},
             update: {},
             create: {
-                friendRequestNumber: 21,
                 sender: evaluatorUsername,
                 receiver: "bperron",
                 status: "accepted"
@@ -1155,12 +1000,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 30,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 30,
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 5,
                 rightPlayer: "jvigneau",
@@ -1175,12 +1017,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 31,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 31,
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 3,
                 rightPlayer: "jvigneau",
@@ -1195,12 +1034,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 32,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 32,
                 leftPlayer: "jvillefr",
                 leftPlayerScore: 5,
                 rightPlayer: evaluatorUsername,
@@ -1215,12 +1051,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 33,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 33,
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 3,
                 rightPlayer: "tberube",
@@ -1235,12 +1068,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 34,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 34,
                 leftPlayer: "tberube",
                 leftPlayerScore: 5,
                 rightPlayer: evaluatorUsername,
@@ -1255,12 +1085,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 35,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 35,
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 5,
                 rightPlayer: "jvigneau",
@@ -1275,12 +1102,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 36,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 36,
                 leftPlayer: "bperron",
                 leftPlayerScore: 2,
                 rightPlayer: evaluatorUsername,
@@ -1295,12 +1119,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 37,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 37,
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 5,
                 rightPlayer: "gehebert",
@@ -1315,12 +1136,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 38,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 38,
                 leftPlayer: "gehebert",
                 leftPlayerScore: 2,
                 rightPlayer: evaluatorUsername,
@@ -1335,12 +1153,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 39,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 39,
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 4,
                 rightPlayer: "gcollet",
@@ -1355,12 +1170,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 40,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 40,
                 leftPlayer: "mleblanc",
                 leftPlayerScore: 5,
                 rightPlayer: evaluatorUsername,
@@ -1375,12 +1187,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 41,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 41,
                 leftPlayer: "mleblanc",
                 leftPlayerScore: 3,
                 rightPlayer: evaluatorUsername,
@@ -1395,12 +1204,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 42,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 42,
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 4,
                 rightPlayer: "alvachon",
@@ -1415,12 +1221,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 43,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 43,
                 leftPlayer: "alvachon",
                 leftPlayerScore: 5,
                 rightPlayer: evaluatorUsername,
@@ -1435,12 +1238,9 @@ async function main()
     try
     {
         await prisma.game.upsert({
-            where: {
-                gameNumber: 44,
-            },
+            where: {},
             update: {},
             create: {
-                gameNumber: 44,
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 4,
                 rightPlayer: "bperron",

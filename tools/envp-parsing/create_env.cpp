@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:41:59 by aguay             #+#    #+#             */
-/*   Updated: 2023/01/09 13:13:45 by aguay            ###   ########.fr       */
+/*   Updated: 2023/01/09 13:51:20 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ bool	create_api_info(void)
 
 	while (run)
 	{
-        std::cout << "Please enter your'e Login 42 : ";
+        std::cout << "Please enter your Login 42 : ";
         std::getline(std::cin, login42);
         std::cout << "Now, please create an API application on the 42 intra website." << std::endl;
         std::cout << "Do you want a tutorial how to do it ? (Y for yes)";
