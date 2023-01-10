@@ -56,6 +56,11 @@ export class Player {
     public getUserId(){
         return this.userId;
     }
+    public isSocketDisconnected(){
+        if(this.socket.disconnected == true)
+            return true
+        return false
+    }
 
 }
 
@@ -65,6 +70,7 @@ export class GameRoom {
     private player2: Player
     private updateInterval;
     private tempWaitForPlayerReadyInterval
+    private handleSocketDisconnect
     private gameUpdateObject: GameUpdate
     private server: io.Server
 
@@ -101,8 +107,8 @@ export class GameRoom {
     async setPlayer1(){ //set Player1 info into game update object
         try{
             var user = await prisma.user.findUnique({where: {userID: this.player1.getUserId()}})
-            this.gameUpdateObject.rightPlayer.playerPhoto = user.imagePath
-            this.gameUpdateObject.rightPlayer.playerUser = user.login42
+            this.gameUpdateObject.leftPlayer.playerPhoto = user.imagePath
+            this.gameUpdateObject.leftPlayer.playerUser = user.login42
         }
         catch(e){
             console.log(e)
@@ -114,6 +120,7 @@ export class GameRoom {
             this.player2 = player;
             try{
                 var user = await prisma.user.findUnique({where: {userID: player.getUserId()}})
+                console.log(user)
                 this.gameUpdateObject.rightPlayer.playerPhoto = user.imagePath
                 this.gameUpdateObject.rightPlayer.playerUser = user.login42
             }
@@ -133,7 +140,25 @@ export class GameRoom {
         return this.roomName;
     }
     public startGameUpdateInterval(server: io.Server) {
-        this.updateInterval = setInterval(async () => {
+        this.handleSocketDisconnect = setInterval( () => { //this interval checks socket status if disconnected, if it is we need to pause the game for 10 seconds
+            if(this.player1.isSocketDisconnected() == true || this.player2.isSocketDisconnected() == true){
+                clearInterval(this.updateInterval);
+                clearInterval(this.handleSocketDisconnect);
+                let timeoutReconnection = setTimeout(() => {
+                    clearInterval(checkForReconnection)
+                    //do things to end game and assign player who didnt disconnect
+                }, 10000) //one of our players did not reconnect in 10 seconds, end the game
+                let checkForReconnection = setInterval( () => {
+                    if(this.player1.isSocketDisconnected() == true || this.player2.isSocketDisconnected() == true){
+                        clearTimeout(timeoutReconnection)
+                        clearInterval(checkForReconnection)
+                        this.startGameUpdateInterval(server)
+                    }
+                }, 100)
+            }
+        }, 100) //lets see if we can deal with 100 millisecs
+
+        this.updateInterval = setInterval(async () => { //game update interval
             this.gameUpdateObject.update({keyActionsPlayer1: this.player1.getKeyActionCurrentState(), keyActionsPlayer2: this.player2.getKeyActionCurrentState()})
             this.gameUpdateObject.updateGameUpdateDto(); //should change the object properties hopefully
             //console.log(this.gameUpdateObject.updateGame);
@@ -142,23 +167,24 @@ export class GameRoom {
                 server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //send event to make client sockets leave room as security measure
                 this.status = "finished"
                 this.gameUpdateObject.updateGame.gameOver = true;
-                this.gameUpdateObject.updateGame.winner = this.gameUpdateObject.leftPlayer.playerScore == 5 ? this.gameUpdateObject.leftPlayer.playerUser : this.gameUpdateObject.rightPlayer.playerUser
+                this.gameUpdateObject.updateGame.winner = this.gameUpdateObject.leftPlayer.playerScore == 5 ? this.gameUpdateObject.leftPlayer.playerUser : this.gameUpdateObject.rightPlayer.playerUser;
                 clearInterval(this.updateInterval);
-                await prisma.game.update({where: {gameID: this.getRoomName()}, 
+                clearInterval(this.handleSocketDisconnect);
+                await prisma.game.update({where: {gameRoomID: this.getRoomName()}, 
                     data: {
                         leftPlayerScore: this.gameUpdateObject.leftPlayer.playerScore,
                         rightPlayerScore: this.gameUpdateObject.rightPlayer.playerScore,
                         active: false,
                         winner: this.gameUpdateObject.updateGame.winner
-                    }})
+                    }});
                 await prisma.user.update({where: {userID: this.getPlayer1Id()}, 
                     data: {
                         userStatus: "online"
-                    }})
+                    }});
                 await prisma.user.update({where: {userID: this.getPlayer2Id()}, 
                     data: {
                         userStatus: "online"
-                    }})
+                    }});
             }
             server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
         }, (1/60) * 1000) //60 fps
@@ -214,9 +240,9 @@ export class GameSocketIOService {
                     
                     await prisma.game.create(
                         {data: {
+                            gameRoomID: room[1].getRoomName(),
                             leftPlayer: leftuser.login42,
                             rightPlayer: rightuser.login42,
-                            gameNumber: 30,
                             active: true,
                         }})
                     await prisma.user.update({where: {userID: room[1].getPlayer1Id()}, 
