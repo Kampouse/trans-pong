@@ -78,13 +78,13 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                     {data.matchHistory.map((currentMatch) =>
                     {
                         return (
-                                    <li className="flex py-4" key={currentMatch.matchNum}>
+                                    <li className="flex py-4" key={currentMatch.updatedAt + currentMatch.winner}>
                                         <div className="flex w-[37%] my-auto items-center ml-2">
                                             <div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full rounded-full`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
+                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                             <div className="ml-2">
-                                                <p className={`text-gray-900`} onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
+                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.leftPlayer}
                                                 </p>
                                             </div>
@@ -99,12 +99,12 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                                         </div>
                                         <div className="flex w-[37%] my-auto justify-end items-center mr-2">
                                             <div className="mr-2">
-                                                <p className={`text-gray-900`} onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
+                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.rightPlayer}
                                                 </p>
                                             </div>
                                             <div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full rounded-full`} src={currentMatch.rightPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
+                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.rightPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                         </div>
                                     </li>

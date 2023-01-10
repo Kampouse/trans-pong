@@ -22,7 +22,6 @@ export class FriendRequestDto{
 
 export class MatchDto{
     constructor(
-        public matchNum:           number,
         public leftPlayer:         string,
         public leftPhoto:          string,
         public leftScore:          number,
@@ -30,6 +29,7 @@ export class MatchDto{
         public rightPhoto:         string,
         public rightScore:         number,
         public winner:             string,
+        public updatedAt:          Date
     ){}
 }
 

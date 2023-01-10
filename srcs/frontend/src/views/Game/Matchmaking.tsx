@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
-import { redirect, useNavigate, Navigate, NavigateFunction, RedirectFunction } from 'react-router-dom';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 import * as io from 'socket.io-client';
+// import { Queue } from './QueueComponent';
 import { Fetch } from 'utils';
+
 export var usersocket: io.Socket = io.connect();
+
 export default function Matchmaking()
 {
-    const nav = useNavigate()
+    const nav = useNavigate();
     usersocket.disconnect(); //automatically disconnect socket on render
     const userid = fetchUserId();
+    const [openQueue, setOpenQueue] = useState(false);
+
     return (
     <div className=" my-4 px-[10%] py-[10%] mx-2 w-[100%]">
             <div className="flex flex-col rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm px-20">
@@ -31,6 +36,7 @@ export default function Matchmaking()
                     </button>
                 </div>
             </div>
+            {/* <Queue onClose={() => setOpenQueue(false)} open={openQueue}></Queue> */}
     </div>
     )
 }
@@ -47,7 +53,6 @@ function fetchUserId() {
 		Fetch ('http://localhost:3000/profile/get/userid')
         .then((response) => response.json())
         .then((data) => {
-            console.log(data.userid);
             setUserId(data.userid);
         })
 	})
@@ -60,15 +65,12 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string){
     document.getElementById("multiplayer").disabled = true;
     usersocket.disconnect();
     usersocket = io.connect("http://localhost:3001");
-    
-    usersocket.on("roomIsReady", (room) => {
-        console.log(room);
+
+    usersocket.on("roomIsReady", (room) =>
+    {
         console.log("Match found! Redirecting to game.");
-        //window.location.replace(`http://localhost:5173/game/${room}`);
+        console.log(room);
         nav(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
-        //var path = `game/${room}`;
-        //return (<Navigate to={`${path}`} replace={true} />)
-        //return redirect(`http://localhost:5173/game/${room}`)
     })
     usersocket.on("connect", () => {
         console.log(usersocket.id)
