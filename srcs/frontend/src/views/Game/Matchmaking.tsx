@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, NavigateFunction } from 'react-router-dom';
 import * as io from 'socket.io-client';
-// import { Queue } from './QueueComponent';
+import { Queue } from './QueueComponent';
 import { Fetch } from 'utils';
 
 export var usersocket: io.Socket = io.connect();
@@ -19,14 +19,14 @@ export default function Matchmaking()
                 <h1 className="text-center text-6xl pt-10 pb-40 font-Merriweather">Matchmaking</h1>
                 <div className="pb-12 flex flex-row items-center justify-center px-10">
                     <button className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
-                        Singler Player
+                        Single Player
                     </button>
-                    <button type='button' id="multiplayer" onClick={(e) => startMultiplayerMatchmake(e, nav, userid)} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
+                    <button type='button' id="multiplayer" onClick={(e) => startMultiplayerMatchmake(e, nav, userid, setOpenQueue)} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Multi Player
                     </button>
                 </div>
             </div>
-            {/* <Queue onClose={() => setOpenQueue(false)} open={openQueue}></Queue> */}
+            <Queue onClose={() => setOpenQueue(false)} open={openQueue}></Queue>
     </div>
     )
 }
@@ -44,10 +44,9 @@ function fetchUserId() {
     return(userId)
 }
 
-function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string){
+function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, setOpenQueue: any){
     e.preventDefault();
     console.log("Creating socket");
-    document.getElementById("multiplayer").disabled = true;
     usersocket.disconnect();
     usersocket = io.connect("http://localhost:3001");
 
@@ -66,5 +65,5 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string){
         usersocket.emit("registerId", {userId: userid, socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
         usersocket.emit("searchGame"); //join new game
     })
-    
+    setOpenQueue(true);
 }
