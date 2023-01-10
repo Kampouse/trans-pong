@@ -25,11 +25,13 @@ const gameBall = {
 
 const leftPlayer = {
 	playerScore: 0,
+	prevPlayerScore: 0,
 	playerPos: 0
 }
 
 const rightPlayer = {
 	playerScore: 0,
+	prevPlayerScore: 0,
 	playerPos: 0
 }
 
@@ -259,7 +261,7 @@ function drawGameover(props: DrawProps, leftScore: number, rightScore: number) {
 
 export function drawSingleGameover(props: DrawProps, winner: React.MutableRefObject<string>) {
   winner.current = leftPlayer.playerScore >= 5 ? "You" : "Computer"
-  drawGameover(props, leftPlayer.playerScore, rightPlayer.playerScore);
+  drawGameover(props, leftPlayer.prevPlayerScore, rightPlayer.prevPlayerScore);
 }
 
 export function drawMultiGameover(props: DrawProps, gameData: UpdateGameDto, winner: React.MutableRefObject<string>) {
@@ -317,8 +319,13 @@ export const update = (props: UpdateProps) => {
     else{
       rightPlayer.playerScore++
     }
-		if (leftPlayer.playerScore >= 5 || rightPlayer.playerScore >= 5)
+		if (leftPlayer.playerScore >= 5 || rightPlayer.playerScore >= 5) {
 			props.gameover.current = true;
+			leftPlayer.prevPlayerScore = leftPlayer.playerScore; 
+			rightPlayer.prevPlayerScore = rightPlayer.playerScore; 
+			leftPlayer.playerScore = 0;
+			rightPlayer.playerScore = 0;
+		}
     gameBall.ballPosX = 0.5
     gameBall.ballPosY = 0.5
     gameBall.ballSpeed = 10.0

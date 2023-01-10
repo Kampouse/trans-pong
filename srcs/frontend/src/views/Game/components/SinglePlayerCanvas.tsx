@@ -51,23 +51,21 @@ const SinglePlayerCanvas = () => {
     init({ canvas })
 		keyActions.up = false
 		keyActions.down = false
-  }, [])
+  }, [gameover.current])
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (gameover.current) {
         drawSingleGameover({ canvas }, winner)
-				snackbarMsg.current = winner.current + " won!";
-				setOpenSnackbar(true);
-				return () => clearInterval(0);
       }
       if (!gameover.current) {
         update({ gameover, keyActions })
         singlePlayerDraw({ canvas })
       }
     }, (1 / 60) * 1000)
-    return () => clearInterval(interval)
-  }, [countdown])
+
+		return () => clearInterval(interval)    
+  }, [])
 
 	const handleKeyDown = event => {
 		event.preventDefault();
