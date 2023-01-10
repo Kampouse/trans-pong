@@ -1,8 +1,19 @@
 import Chat from './Chat/Chat'
 import ReactiveCanvas from './components/ReactiveCanvas'
 import { createRef, DetailedHTMLProps, HTMLAttributes } from 'react'
+import { useLocation } from 'react-router'
+import * as io from 'socket.io-client';
+import {usersocket} from "./Matchmaking"
+
+var onlyonce = 0; //prevent functions being called twice
+function prepareGame(){
+  console.log("Wee woo we joined the room")
+  usersocket.emit("playerReady");
+}
 
 export default function Game() {
+  prepareGame();
+  onlyonce = 1;
   return <ReactiveCanvas />
 }
 

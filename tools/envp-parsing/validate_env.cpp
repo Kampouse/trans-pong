@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:36:51 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/21 08:11:53 by aguay            ###   ########.fr       */
+/*   Updated: 2023/01/09 13:11:12 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ bool    validate_jwt(std::string jwt)
 
 bool	validate_env(void)
 {
-	std::string		envStr[8];
+	std::string		envStr[9];
 	std::string		line;
 	std::ifstream 	env;
 
@@ -162,7 +162,7 @@ bool	validate_env(void)
 		std::cout << "error: could't open .env file" << std::endl;
 		return (false);
 	}	
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		getline(env, line);
 		envStr[i] = line.substr(line.find_first_of('=') + 1, std::string::npos);
@@ -176,11 +176,11 @@ bool	validate_env(void)
 		return (false);
 	if (!validate_db_url(envStr[0], envStr[1], envStr[2], envStr[3]))
 		return (false);
-	if (!validate_api(envStr[4], envStr[5]))
+	if (!validate_api(envStr[5], envStr[6]))
 		return (false);
-	if (!validate_callback(envStr[6]))
+	if (!validate_callback(envStr[7]))
 		return (false);
-    if (!validate_jwt(envStr[7]))
+    if (!validate_jwt(envStr[8]))
 		return (false);
 	std::cout << ".env valid, let's proceed" << std::endl;
 	exit (0);

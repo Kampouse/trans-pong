@@ -1,6 +1,9 @@
 import { defaultMaxListeners } from 'events'
 import React, { useEffect, useRef, useState } from 'react'
 import { init, draw, update, drawGameover } from './ReactiveDraw'
+import {usersocket} from '../Matchmaking'
+import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
+
 
 const ReactiveCanvas = () => {
   const canvas = useRef<HTMLCanvasElement | null>(null)
@@ -26,6 +29,7 @@ const ReactiveCanvas = () => {
   }, [])
 
   useEffect(() => {
+    /*
     const interval = setInterval(() => {
       if (gameover.current) {
         drawGameover({ canvas, mouse })
@@ -35,15 +39,29 @@ const ReactiveCanvas = () => {
         draw({ canvas, mouse })
       }
     }, (1 / 60) * 1000)
-    return () => clearInterval(interval)
+    */
+    usersocket.on("gameUpdate", (gameData: UpdateGameDto) => {
+      if(gameData.gameOver){
+        drawGameover({canvas, mouse});
+      }
+      if(!gameData.gameOver){
+        //update({gameover: gameData.gameOver});
+        draw({canvas, mouse}, gameData);
+      }
+    })
+    //return () => clearInterval(interval)
   }, [countdown])
 
 	const handleKeyDown = event => {
     console.log('User pressed: ', event.key);
+    if(event.key == "ArrowUp" || event.key == "ArrowDown")
+      usersocket.emit("updatePlayerPosition", {direction: event.key}); //need to find a way to emit this only once until a keyup event is fired
   };
 
+  
 	const handleKeyUp = event => {
     console.log('User released: ', event.key);
+    usersocket.emit("stopUpdatePlayerPosition")
   };
 
   return (
@@ -119,3 +137,4 @@ const ReactiveCanvas = () => {
 }
 
 export default ReactiveCanvas
+

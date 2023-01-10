@@ -1,5 +1,6 @@
 if [ ! -f ./backend/.env ]; then
     touch ./backend/.env
+    echo "LOGIN=${LOGIN}" >> ./backend/.env
     echo "DATABASE_URL=${DATABASE_URL}" >> ./backend/.env
     echo "CLIENT_ID=${CLIENT_ID}" >> ./backend/.env
     echo "CLIENT_SECRET=${CLIENT_SECRET}" >> ./backend/.env
