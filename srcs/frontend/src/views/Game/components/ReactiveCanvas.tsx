@@ -9,6 +9,8 @@ const ReactiveCanvas = () => {
   const canvas = useRef<HTMLCanvasElement | null>(null)
   const div = useRef<HTMLDivElement | null>(null)
 
+	const [gameDataGen, setGameDataGen] = useState<any>(null);
+
   const [countdown, setCountdown] = useState(true)
 
 	const winner = useRef('')
@@ -36,8 +38,8 @@ const ReactiveCanvas = () => {
     }, (1 / 60) * 1000)
     */
     usersocket.on("gameUpdate", (gameData: UpdateGameDto) => {
+			setGameDataGen(gameData)
       if(gameData.gameOver){
-				console.log(gameData)
         drawMultiGameover({canvas}, gameData, winner);
 				snackbarMsg.current = winner.current + " won!";
 				setOpenSnackbar(true);
@@ -83,42 +85,46 @@ const ReactiveCanvas = () => {
         {/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}
       </div>
       <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] pt-24 grid xl:grid-cols-6 lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-6 grid-cols-4 items-center justify-center mx-auto">
-        <p className="text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-2xl text-xl font-bold mr-[10px] justify-end grid xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2">
-          {player1}
-        </p>
-        <div
-          className="rounded-full bg-white grid justify-center m-auto
-												xl:h-[125px] xl:w-[125px]
-												lg:h-[100px] lg:w-[100px]
-												md:h-[75px] md:w-[75px]
-												sm:h-[75px] sm:w-[75px]
-												h-[50px] w-[50px]
-												bg-blue-500 border-4 border-white"
-        >
-          <img
-            className="h-full w-full rounded-full"
-            src={player1_img}
-            alt=""
-          />
-        </div>
-        <div
-          className="rounded-full bg-white grid justify-center m-auto
-												xl:h-[125px] xl:w-[125px]
-												lg:h-[100px] lg:w-[100px]
-												md:h-[75px] md:w-[75px]
-												sm:h-[75px] sm:w-[75px]
-												h-[50px] w-[50px]
-												bg-blue-500 border-4 border-white"
-        >
-          <img
-            className="h-full w-full rounded-full"
-            src={player2_img}
-            alt=""
-          />
-        </div>
-        <p className="text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-2xl text-xl font-bold ml-[10px] grid justify-start xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2">
-          {player2}
-        </p>
+        {gameDataGen && (
+					<>
+						<p className="text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-2xl text-xl font-bold mr-[10px] justify-end grid xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2">
+		          {gameDataGen.leftPlayer.playerUser}
+		        </p>
+		        <div
+		          className="rounded-full bg-white grid justify-center m-auto
+														xl:h-[125px] xl:w-[125px]
+														lg:h-[100px] lg:w-[100px]
+														md:h-[75px] md:w-[75px]
+														sm:h-[75px] sm:w-[75px]
+														h-[50px] w-[50px]
+														bg-blue-500 border-4 border-white"
+		        >
+		          <img
+		            className="h-full w-full rounded-full"
+		            src={gameDataGen.leftPlayer.playerPhoto}
+		            alt=""
+		          />
+		        </div>
+		        <div
+		          className="rounded-full bg-white grid justify-center m-auto
+														xl:h-[125px] xl:w-[125px]
+														lg:h-[100px] lg:w-[100px]
+														md:h-[75px] md:w-[75px]
+														sm:h-[75px] sm:w-[75px]
+														h-[50px] w-[50px]
+														bg-blue-500 border-4 border-white"
+		        >
+		          <img
+		            className="h-full w-full rounded-full"
+		            src={gameDataGen.rightPlayer.playerPhoto}
+		            alt=""
+		          />
+		        </div>
+		        <p className="text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-2xl text-xl font-bold ml-[10px] grid justify-start xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2">
+							{gameDataGen.rightPlayer.playerUser}
+		        </p>
+					</>
+				)}
       </div>
       <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] h-fit justify-center m-auto pt-8">
         <div className="grid justify-center m-auto">
