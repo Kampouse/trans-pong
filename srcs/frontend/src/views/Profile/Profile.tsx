@@ -334,6 +334,30 @@ export interface EditProfileProps
     data: any
 }
 
+//  Variable to do edit stuff
+
+async function updateUsername(newUsername: any, data: any)
+{
+    console.log(newUsername.value)
+    console.log(data)
+
+    data.username = newUsername.value;
+    fetch("http://localhost:3000/profile/update/username", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newUsername.value)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
+
 export function EditProfile({open, onClose, data} : EditProfileProps)
 {
     //  =============== Google auth             =============== //
@@ -357,10 +381,8 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                         Change username
                     </p>
                     <div className=''>
-                        <form action='http://localhost:3000/profile/update/username' method='POST'>
                             <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
-                            <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
-                        </form>
+                            <button onClick={() => updateUsername(document.getElementById("newUsername"), data)} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                     </div>
                 </div>
                 <div className='my-2'>
