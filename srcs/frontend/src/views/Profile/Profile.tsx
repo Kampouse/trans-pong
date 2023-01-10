@@ -522,7 +522,7 @@ export default function Profile()
             {data && (
             <>
             <div className='w-full h-[30%] flex py-4 px-5'>
-                <div className='w-fit h-full flex'>
+                <div className='w-fit h-full flex items-center justify-center'>
                     {username === undefined && hover && 
                     <div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
                         <Edit sx={{color: blue[700], height: 35, width: 35}} />
