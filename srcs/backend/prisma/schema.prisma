@@ -36,6 +36,7 @@ model FriendRequest{
 
 model Game{
     gameID              String                          @id @default(cuid())
+    gameRoomID          String?                         @unique 
     leftPlayer          String
     leftPlayerScore     Int                             @default(0)
     rightPlayer         String
