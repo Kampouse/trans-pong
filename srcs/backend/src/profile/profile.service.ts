@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
+import { FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
@@ -18,7 +18,6 @@ export class ProfileService
     friendList: FriendDto[] = [];
     friendRequests: FriendRequestDto[] = [];
     matchHistory: MatchDto[] = [];
-    achievements: AchievementDto[] = [];
 
     insertFriend(user: string, photo: string, status: string)
     {
@@ -41,12 +40,6 @@ export class ProfileService
         this.matchHistory.push(newMatch);
     }
 
-    insertAchievement(title: string)
-    {
-        const newAchievement = new AchievementDto(title);
-        this.achievements.push(newAchievement);
-    }
-
     async getProfilePublic(login42: string): Promise<PublicProfileDto>
     {
         // Create prisma client and look if the username exist in the database
@@ -66,19 +59,17 @@ export class ProfileService
         //  If he dosen't exist, return error true and everything at null
         if (!user)
         {
-            return new PublicProfileDto(true, null, null, null, null, null, null, null);
+            return new PublicProfileDto(true, null, null, null, null, null, null);
         }
 
         //  Free the array's from previous values
         this.friendList = [];
         this.friendRequests = [];
-        this.achievements = [];
         this.matchHistory = [];
 
         //  Free the array's from previous values
         this.friendList = [];
         this.friendRequests = [];
-        this.achievements = [];
         this.matchHistory = [];
 
         //  Build the response
@@ -213,142 +204,9 @@ export class ProfileService
                 x = x + 1;
             }
         }
-
-        // Get all accomplished achievements
-        const achievement = await prisma.achievement.findUnique({
-            where: {
-                userID: user.userID,
-            },
-        });
-
-        //  Sorry for the spaguethi guys, time is an issue lol
-        if (achievement)
-        {
-            if (achievement.achiev1 == true)
-            {
-                this.insertAchievement("achievement-1");
-            }
-            if (achievement.achiev2 == true)
-            {
-                this.insertAchievement("achievement-2");
-            }
-            if (achievement.achiev3 == true)
-            {
-                this.insertAchievement("achievement-3");
-            }
-            if (achievement.achiev4 == true)
-            {
-                this.insertAchievement("achievement-4");
-            }
-            if (achievement.achiev5 == true)
-            {
-                this.insertAchievement("achievement-5");
-            }
-            if (achievement.achiev6 == true)
-            {
-                this.insertAchievement("achievement-6");
-            }
-            if (achievement.achiev7 == true)
-            {
-                this.insertAchievement("achievement-7");
-            }
-            if (achievement.achiev8 == true)
-            {
-                this.insertAchievement("achievement-8");
-            }
-            if (achievement.achiev9 == true)
-            {
-                this.insertAchievement("achievement-9");
-            }
-            if (achievement.achiev10 == true)
-            {
-                this.insertAchievement("achievement-10");
-            }
-            if (achievement.achiev11 == true)
-            {
-                this.insertAchievement("achievement-11");
-            }
-            if (achievement.achiev12 == true)
-            {
-                this.insertAchievement("achievement-12");
-            }
-            if (achievement.achiev13 == true)
-            {
-                this.insertAchievement("achievement-13");
-            }
-            if (achievement.achiev14 == true)
-            {
-                this.insertAchievement("achievement-14");
-            }
-            if (achievement.achiev15 == true)
-            {
-                this.insertAchievement("achievement-15");
-            }
-            if (achievement.achiev16 == true)
-            {
-                this.insertAchievement("achievement-16");
-            }
-            if (achievement.achiev17 == true)
-            {
-                this.insertAchievement("achievement-17");
-            }
-            if (achievement.achiev18 == true)
-            {
-                this.insertAchievement("achievement-18");
-            }
-            if (achievement.achiev19 == true)
-            {
-                this.insertAchievement("achievement-19");
-            }
-            if (achievement.achiev20 == true)
-            {
-                this.insertAchievement("achievement-20");
-            }
-            if (achievement.achiev21 == true)
-            {
-                this.insertAchievement("achievement-21");
-            }
-            if (achievement.achiev22 == true)
-            {
-                this.insertAchievement("achievement-22");
-            }
-            if (achievement.achiev23 == true)
-            {
-                this.insertAchievement("achievement-23");
-            }
-            if (achievement.achiev24 == true)
-            {
-                this.insertAchievement("achievement-24");
-            }
-            if (achievement.achiev25 == true)
-            {
-                this.insertAchievement("achievement-25");
-            }
-            if (achievement.achiev26 == true)
-            {
-                this.insertAchievement("achievement-26");
-            }
-            if (achievement.achiev27 == true)
-            {
-                this.insertAchievement("achievement-27");
-            }
-            if (achievement.achiev28 == true)
-            {
-                this.insertAchievement("achievement-28");
-            }
-            if (achievement.achiev29 == true)
-            {
-                this.insertAchievement("achievement-29");
-            }
-            if (achievement.achiev30 == true)
-            {
-                this.insertAchievement("achievement-30");
-            }
-        }
-
         // At last, return the ProfileResponse
         return new PublicProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.matchHistory, this.achievements , stats);
+            this.friendList, this.matchHistory, stats);
     }
 
     async getProfileEdit(login42: string): Promise<PrivateProfileDto>
@@ -368,13 +226,12 @@ export class ProfileService
         //  If he dosen't exist, return error true and everything at null
         if (!user)
         {
-            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null, null);
+            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null);
         }
 
         //  Free the array's from previous values
         this.friendList = [];
         this.friendRequests = [];
-        this.achievements = [];
         this.matchHistory = [];
 
         //  Build the response
@@ -535,141 +392,9 @@ export class ProfileService
             }
         }
 
-        // Get all accomplished achievements
-        const achievement = await prisma.achievement.findUnique({
-            where: {
-                userID: user.userID,
-            },
-        });
-
-        //  Sorry for the spaguethi guys, time is an issue lol
-        if (achievement)
-        {
-            if (achievement.achiev1 == true)
-            {
-                this.insertAchievement("achievement-1");
-            }
-            if (achievement.achiev2 == true)
-            {
-                this.insertAchievement("achievement-2");
-            }
-            if (achievement.achiev3 == true)
-            {
-                this.insertAchievement("achievement-3");
-            }
-            if (achievement.achiev4 == true)
-            {
-                this.insertAchievement("achievement-4");
-            }
-            if (achievement.achiev5 == true)
-            {
-                this.insertAchievement("achievement-5");
-            }
-            if (achievement.achiev6 == true)
-            {
-                this.insertAchievement("achievement-6");
-            }
-            if (achievement.achiev7 == true)
-            {
-                this.insertAchievement("achievement-7");
-            }
-            if (achievement.achiev8 == true)
-            {
-                this.insertAchievement("achievement-8");
-            }
-            if (achievement.achiev9 == true)
-            {
-                this.insertAchievement("achievement-9");
-            }
-            if (achievement.achiev10 == true)
-            {
-                this.insertAchievement("achievement-10");
-            }
-            if (achievement.achiev11 == true)
-            {
-                this.insertAchievement("achievement-11");
-            }
-            if (achievement.achiev12 == true)
-            {
-                this.insertAchievement("achievement-12");
-            }
-            if (achievement.achiev13 == true)
-            {
-                this.insertAchievement("achievement-13");
-            }
-            if (achievement.achiev14 == true)
-            {
-                this.insertAchievement("achievement-14");
-            }
-            if (achievement.achiev15 == true)
-            {
-                this.insertAchievement("achievement-15");
-            }
-            if (achievement.achiev16 == true)
-            {
-                this.insertAchievement("achievement-16");
-            }
-            if (achievement.achiev17 == true)
-            {
-                this.insertAchievement("achievement-17");
-            }
-            if (achievement.achiev18 == true)
-            {
-                this.insertAchievement("achievement-18");
-            }
-            if (achievement.achiev19 == true)
-            {
-                this.insertAchievement("achievement-19");
-            }
-            if (achievement.achiev20 == true)
-            {
-                this.insertAchievement("achievement-20");
-            }
-            if (achievement.achiev21 == true)
-            {
-                this.insertAchievement("achievement-21");
-            }
-            if (achievement.achiev22 == true)
-            {
-                this.insertAchievement("achievement-22");
-            }
-            if (achievement.achiev23 == true)
-            {
-                this.insertAchievement("achievement-23");
-            }
-            if (achievement.achiev24 == true)
-            {
-                this.insertAchievement("achievement-24");
-            }
-            if (achievement.achiev25 == true)
-            {
-                this.insertAchievement("achievement-25");
-            }
-            if (achievement.achiev26 == true)
-            {
-                this.insertAchievement("achievement-26");
-            }
-            if (achievement.achiev27 == true)
-            {
-                this.insertAchievement("achievement-27");
-            }
-            if (achievement.achiev28 == true)
-            {
-                this.insertAchievement("achievement-28");
-            }
-            if (achievement.achiev29 == true)
-            {
-                this.insertAchievement("achievement-29");
-            }
-            if (achievement.achiev30 == true)
-            {
-                this.insertAchievement("achievement-30");
-            }
-        }
-
         // At last, return the ProfileResponse
         return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authenticator);
+            this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator);
     }
 
     async updateUsername(newUsername: string, login42: string) : Promise<responseDefault>

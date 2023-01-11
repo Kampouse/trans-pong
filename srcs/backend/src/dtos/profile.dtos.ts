@@ -33,12 +33,6 @@ export class MatchDto{
     ){}
 }
 
-export class AchievementDto{
-    constructor(
-        public title:              string,
-    ){}
-}
-
 export class StatisticsDto{
     constructor(
         public played:              number,
@@ -62,7 +56,6 @@ export class PrivateProfileDto {
         public friendList: FriendDto[],
         public friendRequests: FriendRequestDto[],
         public matchHistory: MatchDto[],
-        public achievement: AchievementDto[],
         public stats: StatisticsDto,
         public authenticator: boolean){}
 }
@@ -75,6 +68,5 @@ export class PublicProfileDto {
         public imagePath: string,
         public friendList: FriendDto[],
         public matchHistory: MatchDto[],
-        public achievement: AchievementDto[],
         public stats: StatisticsDto){}
 }

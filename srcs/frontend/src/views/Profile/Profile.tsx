@@ -208,58 +208,6 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
   );
 }
 
-//  =============== Achievement component       =============== //
-
-function Achievements({data}: {data: any}) {
-	return (
-		<div className="flex h-[100%] flex-col -my-4">
-            <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
-                <div className="flow-root overflow-y-scroll scrollbar-hide">
-                    <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg">
-						{ data.achievement.map((currentAchievement) =>
-                        {
-							return (
-								<li className="py-4">
-									<div className="flex items-center m-auto">
-										{
-                                            (currentAchievement.achieved) ? 
-                                            ( <React.Fragment>
-											    <div className="w-12 h-12">
-													<div className="h-[32px] w-[32px]">
-														<WorkspacePremium sx={{ width: 32, height: 32, m: 1}} />
-													</div>
-												</div>
-												<div className="min-w-0 flex-1 pl-2">
-													<p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600">{currentAchievement.name}</p>
-													<p className="text-sm text-gray-500 dark:text-slate-500">{currentAchievement.description}</p>
-												</div>
-											</React.Fragment>
-										    )
-                                            : 
-                                            (
-											<React.Fragment>
-												<div className="w-12 h-12">
-													<div className="h-[32px] w-[32px]">
-														<Lock sx={{ height: 32, width: 32, m: 1 }} />
-													</div>
-												</div>
-												<div className="min-w-0 flex-1 pl-2">
-													<p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600">Locked</p>
-												</div>
-											</React.Fragment>
-										    )
-                                        }
-									</div>
-								</li>
-							);
-						})}
-                    </ul>
-                </div>
-            </div>
-        </div>
-	    );
-}
-
 //  =============== Stats component       =============== //
 
 function Stats({data}: {data: any})
@@ -446,7 +394,7 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                         <iframe name="dummyframe" id="dummyframe" className='w-0 h-0'></iframe>
                         <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data' target='dummyframe'>
                             <input accept="image/*" id="file" type="file" name='file' className=' justify-center'></input>
-                            <button onClick={() => {onClose();}} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
+                            <button onClick={async () => {await getPhoto(data); onClose();}} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
                                 Upload
                             </button>
                         </form>
@@ -604,8 +552,7 @@ export default function Profile()
                             <Tab icon={<History />} label="Match History" sx={{ fontWeight: 'bold' }} value="1" />
                             <Tab icon={<Favorite />} label="Friends" sx={{ fontWeight: 'bold' }} value="2" />
                                 {username === undefined && <Tab icon={<PersonAdd />} label="Friend Requests" sx={{ fontWeight: 'bold' }} value="3" />}
-                            <Tab icon={<EmojiEvents />} label="Achievements" sx={{ fontWeight: 'bold' }} value="4" />
-                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="5" />
+                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="4" />
                         </TabList>
                     </Box>
                 </div>
@@ -614,8 +561,7 @@ export default function Profile()
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
                         <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
                             {username === undefined && <TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>}
-                        <TabPanel value="4"><Achievements data={data} /></TabPanel>
-                        <TabPanel value="5"><Stats data={data} /></TabPanel>
+                        <TabPanel value="4"><Stats data={data} /></TabPanel>
                     </div>
                 </div>
             </TabContext>
