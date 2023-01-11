@@ -16,6 +16,7 @@ import Chat from 'views/Chat/Chat'
 import { ChatRoom, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial } from 'utils'
+import ColorTest from 'views/Game/ColorTest'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -132,6 +133,7 @@ useEffect(() => { check()}, [])
                 <Route path="" element={<SinglePlayerCanvas/>}></Route>
                 <Route path=":id" element={<Game/>}></Route>
             </Route>
+						<Route path="/ColorTest" element={<ColorTest/>}></Route>
           </Routes>
         </>
       ) : (
