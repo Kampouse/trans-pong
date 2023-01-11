@@ -14,4 +14,3 @@ export class responseUploadPhoto
         public photo: string,
     ){};
 }
-

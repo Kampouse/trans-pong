@@ -43,8 +43,53 @@ export class ProfileController {
     }
 
     //  Return the image path of the user
+    @Get('/get/auth')
+    async getProfileAuth(@Res() res, @Req() request: RequestWithUser) : Promise<responseDefault>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined)
+        {
+            res.status(401).send({ message: 'Error: Unauthorized || !file', status: '401' });
+            return;
+        }
+
+        console.log(login42)
+        const response = await this.profileService.getAuth(login42);
+        if (response.error == true)
+        {
+            res.status(403).send({ message: "error", status: '403' });
+            return;
+        }
+        res.status(200).send({ message: response.message, status: '200'});
+        return;
+    }
+
+        //  Return the image path of the user
     @Get('/get/photo')
     async getProfilePhoto(@Res() res, @Req() request: RequestWithUser) : Promise<responseDefault>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined)
+        {
+            res.status(401).send({ message: 'Error: Unauthorized || !file', status: '401' });
+            return;
+        }
+
+        const response = await this.profileService.getPhoto(login42);
+        if (response.error == true)
+        {
+            res.status(403).send({ message: "error", status: '403' });
+            return;
+        }
+        res.status(200).send({ message: response.message, status: '200'});
+        return;
+    }
+
+    //  Return the image path of the user
+    @Get('/get/photo')
+    async getAuth(@Res() res, @Req() request: RequestWithUser) : Promise<responseDefault>
     {
         const login42 =  await this.profileService.authentificate(request);
 

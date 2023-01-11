@@ -1,10 +1,13 @@
 import { Dialog } from '@mui/material'
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 
 export function UserOption({open, onClose, userClicked})
 {
     //  Username of the user clicked and his profile path
     const username = userClicked.current;
-    var redirect = "http://localhost:5173/profile/" + username;
+    var redirect = "/profile/" + username;
+    const nav = useNavigate();
+
 
     //  CSS style for button
     const buttonCss = 'bg-slate-100 text-2xl font-Raleway hover:bg-purple-100 ring-1 ring-slate-500 rounded-lg mx-[25%] w-[50%] h-12'
@@ -15,7 +18,6 @@ export function UserOption({open, onClose, userClicked})
         await fetch('http://localhost:3000/profile/add/' + username)
         .then(function(){})
         .catch(function() {console.log("error on adding " + username);});
-        window.location.reload();
     }
 
     async function blockUser(username: string)
@@ -23,7 +25,6 @@ export function UserOption({open, onClose, userClicked})
         await fetch('http://localhost:3000/profile/block/' + username)
         .then(function(){})
         .catch(function() {console.log("error on blocking " + username);});
-        window.location.reload();
     }
 
     return (
@@ -33,19 +34,18 @@ export function UserOption({open, onClose, userClicked})
                     {username}
                 </h1>
                 <div className='py-4'>
-                    <button name='viewProfileButton' className={buttonCss} onClick={() =>{location.href = redirect;}}>
+                    <button name='viewProfileButton' className={buttonCss} onClick={() =>{nav(redirect, {replace: true}); onClose();}}>
                         Profile page
                     </button>
                 </div>
                 <div className='py-4'>
-                    <button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username)}}>
+                    <button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username), nav('/profile', {replace: true}); onClose();}}>
                         Add friend
                     </button>
                 </div>
                 <div className='py-4'>
                     <button name='invitePlayButton' className={buttonCss} onClick={() =>
                         {
-                            //  Event on click invitePlayButton
                             console.log("Insert event invite " + username + " to play")
                         }}>
                         Invite to play
@@ -54,7 +54,6 @@ export function UserOption({open, onClose, userClicked})
                 <div className='py-4'>
                     <button name='inviteChatButton' className={buttonCss} onClick={() =>
                         {
-                            //  Event on click inviteChatButton
                             console.log("Insert event invite " + username + " to chat")
                         }}>
                         Invite to chat
@@ -64,7 +63,8 @@ export function UserOption({open, onClose, userClicked})
                     <button name='blockUserEvent' className={buttonCss} onClick={() =>
                         {
                             blockUser(username);
-                            console.log("Insert event block " + username)
+                            nav('/profile', {replace: true});
+                            onClose();
                         }}>
                         Block user
                     </button>

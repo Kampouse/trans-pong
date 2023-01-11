@@ -64,7 +64,7 @@ export class PrivateProfileDto {
         public matchHistory: MatchDto[],
         public achievement: AchievementDto[],
         public stats: StatisticsDto,
-        public authentificator: boolean){}
+        public authenticator: boolean){}
 }
 
 export class PublicProfileDto {
