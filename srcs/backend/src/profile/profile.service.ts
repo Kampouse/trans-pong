@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
+import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
@@ -496,6 +496,32 @@ export class ProfileService
         return (response);
     }
 
+    async getActiveGames() : Promise<ActiveGameDto>
+    {
+        var array: Game[] = [];
+        var games;
+
+        try
+        {
+            games = await prisma.game.findMany({
+                where: {
+                    active: true
+                }
+            })
+        }
+        catch{}
+
+        if (games)
+        {
+            for (let i in games)
+            {
+                var newGame = new Game(games[i].leftPlayer, games[i].leftPlayerPhoto, games[i].rightPlayer, games[i].rightPhoto, games[i].gameRoomID);
+                array.push(newGame);
+            }
+        }
+        const response = new ActiveGameDto(array);
+        return (response);
+    }
 
     async updatePhoto(newFilePath: string, login42: string) : Promise<responseUploadPhoto>
     {
