@@ -1,10 +1,13 @@
 import { Dialog } from '@mui/material'
+import { useNavigate } from 'react-router-dom';
 
-export function UserOption({open, onClose, userClicked})
+export function UserOption({open, onClose, userClicked, setValue})
 {
     //  Username of the user clicked and his profile path
     const username = userClicked.current;
-    var redirect = "http://localhost:5173/profile/" + username;
+    var redirect = "/profile/" + username;
+    const nav = useNavigate();
+
 
     //  CSS style for button
     const buttonCss = 'bg-slate-100 text-2xl font-Raleway hover:bg-purple-100 ring-1 ring-slate-500 rounded-lg mx-[25%] w-[50%] h-12'
@@ -15,8 +18,6 @@ export function UserOption({open, onClose, userClicked})
         await fetch('http://localhost:3000/profile/add/' + username)
         .then(function(){})
         .catch(function() {console.log("error on adding " + username);});
-        //window.location.reload();
-        console.log("CANT LEAVE THIS FIX ME Your in a SPA")
     }
 
     async function blockUser(username: string)
@@ -24,8 +25,6 @@ export function UserOption({open, onClose, userClicked})
         await fetch('http://localhost:3000/profile/block/' + username)
         .then(function(){})
         .catch(function() {console.log("error on blocking " + username);});
- //       window.location.reload();
-        console.log("FIX ME CANT leave this your in a SPA")
     }
 
     return (
@@ -35,40 +34,36 @@ export function UserOption({open, onClose, userClicked})
                     {username}
                 </h1>
                 <div className='py-4'>
-                    <button name='viewProfileButton' className={buttonCss} onClick={() =>{location.href = redirect;}}>
+                    <button name='viewProfileButton' className={buttonCss} onClick={() =>{nav(redirect, {replace: true}); onClose(); setValue("1");}}>
                         Profile page
                     </button>
                 </div>
                 <div className='py-4'>
-                    <button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username)}}>
+                    <button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username), nav('/profile/' + username, {replace: true}); onClose();}}>
                         Add friend
                     </button>
                 </div>
                 <div className='py-4'>
-                    <button name='invitePlayButton' className={buttonCss} onClick={() =>
+                    <button name='blockUserEvent' className={buttonCss} onClick={() =>
                         {
-                            //  Event on click invitePlayButton
-                            console.log("Insert event invite " + username + " to play")
+                            blockUser(username);
+                            nav('/profile/' + username, {replace: true});
+                            onClose();
                         }}>
-                        Invite to play
+                        Block user
                     </button>
                 </div>
                 <div className='py-4'>
                     <button name='inviteChatButton' className={buttonCss} onClick={() =>
                         {
-                            //  Event on click inviteChatButton
                             console.log("Insert event invite " + username + " to chat")
                         }}>
                         Invite to chat
                     </button>
                 </div>
                 <div className='py-4 mb-2'>
-                    <button name='blockUserEvent' className={buttonCss} onClick={() =>
-                        {
-                            blockUser(username);
-                            console.log("Insert event block " + username)
-                        }}>
-                        Block user
+                    <button name='invitePlayButton' className={buttonCss} onClick={() =>{onClose()}}>
+                        Cancel
                     </button>
                 </div>
             </div>

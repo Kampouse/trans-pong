@@ -21,9 +21,10 @@ export function GoogleAuth({open, onClose})
             <div className="my-3 h-[160px] w-[160px] ring-2 mx-[20%] ring-black" >
                 {qrCode && <QRCode value={qrCode} size={160} level="M" bgColor="#ffffff" fgColor="#000000" />}
             </div>
-            <form action='http://localhost:3000/profile/create/validation/' method='POST'>
+            <iframe name="dummyframe" id="dummyframe" className='w-0 h-0'></iframe>
+            <form action='http://localhost:3000/profile/create/validation/' target="dummyframe" method='POST'>
                 <input name="token" id="token" type="text" placeholder="6 digit token like : 123456" className="w-full text-center mt-2"></input>
-                <button className='h-fit w-fit my-2 mx-[30%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Activate</button>
+                <button onClick={() => {onClose();}} className='h-fit w-fit my-2 mx-[30%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Activate</button>
             </form>
         </div>
     </Dialog>

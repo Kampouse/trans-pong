@@ -6,7 +6,7 @@
 /*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:41:59 by aguay             #+#    #+#             */
-/*   Updated: 2022/12/23 17:38:39 by jemartel         ###   ########.fr       */
+/*   Updated: 2023/01/09 13:51:20 by aguay            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,13 +96,31 @@ bool	create_api_info(void)
 	std::string		secret;
     std::string     redirect;
 	std::ofstream	file;
+    std::string     login42;
+    std::string     response;
 	bool			run = true;
 
 	while (run)
 	{
-		std::cout << "Intra 42 application api UID: ";
+        std::cout << "Please enter your Login 42 : ";
+        std::getline(std::cin, login42);
+        std::cout << "Now, please create an API application on the 42 intra website." << std::endl;
+        std::cout << "Do you want a tutorial how to do it ? (Y for yes)";
+        std::getline(std::cin, response);
+        if (response == "Y")
+        {
+            std::cout << "1) Go to https://profile.intra.42.fr/" << std::endl;
+            std::cout << "2) Login"<< std::endl;
+            std::cout << "3) Click at top right -> login42 -> settings" << std::endl;
+            std::cout << "4) Click API" << std::endl;
+            std::cout << "5) Click Register a new API" << std::endl;
+            std::cout << "6) Enter whathever at name" << std::endl;
+            std::cout << "7) http://localhost:3000/auth/42login\nCopy this line and put it in redirect URI." << std::endl;
+            std::cout << "8) Enter API information given to me :)" << std::endl;
+        }
+		std::cout << "UID: ";
 		std::getline(std::cin, uid);
-		std::cout << "Intra 42 application secret: ";
+		std::cout << "SECRET: ";
 		std::getline(std::cin, secret);
         std::cout << "Ok, now I need the redirect URL that redirect to :\nhttp://localhost:3000/auth/42login" << std::endl;
         std::getline(std::cin, redirect);
@@ -111,6 +129,7 @@ bool	create_api_info(void)
 	}
     std::string token = create_jwt_token();
 	file.open(".env", std::ofstream::app);
+    file << "LOGIN=" << login42 << '\n';
 	file << "CLIENT_ID=" << uid << '\n';
 	file << "CLIENT_SECRET=" << secret << '\n';
 	file << "REDIRECT=" << redirect << '\n';
@@ -125,6 +144,6 @@ void	create_env(void)
 	create_api_info();
 	if (validate_env())
 		exit (0);
-	std::cout << "error: envp invalid, you can delete it and make again to create one or edit your'e .env file" << std::endl;
+	std::cout << "error: envp invalid, you can delete it and make again to create one or edit your .env file" << std::endl;
 	exit(1);
 }

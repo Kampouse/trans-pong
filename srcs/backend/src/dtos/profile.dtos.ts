@@ -1,3 +1,21 @@
+export class Game
+{
+    constructor(
+        public leftPlayer:          string,
+        public leftPlayerPhoto:     string,
+        public rightPlayer:         string,
+        public rightPlayerPhoto:    string,
+        public gameID:              string 
+    ){}
+}
+
+export class ActiveGameDto
+{
+    constructor(
+        public games:   Game[]
+    ){}
+}
+
 export class UpdateUsernameDto
 {
     constructor(
@@ -22,7 +40,6 @@ export class FriendRequestDto{
 
 export class MatchDto{
     constructor(
-        public matchNum:           number,
         public leftPlayer:         string,
         public leftPhoto:          string,
         public leftScore:          number,
@@ -30,12 +47,7 @@ export class MatchDto{
         public rightPhoto:         string,
         public rightScore:         number,
         public winner:             string,
-    ){}
-}
-
-export class AchievementDto{
-    constructor(
-        public title:              string,
+        public updatedAt:          Date
     ){}
 }
 
@@ -62,9 +74,8 @@ export class PrivateProfileDto {
         public friendList: FriendDto[],
         public friendRequests: FriendRequestDto[],
         public matchHistory: MatchDto[],
-        public achievement: AchievementDto[],
         public stats: StatisticsDto,
-        public authentificator: boolean){}
+        public authenticator: boolean){}
 }
 
 export class PublicProfileDto {
@@ -75,6 +86,5 @@ export class PublicProfileDto {
         public imagePath: string,
         public friendList: FriendDto[],
         public matchHistory: MatchDto[],
-        public achievement: AchievementDto[],
         public stats: StatisticsDto){}
 }

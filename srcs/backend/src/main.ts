@@ -6,6 +6,7 @@ import * as session from 'express-session';
 // import { env } from 'process';
 // import { cors } from 'cors';
 import * as cookieParser from 'cookie-parser';
+import * as io from 'socket.io'
 
 declare global {
   var prisma: PrismaClient | undefined;
