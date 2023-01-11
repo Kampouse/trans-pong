@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
+import { User } from '.prisma/client';
 
 @Injectable()
 export class ProfileService
@@ -1143,4 +1144,31 @@ export class ProfileService
         }
         return (status)
     }
+    
+    public async findAll()
+    {
+        const users: User[] = await prisma.user.findMany({
+          where: {
+            username: {
+                not: null
+            }
+          }
+        });
+        return users;
+    }
+      
+      //  Find one user by id.
+      public async findOneById(id: string) {
+        const user: User = await prisma.user.findUnique({ 
+          where: {userID: id}
+        });
+        
+        if (!user) {
+          return null;
+        }
+        return user;
+      }
+    
 }
+
+

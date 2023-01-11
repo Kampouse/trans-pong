@@ -1,7 +1,8 @@
 import { Injectable,Headers } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User, userStatus } from '@prisma/client';
+import { PrismaService } from 'src/prisma.service';
 import {prisma } from 'src/main';
 import {Socket, Server} from 'socket.io';
 import {ProfileService} from '../profile/profile.service';
@@ -12,8 +13,13 @@ type auth_output = {username : string, iat: string, exp: string}
 
 export class AuthService
 {
+    private userSessions: Map<string, Socket[]>;
+    constructor(private usersService: ProfileService, private jwtService: JwtService, private prisma: PrismaService) { 
+    }
 
-    constructor(private usersService: ProfileService, private jwtService: JwtService) { 
+    async fetchUser(userID: string): Promise<User | null>
+    {
+        return this.prisma.user.findUnique({ where: { userID } });
     }
 
     public async validate_token(input: string)
@@ -116,4 +122,34 @@ export class AuthService
             where: {login42: username}
         })
     }
+
+    public async getUserFromSocket(socket: Socket): Promise<User | null> {
+        const cookies = socket.handshake.headers.cookie;
+    
+        if (!cookies) {
+          return null;
+        }
+    
+        const token = parse(cookies)['jwt'];
+        if (!token) {
+          return null;
+        }
+    
+        try {
+          const sub = this.jwtService.verify(token);
+          if (!sub) {
+            return null;
+          }
+    
+          const user: User | null = await this.prisma.user.findUnique({ where: { userID: sub.sub } });
+    
+          return user;
+        } catch {
+          return null;
+        }
+      }
+    
+      getSocketsFromUser(userId: string): Socket[] {
+        return this.userSessions.get(userId);
+      }
 }

@@ -7,20 +7,38 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum UserStatus {
+  Online 
+  Offline
+  InGame
+}
+
 model User {
     userID              String                          @id @default(cuid())
+    username            String                          @unique
     accessToken42       String?
     refreshToken42      String?
     jwtToken            String?
     login42             String                          @unique
-    username            String                          @unique
-    userStatus          userStatus                      @default(online)
     imagePath           String                          @default("/defaultPhoto.png")
     authentificator     Boolean                         @default(false)
     authKey             String                          @default("none")
     achievement         Achievement?
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
+    friends             Friend[]                        
+    blocked             Blocked[]                       
+    password            String?     
+}
+
+model Friend{
+    id                  Int                             @id @default(autoincrement())
+    user                User[]          
+}
+
+model Blocked{
+    id                  Int                             @id @default(autoincrement())
+    user                User[]
 }
 
 model FriendRequest{
@@ -104,37 +122,9 @@ model Achievement{
     achiev30            Boolean     @default(false)
 }
 
-enum userStatus{
-    online
-    offline
-    playing
-}
-
 enum requestStatus{
     pending
     accepted
     declined
-}
-
-enum ChatRoomType{
-    PUBLIC 
-    PRIVATE 
-}
-
-enum Message_type {
-	USER
-	SYSTEM
-}
-
-model ChatMessage{
-    id              String         @id
-    content         String
-}
-
-model ChatRoom{
-    id          String          @id @default(uuid())
-    hashPassword String?
-    name        String     
-    chatRoomType ChatRoomType   @default(PUBLIC)
 }
 
