@@ -24,12 +24,12 @@ export default function Matchmaking()
 											onClick={(e) => startSinglePlayer(e, nav)}
 											className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200"
 										>
-                        Singler Player
+                        Single Player
                     </button>
                     <button
 											type='button'
 											id="multiplayer"
-											onClick={(e) => startMultiplayerMatchmake(e, nav, userid, setOpenQueue))}
+											onClick={(e) => startMultiplayerMatchmake(e, nav, userid, setOpenQueue)}
 											className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200"
 										>
                         Multi Player

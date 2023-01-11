@@ -1,8 +1,9 @@
 import { Req, Res, Controller, Get, Header, Param, Post, UseInterceptors, Body, Redirect} from "@nestjs/common";
 import { ProfileService } from "./profile.service";
-import { PrivateProfileDto, PublicProfileDto, UpdateUsernameDto } from "src/dtos/profile.dtos";
+import { PrivateProfileDto, PublicProfileDto } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
+import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
 import { UploadedFile } from "@nestjs/common";
 import { RequestWithUser } from "src/dtos/auth.dtos";
 import { extname } from "path";
@@ -41,11 +42,30 @@ export class ProfileController {
         return (publicProfile);
     }
 
+    //  Return the image path of the user
+    @Get('/get/photo')
+    async getProfilePhoto(@Res() res, @Req() request: RequestWithUser) : Promise<responseDefault>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined)
+        {
+            res.status(401).send({ message: 'Error: Unauthorized || !file', status: '401' });
+            return;
+        }
+
+        const response = await this.profileService.getPhoto(login42);
+        if (response.error == true)
+        {
+            res.status(403).send({ message: "error", status: '403' });
+            return;
+        }
+        res.status(200).send({ message: response.message, status: '200'});
+        return;
+    }
+
     //  Upload a photo and update photo path of a user
-    //  send in body: content-type: form-data / key: file /value: file to upload
-    //  TODO: add authentification validation
     @Post('upload/photo')
-    @Redirect()
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
             destination: '../frontend/public',
@@ -57,40 +77,53 @@ export class ProfileController {
             },
         })
     }))
-    async updatePhoto(@UploadedFile() file: Express.Multer.File, @Req() request: RequestWithUser) : Promise<any>
+    async updatePhoto(@Res() res, @UploadedFile() file: Express.Multer.File, @Req() request: RequestWithUser) : Promise<responseUploadPhoto>
     {
         const login42 =  await this.profileService.authentificate(request);
 
+        console.log(login42);
+        console.log(file)
+
         if (login42 == undefined || file == undefined)
         {
-            return {statCode: 302, url: "http://localhost:5173/Profile" }
+            res.status(401).send({ message: 'Error: Unauthorized || !file', status: '401' });
+            return;
         }
-        console.log(login42);
-        this.profileService.updatePhoto(file.filename, login42);
-        console.log("Photo updated")
-        return {statCode: 302, url: "http://localhost:5173/Profile" }
+
+        const response = await this.profileService.updatePhoto(file.filename, login42);
+        if (response.error == true)
+        {
+            res.status(403).send({ message: response.message, status: '403' });
+            return;
+        }
+
+        res.status(200).send({ message: response.message, status: '200' });
+        return;
     }
 
     //  Update the username of the user authentificated
     @Post('update/username')
-    async updateUsername(@Res() res, @Body() updateUsernameDto: UpdateUsernameDto, @Req() request: RequestWithUser) : Promise<any>
+    async updateUsername(@Res() res, @Body() newUsername: any, @Req() request: RequestWithUser) : Promise<responseDefault>
     {
         const login42 =  await this.profileService.authentificate(request);
 
-        console.log(login42 + " asked to change username to " + updateUsernameDto.newUsername)
+        console.log(login42 + " asked to change username to " + newUsername.username)
 
-        if (login42 == undefined || updateUsernameDto.newUsername == undefined)
+        if (login42 == undefined || newUsername.username == undefined)
         {
             res.status(401).send({ message: 'Unauthorized', status: '401' });
+            return;
         }
 
         //  Add userID validation when auth is done by JP
-        const response = this.profileService.updateUsername(updateUsernameDto.newUsername, login42);
-        if (!response)
+        const response = await this.profileService.updateUsername(newUsername.username, login42);
+        if (response.error == true)
         {
-            res.status(401).send({ message: 'Username invalid...', status: '401' });
+            res.status(403).send({ message: response.message, status: '403' });
+            return;
         }
-        res.status(200).send({ message: 'Username change to ' + updateUsernameDto.newUsername + " successfull", status: '401' });
+        res.status(200).send({ message: response.message, status: '200' });
+        return;
     }
 
     @Get('/add/:username')
