@@ -1,8 +1,11 @@
 import { Dialog } from '@mui/material'
-
+import { usersocket } from './Matchmaking';
 
 export function Queue({open, onClose})
 {
+    if(usersocket.disconnected == true){
+        usersocket.connect()
+    }
     return (
         <Dialog onClose={onClose} open={open}>
             <div className='w-[400px] h-[100px] bg-sky-100 pt-1'>

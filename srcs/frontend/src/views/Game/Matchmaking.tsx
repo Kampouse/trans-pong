@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, NavigateFunction } from 'react-router-dom';
 import * as io from 'socket.io-client';
-import { Queue } from './QueueComponent';
+//import { Queue } from './QueueComponent';
 import { Fetch } from 'utils';
+import { Dialog } from '@mui/material'
 
 export var usersocket: io.Socket = io.connect();
 
@@ -64,6 +65,28 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, set
         console.log(userid)
         usersocket.emit("registerId", {userId: userid, socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
         usersocket.emit("searchGame"); //join new game
+        setOpenQueue(true);
+        //TODO: Fix this state disconnecting sockets for some reason on render, which is extremly stupid
     })
-    setOpenQueue(true);
+}
+
+function Queue({open, onClose})
+{
+    if(usersocket.disconnected == true){
+        usersocket.connect()
+    }
+    return (
+        <Dialog onClose={onClose} open={open}>
+            <div className='w-[400px] h-[100px] bg-sky-100 pt-1'>
+                <p className="text-xl text-center py-6 font-Merriweather">
+                    Waiting for an opponent...
+                </p>
+            </div>
+            <div className='bg-sky-100 px-[40%] pb-4'>
+                <button className='w-20 h-10 hover:bg-purple-200 font-Merriweather text-xl rounded-lg ring-1 ring-slate-500 bg-sky-200' onClick={() => {onClose()}}>
+                    Cancel
+                </button>
+            </div>
+        </Dialog>
+    );
 }
