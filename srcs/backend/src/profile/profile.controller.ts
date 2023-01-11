@@ -1,6 +1,6 @@
 import { Req, Res, Controller, Get, Header, Param, Post, UseInterceptors, Body, Redirect} from "@nestjs/common";
 import { ProfileService } from "./profile.service";
-import { PrivateProfileDto, PublicProfileDto } from "src/dtos/profile.dtos";
+import { PrivateProfileDto, PublicProfileDto, ActiveGameDto } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
@@ -42,9 +42,9 @@ export class ProfileController {
         return (publicProfile);
     }
 
-    //  Return the image path of the user
+    //  Return the auth activity in message
     @Get('/get/auth')
-    async getProfileAuth(@Res() res, @Req() request: RequestWithUser) : Promise<responseDefault>
+    async getProfileAuth(@Res() res, @Req() request: RequestWithUser) : Promise<ActiveGameDto>
     {
         const login42 =  await this.profileService.authentificate(request);
 
@@ -63,6 +63,23 @@ export class ProfileController {
         }
         res.status(200).send({ message: response.message, status: '200'});
         return;
+    }
+
+    //  Return the image path of the user
+    @Get('/active/game')
+    async getActiveGame(@Res() res, @Req() request: RequestWithUser) : Promise<ActiveGameDto>
+    {
+        const login42 =  await this.profileService.authentificate(request);
+
+        if (login42 == undefined)
+        {
+            res.status(401).send({ message: 'Error: Unauthorized || !file', status: '401' });
+            return;
+        }
+
+        console.log(login42)
+        const response = await this.profileService.getActiveGames();
+        return (response);
     }
 
         //  Return the image path of the user
