@@ -1,4 +1,4 @@
-import { Req, Res, Controller, Get, Header, Param, Post, UseInterceptors, Body, Redirect} from "@nestjs/common";
+import { Req, Res, Controller, Get, Header, Headers, Param, Post, UseInterceptors, Body, Redirect} from "@nestjs/common";
 import { ProfileService } from "./profile.service";
 import { PrivateProfileDto, PublicProfileDto, ActiveGameDto } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -14,9 +14,9 @@ export class ProfileController {
 
     //  Get the private profile information of the user logged
     @Get()
-    async getProfileEdit(@Req() request: RequestWithUser) : Promise<PrivateProfileDto>
+    async getProfileEdit(@Req() request: RequestWithUser, @Headers() headers: Headers) : Promise<PrivateProfileDto>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request,headers);
 
         if (login42 == undefined)
         {
@@ -30,9 +30,9 @@ export class ProfileController {
     //  Get the public profile information of the username in /username
     @Get(':username')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async getProfilePublic(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<PublicProfileDto>
+    async getProfilePublic(@Param('username') username: string, @Req() request: RequestWithUser, headers: Headers ) : Promise<PublicProfileDto>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request,headers);
  
         if (login42 == undefined || username == undefined)
         {
@@ -139,9 +139,10 @@ export class ProfileController {
             },
         })
     }))
-    async updatePhoto(@Res() res, @UploadedFile() file: Express.Multer.File, @Req() request: RequestWithUser) : Promise<responseUploadPhoto>
+   
+    async updatePhoto(@Res() res, @UploadedFile() file: Express.Multer.File, @Req() request: RequestWithUser, @Headers() header) : Promise<responseUploadPhoto>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request,header);
 
         console.log(login42);
         console.log(file)
@@ -165,9 +166,9 @@ export class ProfileController {
 
     //  Update the username of the user authentificated
     @Post('update/username')
-    async updateUsername(@Res() res, @Body() newUsername: any, @Req() request: RequestWithUser) : Promise<responseDefault>
+    async updateUsername(@Res() res, @Body() newUsername: any, @Req() request: RequestWithUser, @Headers() header) : Promise<responseDefault>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request,header);
 
         console.log(login42 + " asked to change username to " + newUsername.username)
 
@@ -190,9 +191,9 @@ export class ProfileController {
 
     @Get('/add/:username')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async addFriend(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<any>
+    async addFriend(@Param('username') username: string, @Req() request: RequestWithUser, @Headers() header) : Promise<any>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request, header);
 
         if (login42 == undefined || username == undefined)
         {
@@ -205,9 +206,9 @@ export class ProfileController {
 
     @Get('/deny/:username')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async denyRequest(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<any>
+    async denyRequest(@Param('username') username: string, @Req() request: RequestWithUser,@Headers() header) : Promise<any>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request,header);
 
         if (login42 == undefined || username == undefined)
         {
@@ -220,9 +221,9 @@ export class ProfileController {
 
     @Get('/block/:username')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async blockUser(@Param('username') username: string, @Req() request: RequestWithUser) : Promise<any>
+    async blockUser(@Param('username') username: string, @Req() request: RequestWithUser,@Headers() header) : Promise<any>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request,header);
 
         if (login42 == undefined || username == undefined)
         {
@@ -235,9 +236,9 @@ export class ProfileController {
 
     @Get('create/googleAuth')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async createAuth(@Req() request: RequestWithUser) : Promise<any>
+    async createAuth(@Req() request: RequestWithUser,@Headers() header) : Promise<any>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request,header);
 
         if (login42 == undefined)
         {
@@ -249,9 +250,9 @@ export class ProfileController {
     @Post('create/validation')
     @Redirect()
     @Header('Content-type', 'application/json; charset=utf-8')
-    async validateCreation(@Body() token, @Req() request: RequestWithUser) : Promise<any>
+    async validateCreation(@Body() token, @Req() request: RequestWithUser,@Headers() header  ) : Promise<any>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request, header);
 
         if (login42 == undefined || token == undefined)
         {
@@ -265,9 +266,9 @@ export class ProfileController {
     @Post('remove/authenticator')
     @Redirect()
     @Header('Content-type', 'application/json; charset=utf-8')
-    async removeAuth(@Body() token, @Req() request: RequestWithUser) : Promise<any>
+    async removeAuth(@Body() token, @Req() request: RequestWithUser,@Headers() header) : Promise<any>
     {
-        const login42 =  await this.profileService.authentificate(request);
+        const login42 =  await this.profileService.authentificate(request,header);
 
         if (login42 == undefined || token == undefined)
         {
