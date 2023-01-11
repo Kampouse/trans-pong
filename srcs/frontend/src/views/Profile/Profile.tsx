@@ -334,14 +334,62 @@ export interface EditProfileProps
     data: any
 }
 
+async function updateUsername(newUsername: any, data: any)
+{
+    var username = {username: newUsername.value}
+
+    fetch("http://localhost:3000/profile/update/username", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json  "
+        },
+        body: JSON.stringify(username)
+    })
+        .then(response => response.json())
+        .then(res => {
+            if (res.status == "200")
+            {
+                data.username = username.username;
+                alert(res.message)
+            }
+            else
+            {
+                alert(res.message)
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
+
+async function getPhoto(data: any)
+{
+    console.log(data);
+    fetch("http://localhost:3000/profile/get/photo", {
+        method: "GET",
+    })
+        .then(response => response.json())
+        .then(res => {
+            if (res.status == "200")
+            {
+                return (res.message);
+            }
+            else
+            {
+                return;
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
+
 export function EditProfile({open, onClose, data} : EditProfileProps)
 {
     //  =============== Google auth             =============== //
     
     const [openGoogleAuth, setGoogleAuth] = useState(false);
     const [openGoogleReset, setGoogleReset] = useState(false);
-
-    //  Edit profile without authentificator activated
 
     return (
         <Dialog onClose={onClose} open={open} className="font-Raleway">
@@ -357,10 +405,8 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                         Change username
                     </p>
                     <div className=''>
-                        <form action='http://localhost:3000/profile/update/username' method='POST'>
-                            <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-[80%] my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
-                            <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
-                        </form>
+                            <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
+                            <button onClick={() => updateUsername(document.getElementById("newUsername"), data)} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                     </div>
                 </div>
                 <div className='my-2'>
@@ -368,9 +414,12 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                         Upload new Photo
                     </p>
                     <div>
-                        <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data'>
-                            <input accept="image/*" type="file" name='file' className=' justify-center'></input>
-                            <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Upload</button>
+                        <iframe name="dummyframe" id="dummyframe" className='w-0 h-0'></iframe>
+                        <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data' target='dummyframe'>
+                            <input accept="image/*" id="file" type="file" name='file' className=' justify-center'></input>
+                            <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
+                                Upload
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -544,7 +593,7 @@ export default function Profile()
             </>)}
         </div>
         <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked}></UserOption>
-        <EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
+        <EditProfile onClose={async () => {console.log(data.imagePath);setOpenEditProfile(false);}} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
         <GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
     </div>
   );

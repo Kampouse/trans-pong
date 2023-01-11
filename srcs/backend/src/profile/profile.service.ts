@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
+import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
 
 @Injectable()
 export class ProfileService
@@ -660,8 +661,10 @@ export class ProfileService
             this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authentificator);
     }
 
-    async updateUsername(newUsername: string, login42: string) : Promise<any>
+    async updateUsername(newUsername: string, login42: string) : Promise<responseDefault>
     {
+        var response = new responseDefault(true, "Username change to " + newUsername + " successful.")
+
         //  Find the user to update to
         const user = await prisma.user.findUnique({
             where: {
@@ -670,18 +673,21 @@ export class ProfileService
         })
         if (!user)
         {
-            return (false);
+            response.message = "Update username Error 00: Unauthorised client."
+            return (response);
         }
 
         //  Parse username for valid entry
         if (newUsername.length < 5)
         {
-            return (false);
+            response.message = "Update username Error 01: Username must have more than 4 character's."
+            return (response);
         }
 
         if (newUsername.length > 12)
         {
-            return (false)
+            response.message = "Update username Error 02: Username max number of character's is 12."
+            return (response)
         }
 
         //  Put the username with a capital first letter and the rest in lowercase
@@ -700,14 +706,38 @@ export class ProfileService
         }
         catch
         {
-            return (false)
+            response.message = "Update username Error 04: Username change failed due to database update error."
+            return (response);
         }
 
-        return (true);
+        response.error = false;
+        return (response);
     }
 
-    async updatePhoto(newFilePath: string, login42: string) : Promise<any>
+    async getPhoto(login42:string) : Promise<responseDefault>
     {
+        var response = new responseDefault(true, "/defaultPhoto.png");
+        var user;
+
+        try{
+            user = await prisma.user.findUnique( {
+               where: {login42: login42} 
+            } )
+        }
+        catch{}
+
+        if(user != undefined)
+        {
+            response.message = user.imagePath;
+            response.error = false;
+        }
+        return (response);
+    }
+
+    async updatePhoto(newFilePath: string, login42: string) : Promise<responseUploadPhoto>
+    {
+        var response = new responseUploadPhoto(true, "Photo upload successful", "not changed");
+
         const user = await prisma.user.findUnique({
             where:{
                 login42: login42,
@@ -716,7 +746,8 @@ export class ProfileService
         
         if (!user)
         {
-            return ({error: "authentification failed"});
+            response.message = "Upload photo Error 00: Unauthorised client"
+            return (response);
         }
         const path = "/" + newFilePath;
         try
@@ -729,12 +760,15 @@ export class ProfileService
                     imagePath: path,
                 }
             })
+            response.error = false;
+            response.photo = path;
+            return (response);
         }
         catch
         {
-            return ({error: "update failed"});
-        }
-        return ({success: "sucess"});
+            response.message = "Upload photo Error 01: Upload photo in database failed."
+            return (response);
+            }
     }
 
     async addFriend(login42: string, newFriend: string)
