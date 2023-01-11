@@ -18,8 +18,7 @@ export class GameSocketIOController {
                     ){
                     socket.sessionID = sessionID
                     socket.userID = session.userID
-                }
-                
+                    }
             }
         })
         */

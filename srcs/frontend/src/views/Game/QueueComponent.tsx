@@ -1,7 +1,7 @@
 import { Dialog } from '@mui/material'
 import { usersocket } from './Matchmaking';
 
-export function Queue({open, onClose})
+export default function Queue({open, onClose})
 {
     console.log("HELLO IM ACTIVE")
     return (

@@ -81,7 +81,6 @@ export class GameRoom {
     constructor(player1: Player, server: io.Server) {
         this.roomName = this.makeid(10); //default
         this.player1 = player1;
-        this.player2 = new Player("", undefined)
         this.status = "waiting" //default status
         this.gameUpdateObject = new GameUpdate()
         this.updateInterval = null;

@@ -3,6 +3,7 @@ import { FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
+import { DEFAULT_FACTORY_CLASS_METHOD_KEY } from '@nestjs/common/module-utils/constants';
 
 @Injectable()
 export class ProfileService

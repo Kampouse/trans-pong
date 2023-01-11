@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, NavigateFunction } from 'react-router-dom';
 import * as io from 'socket.io-client';
-import { Queue } from './QueueComponent';
+import  Queue  from './QueueComponent';
 import { Fetch } from 'utils';
 import { Dialog } from '@mui/material'
 import { render } from 'react-dom';
 
 export var usersocket: io.Socket = io.connect();
-
 export default function Matchmaking()
 {
     const nav = useNavigate();
@@ -29,6 +28,7 @@ export default function Matchmaking()
                     </button>
                 </div>
             </div>
+            <div id="divqueue"><Queue onClose={() => setOpenQueue(false)} open={openQueue}></Queue></div>
             <Queue onClose={() => setOpenQueue(false)} open={openQueue}></Queue>
     </div>
     )
@@ -52,72 +52,29 @@ function fetchUserId() {
     return(userId)
 }
 
+
 function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, setOpenQueue: any, setSocket: any){
     e.preventDefault();
     console.log("Creating socket");
     usersocket.disconnect();
     //setOpenQueue(true);
-
-    usersocket = io.connect("http://localhost:3001")
-    usersocket.on("roomIsReady", (room) =>
-    {
-        console.log("Match found! Redirecting to game.");
-        console.log(room);
-        nav(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
-    })
-    usersocket.on("connect", () => {
-        console.log(usersocket.id)
-        usersocket.emit("socketIsConnected");
-    })
-    usersocket.on("ack", (socketId) => {
-        console.log(userid)
-        usersocket.emit("registerId", {userId: userid, socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
-        usersocket.emit("searchGame"); //join new game
-        setOpenQueue(true);
-        //TODO: Fix this state disconnecting sockets for some reason on render, which is extremly stupid
-    })
-
-}
-
-/*
-function Queue({open, onClose, userid})
-{
-    /*
-    console.log(userid)
-    const nav = useNavigate();
-    usersocket = io.connect("http://localhost:3001")
-    usersocket.on("roomIsReady", (room) =>
-    {
-        console.log("Match found! Redirecting to game.");
-        console.log(room);
-        nav(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
-    })
-    usersocket.on("connect", () => {
-        console.log(usersocket.id)
-        usersocket.emit("socketIsConnected");
-    })
-    usersocket.on("ack", (socketId) => {
-        console.log(userid)
-        usersocket.emit("registerId", {userId: userid, socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
-        usersocket.emit("searchGame"); //join new game
-        //setOpenQueue(true);
-        //TODO: Fix this state disconnecting sockets for some reason on render, which is extremly stupid
-    })
-    *//*
-    return (
-        <Dialog onClose={onClose} open={open}>
-            <div className='w-[400px] h-[100px] bg-sky-100 pt-1'>
-                <p className="text-xl text-center py-6 font-Merriweather">
-                    Waiting for an opponent...
-                </p>
-            </div>
-            <div className='bg-sky-100 px-[40%] pb-4'>
-                <button className='w-20 h-10 hover:bg-purple-200 font-Merriweather text-xl rounded-lg ring-1 ring-slate-500 bg-sky-200' onClick={() => {onClose()}}>
-                    Cancel
-                </button>
-            </div>
-        </Dialog>
-    );
     
+    usersocket = io.connect("http://localhost:3001")
+    usersocket.on("roomIsReady", (room) =>
+    {
+        console.log("Match found! Redirecting to game.");
+        console.log(room);
+        nav(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
+    })
+    usersocket.on("connect", () => {
+        console.log(usersocket.id)
+        usersocket.emit("socketIsConnected");
+    })
+    usersocket.on("ack", (socketId) => {
+        console.log(userid)
+        usersocket.emit("registerId", {userId: userid, socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+        usersocket.emit("searchGame"); //join new game
+        //TODO: Fix this state disconnecting sockets for some reason on render, which is extremly stupid
+    })
+
 }
-*/
