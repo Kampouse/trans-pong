@@ -171,12 +171,24 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
 
     const nav = useNavigate();
 
+		const [friendRequests, setFriendRequests] = useState<Array<any>>(
+			data.friendRequests
+		)
+
+		const deleteRequest = (fromUser: string ) => {
+			setFriendRequests(
+				friendRequests.filter((request) => {
+					return request.fromUser != fromUser
+				})
+			)
+		}
+
     return (
     <div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
         <div className="flow-root overflow-y-scroll scrollbar-hide">
           <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
-            { data.friendRequests.map((currentRequest) =>
+            { friendRequests.map((currentRequest) =>
             {
                 return (
                     <li className="py-4" key={currentRequest.fromUser}>
@@ -192,10 +204,10 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
                                 </p>
                             </div>
                             <div className='flex w-fit justify-end'>
-                                <IconButton onClick={() => {acceptRequest(currentRequest.fromUser);}}>
+                                <IconButton onClick={() => {acceptRequest(currentRequest.fromUser); deleteRequest(currentRequest.fromUser);}}>
                                     <CheckCircle sx={{ color: blue[700] }} />
                                 </IconButton>
-                                <IconButton onClick={() => {denyRequest(currentRequest.fromUser);}}>
+                                <IconButton onClick={() => {denyRequest(currentRequest.fromUser); deleteRequest(currentRequest.fromUser);}}>
                                     <Cancel sx={{ color: blue[700] }} />
                                 </IconButton>
                             </div>
