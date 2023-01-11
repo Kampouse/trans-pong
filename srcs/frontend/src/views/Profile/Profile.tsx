@@ -119,31 +119,37 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
 
 //  =============== Friend List component       =============== //
 
-function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>})
+function FriendList({data, userClicked, setOpenUserOptions, username}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined})
 {
+	const {profileReq: friendsData} = useFetch(username);
+
     return (
         <div className="flex h-[100%] flex-col -my-4">
             <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
                 <div className="flow-root overflow-y-scroll scrollbar-hide">
-                    <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
-                        {data.friendList.map((currentFriend) =>
-                        {
-                            return (
-                                <li className="py-4" key={currentFriend.friendUser}>
-                                    <div className="flex items-center space-x-4">
-                                        <div className="shrink-0">
-                                            <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true);}}/>
-                                        </div>
-                                        <div className="min-w-0 flex-1">
-                                            <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true); }}>
-                                                {currentFriend.friendUser}
-                                            </p>
-                                            <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentFriend.friendStatus)}>●</span> {currentFriend.friendStatus[0].toUpperCase() + currentFriend.friendStatus.substring(1)}</p>
-                                        </div>
-                                    </div>
-                                </li>);
-                        })}
-                    </ul>
+									 {friendsData && friendsData.error == false && (
+										<>
+	                    <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
+                        {friendsData.friendList.map((currentFriend) =>
+	                        {
+	                          return (
+	                              <li className="py-4" key={currentFriend.friendUser}>
+	                                  <div className="flex items-center space-x-4">
+	                                      <div className="shrink-0">
+	                                          <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true);}}/>
+	                                      </div>
+	                                      <div className="min-w-0 flex-1">
+	                                          <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true); }}>
+	                                              {currentFriend.friendUser}
+	                                          </p>
+	                                          <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentFriend.friendStatus)}>●</span> {currentFriend.friendStatus[0].toUpperCase() + currentFriend.friendStatus.substring(1)}</p>
+	                                      </div>
+	                                  </div>
+	                              </li>);
+	                        })}
+	                    </ul>
+										</>
+									 )}
                 </div>
             </div>
         </div>
@@ -525,12 +531,14 @@ export default function Profile()
     */
 
     const { username } = useParams();
-	const {profileReq: data} = useFetch(username);
+		const {profileReq: data} = useFetch(username);
 
     if (data && data.error == true)
     {
         return (<Error404></Error404>);
     }
+
+		useEffect(() => {setValue("1")}, [username])
 
     return (
     <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
@@ -569,9 +577,9 @@ export default function Profile()
                     </Box>
                 </div>
                 <div className='grow overflow-hidden'>
-                    <div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
+                    <div className='max-h-[100%] overflow-y-scroll overflow-hidden scrollbar-hide'>
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-                        <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
+                        <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
                             {username === undefined && <TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>}
                         <TabPanel value="4"><Stats data={data} /></TabPanel>
                     </div>
@@ -579,7 +587,7 @@ export default function Profile()
             </TabContext>
             </>)}
         </div>
-        <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked}></UserOption>
+        <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked} setValue={setValue}></UserOption>
         <EditProfile onClose={ async () => { await getPhoto(data); setOpenEditProfile(false);}} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
         <GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
     </div>
