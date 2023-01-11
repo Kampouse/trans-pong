@@ -1,5 +1,5 @@
 import { Dialog } from '@mui/material'
-import { useNavigate, NavigateFunction } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export function UserOption({open, onClose, userClicked})
 {
@@ -39,16 +39,18 @@ export function UserOption({open, onClose, userClicked})
                     </button>
                 </div>
                 <div className='py-4'>
-                    <button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username), nav('/profile', {replace: true}); onClose();}}>
+                    <button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username), nav('/profile/' + username, {replace: true}); onClose();}}>
                         Add friend
                     </button>
                 </div>
                 <div className='py-4'>
-                    <button name='invitePlayButton' className={buttonCss} onClick={() =>
+                    <button name='blockUserEvent' className={buttonCss} onClick={() =>
                         {
-                            console.log("Insert event invite " + username + " to play")
+                            blockUser(username);
+                            nav('/profile/' + username, {replace: true});
+                            onClose();
                         }}>
-                        Invite to play
+                        Block user
                     </button>
                 </div>
                 <div className='py-4'>
@@ -60,13 +62,8 @@ export function UserOption({open, onClose, userClicked})
                     </button>
                 </div>
                 <div className='py-4 mb-2'>
-                    <button name='blockUserEvent' className={buttonCss} onClick={() =>
-                        {
-                            blockUser(username);
-                            nav('/profile', {replace: true});
-                            onClose();
-                        }}>
-                        Block user
+                    <button name='invitePlayButton' className={buttonCss} onClick={() =>{onClose()}}>
+                        Cancel
                     </button>
                 </div>
             </div>
