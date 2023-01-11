@@ -3,9 +3,7 @@ import { usersocket } from './Matchmaking';
 
 export function Queue({open, onClose})
 {
-    if(usersocket.disconnected == true){
-        usersocket.connect()
-    }
+    console.log("HELLO IM ACTIVE")
     return (
         <Dialog onClose={onClose} open={open}>
             <div className='w-[400px] h-[100px] bg-sky-100 pt-1'>

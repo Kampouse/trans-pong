@@ -7,14 +7,31 @@ export class GameSocketIOController {
     constructor(private gameSocketIO: GameSocketIOService){
         const server = this.gameSocketIO.getServer();
         //console.log(server)
+        /*
+        server.use((socket, next) => {
+
+            const sessionID = socket.handshake.auth.sessionID;
+            if (sessionID)
+            {
+                var session = gameSocketIO.sessionMap[sessionID]
+                if (session
+                    ){
+                    socket.sessionID = sessionID
+                    socket.userID = session.userID
+                }
+                
+            }
+        })
+        */
         server.on("connection", (socket) => {
             console.log("New socket: "  + socket.id);
 
             socket.on("disconnect", () => {
                 console.log("Socket disconnected: " + socket.id)
                 //do things here to remove user from a game it might be in maybe ?
-                gameSocketIO.socketMap.delete(socket.id)
+                delete gameSocketIO.socketMap[socket.id]
             })
+
 
             socket.on("registerId", (user) => {
                 gameSocketIO.socketMap[user.socket] = user.userId//keeping socket instance in the map so we can retrieve it later
@@ -34,9 +51,14 @@ export class GameSocketIOController {
                 }
                 else{ //array isnt empty and there are rooms available
                     var roomName = await this.gameSocketIO.makePlayerJoinRoom(new Player(this.gameSocketIO.socketMap[socket.id], socket));
-                    //var roomname = this.gameSocketIO.getRoomForPlayer()
-                    socket.join(roomName); //all players are in the game, status is set to active
-                    server.to(roomName).emit("roomIsReady", roomName); //pass control to game execution
+                    if(roomName == ""){
+                        socket.emit("noSuitableRoomFound");
+                    }
+                    else{
+                        //var roomname = this.gameSocketIO.getRoomForPlayer()
+                        socket.join(roomName); //all players are in the game, status is set to active
+                        server.to(roomName).emit("roomIsReady", roomName); //pass control to game execution
+                    }
                 }
             })
             socket.on("socketIsConnected", () => {

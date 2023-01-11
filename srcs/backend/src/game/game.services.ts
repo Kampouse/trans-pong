@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import {GameUpdate, UpdateProps, UpdateProp} from './object.game'
 import * as io from 'socket.io'
 import { prisma } from 'src/main';
+import { AnymatchFn } from "vite";
 
 
 export class Player {
@@ -76,9 +77,11 @@ export class GameRoom {
 
     public status: string
 
+
     constructor(player1: Player, server: io.Server) {
         this.roomName = this.makeid(10); //default
         this.player1 = player1;
+        this.player2 = new Player("", undefined)
         this.status = "waiting" //default status
         this.gameUpdateObject = new GameUpdate()
         this.updateInterval = null;
@@ -197,6 +200,7 @@ export class GameSocketIOService {
     private server: io.Server
     private gameRoomUpdateInterval
     public socketMap: Map<string, string> //socketid, userid, maps socket id's to user id's for easy retrieval
+    public sessionMap: Map<any, any>
     //public roomMap: Array<GameRoom>
     public roomMap: Map<string, GameRoom>
 
@@ -208,6 +212,7 @@ export class GameSocketIOService {
         this.socketMap = new Map<string, string> //userid, socketid
         //this.roomMap = new Array<GameRoom>
         this.roomMap = new Map<string, GameRoom>
+        this.sessionMap = new Map();
         console.log("Multiplayer socket instance started")
         this.gameRoomUpdateInterval = setInterval(() => {
             var i = 0;
@@ -231,37 +236,40 @@ export class GameSocketIOService {
         var i = 0;
         for(let room of this.roomMap){
             if(room[1].status == "waiting"){
-                room[1].setPlayer2(player2) //assign player2 since player1 is already present
-                room[1].setPlayer1();
-                room[1].status= "active"; //change room status to active
-                try {
-                    var leftuser = await prisma.user.findUnique({where: {userID: room[1].getPlayer1Id()}})
-                    var rightuser = await prisma.user.findUnique({where: {userID: room[1].getPlayer2Id()}})
-                    
-                    await prisma.game.create(
-                        {data: {
-                            gameRoomID: room[1].getRoomName(),
-                            leftPlayer: leftuser.login42,
-                            rightPlayer: rightuser.login42,
-                            active: true,
+                if(room[1].getPlayer1Id() != player2.getUserId()){
+                    room[1].setPlayer2(player2) //assign player2 since player1 is already present
+                    room[1].setPlayer1();
+                    room[1].status= "active"; //change room status to active
+                    try {
+                        var leftuser = await prisma.user.findUnique({where: {userID: room[1].getPlayer1Id()}})
+                        var rightuser = await prisma.user.findUnique({where: {userID: room[1].getPlayer2Id()}})
+                        
+                        await prisma.game.create(
+                            {data: {
+                                gameRoomID: room[1].getRoomName(),
+                                leftPlayer: leftuser.login42,
+                                rightPlayer: rightuser.login42,
+                                active: true,
+                            }})
+                        await prisma.user.update({where: {userID: room[1].getPlayer1Id()}, 
+                        data: {
+                            userStatus: "playing"
                         }})
-                    await prisma.user.update({where: {userID: room[1].getPlayer1Id()}, 
-                    data: {
-                        userStatus: "playing"
-                    }})
-                    await prisma.user.update({where: {userID: room[1].getPlayer2Id()}, 
-                    data: {
-                        userStatus: "playing"
-                    }})
-                    console.log("game created")
+                        await prisma.user.update({where: {userID: room[1].getPlayer2Id()}, 
+                        data: {
+                            userStatus: "playing"
+                        }})
+                        console.log("game created")
+                    }
+                    catch(e) {
+                        console.log(e)
+                    }
+                    return room[1].getRoomName(); //return room name to make socket join
                 }
-                catch(e) {
-                    console.log(e)
-                }
-                return room[1].getRoomName(); //return room name to make socket join
             }
             i++;
         }
+        return("")
     }
 
 }
