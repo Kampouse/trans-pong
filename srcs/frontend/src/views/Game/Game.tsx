@@ -1,6 +1,5 @@
-import Chat from './Chat/Chat'
 import ReactiveCanvas from './components/ReactiveCanvas'
-import { createRef, DetailedHTMLProps, HTMLAttributes } from 'react'
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router'
 import * as io from 'socket.io-client';
 import {usersocket} from "./Matchmaking"
@@ -17,58 +16,85 @@ export default function Game() {
   return <ReactiveCanvas />
 }
 
-function Next() {
-  return (
-    <div className="-rotate-180 ">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        id="root"
-        version="1.1"
-        color="rgb(100,116,137"
-        viewBox="0 0 13 16"
-        transform="rotate(180,0,0)"
-        height={100}
-      >
-        <path fill="none" stroke="currentColor" d="M 2 4 L 6 8 L 2 12" />
-        <path fill="none" stroke="currentColor" d="M 7 4 L 11 8 L 7 12" />
-      </svg>
-    </div>
-  )
-}
-
-function Prev() {
-  return (
-    <div className="-rotate-180 ">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        id="root"
-        color="rgb(100,116,137)"
-        version="1.1"
-        viewBox="0 0 13 16"
-        height={100}
-      >
-        <path fill="none" stroke="currentColor" d="M 2 4 L 6 8 L 2 12" />
-        <path fill="none" stroke="currentColor" d="M 7 4 L 11 8 L 7 12" />
-      </svg>
-    </div>
-  )
+const useFetch = (username) =>
+{
+	const [profileReq, setProfileReq] = useState<any>(null);
+	
+	useEffect(() => {
+		fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "") , {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Credentials': 'true'
+			}
+		})
+            .then((response) => response.json())
+			.then((data) => {
+				setProfileReq(data);
+			})
+	}, [username])
+	return {profileReq};
 }
 
 export function GameWatch() {
-  return (
-    <div className="xl:w-[1200px] xl:h-[800px] lg:w-[900px] lg:h-[600px] md:w-[600px] md:h-[400px] sm:w-[600px] sm:h-[400px] w-[300px] h-[200px] mb-[50px] mt-[100px] m-auto flex justify-center lg:flex-row ">
-      <div className=" flex  h-full flex-col justify-center rounded-lg bg-white/30 ring-1 ring-slate-300  backdrop-blur-sm w-full ">
-        <button className="absolute rounded-lg ">
-          {' '}
-          <Prev />{' '}
-        </button>
-        <button className="absolute right-2 rounded-lg ">
-          {' '}
-          <Next />{' '}
-        </button>
+	const {profileReq: data} = useFetch(undefined);
+	console.log(data);
 
-        <canvas className="h-full w-full"/>
-      </div>
-    </div>
+  return (
+    <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
+			<div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
+				<div className='h-hit w-full my-4'>
+					<p className='text-4xl font-Merriweather text-center'>Live Matches</p>
+				</div>
+				<div className='grow overflow-hidden w-[90%] mx-auto flow-root overflow-y-scroll scrollbar-hide pb-2'>
+					{data && (
+	          <>
+							<ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg">
+		            <li className="flex h-[40px] w-full" key="TopList">
+			            <div className="w-[30%] my-auto text-center"><p>Left Player</p></div>
+			            <div className="w-[20%] my-auto text-center"><p>VS</p></div>
+			            <div className="w-[30%] my-auto text-center"><p>Right Player</p></div>
+			            <div className="w-[20%] my-auto text-center"></div>
+		            </li>
+		            {data.matchHistory.map((currentMatch) =>
+		            {
+		              return (
+		                <li className="flex py-4" key={currentMatch.updatedAt + currentMatch.winner}>
+		                    <div className="flex w-[30%] my-auto items-center ml-2">
+		                        <div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
+		                            <img className={`h-full w-full border-2 border-blue-700 rounded-full`} src={currentMatch.leftPhoto} alt=""/>
+		                        </div>
+		                        <div className="ml-2">
+		                            <p className={`text-gray-900`}>
+		                                {currentMatch.leftPlayer}
+		                            </p>
+		                        </div>
+		                    </div>
+		                    <div className="flex h-full w-[20%] my-auto justify-center">
+		                       <p className=" text-center text-gray-900">VS</p>
+		                    </div>
+		                    <div className="flex w-[30%] my-auto justify-end items-center mr-2">
+		                        <div className="mr-2">
+		                            <p className={`text-gray-900`}>
+		                                {currentMatch.rightPlayer}
+		                            </p>
+		                        </div>
+		                        <div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
+		                            <img className={`h-full w-full border-2 border-blue-700 rounded-full`} src={currentMatch.rightPhoto} alt=""/>
+		                        </div>
+		                    </div>
+												<div className="flex h-full w-[20%] m-auto justify-center">
+		                       <button className='bg-pink-500 text-white font-Merriweather rounded-md font-medium px-2 py-1'>Watch</button>
+		                    </div>
+		                </li>
+		            	);
+		            })}
+		          </ul>
+						</>
+					)}
+				</div>
+			</div>
+		</div>
   )
 }
