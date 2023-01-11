@@ -23,26 +23,7 @@ const ReactiveCanvas = () => {
 	const snackbarMsg = useRef('')
 	const [openSnackbar, setOpenSnackbar] = useState(false)
 
-  const player1 = 'Player1'
-  const player2 = 'Player2'
-
-  const player1_img =
-    'https://flowbite.com/docs/images/people/profile-picture-1.jpg'
-  const player2_img =
-    'https://flowbite.com/docs/images/people/profile-picture-1.jpg'
-
   useEffect(() => {
-    /*
-    const interval = setInterval(() => {
-      if (gameover.current) {
-        drawGameover({ canvas, mouse })
-      }
-      if (!gameover.current) {
-        update({ gameover })
-        draw({ canvas, mouse })
-      }
-    }, (1 / 60) * 1000)
-    */
     usersocket.on("gameUpdate", (gameData: UpdateGameDto) => {
 			setGameDataGen(gameData)
       if(gameData.gameOver){
@@ -51,12 +32,10 @@ const ReactiveCanvas = () => {
 				setOpenSnackbar(true);
       }
       if(!gameData.gameOver){
-        //update({gameover: gameData.gameOver});
         draw({canvas}, gameData, {ballColor, backgroundColor, paddleColor});
       }
     })
-    //return () => clearInterval(interval)
-  }, [countdown])
+  }, [])
 
 	const handleKeyDown = event => {
     console.log('User pressed: ', event.key);
