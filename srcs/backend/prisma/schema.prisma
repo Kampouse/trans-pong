@@ -19,11 +19,8 @@ model User {
     authentificator     Boolean                         @default(false)
     authKey             String                          @default("none")
     achievement         Achievement?
-    channels            Channel[]
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
-    rooms               DirectChatRoom[]
-    messages            ChatMessage[]
 }
 
 model FriendRequest{
@@ -67,7 +64,6 @@ model Channel{
     private             Boolean     @default(false)
     password            String
     ownerID             String
-    users               User[]
     admin               String[]
     createdAt           DateTime    @default(now())
     updatedAt           DateTime    @updatedAt
@@ -125,37 +121,20 @@ enum ChatRoomType{
     PRIVATE 
 }
 
+enum Message_type {
+	USER
+	SYSTEM
+}
+
 model ChatMessage{
     id              String         @id
     content         String
-    sender          User        @relation(fields: [senderId], references: [userID])
-    senderId        String
-    chatRoom        ChatRoom    @relation(fields: [chatRoomId], references: [id])
-    chatRoomId      String
-    
-    
-    @@map("chatmessages")
-}
-
-model DirectChatRoom{
-    user        User            @relation(fields: [userId], references: [userID])
-    userId      String
-    chatRoom    ChatRoom        @relation(fields: [chatRoomId], references: [id])
-    chatRoomId  String
-
-    @@id([userId, chatRoomId])
-    @@map("directchatrooms")
 }
 
 model ChatRoom{
     id          String          @id @default(uuid())
+    hashPassword String?
     name        String     
     chatRoomType ChatRoomType   @default(PUBLIC)
-    hashPassword String?
-   
-    users       DirectChatRoom[]              
-    messages    ChatMessage[]   
-
-    @@map("chatrooms")
 }
 

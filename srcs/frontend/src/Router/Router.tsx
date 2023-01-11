@@ -11,9 +11,11 @@ import CreateGame from 'views/Game/CreateGame'
 import PlayMenu from 'views/Game/PlayMenu'
 import Login from 'views/Login/Login'
 import Profile from 'views/Profile/Profile'
+import { socket, WebsocketContext, WebsocketProvider } from "../views/contexts/WebSocketContext";
+import { UserDto } from "../api/dto/user.dto";
 import '@styles/main.css'
 import Error404 from 'views/Error/Error404'
-import Chat from 'views/Chat/Chat'
+import { Chat } from '../views/Chat/Chat'
 import { ChatRoom, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial } from 'utils'
@@ -70,6 +72,8 @@ export const myProfile = atom({
   image: '',
   userId: ''
 })
+export const UserContext = React.createContext<UserDto | null>(null);
+export const SetUserContext = React.createContext<any>(null);
 
 export default function App()
 {
@@ -102,7 +106,14 @@ export default function App()
                 <Route path=":username" element={<Profile />} />
                 <Route path="" element={<Profile />} />
             </Route>
-            <Route path="/Chat" element={<Chat />}></Route>
+			<Route
+                path="/chat"
+                element={
+                    <WebsocketProvider value={socket}>
+                      <Chat />
+                    </WebsocketProvider>
+                }
+              />
             <Route path="*" element={<Error404 />}></Route>
           </Routes>
         </>

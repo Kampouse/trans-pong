@@ -2,7 +2,10 @@ import { Injectable,Headers } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { PrismaClient } from '@prisma/client';
-import {prisma } from 'src/main'
+import {prisma } from 'src/main';
+import {Socket, Server} from 'socket.io';
+import {ProfileService} from '../profile/profile.service';
+import { parse } from 'cookie';
 
 type auth_output = {username : string, iat: string, exp: string}
 @Injectable()
@@ -10,7 +13,7 @@ type auth_output = {username : string, iat: string, exp: string}
 export class AuthService
 {
 
-    constructor(private jwtService: JwtService) { 
+    constructor(private usersService: ProfileService, private jwtService: JwtService) { 
     }
 
     public async validate_token(input: string)
