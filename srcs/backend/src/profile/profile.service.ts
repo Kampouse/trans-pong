@@ -51,11 +51,17 @@ export class ProfileService
     {
         // Create prisma client and look if the username exist in the database
 
-        const user = await prisma.user.findUnique({
+        var user;
+        
+        try
+        {
+            user = await prisma.user.findUnique({
             where: {
                 username: login42,
             },
-        });
+            });
+        }
+        catch{}
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
@@ -348,11 +354,16 @@ export class ProfileService
     async getProfileEdit(login42: string): Promise<PrivateProfileDto>
     {
         // Create prisma client and look if the username exist in the database
-        const user = await prisma.user.findUnique({
-            where: {
-                login42: login42
-            },
-        });
+        var user;
+        
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }})
+        }
+        catch{}
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
@@ -658,7 +669,7 @@ export class ProfileService
 
         // At last, return the ProfileResponse
         return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authentificator);
+            this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authenticator);
     }
 
     async updateUsername(newUsername: string, login42: string) : Promise<responseDefault>
@@ -733,6 +744,33 @@ export class ProfileService
         }
         return (response);
     }
+
+    async getAuth(login42:string) : Promise<responseDefault>
+    {
+        var response = new responseDefault(false, "inactive");
+        var user;
+
+        try
+        {
+            user = await prisma.user.findUnique(
+                {
+                    where: {login42: login42} 
+                } )
+        }
+        catch{}
+
+        if(user != undefined)
+        {
+            if (user.authenticator == true)
+            {
+                console.log("auth is active")
+                response.message = "active";
+                return (response)
+            }
+        }
+        return (response);
+    }
+
 
     async updatePhoto(newFilePath: string, login42: string) : Promise<responseUploadPhoto>
     {
@@ -1060,7 +1098,7 @@ export class ProfileService
     {
         'use strict';
 
-        var authentificator = require('authenticator');
+        var authenticator = require('authenticator');
 
         //  Validate token entered and format it
         token.trim();
@@ -1098,7 +1136,7 @@ export class ProfileService
         }
         catch{}
 
-        var status = authentificator.verifyToken(user.authKey, formattedToken);
+        var status = authenticator.verifyToken(user.authKey, formattedToken);
 
         if (status != null)
         {
@@ -1109,7 +1147,7 @@ export class ProfileService
                         login42: login42
                     },
                     data: {
-                        authentificator: true
+                        authenticator: true
                     }
                 })
             }
@@ -1122,7 +1160,7 @@ export class ProfileService
     {
         'use strict';
 
-        var authentificator = require('authenticator');
+        var authenticator = require('authenticator');
 
         //  Validate token entered and format it
         token.trim();
@@ -1162,7 +1200,7 @@ export class ProfileService
 
         console.log(user.authKey, formattedToken);
 
-        var status = authentificator.verifyToken(user.authKey, formattedToken);
+        var status = authenticator.verifyToken(user.authKey, formattedToken);
 
         if (status != null)
         {
@@ -1173,7 +1211,7 @@ export class ProfileService
                         login42: login42
                     },
                     data: {
-                        authentificator: false,
+                        authenticator: false,
                         authKey: "none"
                     }
                 })

@@ -16,7 +16,7 @@ model User {
     username            String                          @unique
     userStatus          userStatus                      @default(online)
     imagePath           String                          @default("/defaultPhoto.png")
-    authentificator     Boolean                         @default(false)
+    authenticator       Boolean                         @default(false)
     authKey             String                          @default("none")
     achievement         Achievement?
     channels            Channel[]
