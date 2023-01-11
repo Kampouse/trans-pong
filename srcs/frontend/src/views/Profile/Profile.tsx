@@ -9,6 +9,7 @@ import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 import { AlertColor } from '@mui/material';
 import { UserOption } from '../UserOptions/User.Option'
 import { GoogleReset } from 'views/GoogleAuth/google.reset';
+import { useNavigate } from 'react-router-dom';
 import Error404 from 'views/Error/Error404';
 
 
@@ -157,7 +158,6 @@ async function acceptRequest(username: string)
     await fetch('http://localhost:3000/profile/add/' + username)
     .then(function(){})
     .catch(function() {console.log("error on accept friend request fetch");});
-    window.location.reload();
 }
 
 async function denyRequest(username: string)
@@ -165,10 +165,11 @@ async function denyRequest(username: string)
     await fetch('http://localhost:3000/profile/deny/' + username)
     .then(function(){})
     .catch(function() {console.log("error on deny request fetch");});
-    window.location.reload();
 }
 
 function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
+
+    const nav = useNavigate();
 
     return (
     <div className="flex h-[100%] flex-col -my-4">
@@ -205,58 +206,6 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
       </div>
     </div>
   );
-}
-
-//  =============== Achievement component       =============== //
-
-function Achievements({data}: {data: any}) {
-	return (
-		<div className="flex h-[100%] flex-col -my-4">
-            <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
-                <div className="flow-root overflow-y-scroll scrollbar-hide">
-                    <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg">
-						{ data.achievement.map((currentAchievement) =>
-                        {
-							return (
-								<li className="py-4">
-									<div className="flex items-center m-auto">
-										{
-                                            (currentAchievement.achieved) ? 
-                                            ( <React.Fragment>
-											    <div className="w-12 h-12">
-													<div className="h-[32px] w-[32px]">
-														<WorkspacePremium sx={{ width: 32, height: 32, m: 1}} />
-													</div>
-												</div>
-												<div className="min-w-0 flex-1 pl-2">
-													<p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600">{currentAchievement.name}</p>
-													<p className="text-sm text-gray-500 dark:text-slate-500">{currentAchievement.description}</p>
-												</div>
-											</React.Fragment>
-										    )
-                                            : 
-                                            (
-											<React.Fragment>
-												<div className="w-12 h-12">
-													<div className="h-[32px] w-[32px]">
-														<Lock sx={{ height: 32, width: 32, m: 1 }} />
-													</div>
-												</div>
-												<div className="min-w-0 flex-1 pl-2">
-													<p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600">Locked</p>
-												</div>
-											</React.Fragment>
-										    )
-                                        }
-									</div>
-								</li>
-							);
-						})}
-                    </ul>
-                </div>
-            </div>
-        </div>
-	    );
 }
 
 //  =============== Stats component       =============== //
@@ -334,14 +283,85 @@ export interface EditProfileProps
     data: any
 }
 
+async function updateUsername(newUsername: any, data: any)
+{
+    var username = {username: newUsername.value}
+
+    fetch("http://localhost:3000/profile/update/username", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json  "
+        },
+        body: JSON.stringify(username)
+    })
+        .then(response => response.json())
+        .then(res => {
+            if (res.status == "200")
+            {
+                data.username = username.username;
+                alert(res.message)
+            }
+            else
+            {
+                alert(res.message)
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
+
+async function getPhoto(data: any)
+{
+    await fetch("http://localhost:3000/profile/get/photo", {
+        method: "GET",
+    })
+        .then(response => response.json())
+        .then(res => {
+            if (res.status == "200")
+            {
+                data.imagePath = res.message;
+                return (res.message);
+            }
+            else
+            {
+                return;
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
+
+async function getAuth(data: any)
+{
+    await fetch("http://localhost:3000/profile/get/auth", {
+        method: "GET",
+    })
+        .then(response => response.json())
+        .then(res => {
+            if (res.message == "active")
+            {
+                data.authenticator = true;
+                alert("Google 2way authentication is active.")
+            }
+            else
+            {
+                data.authenticator = false;
+                alert("Google 2way authentication is inactive.")
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
+
 export function EditProfile({open, onClose, data} : EditProfileProps)
 {
     //  =============== Google auth             =============== //
     
     const [openGoogleAuth, setGoogleAuth] = useState(false);
     const [openGoogleReset, setGoogleReset] = useState(false);
-
-    //  Edit profile without authentificator activated
 
     return (
         <Dialog onClose={onClose} open={open} className="font-Raleway">
@@ -357,10 +377,13 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                         Change username
                     </p>
                     <div className=''>
-                        <form action='http://localhost:3000/profile/update/username' method='POST'>
-                            <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-[80%] my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
-                            <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
-                        </form>
+                            <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
+                            <button onClick={() =>
+                            {
+                                updateUsername(document.getElementById("newUsername"), data)
+                                onClose();
+                            }}
+                            className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                     </div>
                 </div>
                 <div className='my-2'>
@@ -368,9 +391,12 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                         Upload new Photo
                     </p>
                     <div>
-                        <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data'>
-                            <input accept="image/*" type="file" name='file' className=' justify-center'></input>
-                            <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Upload</button>
+                        <iframe name="dummyframe" id="dummyframe" className='w-0 h-0'></iframe>
+                        <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data' target='dummyframe'>
+                            <input accept="image/*" id="file" type="file" name='file' className=' justify-center'></input>
+                            <button onClick={async () => {await getPhoto(data); onClose();}} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
+                                Upload
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -382,7 +408,7 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                             onClick=
                             {() =>
                                 {
-                                    if (data.authentificator == false)
+                                    if (data.authenticator == false)
                                     {
                                         setGoogleAuth(true);
                                     }
@@ -397,8 +423,8 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                 </div>
             </DialogContent>
             </div>
-            <GoogleAuth open={openGoogleAuth} onClose={() => setGoogleAuth(false)}></GoogleAuth>
-            <GoogleReset open={openGoogleReset} onClose={() => setGoogleReset(false)}></GoogleReset>
+            <GoogleAuth open={openGoogleAuth} onClose={async () => {await getAuth(data);setGoogleAuth(false)}}></GoogleAuth>
+            <GoogleReset open={openGoogleReset} onClose={async () => {await getAuth(data); setGoogleReset(false)}}></GoogleReset>
             </Dialog>
             );
 }
@@ -526,8 +552,7 @@ export default function Profile()
                             <Tab icon={<History />} label="Match History" sx={{ fontWeight: 'bold' }} value="1" />
                             <Tab icon={<Favorite />} label="Friends" sx={{ fontWeight: 'bold' }} value="2" />
                                 {username === undefined && <Tab icon={<PersonAdd />} label="Friend Requests" sx={{ fontWeight: 'bold' }} value="3" />}
-                            <Tab icon={<EmojiEvents />} label="Achievements" sx={{ fontWeight: 'bold' }} value="4" />
-                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="5" />
+                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="4" />
                         </TabList>
                     </Box>
                 </div>
@@ -536,15 +561,14 @@ export default function Profile()
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
                         <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
                             {username === undefined && <TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>}
-                        <TabPanel value="4"><Achievements data={data} /></TabPanel>
-                        <TabPanel value="5"><Stats data={data} /></TabPanel>
+                        <TabPanel value="4"><Stats data={data} /></TabPanel>
                     </div>
                 </div>
             </TabContext>
             </>)}
         </div>
         <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked}></UserOption>
-        <EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
+        <EditProfile onClose={ async () => { await getPhoto(data); setOpenEditProfile(false);}} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
         <GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
     </div>
   );

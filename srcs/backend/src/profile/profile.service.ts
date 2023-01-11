@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { FriendDto, FriendRequestDto, MatchDto, AchievementDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
+import { FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
+import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
 
 @Injectable()
 export class ProfileService
@@ -17,7 +18,6 @@ export class ProfileService
     friendList: FriendDto[] = [];
     friendRequests: FriendRequestDto[] = [];
     matchHistory: MatchDto[] = [];
-    achievements: AchievementDto[] = [];
 
     insertFriend(user: string, photo: string, status: string)
     {
@@ -40,38 +40,36 @@ export class ProfileService
         this.matchHistory.push(newMatch);
     }
 
-    insertAchievement(title: string)
-    {
-        const newAchievement = new AchievementDto(title);
-        this.achievements.push(newAchievement);
-    }
-
     async getProfilePublic(login42: string): Promise<PublicProfileDto>
     {
         // Create prisma client and look if the username exist in the database
 
-        const user = await prisma.user.findUnique({
+        var user;
+        
+        try
+        {
+            user = await prisma.user.findUnique({
             where: {
                 username: login42,
             },
-        });
+            });
+        }
+        catch{}
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
         {
-            return new PublicProfileDto(true, null, null, null, null, null, null, null);
+            return new PublicProfileDto(true, null, null, null, null, null, null);
         }
 
         //  Free the array's from previous values
         this.friendList = [];
         this.friendRequests = [];
-        this.achievements = [];
         this.matchHistory = [];
 
         //  Free the array's from previous values
         this.friendList = [];
         this.friendRequests = [];
-        this.achievements = [];
         this.matchHistory = [];
 
         //  Build the response
@@ -206,163 +204,34 @@ export class ProfileService
                 x = x + 1;
             }
         }
-
-        // Get all accomplished achievements
-        const achievement = await prisma.achievement.findUnique({
-            where: {
-                userID: user.userID,
-            },
-        });
-
-        //  Sorry for the spaguethi guys, time is an issue lol
-        if (achievement)
-        {
-            if (achievement.achiev1 == true)
-            {
-                this.insertAchievement("achievement-1");
-            }
-            if (achievement.achiev2 == true)
-            {
-                this.insertAchievement("achievement-2");
-            }
-            if (achievement.achiev3 == true)
-            {
-                this.insertAchievement("achievement-3");
-            }
-            if (achievement.achiev4 == true)
-            {
-                this.insertAchievement("achievement-4");
-            }
-            if (achievement.achiev5 == true)
-            {
-                this.insertAchievement("achievement-5");
-            }
-            if (achievement.achiev6 == true)
-            {
-                this.insertAchievement("achievement-6");
-            }
-            if (achievement.achiev7 == true)
-            {
-                this.insertAchievement("achievement-7");
-            }
-            if (achievement.achiev8 == true)
-            {
-                this.insertAchievement("achievement-8");
-            }
-            if (achievement.achiev9 == true)
-            {
-                this.insertAchievement("achievement-9");
-            }
-            if (achievement.achiev10 == true)
-            {
-                this.insertAchievement("achievement-10");
-            }
-            if (achievement.achiev11 == true)
-            {
-                this.insertAchievement("achievement-11");
-            }
-            if (achievement.achiev12 == true)
-            {
-                this.insertAchievement("achievement-12");
-            }
-            if (achievement.achiev13 == true)
-            {
-                this.insertAchievement("achievement-13");
-            }
-            if (achievement.achiev14 == true)
-            {
-                this.insertAchievement("achievement-14");
-            }
-            if (achievement.achiev15 == true)
-            {
-                this.insertAchievement("achievement-15");
-            }
-            if (achievement.achiev16 == true)
-            {
-                this.insertAchievement("achievement-16");
-            }
-            if (achievement.achiev17 == true)
-            {
-                this.insertAchievement("achievement-17");
-            }
-            if (achievement.achiev18 == true)
-            {
-                this.insertAchievement("achievement-18");
-            }
-            if (achievement.achiev19 == true)
-            {
-                this.insertAchievement("achievement-19");
-            }
-            if (achievement.achiev20 == true)
-            {
-                this.insertAchievement("achievement-20");
-            }
-            if (achievement.achiev21 == true)
-            {
-                this.insertAchievement("achievement-21");
-            }
-            if (achievement.achiev22 == true)
-            {
-                this.insertAchievement("achievement-22");
-            }
-            if (achievement.achiev23 == true)
-            {
-                this.insertAchievement("achievement-23");
-            }
-            if (achievement.achiev24 == true)
-            {
-                this.insertAchievement("achievement-24");
-            }
-            if (achievement.achiev25 == true)
-            {
-                this.insertAchievement("achievement-25");
-            }
-            if (achievement.achiev26 == true)
-            {
-                this.insertAchievement("achievement-26");
-            }
-            if (achievement.achiev27 == true)
-            {
-                this.insertAchievement("achievement-27");
-            }
-            if (achievement.achiev28 == true)
-            {
-                this.insertAchievement("achievement-28");
-            }
-            if (achievement.achiev29 == true)
-            {
-                this.insertAchievement("achievement-29");
-            }
-            if (achievement.achiev30 == true)
-            {
-                this.insertAchievement("achievement-30");
-            }
-        }
-
         // At last, return the ProfileResponse
         return new PublicProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.matchHistory, this.achievements , stats);
+            this.friendList, this.matchHistory, stats);
     }
 
     async getProfileEdit(login42: string): Promise<PrivateProfileDto>
     {
         // Create prisma client and look if the username exist in the database
-        const user = await prisma.user.findUnique({
-            where: {
-                login42: login42
-            },
-        });
+        var user;
+        
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }})
+        }
+        catch{}
 
         //  If he dosen't exist, return error true and everything at null
         if (!user)
         {
-            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null, null);
+            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null);
         }
 
         //  Free the array's from previous values
         this.friendList = [];
         this.friendRequests = [];
-        this.achievements = [];
         this.matchHistory = [];
 
         //  Build the response
@@ -523,145 +392,15 @@ export class ProfileService
             }
         }
 
-        // Get all accomplished achievements
-        const achievement = await prisma.achievement.findUnique({
-            where: {
-                userID: user.userID,
-            },
-        });
-
-        //  Sorry for the spaguethi guys, time is an issue lol
-        if (achievement)
-        {
-            if (achievement.achiev1 == true)
-            {
-                this.insertAchievement("achievement-1");
-            }
-            if (achievement.achiev2 == true)
-            {
-                this.insertAchievement("achievement-2");
-            }
-            if (achievement.achiev3 == true)
-            {
-                this.insertAchievement("achievement-3");
-            }
-            if (achievement.achiev4 == true)
-            {
-                this.insertAchievement("achievement-4");
-            }
-            if (achievement.achiev5 == true)
-            {
-                this.insertAchievement("achievement-5");
-            }
-            if (achievement.achiev6 == true)
-            {
-                this.insertAchievement("achievement-6");
-            }
-            if (achievement.achiev7 == true)
-            {
-                this.insertAchievement("achievement-7");
-            }
-            if (achievement.achiev8 == true)
-            {
-                this.insertAchievement("achievement-8");
-            }
-            if (achievement.achiev9 == true)
-            {
-                this.insertAchievement("achievement-9");
-            }
-            if (achievement.achiev10 == true)
-            {
-                this.insertAchievement("achievement-10");
-            }
-            if (achievement.achiev11 == true)
-            {
-                this.insertAchievement("achievement-11");
-            }
-            if (achievement.achiev12 == true)
-            {
-                this.insertAchievement("achievement-12");
-            }
-            if (achievement.achiev13 == true)
-            {
-                this.insertAchievement("achievement-13");
-            }
-            if (achievement.achiev14 == true)
-            {
-                this.insertAchievement("achievement-14");
-            }
-            if (achievement.achiev15 == true)
-            {
-                this.insertAchievement("achievement-15");
-            }
-            if (achievement.achiev16 == true)
-            {
-                this.insertAchievement("achievement-16");
-            }
-            if (achievement.achiev17 == true)
-            {
-                this.insertAchievement("achievement-17");
-            }
-            if (achievement.achiev18 == true)
-            {
-                this.insertAchievement("achievement-18");
-            }
-            if (achievement.achiev19 == true)
-            {
-                this.insertAchievement("achievement-19");
-            }
-            if (achievement.achiev20 == true)
-            {
-                this.insertAchievement("achievement-20");
-            }
-            if (achievement.achiev21 == true)
-            {
-                this.insertAchievement("achievement-21");
-            }
-            if (achievement.achiev22 == true)
-            {
-                this.insertAchievement("achievement-22");
-            }
-            if (achievement.achiev23 == true)
-            {
-                this.insertAchievement("achievement-23");
-            }
-            if (achievement.achiev24 == true)
-            {
-                this.insertAchievement("achievement-24");
-            }
-            if (achievement.achiev25 == true)
-            {
-                this.insertAchievement("achievement-25");
-            }
-            if (achievement.achiev26 == true)
-            {
-                this.insertAchievement("achievement-26");
-            }
-            if (achievement.achiev27 == true)
-            {
-                this.insertAchievement("achievement-27");
-            }
-            if (achievement.achiev28 == true)
-            {
-                this.insertAchievement("achievement-28");
-            }
-            if (achievement.achiev29 == true)
-            {
-                this.insertAchievement("achievement-29");
-            }
-            if (achievement.achiev30 == true)
-            {
-                this.insertAchievement("achievement-30");
-            }
-        }
-
         // At last, return the ProfileResponse
         return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.friendRequests, this.matchHistory, this.achievements, stats, user.authentificator);
+            this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator);
     }
 
-    async updateUsername(newUsername: string, login42: string) : Promise<any>
+    async updateUsername(newUsername: string, login42: string) : Promise<responseDefault>
     {
+        var response = new responseDefault(true, "Username change to " + newUsername + " successful.")
+
         //  Find the user to update to
         const user = await prisma.user.findUnique({
             where: {
@@ -670,18 +409,21 @@ export class ProfileService
         })
         if (!user)
         {
-            return (false);
+            response.message = "Update username Error 00: Unauthorised client."
+            return (response);
         }
 
         //  Parse username for valid entry
         if (newUsername.length < 5)
         {
-            return (false);
+            response.message = "Update username Error 01: Username must have more than 4 character's."
+            return (response);
         }
 
         if (newUsername.length > 12)
         {
-            return (false)
+            response.message = "Update username Error 02: Username max number of character's is 12."
+            return (response)
         }
 
         //  Put the username with a capital first letter and the rest in lowercase
@@ -700,14 +442,65 @@ export class ProfileService
         }
         catch
         {
-            return (false)
+            response.message = "Update username Error 04: Username change failed due to database update error."
+            return (response);
         }
 
-        return (true);
+        response.error = false;
+        return (response);
     }
 
-    async updatePhoto(newFilePath: string, login42: string) : Promise<any>
+    async getPhoto(login42:string) : Promise<responseDefault>
     {
+        var response = new responseDefault(true, "/defaultPhoto.png");
+        var user;
+
+        try{
+            user = await prisma.user.findUnique( {
+               where: {login42: login42} 
+            } )
+        }
+        catch{}
+
+        if(user != undefined)
+        {
+            response.message = user.imagePath;
+            response.error = false;
+        }
+        return (response);
+    }
+
+    async getAuth(login42:string) : Promise<responseDefault>
+    {
+        var response = new responseDefault(false, "inactive");
+        var user;
+
+        try
+        {
+            user = await prisma.user.findUnique(
+                {
+                    where: {login42: login42} 
+                } )
+        }
+        catch{}
+
+        if(user != undefined)
+        {
+            if (user.authenticator == true)
+            {
+                console.log("auth is active")
+                response.message = "active";
+                return (response)
+            }
+        }
+        return (response);
+    }
+
+
+    async updatePhoto(newFilePath: string, login42: string) : Promise<responseUploadPhoto>
+    {
+        var response = new responseUploadPhoto(true, "Photo upload successful", "not changed");
+
         const user = await prisma.user.findUnique({
             where:{
                 login42: login42,
@@ -716,7 +509,8 @@ export class ProfileService
         
         if (!user)
         {
-            return ({error: "authentification failed"});
+            response.message = "Upload photo Error 00: Unauthorised client"
+            return (response);
         }
         const path = "/" + newFilePath;
         try
@@ -729,12 +523,15 @@ export class ProfileService
                     imagePath: path,
                 }
             })
+            response.error = false;
+            response.photo = path;
+            return (response);
         }
         catch
         {
-            return ({error: "update failed"});
-        }
-        return ({success: "sucess"});
+            response.message = "Upload photo Error 01: Upload photo in database failed."
+            return (response);
+            }
     }
 
     async addFriend(login42: string, newFriend: string)
@@ -1026,7 +823,7 @@ export class ProfileService
     {
         'use strict';
 
-        var authentificator = require('authenticator');
+        var authenticator = require('authenticator');
 
         //  Validate token entered and format it
         token.trim();
@@ -1064,7 +861,7 @@ export class ProfileService
         }
         catch{}
 
-        var status = authentificator.verifyToken(user.authKey, formattedToken);
+        var status = authenticator.verifyToken(user.authKey, formattedToken);
 
         if (status != null)
         {
@@ -1075,7 +872,7 @@ export class ProfileService
                         login42: login42
                     },
                     data: {
-                        authentificator: true
+                        authenticator: true
                     }
                 })
             }
@@ -1088,7 +885,7 @@ export class ProfileService
     {
         'use strict';
 
-        var authentificator = require('authenticator');
+        var authenticator = require('authenticator');
 
         //  Validate token entered and format it
         token.trim();
@@ -1128,7 +925,7 @@ export class ProfileService
 
         console.log(user.authKey, formattedToken);
 
-        var status = authentificator.verifyToken(user.authKey, formattedToken);
+        var status = authenticator.verifyToken(user.authKey, formattedToken);
 
         if (status != null)
         {
@@ -1139,7 +936,7 @@ export class ProfileService
                         login42: login42
                     },
                     data: {
-                        authentificator: false,
+                        authenticator: false,
                         authKey: "none"
                     }
                 })
