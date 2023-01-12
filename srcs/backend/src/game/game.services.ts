@@ -207,6 +207,12 @@ export class GameRoom {
             server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
         }, (1/60) * 1000) //60 fps
     }
+    public getPlayer1Status(){
+        return this.player1.status;
+    }
+    public getPlayer2Status(){
+        return this.player2.status;
+    }
 }
 
 @Injectable()
@@ -237,7 +243,7 @@ export class GameSocketIOService {
                     this.roomMap.delete(gameroom[0])
                 }
                 //add a check for rooms with disconnected sockets or just plain empty for any type of status
-                else if (gameroom[1].
+                //else if (gameroom[1].
             }
         }, 500)
     }
