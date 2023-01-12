@@ -510,7 +510,7 @@ export class ProfileService
         {
             games = await prisma.game.findMany({
                 where: {
-                    active: false
+                    active: true
                 }
             })
         }
