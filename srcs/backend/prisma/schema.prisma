@@ -7,10 +7,10 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum UserStatus {
-  Online 
-  Offline
-  InGame
+enum userStatus{
+    online
+    offline
+    playing
 }
 
 model User {
@@ -20,6 +20,7 @@ model User {
     refreshToken42      String?
     jwtToken            String?
     login42             String                          @unique
+    userStatus          userStatus                      @default(online)
     imagePath           String                          @default("/defaultPhoto.png")
     authentificator     Boolean                         @default(false)
     authKey             String                          @default("none")

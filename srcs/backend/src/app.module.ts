@@ -9,6 +9,10 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { ChatService } from './chat/chat.service';
+import { ChatController } from './chat/chat.controller';
+import { ChatModule } from './chat/chat.module';
+import { ProfileModule } from './profile/profile.module';
 
 
 
@@ -18,7 +22,9 @@ import { ConfigModule } from '@nestjs/config';
         imports:[
             ConfigModule.forRoot(),
             AuthModule,
-    MulterModule.register({ dest: '../frontend/public' })],
+            ChatModule,
+            ProfileModule,
+            MulterModule.register({ dest: '../frontend/public' })],
             
         //  Controllers imports
         controllers:[
@@ -29,6 +35,7 @@ import { ConfigModule } from '@nestjs/config';
         providers:[
             AuthService,
             ProfileService,
+            ChatService,
             AuthService,
             JwtService,
             AppService,]

@@ -4,7 +4,7 @@ import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { PrismaClient, User, userStatus } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import {prisma } from 'src/main';
-import {Socket, Server} from 'socket.io';
+import {Socket} from 'socket.io';
 import {ProfileService} from '../profile/profile.service';
 import { parse } from 'cookie';
 
@@ -14,12 +14,12 @@ type auth_output = {username : string, iat: string, exp: string}
 export class AuthService
 {
     private userSessions: Map<string, Socket[]>;
-    constructor(private usersService: ProfileService, private jwtService: JwtService, private prisma: PrismaService) { 
+    constructor(private jwtService: JwtService) { 
     }
 
     async fetchUser(userID: string): Promise<User | null>
     {
-        return this.prisma.user.findUnique({ where: { userID } });
+        return prisma.user.findUnique({ where: { userID } });
     }
 
     public async validate_token(input: string)
@@ -141,7 +141,7 @@ export class AuthService
             return null;
           }
     
-          const user: User | null = await this.prisma.user.findUnique({ where: { userID: sub.sub } });
+          const user: User | null = await prisma.user.findUnique({ where: { userID: sub.sub } });
     
           return user;
         } catch {

@@ -10,10 +10,8 @@ export class ChatController {
 
   @Get('userRooms')
   @UseGuards(JwtGuard)
-  public async getRoomsFromUser(
-    @Req() req: Request,
-  ) {
-      const user: any = req.user;
+  public async getRoomsFromUser(@Req() req: Request, ) {
+      const user: any = req;
 
       const rooms: RoomDto[] = this.chatService.getAllRoomsFromUser(user.id);
 
@@ -26,10 +24,8 @@ export class ChatController {
 
   @Get('userPMs')
   @UseGuards(JwtGuard)
-  public async getPMsFromUser(
-    @Req() req: Request,
-  ) {
-      const user: any = req.user;
+  public async getPMsFromUser(@Req() req: Request, ) {
+      const user: any = req;
 
       const privateMsgs: PrivateMsgsDto[] = this.chatService.getUserPrivateMsgs(user.id);
 

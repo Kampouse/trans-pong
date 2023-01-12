@@ -3,9 +3,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { ProfileService } from '../profile/profile.service';
 import { Socket } from 'socket.io';
 import { hashPwd } from './helper/bcrypt';
-import { Prisma, User} from '.prisma/client';
-
-
+import { User } from '.prisma/client';
 
 export class MessageDto {
   userId : string;

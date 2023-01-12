@@ -1,11 +1,13 @@
-import { Redirect, Body } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
+import { Redirect, Body } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import * as session from 'express-session';
 // import { env } from 'process';
 // import { cors } from 'cors';
-import * as cookieParser from 'cookie-parser';
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -24,7 +26,11 @@ const startPrisma = async () => {
 export const prisma = global.prisma || new PrismaClient({ log: ['info'] });
 async function bootstrap() {
   startPrisma();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const config: ConfigService = app.get(ConfigService);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const port: number = config.get<number>('PORT');
+  
   app.enableCors({
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],

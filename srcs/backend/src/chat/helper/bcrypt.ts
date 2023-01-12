@@ -1,10 +1,10 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 export async function hashPwd(rawPwd: string) {
-    const SALT = await bcrypt.genSalt();
-    return bcrypt.hash(rawPwd, SALT);
+  const SALT = await bcrypt.genSalt();
+  return bcrypt.hash(rawPwd, SALT);
 }
 
 export async function comparePwd(rawPwd: string, hashPwd: string) {
-    return bcrypt.compare(rawPwd, hashPwd);
+  return bcrypt.compare(rawPwd, hashPwd);
 }

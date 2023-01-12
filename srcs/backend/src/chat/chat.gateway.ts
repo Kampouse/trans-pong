@@ -6,7 +6,7 @@ import {
     ConnectedSocket,
     OnGatewayConnection,
   } from '@nestjs/websockets';
-  import { Server, Socket} from 'socket.io';
+  import { Socket, Server} from 'socket.io';
   import { ChatService, MessageDto, RoomDto, RoomReturnDto } from './chat.service';
   import { Inject } from '@nestjs/common';
   import { comparePwd } from './helper/bcrypt';
