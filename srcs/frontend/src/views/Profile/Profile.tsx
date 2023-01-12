@@ -119,7 +119,7 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
 
 //  =============== Friend List component       =============== //
 
-function FriendList({data, userClicked, setOpenUserOptions, username}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined})
+function FriendList({userClicked, setOpenUserOptions, username}: {userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined})
 {
 	const {profileReq: friendsData} = useFetch(username);
 
@@ -173,13 +173,17 @@ async function denyRequest(username: string)
     .catch(function() {console.log("error on deny request fetch");});
 }
 
-function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
+function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined}): JSX.Element {
+	const {profileReq: friendsData} = useFetch(username);
 
     const nav = useNavigate();
 
-		const [friendRequests, setFriendRequests] = useState<Array<any>>(
-			data.friendRequests
-		)
+		const [friendRequests, setFriendRequests] = useState<Array<any>>([])
+
+		useEffect(() => {
+			if (friendsData)
+				setFriendRequests(friendsData.friendRequests)
+		}, [friendsData])
 
 		const deleteRequest = (fromUser: string ) => {
 			setFriendRequests(
@@ -193,33 +197,37 @@ function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, use
     <div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
         <div className="flow-root overflow-y-scroll scrollbar-hide">
-          <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
-            { friendRequests.map((currentRequest) =>
-            {
-                return (
-                    <li className="py-4" key={currentRequest.fromUser}>
-                        <div className="flex items-center space-x-4">
-                            <div className="shrink-0">
-                                <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentRequest.fromPhoto} alt="" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
-                                />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                                <p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
-                                >
-                                    {currentRequest.fromUser}
-                                </p>
-                            </div>
-                            <div className='flex w-fit justify-end'>
-                                <IconButton onClick={() => {acceptRequest(currentRequest.fromUser); deleteRequest(currentRequest.fromUser);}}>
-                                    <CheckCircle sx={{ color: blue[700] }} />
-                                </IconButton>
-                                <IconButton onClick={() => {denyRequest(currentRequest.fromUser); deleteRequest(currentRequest.fromUser);}}>
-                                    <Cancel sx={{ color: blue[700] }} />
-                                </IconButton>
-                            </div>
-                        </div>
-                    </li>);})}
-            </ul>
+					{friendsData && friendsData.error == false && friendRequests && (
+						<>
+		          <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
+		            { friendRequests.map((currentRequest) =>
+		            {
+		                return (
+		                    <li className="py-4" key={currentRequest.fromUser}>
+		                        <div className="flex items-center space-x-4">
+		                            <div className="shrink-0">
+		                                <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentRequest.fromPhoto} alt="" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
+		                                />
+		                            </div>
+		                            <div className="min-w-0 flex-1">
+		                                <p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
+		                                >
+		                                    {currentRequest.fromUser}
+		                                </p>
+		                            </div>
+		                            <div className='flex w-fit justify-end'>
+		                                <IconButton onClick={() => {acceptRequest(currentRequest.fromUser); deleteRequest(currentRequest.fromUser);}}>
+		                                    <CheckCircle sx={{ color: blue[700] }} />
+		                                </IconButton>
+		                                <IconButton onClick={() => {denyRequest(currentRequest.fromUser); deleteRequest(currentRequest.fromUser);}}>
+		                                    <Cancel sx={{ color: blue[700] }} />
+		                                </IconButton>
+		                            </div>
+		                        </div>
+		                    </li>);})}
+		           </ul>
+						</>
+					)}
         </div>
       </div>
     </div>
@@ -579,8 +587,8 @@ export default function Profile()
                 <div className='grow overflow-hidden'>
                     <div className='max-h-[100%] overflow-y-scroll overflow-hidden scrollbar-hide'>
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-                        <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
-                            {username === undefined && <TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>}
+                        <TabPanel value="2"><FriendList userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
+                            {username === undefined && <TabPanel value="3"><FriendRequests userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>}
                         <TabPanel value="4"><Stats data={data} /></TabPanel>
                     </div>
                 </div>
