@@ -142,13 +142,28 @@ export class GameRoom {
         return this.roomName;
     }
     public startGameUpdateInterval(server: io.Server) {
-        this.handleSocketDisconnect = setInterval( () => { //this interval checks socket status if disconnected, if it is we need to pause the game for 10 seconds
+        this.handleSocketDisconnect = setInterval( async () => { //this interval checks socket status if disconnected, if it is we need to pause the game for 10 seconds
             if(this.player1.isSocketDisconnected() == true || this.player2.isSocketDisconnected() == true){
                 clearInterval(this.updateInterval);
                 clearInterval(this.handleSocketDisconnect);
                 let timeoutReconnection = setTimeout(() => {
                     clearInterval(checkForReconnection)
                     //do things to end game and assign player who didnt disconnect
+                    await prisma.user.update({where: {userID: this.getPlayer1Id()}, 
+                    data: {
+                        userStatus: "online"
+                    }});
+                    await prisma.user.update({where: {userID: this.getPlayer2Id()}, 
+                    data: {
+                        userStatus: "online"
+                    }});
+                    await prisma.game.update({where: {gameRoomID: this.getRoomName()}, 
+                    data: {
+                        leftPlayerScore: this.gameUpdateObject.leftPlayer.playerScore,
+                        rightPlayerScore: this.gameUpdateObject.rightPlayer.playerScore,
+                        active: false,
+                        winner: "No winner"
+                    }});
                     server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //frontend to handle game end
                 }, 10000) //one of our players did not reconnect in 10 seconds, end the game
                 let checkForReconnection = setInterval( () => {
@@ -222,6 +237,7 @@ export class GameSocketIOService {
                     this.roomMap.delete(gameroom[0])
                 }
                 //add a check for rooms with disconnected sockets or just plain empty for any type of status
+                else if (gameroom[1].
             }
         }, 500)
     }
