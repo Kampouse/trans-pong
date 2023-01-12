@@ -147,6 +147,7 @@ export class GameRoom {
                 clearInterval(this.updateInterval);
                 clearInterval(this.handleSocketDisconnect);
                 let timeoutReconnection = setTimeout( async () => {
+                    this.status = "finished"
                     clearInterval(checkForReconnection)
                     //do things to end game and assign player who didnt disconnect
                     await prisma.user.update({where: {userID: this.getPlayer1Id()}, 
@@ -165,7 +166,7 @@ export class GameRoom {
                         winner: "No winner"
                     }});
                     server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //frontend to handle game end
-                }, 10000) //one of our players did not reconnect in 10 seconds, end the game
+                }, 5000) //one of our players did not reconnect in 10 seconds, end the game
                 let checkForReconnection = setInterval( () => {
                     if(this.player1.isSocketDisconnected() == false && this.player2.isSocketDisconnected() == false){
                         clearTimeout(timeoutReconnection)
@@ -227,7 +228,9 @@ export class GameSocketIOService {
 
     constructor() {
         this.server = new io.Server(3001, {cors: {
-            origin: "http://localhost:5173",
+            origin: function (origin, callback) {
+                console.log(origin)
+                callback(null, true)},
             methods: ["GET", "POST", "PUT", "DELETE"]
           }});
         this.socketMap = new Map<string, string> //userid, socketid

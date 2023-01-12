@@ -65,6 +65,11 @@ export class GameSocketIOController {
             socket.on(("joinedGame"), () => {
                 console.log(`Socket ${socket.id} landed on the game`)
             })
+            socket.on("spectateGame", (roomID) => {
+                console.log(roomID);
+                socket.join(roomID);
+                socket.emit("roomIsReady")
+            })
         })
 
         server.on("disconnect", () => {

@@ -1,5 +1,8 @@
 import { ActiveGameDto, Game } from './../../../../backend/src/dtos/profile.dtos'
 import { useState } from 'react';
+import * as io from 'socket.io-client';
+import { useNavigate } from 'react-router';
+import {usersocket} from './Matchmaking'
 
 async function getActiveGames(data: ActiveGameDto, setData)
 {
@@ -24,7 +27,7 @@ export function SpectateMenu()
 {
     let emptyGames: Game[] = [];
     const [data, setData] = useState(new ActiveGameDto(emptyGames));
-
+    const nav = useNavigate();
     return (
         <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[900px] w-[90%] max-w-[700px] font-Raleway">
             <button className=' ring-1 ring-black hover:bg-purple-200 hover:text-black h-14 w-40 my-4 mx-[39%] px-5 text-xl rounded-md bg-sky-200 text-black' onClick={async () => 
@@ -77,6 +80,12 @@ export function SpectateMenu()
                                <button className='bg-pink-500 text-white font-Merriweather rounded-md font-medium px-2 py-1' onClick={async () => 
                                     {
                                         //  Open the game component here with gameRoomId stored in : currentMatch.gameID
+                                        usersocket.emit("spectateGame", currentMatch.gameID);
+                                        usersocket.on("roomIsReady", () => {
+                                            console.log("wooooo")
+                                            usersocket.off("roomIsReady");
+                                            nav(`/game/${currentMatch.gameID}`)
+                                        })
                                         console.log("TODO: add opening game in spectator mode here");
                                     }}>
                                     Spectate
