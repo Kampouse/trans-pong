@@ -24,6 +24,11 @@ const ONLINE = "text-green-600 text-md";
 const PLAYING = "text-amber-500 text-md";
 const OFFLINE = "text-red-600 text-md";
 
+async function delay(ms: number)
+{
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const getStatusCSS = (status) =>
 {
 	if (status === 'online')
@@ -301,7 +306,7 @@ export interface EditProfileProps
     data: any
 }
 
-async function updateUsername(newUsername: any, data: any)
+async function updateUsername(newUsername: any, data: any, setOpenSnackbar: any, snackbarMsg: any, snackbarSeverity: any)
 {
     var username = {username: newUsername.value}
 
@@ -317,11 +322,15 @@ async function updateUsername(newUsername: any, data: any)
             if (res.status == "200")
             {
                 data.username = username.username;
-                alert(res.message)
+                setOpenSnackbar(true);
+                snackbarMsg.current = res.message;
+                snackbarSeverity.current = 'success'
             }
             else
             {
-                alert(res.message)
+                setOpenSnackbar(true);
+                snackbarMsg.current = res.message;
+                snackbarSeverity.current = 'error'
             }
         })
         .catch(error => {
@@ -335,23 +344,17 @@ async function getPhoto(data: any)
         method: "GET",
     })
         .then(response => response.json())
-        .then(res => {
-            if (res.status == "200")
+        .then(res =>
             {
                 data.imagePath = res.message;
-                return (res.message);
-            }
-            else
+            })
+        .catch(error =>
             {
-                return;
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-        });
+                console.error("Error:", error);
+            });
 }
 
-async function getAuth(data: any)
+async function getAuth(data: any, setOpenSnackbar, snackbarMsg, snackbarSeverity)
 {
     await fetch("http://localhost:3000/profile/get/auth", {
         method: "GET",
@@ -361,12 +364,16 @@ async function getAuth(data: any)
             if (res.message == "active")
             {
                 data.authenticator = true;
-                alert("Google 2way authentication is active.")
+                setOpenSnackbar(true);
+                snackbarMsg.current = "Google two way auth is active";
+                snackbarSeverity.current = 'success'
             }
             else
             {
                 data.authenticator = false;
-                alert("Google 2way authentication is inactive.")
+                setOpenSnackbar(true);
+                snackbarMsg.current ="Google two way auth is inactive";
+                snackbarSeverity.current = 'error'
             }
         })
         .catch(error => {
@@ -374,10 +381,8 @@ async function getAuth(data: any)
         });
 }
 
-export function EditProfile({open, onClose, data} : EditProfileProps)
+export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, snackbarSeverity} : EditProfileProps)
 {
-    //  =============== Google auth             =============== //
-    
     const [openGoogleAuth, setGoogleAuth] = useState(false);
     const [openGoogleReset, setGoogleReset] = useState(false);
 
@@ -385,7 +390,7 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
         <Dialog onClose={onClose} open={open} className="font-Raleway">
         <div className=" w-96">
             <DialogTitle className='bg-sky-200'>
-                <p className=' text-center font-Raleway font-bold text-3xl '>
+                <p className=' text-center font-Raleway  font-bold text-3xl '>
                     Edit Profile
                 </p>
             </DialogTitle>
@@ -398,7 +403,7 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                             <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
                             <button onClick={() =>
                             {
-                                updateUsername(document.getElementById("newUsername"), data)
+                                updateUsername(document.getElementById("newUsername"), data, setOpenSnackbar, snackbarMsg, snackbarSeverity)
                                 onClose();
                             }}
                             className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
@@ -412,7 +417,15 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                         <iframe name="dummyframe" id="dummyframe" className='w-0 h-0'></iframe>
                         <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data' target='dummyframe'>
                             <input accept="image/*" id="file" type="file" name='file' className=' justify-center'></input>
-                            <button onClick={async () => {await getPhoto(data); onClose();}} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
+                            <button onClick={ async () =>
+                                {
+                                    await delay(300);
+                                    await getPhoto(data);
+                                    setOpenSnackbar(true);
+                                    snackbarMsg.current = "Photo upload successful";
+                                    snackbarSeverity.current = 'success';
+                                    onClose();
+                                }} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
                                 Upload
                             </button>
                         </form>
@@ -441,8 +454,8 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                 </div>
             </DialogContent>
             </div>
-            <GoogleAuth open={openGoogleAuth} onClose={async () => {await getAuth(data);setGoogleAuth(false)}}></GoogleAuth>
-            <GoogleReset open={openGoogleReset} onClose={async () => {await getAuth(data); setGoogleReset(false)}}></GoogleReset>
+            <GoogleAuth open={openGoogleAuth} onClose={async () => {await getAuth(data, setOpenSnackbar, snackbarMsg, snackbarSeverity);setGoogleAuth(false)}}></GoogleAuth>
+            <GoogleReset open={openGoogleReset} onClose={async () => {await getAuth(data, setOpenSnackbar, snackbarMsg, snackbarSeverity); setGoogleReset(false)}}></GoogleReset>
             </Dialog>
             );
 }
@@ -588,7 +601,7 @@ export default function Profile()
             </>)}
         </div>
         <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked} setValue={setValue}></UserOption>
-        <EditProfile onClose={ async () => { await getPhoto(data); setOpenEditProfile(false);}} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
+        <EditProfile onClose={ async () => {setOpenEditProfile(false);}} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
         <GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
     </div>
   );
