@@ -146,7 +146,7 @@ export class GameRoom {
             if(this.player1.isSocketDisconnected() == true || this.player2.isSocketDisconnected() == true){
                 clearInterval(this.updateInterval);
                 clearInterval(this.handleSocketDisconnect);
-                let timeoutReconnection = setTimeout(() => {
+                let timeoutReconnection = setTimeout( async () => {
                     clearInterval(checkForReconnection)
                     //do things to end game and assign player who didnt disconnect
                     await prisma.user.update({where: {userID: this.getPlayer1Id()}, 
