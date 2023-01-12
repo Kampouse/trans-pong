@@ -74,19 +74,17 @@ const SinglePlayerCanvas = () => {
   }, [])
 
 	addEventListener("keydown", (event) => {
-		event.preventDefault();
-		if (event.key === 'w' || event.key === 'ArrowUp')
+		if (event.key === 'ArrowUp')
 			keyActions.up = true;
-		if (event.key === 's' || event.key === 'ArrowDown')
+		if (event.key === 'ArrowDown')
 			keyActions.down = true;
     console.log('User pressed: ', event.key);
 	});
 
 	addEventListener("keyup", (event) => {
-		event.preventDefault();
-		if (event.key === 'w' || event.key === 'ArrowUp')
+		if (event.key === 'ArrowUp')
 			keyActions.up = false;
-		if (event.key === 's' || event.key === 'ArrowDown')
+		if (event.key === 'ArrowDown')
 			keyActions.down = false;
     console.log('User released: ', event.key);
 	});
