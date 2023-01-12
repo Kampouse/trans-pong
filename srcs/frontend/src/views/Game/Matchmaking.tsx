@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, NavigateFunction } from 'react-router-dom';
 import * as io from 'socket.io-client';
 import  Queue  from './QueueComponent';
 import { Fetch } from 'utils';
 import { Dialog } from '@mui/material'
 import { render } from 'react-dom';
+import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 
-export var usersocket: io.Socket = io.connect();
+export var usersocket: io.Socket = io.connect()
 export default function Matchmaking()
 {
     const nav = useNavigate();
@@ -14,6 +15,8 @@ export default function Matchmaking()
     const userid = fetchUserId();
     const [openQueue, setOpenQueue] = useState(false);
     const [socket, setSocket] = useState()
+    const snackbarMsg = useRef('')
+	const [openSnackbar, setOpenSnackbar] = useState(false)
 
     return (
     <div className=" my-4 px-[10%] py-[10%] mx-2 w-[100%]">
@@ -23,13 +26,12 @@ export default function Matchmaking()
                     <button type='button' id="singleplayer" onClick={(e) => startSinglePlayer(e, nav)} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Singler Player
                     </button>
-                    <button type='button' id="multiplayer" onClick={((e) => startMultiplayerMatchmake(e, nav, userid, setOpenQueue, setSocket))} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
+                    <button type='button' id="multiplayer" onClick={((e) => startMultiplayerMatchmake(e, nav, userid, setOpenQueue, setOpenSnackbar))} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Multi Player
                     </button>
                 </div>
             </div>
             <div id="divqueue"><Queue onClose={() => setOpenQueue(false)} open={openQueue}></Queue></div>
-            <Queue onClose={() => setOpenQueue(false)} open={openQueue}></Queue>
     </div>
     )
 }
@@ -53,13 +55,14 @@ function fetchUserId() {
 }
 
 
-function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, setOpenQueue: any, setSocket: any){
+function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, setOpenQueue: any, setOpenSnackbar: any){
     e.preventDefault();
     console.log("Creating socket");
     usersocket.disconnect();
     //setOpenQueue(true);
-    
+    console.log("ok allo")
     usersocket = io.connect("http://localhost:3001")
+    //usersocket.connect()
     usersocket.on("roomIsReady", (room) =>
     {
         console.log("Match found! Redirecting to game.");
@@ -74,7 +77,10 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, set
         console.log(userid)
         usersocket.emit("registerId", {userId: userid, socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
         usersocket.emit("searchGame"); //join new game
+       // setOpenSnackbar(true)
         //TODO: Fix this state disconnecting sockets for some reason on render, which is extremly stupid
     })
-
+    usersocket.on("noSuitableRoomFound", () => {
+        usersocket.emit("socketIsConnected"); //fire again to relaunch a search, if we land here we didnt find a room thats it (mostly due to same user found but yea)
+    })
 }

@@ -6,8 +6,10 @@ import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
 import { useBallColor, useBackgroundColor, usePaddleColor } from 'Router/Router'
 import { useAtom } from 'jotai'
+import { useNavigate } from 'react-router'
 
 const ReactiveCanvas = () => {
+  const nav = useNavigate();
   const canvas = useRef<HTMLCanvasElement | null>(null)
   const div = useRef<HTMLDivElement | null>(null)
 
@@ -54,6 +56,13 @@ const ReactiveCanvas = () => {
         //update({gameover: gameData.gameOver});
         draw({canvas}, gameData, {ballColor, backgroundColor, paddleColor});
       }
+    })
+    usersocket.on("leaveRoom", (roomID) => {
+      usersocket.off("gameUpdate")
+      usersocket.disconnect()
+      setTimeout(() => {
+        nav('/Profile'); //go back to profile
+      }, 3000)
     })
     //return () => clearInterval(interval)
   }, [countdown])

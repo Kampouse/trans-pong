@@ -149,9 +149,10 @@ export class GameRoom {
                 let timeoutReconnection = setTimeout(() => {
                     clearInterval(checkForReconnection)
                     //do things to end game and assign player who didnt disconnect
+                    server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //frontend to handle game end
                 }, 10000) //one of our players did not reconnect in 10 seconds, end the game
                 let checkForReconnection = setInterval( () => {
-                    if(this.player1.isSocketDisconnected() == true || this.player2.isSocketDisconnected() == true){
+                    if(this.player1.isSocketDisconnected() == false && this.player2.isSocketDisconnected() == false){
                         clearTimeout(timeoutReconnection)
                         clearInterval(checkForReconnection)
                         this.startGameUpdateInterval(server)
