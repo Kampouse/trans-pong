@@ -54,7 +54,6 @@ export class ProfileController {
             return;
         }
 
-        console.log(login42)
         const response = await this.profileService.getAuth(login42);
         if (response.error == true)
         {
@@ -77,7 +76,6 @@ export class ProfileController {
             return;
         }
 
-        console.log(login42)
         const response = await this.profileService.getActiveGames();
         return (response);
     }
@@ -142,9 +140,6 @@ export class ProfileController {
     async updatePhoto(@Res() res, @UploadedFile() file: Express.Multer.File, @Req() request: RequestWithUser) : Promise<responseUploadPhoto>
     {
         const login42 =  await this.profileService.authentificate(request);
-
-        console.log(login42);
-        console.log(file)
 
         if (login42 == undefined || file == undefined)
         {

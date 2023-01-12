@@ -10,7 +10,7 @@ export function UserOption({open, onClose, userClicked, setValue})
 
 
     //  CSS style for button
-    const buttonCss = 'bg-slate-100 text-2xl font-Raleway hover:bg-purple-100 ring-1 ring-slate-500 rounded-lg mx-[25%] w-[50%] h-12'
+    const buttonCss = 'bg-slate-100 text-2xl font-Raleway hover:bg-purple-100 ring-1 ring-slate-500 rounded-lg mx-[25%] w-[50%] h-11'
 
     //  Get request for adding a friend
     async function addFriend(username: string)
