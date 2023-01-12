@@ -1036,7 +1036,7 @@ export class ProfileService
 
         if (user != undefined)
         {
-            var login = user.login42;
+            var login = user.username;
             var photo = user.imagePath;
             return({
                 login: login,

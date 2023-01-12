@@ -121,7 +121,7 @@ useEffect(() => { check()}, [])
           <Routes>
             <Route path="/" element={<Menu />} />
             <Route path="/Menu" element={<Menu />} />
-            <Route path="/Watch" element={<SpectateMenu />} />
+            <Route path="/Spectate" element={<SpectateMenu />} />
             <Route path="/Play" element={<Game />}></Route>
             <Route path="/MatchMaking" element={<Matchmaking />}></Route>
             <Route path="/Profile">
@@ -130,7 +130,7 @@ useEffect(() => { check()}, [])
             </Route>
             <Route path="/Chat" element={<Chat />}></Route>
             <Route path="*" element={<Error404 />}></Route>
-            <Route path="/game">
+            <Route path="/Game">
                 <Route path="" element={<SinglePlayerCanvas/>}></Route>
                 <Route path=":id" element={<Game/>}></Route>
             </Route>
