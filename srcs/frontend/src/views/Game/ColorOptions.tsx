@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useBallColor, useBackgroundColor, usePaddleColor } from 'Router/Router'
 import { useAtom } from 'jotai'
 
-export default function ColorTest() {
+export default function ColorOptions() {
 	const [ballColor, setBallColor] = useAtom(useBallColor)
 	const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
 	const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)

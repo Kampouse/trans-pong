@@ -501,25 +501,58 @@ export class ProfileService
     {
         var array: Game[] = [];
         var games;
+        var leftPlayer;
+        var rightPlayer
 
+        //  Get every active games
+        //  TODO: change active to true after tests
         try
         {
             games = await prisma.game.findMany({
                 where: {
-                    active: true
+                    active: false
                 }
             })
         }
         catch{}
 
+        //  If there is some active games, insert them in an array of games
         if (games)
         {
             for (let i in games)
             {
-                var newGame = new Game(games[i].leftPlayer, games[i].leftPlayerPhoto, games[i].rightPlayer, games[i].rightPhoto, games[i].gameRoomID);
-                array.push(newGame);
+                //  Set both player to undefined
+
+                leftPlayer = undefined;
+                rightPlayer = undefined;
+
+                //  Try to Find left Player
+                try
+                {
+                    leftPlayer = await prisma.user.findUnique({
+                        where: {
+                            login42: games[i].leftPlayer
+                        }})
+                }catch{}
+
+                //  Try to find right player
+                try
+                {
+                    rightPlayer = await prisma.user.findUnique({
+                        where: {
+                            login42: games[i].rightPlayer}})
+                }catch{}
+
+                //  Add the game to the array if both player are found in the database
+                if (leftPlayer != undefined && rightPlayer != undefined)
+                {
+                    var newGame = new Game(leftPlayer.username, leftPlayer.imagePath, rightPlayer.username, rightPlayer.imagePath, games[i].gameRoomID);
+                    array.push(newGame);
+                }
             }
         }
+
+        //  Create the Active game data object with the array and return it.
         const response = new ActiveGameDto(array);
         return (response);
     }

@@ -5,7 +5,8 @@ import { Routes, Route } from 'react-router-dom'
 import { useAtom, atom } from 'jotai'
 import Nav from 'views/Nav/Nav'
 import { Menu } from 'views/Menu/menu'
-import Game, { GameWatch } from 'views/Game/Game'
+import Game from 'views/Game/Game'
+import { SpectateMenu } from 'views/Game/Spectate'
 import Matchmaking from 'views/Game/Matchmaking'
 import Login from 'views/Login/Login'
 import Profile from 'views/Profile/Profile'
@@ -16,7 +17,7 @@ import Chat from 'views/Chat/Chat'
 import { ChatRoom, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial } from 'utils'
-import ColorTest from 'views/Game/ColorTest'
+import ColorOptions from 'views/Game/ColorOptions'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -120,7 +121,7 @@ useEffect(() => { check()}, [])
           <Routes>
             <Route path="/" element={<Menu />} />
             <Route path="/Menu" element={<Menu />} />
-            <Route path="/Watch" element={<GameWatch />} />
+            <Route path="/Watch" element={<SpectateMenu />} />
             <Route path="/Play" element={<Game />}></Route>
             <Route path="/MatchMaking" element={<Matchmaking />}></Route>
             <Route path="/Profile">
@@ -133,8 +134,8 @@ useEffect(() => { check()}, [])
                 <Route path="" element={<SinglePlayerCanvas/>}></Route>
                 <Route path=":id" element={<Game/>}></Route>
             </Route>
-						<Route path="/ColorTest" element={<ColorTest/>}></Route>
-          </Routes>
+                <Route path="/ColorOptions" element={<ColorOptions/>}></Route>
+            </Routes>
         </>
       ) : (
         <Login Status={login} />
