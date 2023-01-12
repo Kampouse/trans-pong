@@ -24,7 +24,7 @@ export default function Matchmaking()
                 <h1 className="text-center text-6xl pt-10 pb-40 font-Merriweather">Matchmaking</h1>
                 <div className="pb-12 flex flex-row items-center justify-center px-10">
                     <button type='button' id="singleplayer" onClick={(e) => startSinglePlayer(e, nav)} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
-                        Singler Player
+                        Single Player
                     </button>
                     <button type='button' id="multiplayer" onClick={((e) => startMultiplayerMatchmake(e, nav, userid, setOpenQueue, setOpenSnackbar))} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Multi Player

@@ -312,6 +312,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData0',
                 leftPlayer: 'jbadia',
                 leftPlayerScore: 5,
                 rightPlayer: 'gcollet',
@@ -327,6 +328,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData1',
                 leftPlayer: 'jvigneau',
                 leftPlayerScore: 200,
                 rightPlayer: 'tberube',
@@ -342,6 +344,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData2',
                 leftPlayer: 'tberube',
                 leftPlayerScore: 1,
                 rightPlayer: 'jvigneau',
@@ -357,6 +360,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData3',
                 leftPlayer: 'tberube',
                 leftPlayerScore: 2,
                 rightPlayer: 'gcollet',
@@ -372,6 +376,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData4',
                 leftPlayer: 'bperron',
                 leftPlayerScore: 1,
                 rightPlayer: 'jvigneau',
@@ -387,6 +392,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData5',
                 leftPlayer: 'bperron',
                 leftPlayerScore: 45,
                 rightPlayer: 'jvigneau',
@@ -402,6 +408,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData6',
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 5,
                 rightPlayer: 'gcollet',
@@ -417,6 +424,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData7',
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 2,
                 rightPlayer: 'jbadia',
@@ -432,6 +440,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData8',
                 leftPlayer: 'alvachon',
                 leftPlayerScore: 2,
                 rightPlayer: 'gcollet',
@@ -447,6 +456,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData9',
                 leftPlayer: 'jbadia',
                 leftPlayerScore: 2,
                 rightPlayer: 'alvachon',
@@ -462,6 +472,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData10',
                 leftPlayer: 'gehebert',
                 leftPlayerScore: 2,
                 rightPlayer: 'mleblanc',
@@ -475,8 +486,9 @@ async function main()
 
     try
     {
-        var game11 = await prisma.game.create({
+        await prisma.game.create({
             data: {
+                gameRoomID: 'testData11',
                 leftPlayer: 'gehebert',
                 leftPlayerScore: 1,
                 rightPlayer: 'jvigneau',
@@ -492,6 +504,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData12',
                 leftPlayer: 'jvillefr',
                 leftPlayerScore: 2,
                 rightPlayer: 'gehebert',
@@ -507,6 +520,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData13',
                 leftPlayer: 'gehebert',
                 leftPlayerScore: 5,
                 rightPlayer: 'jvillefr',
@@ -522,6 +536,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData14',
                 leftPlayer: 'jvillefr',
                 leftPlayerScore: 12,
                 rightPlayer: 'gehebert',
@@ -538,6 +553,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData15',
                 leftPlayer: 'bperron',
                 leftPlayerScore: 5,
                 rightPlayer: 'gcollet',
@@ -553,6 +569,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData16',
                 leftPlayer: 'jbadia',
                 leftPlayerScore: 1,
                 rightPlayer: 'bperron',
@@ -568,6 +585,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData17',
                 leftPlayer: 'bperron',
                 leftPlayerScore: 2,
                 rightPlayer: 'tberube',
@@ -583,6 +601,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData18',
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 4,
                 rightPlayer: 'alvachon',
@@ -598,6 +617,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData19',
                 leftPlayer: 'alvachon',
                 leftPlayerScore: 2,
                 rightPlayer: 'mleblanc',
@@ -613,6 +633,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData20',
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 6,
                 rightPlayer: 'gcollet',
@@ -628,6 +649,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData21',
                 leftPlayer: 'gcollet',
                 leftPlayerScore: 2,
                 rightPlayer: 'jbadia',
@@ -643,6 +665,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData22',
                 leftPlayer: 'tberube',
                 leftPlayerScore: 12,
                 rightPlayer: 'jbadia',
@@ -658,6 +681,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData23',
                 leftPlayer: 'tberube',
                 leftPlayerScore: 5,
                 rightPlayer: 'jvigneau',
@@ -673,6 +697,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData24',
                 leftPlayer: 'jvigneau',
                 leftPlayerScore: 12,
                 rightPlayer: 'mleblanc',
@@ -688,6 +713,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData25',
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 5,
                 rightPlayer: 'gehebert',
@@ -703,6 +729,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData26',
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 4,
                 rightPlayer: 'gehebert',
@@ -718,6 +745,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData27',
                 leftPlayer: 'mleblanc',
                 leftPlayerScore: 12,
                 rightPlayer: 'bperron',
@@ -733,6 +761,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData28',
                 leftPlayer: 'bperron',
                 leftPlayerScore: 11,
                 rightPlayer: 'jvigneau',
@@ -748,6 +777,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData29',
                 leftPlayer: 'jvigneau',
                 leftPlayerScore: 25,
                 rightPlayer: 'gehebert',
@@ -873,6 +903,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData30',
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 5,
                 rightPlayer: "jvigneau",
@@ -888,6 +919,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData31',
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 3,
                 rightPlayer: "jvigneau",
@@ -903,6 +935,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData32',
                 leftPlayer: "jvillefr",
                 leftPlayerScore: 5,
                 rightPlayer: evaluatorUsername,
@@ -918,6 +951,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData33',
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 3,
                 rightPlayer: "tberube",
@@ -933,6 +967,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData34',
                 leftPlayer: "tberube",
                 leftPlayerScore: 5,
                 rightPlayer: evaluatorUsername,
@@ -948,6 +983,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData35',
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 5,
                 rightPlayer: "jvigneau",
@@ -963,6 +999,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData36',
                 leftPlayer: "bperron",
                 leftPlayerScore: 2,
                 rightPlayer: evaluatorUsername,
@@ -978,6 +1015,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData37',
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 5,
                 rightPlayer: "gehebert",
@@ -993,6 +1031,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData38',
                 leftPlayer: "gehebert",
                 leftPlayerScore: 2,
                 rightPlayer: evaluatorUsername,
@@ -1008,6 +1047,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData39',
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 4,
                 rightPlayer: "gcollet",
@@ -1023,6 +1063,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData40',
                 leftPlayer: "mleblanc",
                 leftPlayerScore: 5,
                 rightPlayer: evaluatorUsername,
@@ -1038,6 +1079,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData41',
                 leftPlayer: "mleblanc",
                 leftPlayerScore: 3,
                 rightPlayer: evaluatorUsername,
@@ -1053,6 +1095,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData42',
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 4,
                 rightPlayer: "alvachon",
@@ -1068,6 +1111,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData43',
                 leftPlayer: "alvachon",
                 leftPlayerScore: 5,
                 rightPlayer: evaluatorUsername,
@@ -1083,6 +1127,7 @@ async function main()
     {
         await prisma.game.create({
             data: {
+                gameRoomID: 'testData44',
                 leftPlayer: evaluatorUsername,
                 leftPlayerScore: 4,
                 rightPlayer: "bperron",

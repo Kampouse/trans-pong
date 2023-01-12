@@ -39,7 +39,12 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
           <Link to="/Matchmaking" className=" ml-2 pl-3 font-Merriweather text-white">
             Play
           </Link>
-
+          <Link to="/Watch" className=" ml-2 pl-3 font-Merriweather text-white">
+            Spectate
+          </Link>
+          <Link to="/ColorOptions" className=" ml-2 pl-3 font-Merriweather text-white">
+            Game options
+          </Link>
           <ul className="  mr-auto flex flex-col pl-0"></ul>
         </div>
 

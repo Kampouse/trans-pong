@@ -50,7 +50,7 @@ export const Menu = (): React.ReactElement => {
             </Link>
           </ContenterLarge>
           <ContenterLarge>
-            <Link to="/ColorTest" className="relative h-full w-full">
+            <Link to="/ColorOptions" className="relative h-full w-full">
               <div className="mt-32 flex justify-center">
                 <SettingSvg />
               </div>
