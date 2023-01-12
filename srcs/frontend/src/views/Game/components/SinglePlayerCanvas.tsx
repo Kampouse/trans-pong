@@ -73,31 +73,26 @@ const SinglePlayerCanvas = () => {
 		return () => clearInterval(interval)    
   }, [])
 
-	const handleKeyDown = event => {
+	addEventListener("keydown", (event) => {
 		event.preventDefault();
 		if (event.key === 'w' || event.key === 'ArrowUp')
 			keyActions.up = true;
 		if (event.key === 's' || event.key === 'ArrowDown')
 			keyActions.down = true;
     console.log('User pressed: ', event.key);
-  };
+	});
 
-	const handleKeyUp = event => {
+	addEventListener("keyup", (event) => {
 		event.preventDefault();
 		if (event.key === 'w' || event.key === 'ArrowUp')
 			keyActions.up = false;
 		if (event.key === 's' || event.key === 'ArrowDown')
 			keyActions.down = false;
     console.log('User released: ', event.key);
-  };
+	});
 
   return (
-    <div
-			className="mx-auto w-full h-full pt-[50px]"
-			tabIndex={0}
-			onKeyDownCapture={handleKeyDown}
-			onKeyUpCapture={handleKeyUp}
-		>
+    <div className="mx-auto w-full h-full pt-[50px]">
       <div
         id="container"
         ref={div}
