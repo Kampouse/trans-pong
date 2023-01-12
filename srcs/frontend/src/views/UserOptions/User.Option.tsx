@@ -1,7 +1,7 @@
 import { Dialog } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 
-export function UserOption({open, onClose, userClicked})
+export function UserOption({open, onClose, userClicked, setValue})
 {
     //  Username of the user clicked and his profile path
     const username = userClicked.current;
@@ -34,7 +34,7 @@ export function UserOption({open, onClose, userClicked})
                     {username}
                 </h1>
                 <div className='py-4'>
-                    <button name='viewProfileButton' className={buttonCss} onClick={() =>{nav(redirect, {replace: true}); onClose();}}>
+                    <button name='viewProfileButton' className={buttonCss} onClick={() =>{nav(redirect, {replace: true}); onClose(); setValue("1");}}>
                         Profile page
                     </button>
                 </div>
