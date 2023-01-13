@@ -4,7 +4,7 @@ import { UserDto } from "./dto/user.dto";
 export class UserAPI {
   
   public static async isLoggedIn(): Promise<{loggedIn: boolean}> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/auth/isLogged`, {
+    const resp = await fetch(`http://10.42.42.10:5432/auth/isLogged`, {
       credentials: "include",
       method: "GET"
     });
@@ -13,14 +13,14 @@ export class UserAPI {
   }
   
   public static async logout(): Promise<void> {
-    await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/auth/logout`, {
+    await fetch(`http://10.42.42.10:5432/auth/logout`, {
       method: "DELETE", 
       credentials: "include",
     })
   }
   
   public static async getUserProfile(): Promise<UserDto | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/profile`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/profile`, {
         credentials: "include",
         method: "GET"
       });
@@ -29,7 +29,7 @@ export class UserAPI {
     }
 
   public static async getOneUserById(id: string): Promise<UserDto | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/${id}`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/${id}`, {
         credentials: "include",
         method: "GET"
       });
@@ -38,7 +38,7 @@ export class UserAPI {
     }
 
   public static async getAllUsers(): Promise<{users: UserDto[]}> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/`, {
         credentials: "include",
         method: "GET"
       });
@@ -47,7 +47,7 @@ export class UserAPI {
     }
 
     public static async addAvatar(formData: FormData): Promise<void> {
-      await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/avatar`, {
+      await fetch(`http://10.42.42.10:5432/users/avatar`, {
         credentials: "include",
         method: "POST",
         body: formData
@@ -56,7 +56,7 @@ export class UserAPI {
   }
 
   public static async getAllAvatars(): Promise<AvatarDto[] | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/avatars`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/avatars`, {
       credentials: "include",
       method: "GET"
     });
@@ -65,14 +65,14 @@ export class UserAPI {
   }
 
   public static async removeAvatar(id: number): Promise<void> {
-    await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/avatar/${id}`, {
+    await fetch(`http://10.42.42.10:5432/users/avatar/${id}`, {
         credentials: "include",
         method: "DELETE"
     })
   }
 
   public static async updateAvatar(id: number): Promise<UserDto | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/avatar/${id}`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/avatar/${id}`, {
       credentials: "include",
       method: "POST"
     });
@@ -81,7 +81,7 @@ export class UserAPI {
   }
 
   public static async updateName(name: string): Promise<UserDto | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/updateName`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/updateName`, {
       credentials: "include",
       method: "POST",
       headers: {'Content-Type': 'application/json'},
@@ -92,7 +92,7 @@ export class UserAPI {
   }
 
   public static async disableTfa(): Promise<UserDto | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/turnOffTfa`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/turnOffTfa`, {
       credentials: "include",
       method: "POST",
     });
@@ -101,7 +101,7 @@ export class UserAPI {
   }
 
   public static async generateQrCode(): Promise<Blob | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/auth/2fa/generate`, {
+    const resp = await fetch(`http://10.42.42.10:5432/auth/2fa/generate`, {
       credentials: "include",
       method: "GET",
     });
@@ -110,7 +110,7 @@ export class UserAPI {
   }
 
   public static async validateTfa(code: string): Promise<{valid: boolean}> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/auth/2fa/validate`, {
+    const resp = await fetch(`http://10.42.42.10:5432/auth/2fa/validate`, {
       credentials: "include",
       method: "POST",
       headers: {'Content-Type': 'application/json'},
@@ -121,7 +121,7 @@ export class UserAPI {
   }
 
   public static async addFriend(friendId: number): Promise<UserDto | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/friend`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/friend`, {
       credentials: "include",
       method: "POST",
       headers: {'Content-Type': 'application/json'},
@@ -132,7 +132,7 @@ export class UserAPI {
   }
 
   public static async removeFriend(friendId: number): Promise<UserDto | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/friend`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/friend`, {
       credentials: "include",
       method: "DELETE",
       headers: {'Content-Type': 'application/json'},
@@ -143,7 +143,7 @@ export class UserAPI {
   }
 
   public static async addBlock(blockedId: number): Promise<UserDto | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/blocked`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/blocked`, {
       credentials: "include",
       method: "POST",
       headers: {'Content-Type': 'application/json'},
@@ -154,7 +154,7 @@ export class UserAPI {
   }
 
   public static async removeBlock(blockedId: number): Promise<UserDto | null> {
-    const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/blocked`, {
+    const resp = await fetch(`http://10.42.42.10:5432/users/blocked`, {
       credentials: "include",
       method: "DELETE",
       headers: {'Content-Type': 'application/json'},

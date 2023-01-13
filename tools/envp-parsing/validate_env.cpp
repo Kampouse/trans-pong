@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_env.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aguay <aguay@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hbanthiy <marvin@42quebec.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:36:51 by aguay             #+#    #+#             */
-/*   Updated: 2023/01/12 14:44:51 by hbanthiy         ###   ########.fr       */
+/*   Updated: 2023/01/13 15:38:58 by hbanthiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,12 @@ bool	validate_db_url(std::string db_name, std::string username, std::string pass
 	}
 
 	//	Validate host and port
-	std::string host_port = db_url.substr(offset, 16);
-	offset += 16;
-	if (host_port != "@10.13.9.3:5432/")
+	std::string host_port = db_url.substr(offset, 18);
+	offset += 18;
+	if (host_port != "@10.42.42.10:5432/")
 	{
 		std::cout << "error var: db_url: host or port invalid" << std::endl;
-		std::cout << "expected = @10.13.9.3:5432/ and got " << host_port << std::endl;
+		std::cout << "expected = @10.42.42.10:5432/ and got " << host_port << std::endl;
 		return (false);
 	}
 

@@ -24,7 +24,7 @@ export class ChatAPI {
   public static async getRoomsFromUser(): Promise<{ rooms: RoomDto[] }> {
 
     const resp = await fetch(
-      `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/chat/userRooms`,
+      `http://10.42.42.10:5432/chat/userRooms`,
       {
         credentials: "include",
         method: "GET",
@@ -37,7 +37,7 @@ export class ChatAPI {
   public static async getPMsFromUser(): Promise<{ privateMsgs: PrivateMsgsDto[] }> {
 
     const resp = await fetch(
-      `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/chat/userPMs`,
+      `http://10.42.42.10:5432/chat/userPMs`,
       {
         credentials: "include",
         method: "GET",
@@ -50,7 +50,7 @@ export class ChatAPI {
   public static async getAllRoomNames(): Promise<{ rooms: string[] }> {
 
     const resp = await fetch(
-      `http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/chat/roomNames`,
+      `http://10.42.42.10:5432/chat/roomNames`,
       {
         credentials: "include",
         method: "GET",
