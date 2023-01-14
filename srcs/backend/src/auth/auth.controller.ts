@@ -31,6 +31,7 @@ export class AuthController {
         statCode: 302,
         url: "http://localhost:5173/ErrorLogin"
       }
+      console.log("Error occured during authentifcation", token)
       return ErrorLogin
     }
     const NewResponse = {

@@ -27,15 +27,15 @@ export class AuthService {
     }
 
     public process_poller = async (req: RequestWithUser, redirect_content: validateUser): Promise<string | null | Error> => {
-        let user = null;
+        let user = redirect_content?.user_validity?.user;
         try {
             if (!redirect_content.user_validity.user) {
                 user = await this.createUser(req)
             }
-            return await this.createToken(redirect_content.user_validity.user)
+            return await this.createToken(user)
         }
         catch {
-            return new Error("Error occured during authentifcation")
+            return new Error("User creation failed or token creation faile")
         }
     }
     public async redirect_poller(headers, req: RequestWithUser): Promise<validateUser> {
@@ -54,12 +54,15 @@ export class AuthService {
         }
     }
     async createToken(validate: string): Promise<string | null> {
+        console.log("User is valid?", validate)
         const user = await prisma.user.findUnique({ where: { login42: validate } })
         const secret = process.env.JWT_KEY; // private key for jwt should be in env
         const expiresIn = '1d';
         const token = this.jwtService.sign(
             { username: validate },
             { secret, expiresIn });
+
+        console.log("Token is valid?", user.login42)
         const output = await prisma.user.update({
             where: {
                 login42: user.login42
@@ -68,6 +71,7 @@ export class AuthService {
                 jwtToken: token
             }
         })
+        console.log("Token is valid?", output)
         return token
     }
 
