@@ -54,15 +54,12 @@ export class AuthService {
         }
     }
     async createToken(validate: string): Promise<string | null> {
-        console.log("User is valid?", validate)
         const user = await prisma.user.findUnique({ where: { login42: validate } })
         const secret = process.env.JWT_KEY; // private key for jwt should be in env
         const expiresIn = '1d';
         const token = this.jwtService.sign(
             { username: validate },
             { secret, expiresIn });
-
-        console.log("Token is valid?", user.login42)
         const output = await prisma.user.update({
             where: {
                 login42: user.login42
@@ -89,15 +86,21 @@ export class AuthService {
     }
 
     async doesUserExist(apiResponse: RequestWithUser): Promise<string> {
-        const user = await prisma.user.findUnique({
-            where:
-            {
-                login42: apiResponse.user.username
+        try {
+
+            const user = await prisma.user.findUnique({
+                where:
+                {
+                    login42: apiResponse.user.username
+                }
+            })
+            if (user) {
+                const login42 = user.login42;
+                return (login42);
             }
-        })
-        if (user) {
-            const login42 = user.login42;
-            return (login42);
+        }
+        catch (error) {
+            return (null)
         }
         return null;
     }
