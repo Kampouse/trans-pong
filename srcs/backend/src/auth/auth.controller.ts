@@ -1,59 +1,44 @@
-import { Controller, Get, Req, UseGuards, Redirect, Res} from '@nestjs/common';
+import { Controller, Get, Req, UseGuards, Redirect, Res, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { FortyTwoAuthGuard } from './utils/Guards';
 import { RequestWithUser, SessionUser } from "src/dtos/auth.dtos";
 
 @Controller('auth')
-export class AuthController
-{
-  constructor(private readonly authService: AuthService) {}
-  
+export class AuthController {
+  constructor(private readonly authService: AuthService) { }
+
   @Get('who')
-  async whoAmI(@Req() request: RequestWithUser, @Res() res)
-  {
-    const sessionStore = request['sessionStore'];
-    const type: SessionUser = sessionStore['sessions'];
-    const groups = { ...type };
-    const first = Object.values(groups)[0];
+  async whoAmI(@Req() request: RequestWithUser, @Res() res) {
+    if (request.user) {
+      return request.user;
+    }
+    res.status(401).send();
+    return { error: "No user found" };
 
-    //  Look if the 42api was used
-    if (first != undefined)
-    {
-        const parsed = JSON.parse(first);
-        const passport = parsed['passport'];
-        const token = await this.authService.createToken(passport['user']);
-        if (token != false)
-        {
-            console.log("token valid, sending it back")
-            res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true }).send();
-        }
-        else
-        {
-            res.status(401).send({ message: 'Unauthorized', status: '401' });
-        }
-    }
-    else
-    {
-        console.log("there is no session values.")
-        res.status(401).send({ message: 'Unauthorized', status: '401' });
-    }
   }
-
   @UseGuards(FortyTwoAuthGuard)
   @Get('42login')
   @Redirect()
-  async handleLogin42(@Req() request: RequestWithUser, @Res() res)
-  {
-    // Create the user with the 42api response
-    if (request)
-    {
-      let isOldUser = await this.authService.doesUserExist(request);
-
-      if (!isOldUser)
-      {
-        const user = await this.authService.createUser(request);
-      }
+  async handleLogin42(@Req() request: RequestWithUser, @Res() res, @Headers() headers) {
+    let redirect_content = await this.authService.redirect_poller(headers, request)
+    if (redirect_content.user_validity.user && redirect_content.user_validity.token) {
+      console.log("User is valid and token is valid", redirect_content)
+      return redirect_content.response
     }
-    return {statCode: 302, url: "http://localhost:5173/Profile" }
+    const token = await this.authService.process_poller(request, redirect_content)
+    if (token instanceof Error) {
+      const ErrorLogin = {
+        statCode: 302,
+        url: "http://localhost:5173/ErrorLogin"
+      }
+      return ErrorLogin
+    }
+    const NewResponse = {
+      statCode: 302,
+      url: "http://localhost:5173/Profile"
+    }
+    res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true })
+    redirect_content.response = NewResponse
+    return redirect_content.response
   }
 }

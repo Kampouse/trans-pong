@@ -17,12 +17,12 @@ export function generateSerial() {
 }
 
 export function Fetch(url: string) {
-    let  header = {
-      'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': 'true',
-    }
-     return fetch(url, {headers:header, credentials: 'include'})
-  
+  let header = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': 'true',
+  }
+  return fetch(url, { headers: header, credentials: 'include' })
+
 
 }

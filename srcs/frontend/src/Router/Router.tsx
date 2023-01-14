@@ -16,7 +16,7 @@ import Error404 from 'views/Error/Error404'
 import Chat from 'views/Chat/Chat'
 import { ChatRoom, User } from 'utils/types'
 import '@styles/main.css'
-import { generateSerial } from 'utils'
+import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
@@ -94,7 +94,7 @@ export default function App()
 //  Here we check with the backend if the user is authentificated
 const check = async () =>
 {
-    fetch('http://localhost:3000/auth/who')
+    Fetch('http://localhost:3000/auth/who')
       .then((response) => response.status)
       .then((status) =>
       {
