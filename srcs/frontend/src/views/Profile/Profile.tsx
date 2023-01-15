@@ -11,7 +11,7 @@ import { UserOption } from '../UserOptions/User.Option'
 import { GoogleReset } from 'views/GoogleAuth/google.reset';
 import { useNavigate } from 'react-router-dom';
 import Error404 from 'views/Error/Error404';
-
+import {Fetch } from 'utils';
 
 //  =============== User status         =============== //
 
@@ -51,14 +51,8 @@ const useFetch = (username) =>
 	const [profileReq, setProfileReq] = useState<any>(null);
 	
 	useEffect(() => {
-		fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "") , {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Credentials': 'true'
-			}
-		})
+		Fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "")
+		)
             .then((response) => response.json())
 			.then((data) => {
 				setProfileReq(data);

@@ -3,28 +3,28 @@ import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { prisma } from 'src/main'
 type validateUser = { response: { url: string, statCode: number }, user_validity: { token: boolean, user: string | null } }
-type tokenDatas  = { username: string, iat: number , exp: number }
+type tokenDatas = { username: string, iat: number, exp: number }
 @Injectable()
 export class AuthService {
     constructor(private jwtService: JwtService) { }
 
-    public  async validate_token(token: string) {
+    public async validate_token(token: string) {
         if (!token) {
-            return (false)
+            return (null)
         }
         try {
             const secret = process.env.JWT_KEY;
             const decoded = this.jwtService.verify(token, { secret }) as tokenDatas;
             if (decoded && decoded.username) {
-             const output =  await   this.doesUserExist(decoded.username)
+                const output = await this.doesUserExist(decoded.username)
                 if (output) {
-                    return (true)
+                    return (output)
                 }
             }
-            return (false);
+            return (null);
         }
         catch (error) {
-            return (false);
+            return (null);
         }
     }
 
@@ -42,7 +42,8 @@ export class AuthService {
     }
     public async redirect_poller(headers, req: RequestWithUser): Promise<validateUser> {
         const is_valid = await this.validate_token(headers.cookie?.split("=")[1])
-        const exist = await this.doesUserExist(req.user.username)
+        const user_data = await this.doesUserExist(req.user.username)
+
         return {
             response:
             {
@@ -51,7 +52,7 @@ export class AuthService {
             },
             user_validity:
             {
-                token: is_valid, user: exist
+                token: is_valid !== null ? true : false, user: user_data,
             }
         }
     }
@@ -108,7 +109,15 @@ export class AuthService {
     }
 
     public async authentificateSession(data: any): Promise<string> {
-        let request: RequestWithUser = data;
+        let request: Request = data;
+        const cookie_string = request.headers['cookie']?.split("=")[1]
+        if (cookie_string) {
+            const is_valid = await this.validate_token(cookie_string)
+            if (is_valid) {
+                console.log("User is valid:", is_valid)
+                return (is_valid)
+            }
+        }
 
         if (data == undefined) {
             return (null)
