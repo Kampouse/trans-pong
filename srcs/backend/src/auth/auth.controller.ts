@@ -11,9 +11,11 @@ export class AuthController {
   @ UseGuards(JwtGuard)
   async whoAmI(@Req() request: RequestWithUser, @Res() res) {
     if (request.user) {
-      return request.user;
+    
+          res.status(401).send();
+          return request.user;
+    
     }
-    //change this to a 401 error
     res.status(401).send();
     return { error: "No user found" };
 
