@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import '@styles/main.css'
-import { setDefaultResultOrder } from 'dns'
 import { login } from './login.42api'
 import { useAtom, atom } from 'jotai'
 import { useLogin } from 'Router/Router'
-import { Cookie } from '@mui/icons-material'
 import { Fetch } from 'utils'
 
 type DataIntput = {
@@ -29,23 +27,17 @@ export default function Login(Status)
         const button: HTMLButtonElement = event.currentTarget
     }
 	
-const localStorageLookup = async () => {
-  const data = localStorage.getItem('userData')
-  if (data) {
-     return data
-  }
-  return ""
-}
+
 
 //  Here we check if the client passed throught 42api
 const check = async () =>
 {
-    const localdata = await localStorageLookup()
     Fetch ('http://localhost:3000/auth/who').then((response) =>
     {
         if(response.status === 200)
         {
           setLogin('login')
+          navigate('/Menu')
         }
         else
         {
@@ -58,7 +50,6 @@ const loginOffline = () =>
 {
     setLogin('login')
 }
-
 // useEffect(() => { navigate(Navi)}, [])
   return (
     <div className="m-auto flex h-fit w-screen pb-[50px]">

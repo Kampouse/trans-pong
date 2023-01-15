@@ -105,6 +105,7 @@ const check = async () =>
         }
         else
         {
+          navigate('/')
             console.log("No user logged, please login.")
         }
       })
@@ -113,13 +114,12 @@ const check = async () =>
 useEffect(() => { check()}, [])
   return (
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
-      {login == 'login' ? (
         <>
           <main>
             <Nav Status={'f'} setStatus={setUser} setOpenSearchUser={setOpenSearchUser} searchUser={searchUser} setSearchUser={setSearchUser} />
           </main>
           <Routes>
-            <Route path="/" element={<Menu />} />
+            <Route path="/" element={<Login Status={login} />} />
             <Route path="/Menu" element={<Menu />} />
             <Route path="/Spectate" element={<SpectateMenu />} />
             <Route path="/Play" element={<Game />}></Route>
@@ -137,9 +137,6 @@ useEffect(() => { check()}, [])
                 <Route path="/ColorOptions" element={<ColorOptions/>}></Route>
             </Routes>
         </>
-      ) : (
-        <Login Status={login} />
-      )}
 			<SearchUser open={openSearchUser} onClose={() => {setOpenSearchUser(false); setSearchUser('')}} searchInput={searchUser} userClicked={userClicked} />
     </div>
   )
