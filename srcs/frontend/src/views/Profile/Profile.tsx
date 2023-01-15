@@ -56,7 +56,9 @@ const useFetch = (username) =>
             .then((response) => response.json())
 			.then((data) => {
 				setProfileReq(data);
-			})
+			}).catch((err) => {
+                    console.error(err);
+            })
 	}, [username])
 	return {profileReq};
 }
@@ -75,7 +77,7 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                     <div className="w-[26%] my-auto text-center"><p>Result</p></div>
                     <div className="w-[37%] my-auto text-center"><p>Right Player</p></div>
                     </li>
-                    {data.matchHistory.map((currentMatch) =>
+                    {  data.matchHistory && data.matchHistory.map((currentMatch) =>
                     {
                         return (
                                     <li className="flex py-4" key={currentMatch.updatedAt + currentMatch.winner}>
@@ -237,19 +239,21 @@ function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicke
 
 function Stats({data}: {data: any})
 {
-    var played = data.stats.played;
-    var win = data.stats.win;
-    var ratio = data.stats.winRatio;
+
+    let played = data?.stats?.played ? data?.stats?.played : 0;
+    let win = data?.stats?.win ? data?.stats?.win : 0;
+    let ratio = data?.stats?.winRatio ? data?.stats?.winRatio : 0;
     ratio = (ratio * 100).toPrecision(4) + ' %';
-    var leftPlayed = data.stats.leftPlayed;
-    var leftWin = data.stats.leftWin;
-    var leftRatio = data.stats.leftWinRatio;
+    let leftPlayed = data?.stats?.leftPlayed ? data?.stats?.leftPlayed : 0;
+    let leftWin = data?.stats?.leftWin ? data?.stats?.leftWin : 0;
+    let leftRatio = data?.stats?.leftWinRatio ? data?.stats?.leftWinRatio : 0;
     leftRatio = (leftRatio * 100).toPrecision(4) + ' %'
-    var rightPlayed = data.stats.rightPlayed;
-    var rightWin = data.stats.rightWin;
-    var rightRatio = data.stats.rightWinRatio;
+    let rightPlayed = data?.stats?.rightPlayed ? data?.stats?.rightPlayed : 0;
+    let rightWin = data?.stats?.rightWin ? data?.stats?.rightWin : 0;
+    let rightRatio = data?.stats?.rightWinRatio ? data?.stats?.rightWinRatio : 0;
+
     rightRatio = (rightRatio * 100).toPrecision(4) + ' %'
-    var classInfo = 'py-2 pl-16'
+    let classInfo = 'py-2 pl-16'
 
     return (
     <div className="h-[100%]">
@@ -547,16 +551,14 @@ export default function Profile()
 
     const { username } = useParams();
 		const {profileReq: data} = useFetch(username);
-
-    if (data && data.error == true)
-    {
-        return (<Error404></Error404>);
-    }
-
-		useEffect(() => {setValue("1")}, [username])
-
+ if(data && data?.statusCode && data.statusCode != 200)
+      {
+           data.error = true;
+           data.status = data.statusCode;
+      }
+    useEffect(() => {setValue("1")}, [username])
     return (
-    <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
+    <div  className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
         <div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
             {data && (
             <>
@@ -576,7 +578,7 @@ export default function Profile()
                 <div className='w-[50%] h-full flex mx-auto'>
                     <div className='h-fit my-auto'>
                         <p className='text-4xl font-Merriweather '>{ data.username }</p>
-                        <p className="text-lg font-Merriweather pt-2"><span className={getStatusCSS(data.status)}>●</span> {data.status[0].toUpperCase() + data.status.substring(1)}</p>
+                        <p className="text-lg font-Merriweather pt-2"><span className={getStatusCSS(data?.status)}>●</span> {data?.status[0]?.toUpperCase()}</p>
                     </div>
                 </div>
             </div>
