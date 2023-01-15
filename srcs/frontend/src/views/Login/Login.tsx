@@ -45,7 +45,7 @@ const check = async () =>
     {
         if(response.status === 200)
         {
-
+          setLogin('login')
         }
         else
         {

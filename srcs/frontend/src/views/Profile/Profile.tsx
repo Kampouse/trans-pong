@@ -556,7 +556,7 @@ export default function Profile()
            data.error = true;
            data.status = data.statusCode;
       }
-    useEffect(() => {setValue("1")}, [username])
+    useEffect(() => {}, [username])
     return (
     <div  className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
         <div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>

@@ -10,12 +10,12 @@ export class AuthController {
   @Get('who')
   @ UseGuards(JwtGuard)
   async whoAmI(@Req() request: RequestWithUser, @Res() res) {
-    if (request.user) {
-    
-          res.status(401).send();
-          return request.user;
-    
-    }
+     const output =  await this.authService.validate_token(request.headers['cookie'].split("=")[1])
+  if(output)
+     {
+      console.log("User is valid and token is valid", output)
+      res.status(200).send();
+     }
     res.status(401).send();
     return { error: "No user found" };
 
