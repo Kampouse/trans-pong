@@ -15,21 +15,22 @@ export class ProfileController {
     //  Get the private profile information of the user logged
     @Get()
     @UseGuards(JwtGuard)
-    async getProfileEdit(@Req() request: RequestWithUser): Promise<PrivateProfileDto> {
+    async getProfileEdit(@Req() request: RequestWithUser): Promise<PrivateProfileDto | Error> {
+        try {
         const login42 = await this.profileService.authentificate(request);
-        if (login42 == undefined) {
-            return (await this.profileService.getProfileEdit(undefined));
-        }
         const privateProfile: PrivateProfileDto = await this.profileService.getProfileEdit(login42);
         return (privateProfile);
+    } catch (error) {
+        return (Error ("Error: invalid token "));
     }
+}
 
     //  Get the public profile information of the username in /username
     @Get(':username')
     @Header('Content-type', 'application/json; charset=utf-8')
+    @UseGuards(JwtGuard)
     async getProfilePublic(@Param('username') username: string, @Req() request: RequestWithUser): Promise<PublicProfileDto> {
         const login42 = await this.profileService.authentificate(request);
-
         if (login42 == undefined || username == undefined) {
             return (await this.profileService.getProfilePublic(undefined));
         }
@@ -39,6 +40,7 @@ export class ProfileController {
 
     //  Return all active games
     @Get('/active/game')
+    @UseGuards(JwtGuard)
     async getActiveGame(@Res() res, @Req() request: RequestWithUser) {
         const login42 = await this.profileService.authentificate(request);
 
@@ -54,6 +56,7 @@ export class ProfileController {
 
     //  Return the auth activity in message
     @Get('/get/auth')
+    @UseGuards(JwtGuard)
     async getProfileAuth(@Res() res, @Req() request: RequestWithUser): Promise<ActiveGameDto> {
         const login42 = await this.profileService.authentificate(request);
 
@@ -73,6 +76,7 @@ export class ProfileController {
 
     //  Return the image path of the user
     @Get('/get/photo')
+    @UseGuards(JwtGuard)
     async getProfilePhoto(@Res() res, @Req() request: RequestWithUser): Promise<responseDefault> {
         const login42 = await this.profileService.authentificate(request);
 
@@ -91,6 +95,8 @@ export class ProfileController {
     }
 
     //  Return the image path of the user
+    //
+    @UseGuards(JwtGuard)
     @Get('/get/photo')
     async getAuth(@Res() res, @Req() request: RequestWithUser): Promise<responseDefault> {
         const login42 = await this.profileService.authentificate(request);
@@ -110,6 +116,7 @@ export class ProfileController {
     }
 
     //  Upload a photo and update photo path of a user
+    @UseGuards(JwtGuard)
     @Post('upload/photo')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
@@ -141,6 +148,8 @@ export class ProfileController {
     }
 
     //  Update the username of the user authentificated
+    
+    @UseGuards(JwtGuard)
     @Post('update/username')
     async updateUsername(@Res() res, @Body() newUsername: any, @Req() request: RequestWithUser): Promise<responseDefault> {
         const login42 = await this.profileService.authentificate(request);
@@ -162,6 +171,7 @@ export class ProfileController {
         return;
     }
 
+    @UseGuards(JwtGuard)
     @Get('/add/:username')
     @Header('Content-type', 'application/json; charset=utf-8')
     async addFriend(@Param('username') username: string, @Req() request: RequestWithUser): Promise<any> {
@@ -175,6 +185,8 @@ export class ProfileController {
         return;
     }
 
+
+    @UseGuards(JwtGuard)
     @Get('/deny/:username')
     @Header('Content-type', 'application/json; charset=utf-8')
     async denyRequest(@Param('username') username: string, @Req() request: RequestWithUser): Promise<any> {
@@ -188,6 +200,7 @@ export class ProfileController {
         return;
     }
 
+    @UseGuards(JwtGuard)
     @Get('/block/:username')
     @Header('Content-type', 'application/json; charset=utf-8')
     async blockUser(@Param('username') username: string, @Req() request: RequestWithUser): Promise<any> {
@@ -201,6 +214,10 @@ export class ProfileController {
         return;
     }
 
+
+
+
+    @UseGuards(JwtGuard)
     @Get('create/googleAuth')
     @Header('Content-type', 'application/json; charset=utf-8')
     async createAuth(@Req() request: RequestWithUser): Promise<any> {
@@ -212,6 +229,8 @@ export class ProfileController {
         return (this.profileService.createAuth(login42));
     }
 
+
+    @UseGuards(JwtGuard)
     @Post('create/validation')
     @Redirect()
     @Header('Content-type', 'application/json; charset=utf-8')
@@ -226,6 +245,7 @@ export class ProfileController {
         return { statCode: 302, url: "http://localhost:5173/Profile" }
     }
 
+    @UseGuards(JwtGuard)
     @Post('remove/authenticator')
     @Redirect()
     @Header('Content-type', 'application/json; charset=utf-8')
@@ -243,6 +263,7 @@ export class ProfileController {
     }
 
     //  Get currently logged in user ID
+    @UseGuards(JwtGuard)
     @Get('/get/userid')
     @Header('Content-type', 'application/json; charset=utf-8')
     async getUserId(@Req() request: RequestWithUser): Promise<any> {
@@ -262,6 +283,8 @@ export class ProfileController {
     }
 
     //  Get currently logged in user ID
+    
+   @UseGuards(JwtGuard) 
     @Get('/play/solo')
     @Header('Content-type', 'application/json; charset=utf-8')
     async getClientInfo(@Req() request: RequestWithUser): Promise<any> {

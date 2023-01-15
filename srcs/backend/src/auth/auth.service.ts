@@ -8,7 +8,7 @@ type tokenDatas = { username: string, iat: number, exp: number }
 export class AuthService {
     constructor(private jwtService: JwtService) { }
 
-    public async validate_token(token: string) {
+    public async validate_token(token: string) : Promise<string | null> {
         if (!token) {
             return (null)
         }
@@ -18,7 +18,7 @@ export class AuthService {
             if (decoded && decoded.username) {
                 const output = await this.doesUserExist(decoded.username)
                 if (output) {
-                    return (output)
+                    return (output as string)
                 }
             }
             return (null);
@@ -115,7 +115,7 @@ export class AuthService {
             const is_valid = await this.validate_token(cookie_string)
             if (is_valid) {
                 console.log("User is valid:", is_valid)
-                return (is_valid)
+                return (is_valid as string)
             }
         }
 

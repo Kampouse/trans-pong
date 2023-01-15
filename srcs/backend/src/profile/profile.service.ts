@@ -11,8 +11,7 @@ export class ProfileService
     @Inject(AuthService)
     private readonly authService: AuthService
 
-    async authentificate(data: any)
-    {
+    async authentificate(data: Request) : Promise<string> {
         return(await this.authService.authentificateSession(data));
     }
 
