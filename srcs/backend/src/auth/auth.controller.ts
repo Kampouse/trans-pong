@@ -1,6 +1,6 @@
 import { Controller, Get, Req, UseGuards, Redirect, Res, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { FortyTwoAuthGuard } from './utils/Guards';
+import { FortyTwoAuthGuard, JwtGuard } from './utils/Guards';
 import { RequestWithUser, SessionUser } from "src/dtos/auth.dtos";
 
 @Controller('auth')
@@ -8,10 +8,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   @Get('who')
+  @ UseGuards(JwtGuard)
   async whoAmI(@Req() request: RequestWithUser, @Res() res) {
     if (request.user) {
       return request.user;
     }
+    //change this to a 401 error
     res.status(401).send();
     return { error: "No user found" };
 

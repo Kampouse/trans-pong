@@ -1,5 +1,6 @@
+import { AuthService } from 'src/auth/auth.service';
 import { AuthGuard, PassportSerializer } from '@nestjs/passport';
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable,Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
 import { doesNotMatch } from 'assert';
@@ -18,16 +19,20 @@ export class FortyTwoAuthGuard extends AuthGuard('42') {
   }
 }
 //make an auth guard  from the jwt token 
+
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
+ Service = new AuthService(new JwtService)
   async canActivate(context: ExecutionContext): Promise<boolean> {
+
+    
     const request = context.switchToHttp().getRequest();
-    const token = request.headers.authorization;
+    const token = request.headers.cookie?.split("=")[1]
     try {
-        console.log('token', token);
-        let parsedToken = token;
-        const decoded = jwt.verify(parsedToken, 'secret');
-      return true;
+
+      console.log(token)
+      let status =  await this.Service.validate_token(token)
+      return status;
     } catch (err) {
       return false;
     }

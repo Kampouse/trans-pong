@@ -3,21 +3,23 @@ import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { prisma } from 'src/main'
 type validateUser = { response: { url: string, statCode: number }, user_validity: { token: boolean, user: string | null } }
-
+type tokenDatas  = { username: string, iat: number , exp: number }
 @Injectable()
 export class AuthService {
     constructor(private jwtService: JwtService) { }
 
-    public validate_token(input: string) {
-        let token = input
+    public  async validate_token(token: string) {
         if (!token) {
             return (false)
         }
         try {
             const secret = process.env.JWT_KEY;
-            const decoded = this.jwtService.verify(token, { secret });
-            if (decoded) {
-                return (true);
+            const decoded = this.jwtService.verify(token, { secret }) as tokenDatas;
+            if (decoded && decoded.username) {
+             const output =  await   this.doesUserExist(decoded.username)
+                if (output) {
+                    return (true)
+                }
             }
             return (false);
         }
@@ -39,8 +41,8 @@ export class AuthService {
         }
     }
     public async redirect_poller(headers, req: RequestWithUser): Promise<validateUser> {
-        const is_valid = this.validate_token(headers.cookie?.split("=")[1])
-        const exist = await this.doesUserExist(req)
+        const is_valid = await this.validate_token(headers.cookie?.split("=")[1])
+        const exist = await this.doesUserExist(req.user.username)
         return {
             response:
             {
@@ -85,13 +87,13 @@ export class AuthService {
         return (output?.login42)
     }
 
-    async doesUserExist(apiResponse: RequestWithUser): Promise<string> {
+    async doesUserExist(username: string): Promise<string> {
         try {
 
             const user = await prisma.user.findUnique({
                 where:
                 {
-                    login42: apiResponse.user.username
+                    login42: username
                 }
             })
             if (user) {
