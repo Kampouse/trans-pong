@@ -1,13 +1,14 @@
 import { Dialog } from "@mui/material";
 import { useEffect, useState } from "react";
 import QRCode from 'qrcode.react';
+import {Fetch } from 'utils';
 
 export function GoogleAuth({open, onClose})
 {
   const [qrCode, setQrCode] = useState<any>(null);
 
   useEffect(() => {
-    fetch('http://localhost:3000/profile/create/googleAuth')
+    Fetch('http://localhost:3000/profile/create/googleAuth')
       .then((response) => response.json())
       .then((data) => {
         setQrCode(data.QRcode);
