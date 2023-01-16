@@ -316,13 +316,7 @@ async function updateUsername(newUsername: any, data: any, setOpenSnackbar: any,
 {
     var username = {username: newUsername.value}
 
-    fetch("http://localhost:3000/profile/update/username", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json  "
-        },
-        body: JSON.stringify(username)
-    })
+    Fetch("http://localhost:3000/profile/update/username", "POST", JSON.stringify(username))
         .then(response => response.json())
         .then(res => {
             if (res.status == "200")

@@ -29,7 +29,7 @@ async function bootstrap() {
   app.enableCors({
     //origin: 'http://localhost:5173',
     origin: function (origin, callback) {
-      console.log(origin)
+      //console.log(origin)
       callback(null, true)},
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: [

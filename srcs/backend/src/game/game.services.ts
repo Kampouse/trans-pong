@@ -229,7 +229,7 @@ export class GameSocketIOService {
     constructor() {
         this.server = new io.Server(3001, {cors: {
             origin: function (origin, callback) {
-                console.log(origin)
+                //console.log(origin)
                 callback(null, true)},
             methods: ["GET", "POST", "PUT", "DELETE"]
           }});

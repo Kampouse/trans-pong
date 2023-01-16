@@ -164,6 +164,7 @@ export class ProfileController {
         //  Add userID validation when auth is done by JP
         const response = await this.profileService.updateUsername(newUsername.username, login42);
         if (response.error == true) {
+            console.log("shit happened")
             res.status(403).send({ message: response.message, status: '403' });
             return;
         }
