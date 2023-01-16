@@ -22,6 +22,7 @@ export function Fetch(url: string) {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Credentials': 'true',
   }
+
   return fetch(url, { headers: header, credentials: 'include' })
 
 

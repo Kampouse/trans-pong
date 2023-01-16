@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { useAtom } from 'jotai'
-import { useLogin } from "../../Router/Router";
-
-
+import { SearchUser, useLogin } from "../../Router/Router";
+import { useNavigate } from 'react-router'
+import { Fetch } from '../../utils'
 export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, setSearchUser}) {
+  const navigate = useNavigate();
   const [setLogin] = useAtom(useLogin)
-
+ const [status , setLog] = useAtom(useLogin)
 	const buttonHandler = ( func: () => void, event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     func();
@@ -14,6 +15,11 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
 
   const logout = () => 
   {
+    console.log('logout')
+     Fetch ('http://localhost:3000/auth/42logout')
+      setLog('logout')
+      navigate('/')
+     
     //  TODO: Call logout method here
   }
 
@@ -49,8 +55,8 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
             Chat
           </Link>
           <ul className="  mr-auto flex flex-col pl-0"></ul>
-        </div>
 
+        </div>
         <div className="relative flex items-center font-Merriweather">
             <button  onClick={(event) => buttonHandler(logout, event) } type="submit" className="pl-4" >Logout </button>
         </div>

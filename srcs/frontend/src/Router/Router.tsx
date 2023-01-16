@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, Children } from 'react'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 import { useNavigate } from 'react-router'
 import { Routes, Route } from 'react-router-dom'
@@ -18,6 +18,7 @@ import { ChatRoom, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
+import { jsx } from '@emotion/react'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -37,6 +38,34 @@ export interface SearchUserProps {
 	searchInput: string;
 	userClicked: React.MutableRefObject<User | null>;
 }
+
+
+
+
+interface WrapperProps {
+  children: React.ReactNode;
+}
+
+const Wrapper: React.FC<WrapperProps> = ({ children }) => {
+	const [user, setUser] = useState(myProfile)
+	const [login, setLogin] = useAtom(useLogin)
+  const [isLogin, setIsLogin] = useState(useLogin)
+	const [openSearchUser, setOpenSearchUser] = useState(false);
+	const [searchUser, setSearchUser] = useState('');
+	const [users, setUsers] = useAtom(useUsers);
+	const [rooms, setRooms] = useAtom(useRooms);
+	const userClicked = useRef<User | null>(null);
+	const navigate = useNavigate();
+  return (
+    <>
+        <main>
+            <Nav Status={'f'} setStatus={setUser} setOpenSearchUser={setOpenSearchUser} searchUser={searchUser} setSearchUser={setSearchUser} />
+          </main>
+        { isLogin &&  children }
+    </>
+  );
+}
+
 
 export function SearchUser({ open, onClose, searchInput, userClicked }: SearchUserProps) {
 	const [users, setUsers] = useAtom(useUsers);
@@ -113,31 +142,27 @@ const check = async () =>
 
 useEffect(() => { check()}, [])
   return (
-    <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
         <>
-          <main>
-            <Nav Status={'f'} setStatus={setUser} setOpenSearchUser={setOpenSearchUser} searchUser={searchUser} setSearchUser={setSearchUser} />
-          </main>
+    <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
           <Routes>
-            <Route path="/" element={<Login Status={login} />} />
-            <Route path="/Menu" element={<Menu />} />
-            <Route path="/Spectate" element={<SpectateMenu />} />
-            <Route path="/Play" element={<Game />}></Route>
-            <Route path="/MatchMaking" element={<Matchmaking />}></Route>
+           <Route path="/" element={  <Login Status={login} /> } />
+            <Route path="/Menu" element={ <Wrapper><Menu/></Wrapper>} />
+            <Route path="/Spectate" element={<Wrapper><SpectateMenu /> </Wrapper>} />
+            <Route path="/Play" element={ <Wrapper> <Game /> </Wrapper>}></Route>
+            <Route path="/MatchMaking" element={ <Wrapper><Matchmaking/></Wrapper>}></Route>
             <Route path="/Profile">
-                <Route path=":username" element={<Profile />} />
-                <Route path="" element={<Profile />} />
+                <Route path=":username" element={ <Wrapper> <Profile/></Wrapper>} />
+                <Route path="" element={  <Wrapper> <Profile/></Wrapper>} />
             </Route>
-            <Route path="/Chat" element={<Chat />}></Route>
+            <Route path="/Chat" element={<Wrapper> <Chat /></Wrapper>}></Route>
             <Route path="*" element={<Error404 />}></Route>
             <Route path="/Game">
-                <Route path="" element={<SinglePlayerCanvas/>}></Route>
-                <Route path=":id" element={<Game/>}></Route>
+                <Route path="" element={<Wrapper> <SinglePlayerCanvas/></Wrapper> }></Route>
+                <Route path=":id" element={<Wrapper><Game/></Wrapper>}></Route>
             </Route>
-                <Route path="/ColorOptions" element={<ColorOptions/>}></Route>
+                <Route path="/ColorOptions" element={ <Wrapper> <ColorOptions/> </Wrapper>}></Route>
             </Routes>
-        </>
-			<SearchUser open={openSearchUser} onClose={() => {setOpenSearchUser(false); setSearchUser('')}} searchInput={searchUser} userClicked={userClicked} />
-    </div>
-  )
+        </div>
+    </>
+   )
 }

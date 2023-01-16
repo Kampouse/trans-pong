@@ -29,12 +29,28 @@ export default function Login(Status)
 	
 
 
+const wifiStatus =  async() : Promise<boolean> =>
+{
+   try {
+      const output = await  fetch ('http://localhost:5173/http://hub.dummyapis.com/statuscode/200' )
+       return true
+   }
+   catch (error) {
+     console.log(error)
+      return false
+   }
+}
 //  Here we check if the client passed throught 42api
 const check = async () =>
 {
+   const isOnline = await wifiStatus()
+   console.log(isOnline)  
+  
+  if (isOnline)
+  {
     Fetch ('http://localhost:3000/auth/who').then((response) =>
     {
-        if(response.status === 200)
+      if(response.status === 200)
         {
           setLogin('login')
           navigate('/Menu')
@@ -44,6 +60,7 @@ const check = async () =>
             login() 
         }
     })
+  }
 }
 
 const loginOffline = () =>

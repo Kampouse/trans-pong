@@ -46,4 +46,10 @@ export class AuthController {
     redirect_content.response = NewResponse
     return redirect_content.response
   }
+  @Get('42logout')
+  async  logout(@Req() request: RequestWithUser, @Res() res) {
+    console.log("User logged out")
+    res.cookie('token', "", { httpOnly: true, sameSite: 'None', secure: true }).status(200).send();
+    return { message: "User logged out"}
+  }
 }
