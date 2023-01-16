@@ -162,14 +162,14 @@ function FriendList({userClicked, setOpenUserOptions, username}: {userClicked: R
 //  Accept request GET request
 async function acceptRequest(username: string)
 {
-    await fetch('http://localhost:3000/profile/add/' + username)
+    await Fetch('http://localhost:3000/profile/add/' + username)
     .then(function(){})
     .catch(function() {console.log("error on accept friend request fetch");});
 }
 
 async function denyRequest(username: string)
 {
-    await fetch('http://localhost:3000/profile/deny/' + username)
+    await Fetch('http://localhost:3000/profile/deny/' + username)
     .then(function(){})
     .catch(function() {console.log("error on deny request fetch");});
 }
@@ -340,9 +340,7 @@ async function updateUsername(newUsername: any, data: any, setOpenSnackbar: any,
 
 async function getPhoto(data: any)
 {
-    await fetch("http://localhost:3000/profile/get/photo", {
-        method: "GET",
-    })
+    await Fetch("http://localhost:3000/profile/get/photo")
         .then(response => response.json())
         .then(res =>
             {
@@ -356,9 +354,7 @@ async function getPhoto(data: any)
 
 async function getAuth(data: any, setOpenSnackbar, snackbarMsg, snackbarSeverity)
 {
-    await fetch("http://localhost:3000/profile/get/auth", {
-        method: "GET",
-    })
+    await Fetch("http://localhost:3000/profile/get/auth")
         .then(response => response.json())
         .then(res => {
             if (res.message == "active")
