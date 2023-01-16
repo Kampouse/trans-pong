@@ -1,5 +1,6 @@
 import { Dialog } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
+import {Fetch } from 'utils';
 
 export function UserOption({open, onClose, userClicked, setValue})
 {
@@ -15,14 +16,14 @@ export function UserOption({open, onClose, userClicked, setValue})
     //  Get request for adding a friend
     async function addFriend(username: string)
     {
-        await fetch('http://localhost:3000/profile/add/' + username)
+        await Fetch('http://localhost:3000/profile/add/' + username)
         .then(function(){})
         .catch(function() {console.log("error on adding " + username);});
     }
 
     async function blockUser(username: string)
     {
-        await fetch('http://localhost:3000/profile/block/' + username)
+        await Fetch('http://localhost:3000/profile/block/' + username)
         .then(function(){})
         .catch(function() {console.log("error on blocking " + username);});
     }
