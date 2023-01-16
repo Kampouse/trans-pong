@@ -36,7 +36,7 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
           aria-label="Toggle navigation"
         ></button>
         <div className=" grow " id="navbarSupportedContent1">
-          <Link to="/" className="font-Merriweather text-xl text-white">
+          <Link to="/Menu" className="font-Merriweather text-xl text-white">
             Transcendence
           </Link>
           <Link to={"/Profile"} className=" ml-2 pl-3 font-Merriweather text-white">

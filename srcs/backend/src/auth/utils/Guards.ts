@@ -19,7 +19,6 @@ export class FortyTwoAuthGuard extends AuthGuard('42') {
   }
 }
 //make an auth guard  from the jwt token 
-
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
   Service = new AuthService(new JwtService)
@@ -29,8 +28,6 @@ export class JwtGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const token = request.headers.cookie?.split("=")[1]
     try {
-
-      console.log(token)
       let status = await this.Service.validate_token(token)
       return status !== null ? true : false;
     } catch (err) {
@@ -57,4 +54,3 @@ export class SessionSerializer extends PassportSerializer {
     done(null, payload);
   }
 }
-

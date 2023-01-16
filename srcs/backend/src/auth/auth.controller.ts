@@ -8,14 +8,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   @Get('who')
-  @ UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   async whoAmI(@Req() request: RequestWithUser, @Res() res) {
-     const output =  await this.authService.validate_token(request.headers['cookie'].split("=")[1])
-  if(output)
-     {
-      console.log("User is valid and token is valid", output)
+    const output = await this.authService.validate_token(request.headers['cookie'].split("=")[1])
+    if (output) {
       res.status(200).send();
-     }
+    }
     res.status(401).send();
     return { error: "No user found" };
 
@@ -47,9 +45,8 @@ export class AuthController {
     return redirect_content.response
   }
   @Get('42logout')
-  async  logout(@Req() request: RequestWithUser, @Res() res) {
-    console.log("User logged out")
+  async logout(@Req() request: RequestWithUser, @Res() res) {
     res.cookie('token', "", { httpOnly: true, sameSite: 'None', secure: true }).status(200).send();
-    return { message: "User logged out"}
+    return { message: "User logged out" }
   }
 }

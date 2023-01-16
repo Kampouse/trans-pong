@@ -8,7 +8,7 @@ type tokenDatas = { username: string, iat: number, exp: number }
 export class AuthService {
     constructor(private jwtService: JwtService) { }
 
-    public async validate_token(token: string) : Promise<string | null> {
+    public async validate_token(token: string): Promise<string | null> {
         if (!token) {
             return (null)
         }
@@ -71,7 +71,6 @@ export class AuthService {
                 jwtToken: token
             }
         })
-        console.log("Token is valid?", output)
         return token
     }
 
@@ -114,79 +113,11 @@ export class AuthService {
         if (cookie_string) {
             const is_valid = await this.validate_token(cookie_string)
             if (is_valid) {
-                console.log("User is valid:", is_valid)
                 return (is_valid as string)
             }
         }
-
-        if (data == undefined) {
+        else {
             return (null)
         }
-
-        const sessionStore = request['sessionStore'];
-
-        if (sessionStore == undefined) {
-            return (null)
-        }
-
-        const type: SessionUser = sessionStore['sessions'];
-
-        if (type == undefined) {
-            return (null)
-        }
-
-        const groups = { ...type };
-
-        if (groups == undefined) {
-            return (null)
-        }
-
-        const js = Object.values(groups)[0];
-
-        if (js == undefined) {
-            return (null)
-        }
-
-        const parsed = JSON.parse(js);
-
-        if (parsed == undefined) {
-            return (null)
-        }
-
-        const passport = parsed['passport'];
-
-        if (passport == undefined) {
-            return (null)
-        }
-
-        const username = passport.user.username;
-
-        if (username == undefined) {
-            return (null)
-        }
-
-        //  Validate if the username already has a tokken
-
-        const user = await prisma.user.findUnique({
-            where: {
-                login42: username
-            }
-        })
-
-        //  If the user did not dosent exist, username got spoof
-        if (!user) {
-            //  Log ip of spoof try here in real life project and black list IP
-            return (null)
-        }
-
-        if (user.jwtToken) {
-            if (this.validate_token(user.jwtToken)) {
-                //  Refresh token here if the tokken is valid
-                //  TODO: add refresh token here
-                await prisma.$disconnect();
-                return (username);
-            }
-        }
-        return (null)
     }
 }

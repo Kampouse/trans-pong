@@ -18,7 +18,6 @@ import { ChatRoom, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
-import { jsx } from '@emotion/react'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -31,16 +30,12 @@ export const usePaddleColor = atom('#ffffff')
 export const getUserDetails = () =>
 {
 }
-
 export interface SearchUserProps {
 	open: boolean;
 	onClose: () => void;
 	searchInput: string;
 	userClicked: React.MutableRefObject<User | null>;
 }
-
-
-
 
 interface WrapperProps {
   children: React.ReactNode;
@@ -65,8 +60,6 @@ const Wrapper: React.FC<WrapperProps> = ({ children }) => {
     </>
   );
 }
-
-
 export function SearchUser({ open, onClose, searchInput, userClicked }: SearchUserProps) {
 	const [users, setUsers] = useAtom(useUsers);
 	const usersList: User[] = users.filter((user: User) => {return user.username.search(searchInput.toLowerCase()) > -1});
