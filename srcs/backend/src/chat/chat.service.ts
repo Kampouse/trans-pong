@@ -6,59 +6,60 @@ import { hashPwd } from './helper/bcrypt';
 import { User } from '.prisma/client';
 
 export class MessageDto {
-  userId : string;
-  userName : string;
-  message : string;
-};
+  userId: string;
+  userName: string;
+  message: string;
+}
 
 export class PrivateMsgsDto {
-  user : User;
-  messages : Array<MessageDto>;
-};
+  user: User;
+  messages: Array<MessageDto>;
+}
 
 export class RoomDto {
-  roomName : string;
-  owner : string;
-  admins : Array<string>;
-  users : Array<User>;
-  messages : Array<MessageDto>;
-  password : string;
-  mutedMap : Map<string, string>;
-  banMap : Map<string,string>;
-};
+  roomName: string;
+  owner: string;
+  admins: Array<string>;
+  users: Array<User>;
+  messages: Array<MessageDto>;
+  password: string;
+  mutedMap: Map<string, string>;
+  banMap: Map<string, string>;
+}
 
 export class RoomReturnDto {
-  roomName : string;
-  owner : string;
-  admins : Array<string>;
-  users : Array<User>;
-  messages : Array<MessageDto>;
-};
+  roomName: string;
+  owner: string;
+  admins: Array<string>;
+  users: Array<User>;
+  messages: Array<MessageDto>;
+}
 
 @Injectable()
 export class ChatService {
+  constructor(
+    private userService: ProfileService,
+    private authService: AuthService,
+  ) {
+    this.RoomList = new Map();
+    this.PrivateMsgList = new Map();
+  }
 
-    constructor(
-      private userService: ProfileService, 
-      private authService: AuthService
-    ) {
-      this.RoomList = new Map();
-      this.PrivateMsgList = new Map();
+  public RoomList: Map<string, RoomDto>;
+  public PrivateMsgList: Map<string, PrivateMsgsDto[]>;
 
-    }
+  /*
+   **
+   ** @Gateway
+   **
+   */
+  /*********************** CREATE ROOM  ************************/
 
-    public RoomList: Map<string, RoomDto>;
-    public PrivateMsgList: Map<string, PrivateMsgsDto[]>;
-
-    /*
-    **
-    ** @Gateway
-    **
-    */
-               /*********************** CREATE ROOM  ************************/
-
-
-  async createRoom(roomName: string, password: string, user: User): Promise<RoomDto> {
+  async createRoom(
+    roomName: string,
+    password: string,
+    user: User,
+  ): Promise<RoomDto> {
     const roomDto = new RoomDto();
 
     roomDto.roomName = roomName;
@@ -68,8 +69,7 @@ export class ChatService {
     roomDto.messages = [];
     if (password && password !== '') {
       roomDto.password = await hashPwd(password);
-    }
-    else {
+    } else {
       roomDto.password = password;
     }
     roomDto.mutedMap = new Map();
@@ -80,22 +80,21 @@ export class ChatService {
     return roomDto;
   }
 
-                   /*********************** JOIN ROOM  ************************/
-
+  /*********************** JOIN ROOM  ************************/
 
   addToRoom(user: User, room: RoomDto) {
-    if (room.users.find(({userID}) => userID === user.userID )) {
-      return ;
+    if (room.users.find(({ userID }) => userID === user.userID)) {
+      return;
     }
 
     room.users.push(user);
     this.RoomList.set(room.roomName.toUpperCase(), room);
 
     const sockets: Socket[] = this.authService.getSocketsFromUser(user.userID);
-    sockets.forEach(socket => socket.join(room.roomName));
+    sockets.forEach((socket) => socket.join(room.roomName));
   }
 
-      /*********************** SEND MESSAGE ROOM && PRIVATE MESSAGE ************************/
+  /*********************** SEND MESSAGE ROOM && PRIVATE MESSAGE ************************/
 
   addNewRoomMessage(room: RoomDto, user: User, message: string): MessageDto {
     const messageDto: MessageDto = new MessageDto();
@@ -108,11 +107,10 @@ export class ChatService {
     return messageDto;
   }
 
-       /*********************** LEAVE ROOM  ************************/
-
+  /*********************** LEAVE ROOM  ************************/
 
   leaveRoom(userId: string, room: RoomDto) {
-    const userIndex = room.users.findIndex(({userID}) => userID === userId);
+    const userIndex = room.users.findIndex(({ userID }) => userID === userId);
 
     if (userIndex > -1) {
       room.users.splice(userIndex, 1);
@@ -127,27 +125,27 @@ export class ChatService {
     this.RoomList.set(room.roomName.toUpperCase(), room);
 
     const sockets: Socket[] = this.authService.getSocketsFromUser(userId);
-    sockets.forEach((socket) => { socket.leave(room.roomName) });
+    sockets.forEach((socket) => {
+      socket.leave(room.roomName);
+    });
   }
 
   destroyRoom(room: RoomDto) {
-   this.RoomList.delete(room.roomName.toUpperCase());
+    this.RoomList.delete(room.roomName.toUpperCase());
   }
 
-       /*********************** CHANGE PW ************************/
+  /*********************** CHANGE PW ************************/
 
   async changePassword(roomDto: RoomDto, password: string) {
     if (password === '') {
       roomDto.password = '';
-    }
-    else {
+    } else {
       roomDto.password = await hashPwd(password);
     }
     this.RoomList.set(roomDto.roomName.toUpperCase(), roomDto);
   }
 
-
-    /*********************** Set Admin  ************************/
+  /*********************** Set Admin  ************************/
 
   setAdmin(roomDto: RoomDto, userId: string) {
     if (!this.isAdminFromRoom(userId, roomDto)) {
@@ -164,14 +162,12 @@ export class ChatService {
     }
 
     this.RoomList.set(roomDto.roomName.toUpperCase(), roomDto);
-
   }
 
   setBanTime(roomDto: RoomDto, userId: string, time: number) {
     if (time <= 0) {
       roomDto.banMap.delete(userId);
-    }
-    else {
+    } else {
       roomDto.banMap.set(userId, (time * 60 * 1000 + Date.now()).toString());
     }
     this.RoomList.set(roomDto.roomName.toUpperCase(), roomDto);
@@ -180,8 +176,7 @@ export class ChatService {
   setMuteTime(roomDto: RoomDto, userId: string, time: number) {
     if (time === 0) {
       roomDto.mutedMap.delete(userId);
-    }
-    else {
+    } else {
       roomDto.mutedMap.set(userId, (time * 60 * 1000 + Date.now()).toString());
     }
     this.RoomList.set(roomDto.roomName.toUpperCase(), roomDto);
@@ -191,26 +186,27 @@ export class ChatService {
     let allSenderMsgs = this.PrivateMsgList.get(sender.userID);
     let allReceiverMsgs = this.PrivateMsgList.get(receiver.userID);
 
-
     if (!allSenderMsgs) {
-      allSenderMsgs = [{user: receiver, messages: []}]
-    }
-    else {
-      const userMessagesIdx = allSenderMsgs.findIndex(({user}) => user.userID === receiver.userID );
+      allSenderMsgs = [{ user: receiver, messages: [] }];
+    } else {
+      const userMessagesIdx = allSenderMsgs.findIndex(
+        ({ user }) => user.userID === receiver.userID,
+      );
 
       if (userMessagesIdx < 0) {
-        allSenderMsgs.push({user: receiver, messages: []});
+        allSenderMsgs.push({ user: receiver, messages: [] });
       }
     }
 
     if (!allReceiverMsgs) {
-      allReceiverMsgs = [{user: sender, messages: []}]
-    }
-    else {
-      const userMessagesIdx = allReceiverMsgs.findIndex(({user}) => user.userID === sender.userID );
+      allReceiverMsgs = [{ user: sender, messages: [] }];
+    } else {
+      const userMessagesIdx = allReceiverMsgs.findIndex(
+        ({ user }) => user.userID === sender.userID,
+      );
 
       if (userMessagesIdx < 0) {
-        allReceiverMsgs.push({user: sender, messages: []});
+        allReceiverMsgs.push({ user: sender, messages: [] });
       }
     }
 
@@ -219,16 +215,20 @@ export class ChatService {
   }
 
   addPrivateMessage(sender: User, receiver: User, message: string): MessageDto {
-    let allSenderMsgs = this.PrivateMsgList.get(sender.userID);
-    let allReceiverMsgs = this.PrivateMsgList.get(receiver.userID);
+    const allSenderMsgs = this.PrivateMsgList.get(sender.userID);
+    const allReceiverMsgs = this.PrivateMsgList.get(receiver.userID);
 
     const messageDto: MessageDto = new MessageDto();
     messageDto.message = message;
     messageDto.userId = sender.userID;
     messageDto.userName = sender.username;
 
-    allSenderMsgs.find(({user}) => user.userID === receiver.userID ).messages.push(messageDto);
-    allReceiverMsgs.find(({user}) => user.userID === sender.userID ).messages.push(messageDto);
+    allSenderMsgs
+      .find(({ user }) => user.userID === receiver.userID)
+      .messages.push(messageDto);
+    allReceiverMsgs
+      .find(({ user }) => user.userID === sender.userID)
+      .messages.push(messageDto);
 
     this.PrivateMsgList.set(sender.userID, allSenderMsgs);
     this.PrivateMsgList.set(receiver.userID, allReceiverMsgs);
@@ -236,32 +236,33 @@ export class ChatService {
   }
 
   /*
-  **
-  ** @Controller
-  **
-  */
+   **
+   ** @Controller
+   **
+   */
 
-  getAllRoomsFromUser(userId : string): RoomDto[] {
-    const userRooms = new Array<RoomDto>;
-    this.RoomList.forEach((value) => { value.users.find( ({userID}) => userID === userId ) && userRooms.push(value); })
+  getAllRoomsFromUser(userId: string): RoomDto[] {
+    const userRooms = new Array<RoomDto>();
+    this.RoomList.forEach((value) => {
+      value.users.find(({ userID }) => userID === userId) &&
+        userRooms.push(value);
+    });
     return userRooms;
   }
 
-
-
   /* all room list string room name */
   getAllRoomNames(): string[] {
-    const roomNames = new Array<string>;
-    this.RoomList.forEach(element => roomNames.push(element.roomName));
+    const roomNames = new Array<string>();
+    this.RoomList.forEach((element) => roomNames.push(element.roomName));
     return roomNames;
   }
 
   /*
-  **
-  ** @Utils
-  **
-  */
- 
+   **
+   ** @Utils
+   **
+   */
+
   getUserPrivateMsgs(userId: string) {
     return this.PrivateMsgList.get(userId);
   }
@@ -272,11 +273,11 @@ export class ChatService {
   }
 
   getRoomFromName(name: string): RoomDto {
-    return (this.RoomList.get(name.toUpperCase()));
+    return this.RoomList.get(name.toUpperCase());
   }
 
   isBanned(roomDto: RoomDto, userId: string): boolean {
-    const time: number = Number(roomDto.banMap.get(userId));
+    const time = Number(roomDto.banMap.get(userId));
     if (!time) {
       return false;
     }
@@ -289,7 +290,7 @@ export class ChatService {
   }
 
   isMuted(roomDto: RoomDto, userId: string): boolean {
-    const time: number = Number(roomDto.mutedMap.get(userId));
+    const time = Number(roomDto.mutedMap.get(userId));
     if (!time) {
       return false;
     }
@@ -302,7 +303,7 @@ export class ChatService {
   }
 
   roomExist(roomName: string): boolean {
-    return (this.RoomList.has(roomName.toUpperCase()));
+    return this.RoomList.has(roomName.toUpperCase());
   }
 
   getReturnRoom(roomDto: RoomDto): RoomReturnDto {
@@ -324,13 +325,16 @@ export class ChatService {
   async addSocketToRooms(socket: Socket) {
     const user: User = await this.authService.getUserFromSocket(socket);
     if (!user) {
-      return ;
+      return;
     }
 
-    this.RoomList.forEach((value) => { value.users.find( ({userID}) => userID === user.userID ) && socket.join(value.roomName); });
+    this.RoomList.forEach((value) => {
+      value.users.find(({ userID }) => userID === user.userID) &&
+        socket.join(value.roomName);
+    });
   }
 
   isAdminFromRoom(userId: string, roomDto: RoomDto): boolean {
-    return (roomDto.admins.find(id => id === userId)? true : false);
+    return roomDto.admins.find((id) => id === userId) ? true : false;
   }
 }

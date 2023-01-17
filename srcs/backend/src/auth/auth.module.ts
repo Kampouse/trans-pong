@@ -14,14 +14,15 @@ import { ProfileModule } from 'src/profile/profile.module';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports:
-    [
+  imports: [
     ProfileModule,
     PassportModule,
-    JwtModule.register({secret: "this is a secret",signOptions: { expiresIn: '60s' },}),
-    ],
-  providers:
-    [
+    JwtModule.register({
+      secret: 'this is a secret',
+      signOptions: { expiresIn: '60s' },
+    }),
+  ],
+  providers: [
     AuthService,
     JwtService,
     GoogleAuthGuard,
@@ -29,8 +30,8 @@ import { PassportModule } from '@nestjs/passport';
     FortyTwoAuthGuard,
     SessionSerializer,
     JwtGuard,
-    ],
-    controllers: [AuthController],
-    exports: [AuthService],
+  ],
+  controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -14,30 +14,27 @@ import { ChatController } from './chat/chat.controller';
 import { ChatModule } from './chat/chat.module';
 import { ProfileModule } from './profile/profile.module';
 
+@Module({
+  //  Module imports
+  imports: [
+    ConfigModule.forRoot(),
+    AuthModule,
+    ChatModule,
+    ProfileModule,
+    MulterModule.register({ dest: '../frontend/public' }),
+  ],
 
+  //  Controllers imports
+  controllers: [AuthController, ProfileController],
 
-@Module(
-    {
-        //  Module imports
-        imports:[
-            ConfigModule.forRoot(),
-            AuthModule,
-            ChatModule,
-            ProfileModule,
-            MulterModule.register({ dest: '../frontend/public' })],
-            
-        //  Controllers imports
-        controllers:[
-            AuthController,
-            ProfileController],
-
-        //  Services imports
-        providers:[
-            AuthService,
-            ProfileService,
-            ChatService,
-            AuthService,
-            JwtService,
-            AppService,]
+  //  Services imports
+  providers: [
+    AuthService,
+    ProfileService,
+    ChatService,
+    AuthService,
+    JwtService,
+    AppService,
+  ],
 })
 export class AppModule {}
