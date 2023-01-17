@@ -70,6 +70,9 @@ export class GameSocketIOController {
                 socket.join(roomID);
                 socket.emit("roomIsReady")
             })
+            socket.on("ping", (userid) => {
+                //code for pings here with shit
+            })
         })
 
         server.on("disconnect", () => {
