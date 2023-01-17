@@ -24,7 +24,7 @@ const startPrisma = async () => {
 
 var updateStatusInterval = setInterval( async () => {
   const users = await prisma.user.findMany({where: {userStatus: "online"}})
-  //finish this shit later
+  //finish this shit later, socket is done
 }, 60000)
 
 export const prisma = global.prisma || new PrismaClient({ log: ['info'] });
@@ -34,9 +34,8 @@ async function bootstrap() {
   app.enableCors({
     //origin: 'http://localhost:5173',
     origin: function (origin, callback) {
-      //console.log(origin)
-      console.log(callback)
-      callback(null, true)},
+      callback(null, true)
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: [
       'Content-Type',

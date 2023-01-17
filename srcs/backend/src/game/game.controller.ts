@@ -1,6 +1,7 @@
 import { Controller, Get, Req, Redirect, Res, Param } from "@nestjs/common";
 import { GameRoom, GameSocketIOService, Player } from "./game.services";
 import { RequestWithUser } from "src/dtos/auth.dtos";
+import { prisma } from 'src/main'
 
 @Controller()
 export class GameSocketIOController {
@@ -70,8 +71,17 @@ export class GameSocketIOController {
                 socket.join(roomID);
                 socket.emit("roomIsReady")
             })
-            socket.on("ping", (userid) => {
+            socket.on("ping", async (userid) => {
                 //code for pings here with shit
+                const user = await prisma.user.findUnique({where: {userID: userid}})
+                if (user.userStatus == "playing")
+                    await prisma.user.update({where: {userID: userid}, data:{
+                        userStatus: "playing"
+                    }})
+                else if (user.userStatus == "online")
+                await prisma.user.update({where: {userID: userid}, data:{
+                    userStatus: "online"
+                }})
             })
         })
 
