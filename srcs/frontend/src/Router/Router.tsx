@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, Children } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
+import { UserDto } from 'utils/user.dto'
 import { useNavigate } from 'react-router'
 import { Routes, Route } from 'react-router-dom'
 import { useAtom, atom } from 'jotai'
@@ -18,6 +19,9 @@ import { ChatRoom, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
+import { WebsocketContext, WebsocketProvider } from 'context/WebSocketContext'
+
+
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -98,6 +102,9 @@ export const myProfile = atom({
   userId: ''
 })
 
+export const UserContext = React.createContext<UserDto | null >(null);
+export const SetUserContext = React.createContext<any>(null);
+
 export default function App()
 {
 	const [user, setUser] = useState(myProfile)
@@ -108,14 +115,15 @@ export default function App()
 	const [rooms, setRooms] = useAtom(useRooms);
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
+  const socket = useContext(WebsocketContext);
 
 	// const [ballColor, setBallColor] = useAtom(useBallColor)
 	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
 	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
 
-//  Here we check with the backend if the user is authentificated
-const check = async () =>
-{
+  //  Here we check with the backend if the user is authentificated
+  const check = async () =>
+  {
     Fetch('http://localhost:3000/auth/who')
       .then((response) => response.status)
       .then((status) =>
@@ -124,6 +132,7 @@ const check = async () =>
         {
             console.log("User is authentificated, proceed to open the dashboard")
             setLogin('login')
+            socket.emit("userUpdate")
         }
         else
         {
@@ -131,10 +140,11 @@ const check = async () =>
             console.log("No user logged, please login.")
         }
       })
-}
+  }
 
-useEffect(() => { check()}, [])
-  return (
+
+  useEffect(() => { check()}, [])
+    return (
         <>
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
           <Routes>
