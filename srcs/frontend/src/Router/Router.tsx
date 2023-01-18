@@ -20,6 +20,7 @@ import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
 import { WebsocketContext, WebsocketProvider } from 'context/WebSocketContext'
+import { UserAPI } from 'api/user.api'
 
 
 export const useLogin = atom('should login')
@@ -107,50 +108,96 @@ export const SetUserContext = React.createContext<any>(null);
 
 export default function App()
 {
-	const [user, setUser] = useState(myProfile)
-	const [login, setLogin] = useAtom(useLogin)
+	//const [user, setUser] = useState(myProfile)
+	//const [login, setLogin] = useAtom(useLogin)
 	const [openSearchUser, setOpenSearchUser] = useState(false);
 	const [searchUser, setSearchUser] = useState('');
 	const [users, setUsers] = useAtom(useUsers);
 	const [rooms, setRooms] = useAtom(useRooms);
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
-  
-  const socket = useContext(WebsocketContext);
 
+  const [user, setUser] = React.useState<UserDto | null>(null);
+  const socket = useContext(WebsocketContext);
+  const [loggedIn, setLoggedIn] = React.useState(false);
 
 	// const [ballColor, setBallColor] = useAtom(useBallColor)
 	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
 	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
 
   //  Here we check with the backend if the user is authentificated
-  const check = async () =>
-  {
-    Fetch('http://localhost:3000/auth/who')
-      .then((response) => response.status)
-      .then((status) =>
-      {
-        if (status == 200)
-        {
-            console.log("User is authentificated, proceed to open the dashboard")
-            setLogin('login')
-            socket.emit("userUpdate")
-        }
-        else
-        {
-          navigate('/')
-            console.log("No user logged, please login.")
-        }
-      })
-  }
+  // const check = async () =>
+  // {
+  //   Fetch('http://localhost:3000/auth/who')
+  //     .then((response) => response.status)
+  //     .then((status) =>
+  //     {
+  //       if (status == 200)
+  //       {
+  //           console.log("User is authentificated, proceed to open the dashboard")
+  //           setLogin('login')
+  //           socket.emit("userUpdate")
+  //       }
+  //       else
+  //       {
+  //         navigate('/')
+  //           console.log("No user logged, please login.")
+  //       }
+  //     })
+  // }
+  React.useEffect(() => {
+    const fetchProfile = async () => {
+      const respUser = await UserAPI.getUserProfile();
+      setUser(respUser);
 
+      if (!respUser) {
+        const logged = await UserAPI.isLoggedIn();
+        setLoggedIn(logged.loggedIn);
+        console.log("User is Authenticated, proceed to open the dashboard")
+      }
+      else {
+        setLoggedIn(true);
+      }
 
-  useEffect(() => { check()}, [])
+     // if (respUser) {
+        //socket.emit("userUpdate");
+      //}
+    };
+
+    fetchProfile();
+    // eslint-disable-next-line
+  }, []);
+
+  React.useEffect(() => {
+    socket.on("onUserChange", () => {
+      const fetchProfile = async () => {
+        const respUser = await UserAPI.getUserProfile();
+        setUser(respUser);
+  
+        if (!respUser) {
+          const logged = await UserAPI.isLoggedIn();
+          setLoggedIn(logged.loggedIn);
+        }
+        else {
+          setLoggedIn(true);
+        }
+      };
+  
+      fetchProfile();
+    });
+    return () => {
+      socket.off("onUserChange");
+    };
+  }, [socket]);
+
+  // useEffect(() => { check()}, [])
     return (
         <>
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
+          <UserContext.Provider value={user}>
+          <SetUserContext.Provider value={setUser}>
           <Routes>
-           <Route path="/" element={  <Login Status={login} /> } />
+           <Route path="/" element={  <Wrapper><Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} /></Wrapper> } />
             <Route path="/Menu" element={ <Wrapper><Menu/></Wrapper>} />
             <Route path="/Spectate" element={<Wrapper><SpectateMenu /> </Wrapper>} />
             <Route path="/Play" element={ <Wrapper> <Game /> </Wrapper>}></Route>
@@ -159,7 +206,16 @@ export default function App()
                 <Route path=":username" element={ <Wrapper> <Profile/></Wrapper>} />
                 <Route path="" element={  <Wrapper> <Profile/></Wrapper>} />
             </Route>
-            <Route path="/Chat" element={<Wrapper> <Chat /></Wrapper>}></Route>
+            <Route
+                path="/Chat"
+                element={
+                  <Wrapper>
+                    <WebsocketProvider value={socket}>
+                      <Chat />
+                    </WebsocketProvider>
+                  </Wrapper>
+                }
+              />
             <Route path="*" element={<Error404 />}></Route>
             <Route path="/Game">
                 <Route path="" element={<Wrapper> <SinglePlayerCanvas/></Wrapper> }></Route>
@@ -167,6 +223,8 @@ export default function App()
             </Route>
                 <Route path="/ColorOptions" element={ <Wrapper> <ColorOptions/> </Wrapper>}></Route>
             </Routes>
+        </SetUserContext.Provider>
+        </UserContext.Provider>
         </div>
     </>
    )

@@ -3,26 +3,41 @@ import { UserDto } from "utils/user.dto";
 export class UserAPI
 {
     public static async isLoggedIn(): Promise<{loggedIn: boolean}> {
-        const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/auth/isLogged`, {
+        const resp = await fetch(`http://localhost:3000/auth/isLogged`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          },
           credentials: "include",
           method: "GET"
         });
         
-        return (resp.ok? resp.json() : {loggedIn: false});
+      return (resp.ok? resp.json() : {loggedIn: false});
     }
+
     public static async getUserProfile(): Promise<UserDto | null> {
-        const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/profile`, {
+        const resp = await fetch(`http://localhost:3000/auth/who`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': 'true',
+            },
             credentials: "include",
             method: "GET"
         });
           
-          return (resp.ok? resp.json() : null);
+        return (resp.ok? resp.json() : null);
     }
     public static async addBlock(blockedId: string): Promise<UserDto | null> {
-        const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/blocked`, {
+        const resp = await fetch(`http://localhost:3000/users/blocked`, {
           credentials: "include",
           method: "POST",
-          headers: {'Content-Type': 'application/json'},
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          },
           body: blockedId,
         });
     
@@ -30,10 +45,14 @@ export class UserAPI
       }
     
       public static async removeBlock(blockedId: string): Promise<UserDto | null> {
-        const resp = await fetch(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}/users/blocked`, {
+        const resp = await fetch(`http://localhost:3000/users/blocked`, {
           credentials: "include",
           method: "DELETE",
-          headers: {'Content-Type': 'application/json'},
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          },
           body: blockedId,
         });
     
@@ -41,3 +60,37 @@ export class UserAPI
       }
 
 }
+
+/*
+export function Fetch(url: string, method?: string, body?: string) {
+  let header = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': 'true',
+  }
+  if(method != ""){
+    return fetch(url, {headers: header, credentials: 'include', method: method, body: body})
+  }
+  return fetch(url, { headers: header, credentials: 'include', body:body })
+
+const check = async () =>
+  // {
+  //   Fetch('http://localhost:3000/auth/who')
+  //     .then((response) => response.status)
+  //     .then((status) =>
+  //     {
+  //       if (status == 200)
+  //       {
+  //           console.log("User is authentificated, proceed to open the dashboard")
+  //           setLogin('login')
+  //           socket.emit("userUpdate")
+  //       }
+  //       else
+  //       {
+  //         navigate('/')
+  //           console.log("No user logged, please login.")
+  //       }
+  //     })
+  // }
+}
+*/

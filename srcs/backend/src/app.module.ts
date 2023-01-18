@@ -9,33 +9,29 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
-import {GameSocketIOService} from './game/game.services'
-import {GameSocketIOController} from './game/game.controller'
-import {GameSocketIOModule} from './game/game.module'
+import { GameSocketIOService } from './game/game.services';
+import { GameSocketIOController } from './game/game.controller';
+import { GameSocketIOModule } from './game/game.module';
 
-@Module(
-    {
-        //  Module imports
-        imports:[
-            ConfigModule.forRoot(),
-            AuthModule,
-            MulterModule.register({dest: '../frontend/public'}),
-            ],
+@Module({
+  //  Module imports
+  imports: [
+    ConfigModule.forRoot(),
+    AuthModule,
+    MulterModule.register({ dest: '../frontend/public' }),
+  ],
 
-        //  Controllers imports
-        controllers:[
-            AuthController,
-            ProfileController,
-            GameSocketIOController
-            ],
+  //  Controllers imports
+  controllers: [AuthController, ProfileController, GameSocketIOController],
 
-        //  Services imports
-        providers:[
-            AuthService,
-            ProfileService,
-            AuthService,
-            JwtService,
-            AppService,
-            GameSocketIOService]
+  //  Services imports
+  providers: [
+    AuthService,
+    ProfileService,
+    AuthService,
+    JwtService,
+    AppService,
+    GameSocketIOService,
+  ],
 })
 export class AppModule {}
