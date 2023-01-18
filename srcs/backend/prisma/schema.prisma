@@ -1,81 +1,84 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    userID              String                          @id @default(cuid())
-    accessToken42       String?
-    refreshToken42      String?
-    jwtToken            String?
-    login42             String                          @unique
-    username            String                          @unique
-    userStatus          userStatus                      @default(online)
-    imagePath           String                          @default("/defaultPhoto.png")
-    authenticator       Boolean                         @default(false)
-    authKey             String                          @default("none")
-    createdAt           DateTime                        @default(now())
-    updatedAt           DateTime                        @updatedAt
+  userID           String     @id @default(cuid())
+  accessToken42    String?
+  refreshToken42   String?
+  jwtToken         String?
+  login42          String     @unique
+  username         String     @unique
+  userStatus       userStatus @default(online)
+  imagePath        String     @default("/defaultPhoto.png")
+  authenticator    Boolean    @default(false)
+  authKey          String     @default("none")
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  Channel          Channel?   @relation(fields: [channelChannelID], references: [channelID])
+  channelChannelID String?
 }
 
-model FriendRequest{
-    friendRequestID     String                          @id @default(cuid())
-    sender              String
-    receiver            String
-    status              requestStatus                   @default(pending)
-    createdAt           DateTime                        @default(now())
-    updatedAt           DateTime                        @updatedAt
-    @@unique([sender, receiver])
+model FriendRequest {
+  friendRequestID String        @id @default(cuid())
+  sender          String
+  receiver        String
+  status          requestStatus @default(pending)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([sender, receiver])
 }
 
-model Game{
-    gameID              String                          @id @default(cuid())
-    gameRoomID          String?                         @unique 
-    leftPlayer          String
-    leftPlayerScore     Int                             @default(0)
-    rightPlayer         String
-    rightPlayerScore    Int                             @default(0)
-    active              Boolean                         @default(true)
-    winner              String                          @default("Undefined")
-    createdAt           DateTime                        @default(now())
-    updatedAt           DateTime                        @updatedAt
+model Game {
+  gameID           String   @id @default(cuid())
+  gameRoomID       String?  @unique
+  leftPlayer       String
+  leftPlayerScore  Int      @default(0)
+  rightPlayer      String
+  rightPlayerScore Int      @default(0)
+  active           Boolean  @default(true)
+  winner           String   @default("Undefined")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
-model Block{
-    blockID             String                          @id @default(cuid())
-    blocker             String
-    blocked             String
-    createdAt           DateTime                        @default(now())
-    updatedAt           DateTime                        @updatedAt
+model Block {
+  blockID   String   @id @default(cuid())
+  blocker   String
+  blocked   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@unique([blocker, blocked])
+  @@unique([blocker, blocked])
 }
 
-model Channel{
-    channelID           String      @id @default(cuid())
-    channelNumber       Int         @unique @default(autoincrement())
-    Name                String      @unique @default("Name not initialised")
-    private             Boolean     @default(false)
-    password            String
-    ownerID             String
-    users               User[]
-    admin               String[]
-    createdAt           DateTime    @default(now())
-    updatedAt           DateTime    @updatedAt
+model Channel {
+  channelID     String   @id @default(cuid())
+  channelNumber Int      @unique @default(autoincrement())
+  Name          String   @unique @default("Name not initialised")
+  private       Boolean  @default(false)
+  password      String
+  ownerID       String
+  users         User[]
+  admin         String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
-enum userStatus{
-    online
-    offline
-    playing
+enum userStatus {
+  online
+  offline
+  playing
 }
 
-enum requestStatus{
-    pending
-    accepted
-    declined
+enum requestStatus {
+  pending
+  accepted
+  declined
 }

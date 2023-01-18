@@ -115,7 +115,9 @@ export default function App()
 	const [rooms, setRooms] = useAtom(useRooms);
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
+  
   const socket = useContext(WebsocketContext);
+
 
 	// const [ballColor, setBallColor] = useAtom(useBallColor)
 	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)

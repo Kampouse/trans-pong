@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { io, Socket } from "socket.io-client";
 
-export const socket = io(`http://${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}`, 
+export const socket = io(`http://10.42.42.10:5137`, 
 { withCredentials: true});
 export const WebsocketContext = createContext<Socket>(socket);
 export const WebsocketProvider = WebsocketContext.Provider;
