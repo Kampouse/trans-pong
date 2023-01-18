@@ -7,22 +7,7 @@ import { prisma } from 'src/main'
 export class GameSocketIOController {
     constructor(private gameSocketIO: GameSocketIOService){
         const server = this.gameSocketIO.getServer();
-        //console.log(server)
-        /*
-        server.use((socket, next) => {
-
-            const sessionID = socket.handshake.auth.sessionID;
-            if (sessionID)
-            {
-                var session = gameSocketIO.sessionMap[sessionID]
-                if (session
-                    ){
-                    socket.sessionID = sessionID
-                    socket.userID = session.userID
-                    }
-            }
-        })
-        */
+     
         server.on("connection", (socket) => {
             console.log("New socket: "  + socket.id);
 
@@ -35,8 +20,6 @@ export class GameSocketIOController {
             socket.on("registerId", (user) => {
                 gameSocketIO.socketMap[user.socket] = user.userId//keeping socket instance in the map so we can retrieve it later
                 console.log(gameSocketIO.socketMap)
-                //this.getUserFromSocketId(this.gameSocketIO.socketMap, user.userId)
-                //console.log(this.getUserFromSocketId(this.gameSocketIO.socketMap, socket.id))
             })
 
             socket.on("searchGame", async () => {
@@ -46,7 +29,6 @@ export class GameSocketIOController {
                     var newRoom: GameRoom = new GameRoom(new Player(this.gameSocketIO.socketMap[socket.id], socket), gameSocketIO.getServer())
                     gameSocketIO.roomMap.set(newRoom.getRoomName(), newRoom) //adds new room to list
                     socket.join(newRoom.getRoomName()); //make client socket join room
-                    //console.log(gameSocketIO.roomMap)
                 }
                 else{ //array isnt empty and there are rooms available
                     var roomName = await this.gameSocketIO.makePlayerJoinRoom(new Player(this.gameSocketIO.socketMap[socket.id], socket));
@@ -54,7 +36,6 @@ export class GameSocketIOController {
                         socket.emit("noSuitableRoomFound");
                     }
                     else{
-                        //var roomname = this.gameSocketIO.getRoomForPlayer()
                         socket.join(roomName); //all players are in the game, status is set to active
                         server.to(roomName).emit("roomIsReady", roomName); //pass control to game execution
                     }
@@ -72,7 +53,6 @@ export class GameSocketIOController {
                 socket.emit("roomIsReady")
             })
             socket.on("ping", async (userid) => {
-                //code for pings here with shit
                 const user = await prisma.user.findUnique({where: {userID: userid}})
                 if (user.userStatus == "playing")
                     await prisma.user.update({where: {userID: userid}, data:{
@@ -93,7 +73,6 @@ export class GameSocketIOController {
     getUserFromSocketId(map, searchValue) {
         for (let [key, value] of map.entries()) {
             if (value === searchValue){
-                //console.log(key)
                 return key;
             }
             console.log("user from socket id not found")
