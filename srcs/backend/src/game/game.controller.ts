@@ -79,9 +79,9 @@ export class GameSocketIOController {
                         userStatus: "playing"
                     }})
                 else if (user.userStatus == "online")
-                await prisma.user.update({where: {userID: userid}, data:{
-                    userStatus: "online"
-                }})
+                    await prisma.user.update({where: {userID: userid}, data:{
+                        userStatus: "online"
+                    }})
             })
         })
 
