@@ -7,6 +7,7 @@ import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
 import { useBallColor, useBackgroundColor, usePaddleColor } from 'Router/Router'
 import { useAtom } from 'jotai'
+import { Fetch } from 'utils'
 
 let keyActions = {
 	up: false,
@@ -18,14 +19,7 @@ const useFetch = () =>
 	const [gameReq, setGameReq] = useState<any>(null);
 	
 	useEffect(() => {
-		fetch('http://localhost:3000/profile/play/solo' , {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Credentials': 'true'
-			}
-		})
+		Fetch("http://localhost:3000/profile/play/solo")
       .then((response) => response.json())
 			.then((data) => {
 				setGameReq(data);
