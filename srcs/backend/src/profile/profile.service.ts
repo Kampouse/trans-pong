@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { Inject, Injectable } from '@nestjs/common';
 import {
   ActiveGameDto,
@@ -15,9 +16,8 @@ import {
   responseDefault,
   responseUploadPhoto,
 } from 'src/dtos/responseTools.dtos';
-import { DEFAULT_FACTORY_CLASS_METHOD_KEY } from '@nestjs/common/module-utils/constants';
 import { UserDto } from 'src/dtos/user.dtos';
-import { User } from '@prisma/client';
+import { User, Friends } from '@prisma/client';
 
 @Injectable()
 export class ProfileService {
@@ -879,7 +879,7 @@ export class ProfileService {
     //  If the user already has a key, load a qr code associated
     if (user.authKey != 'none') {
       console.log('Key already exist');
-      var otAuth = authentificator.generateTotpUri(
+      const otAuth = authentificator.generateTotpUri(
         user.authKey,
         login42 + '@42qc.ca',
         'Trans-Pong',
@@ -914,7 +914,7 @@ export class ProfileService {
         },
       });
 
-      var otAuth = authentificator.generateTotpUri(
+      const otAuth = authentificator.generateTotpUri(
         formattedKey,
         login42 + '@42qc.ca',
         'Trans-Pong',
@@ -1074,15 +1074,13 @@ export class ProfileService {
     userDto.login42 = user.login42;
     userDto.username = user.username;
     userDto.userStatus = user.userStatus;
-    userDto.friends = user.friends
-      ? user.friends.map((x) => this.entityToDto(x))
-      : [];
-    userDto.friends = user.friends
-      ? user.friends.map((x) => this.entityToDto(x))
-      : [];
+    //userDto.friends = user.userFriends.map;
+    //userDto.blocked = null;
+    userDto.friends = user.userFriends;
+    //userDto.friends = (await user.friends).map((x) => this.entityToDto(x));
+    //userDto.blocked = (await user.blocked).map((x) => this.entityToDto(x));
     userDto.authenticator = user.authenticator;
     userDto.imagePath = user.imagePath;
-
     return userDto;
   }
 
@@ -1090,7 +1088,7 @@ export class ProfileService {
   public async findOneById(id: string) {
     const user: User = await prisma.user.findUnique({
       where: { userID: id },
-      relations: { blocked: true, friends: true },
+      include: { userFriends: true },
     });
     if (!user) return null;
     const userDto: UserDto = this.entityToDto(user);

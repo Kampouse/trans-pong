@@ -18,8 +18,7 @@ type tokenDatas = { username: string; iat: number; exp: number };
 export class AuthService {
   private userSessions: Map<string, Socket[]>;
   constructor(
-    private jwtService: JwtService,
-    private usersService: ProfileService,
+    private jwtService: JwtService, //private usersService: ProfileService,
   ) {}
 
   public async validate_token(token: string): Promise<string | null> {
@@ -99,6 +98,7 @@ export class AuthService {
         username: apiResponse.user.username,
         accessToken42: apiResponse.user.accessToken,
         refreshToken42: apiResponse.user.refreshToken,
+        userFriends: null,
       },
     });
     return output?.login42;
@@ -152,11 +152,11 @@ export class AuthService {
         return null;
       }
 
-      const userDto: UserDto | null = await this.usersService.findOneById(
-        sub.sub,
-      );
+      // const userDto: UserDto | null = await this.usersService.findOneById(
+      // sub.sub,
+      // );
 
-      return userDto;
+      //return userDto;
     } catch {
       return null;
     }

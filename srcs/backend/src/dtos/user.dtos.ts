@@ -1,4 +1,4 @@
-import { UserStatus } from '@prisma/client';
+import { Friends, UserStatus } from '@prisma/client';
 
 export class UserDto {
   userID: string;
@@ -7,6 +7,6 @@ export class UserDto {
   userStatus: UserStatus;
   imagePath: string;
   authenticator: boolean;
-  friends?: UserDto[];
-  blocked?: UserDto[];
+  friends: Friends[];
+  //blocked?: Friends[];
 }
