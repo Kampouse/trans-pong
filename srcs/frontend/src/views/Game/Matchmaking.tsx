@@ -8,11 +8,11 @@ import { render } from 'react-dom';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 
 export var usersocket: io.Socket = io.connect("http://localhost:3001")
-export const userid = fetchUserId();
+export const userid = await getUserId();
 export var pingInterval = setInterval( async () => {
-    if (userid != "") //userid not empty so we know suer is logged in
+    if (userid != "" && userid != null) //userid not empty so we know suer is logged in
         usersocket.emit("ping", userid) //ping with userid to tell if user is alive
-}, 10000) //every 10 seconds or whatever
+}, 5000) //every 10 seconds or whatever
 
 export default function Matchmaking()
 {
@@ -67,6 +67,16 @@ export default function Matchmaking()
 function startSinglePlayer(e, nav: NavigateFunction){
 	e.preventDefault();
 	nav('/game');
+}
+
+async function getUserId(): Promise<string> {
+    var userid;
+    await Fetch ('http://localhost:3000/profile/get/userid')
+        .then((response) => response.json())
+        .then((data) => {
+           userid = data.userid;
+        })
+    return userid;
 }
 
 function fetchUserId() {

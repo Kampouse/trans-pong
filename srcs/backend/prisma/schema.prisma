@@ -21,6 +21,7 @@ model User {
     channels            Channel[]
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
+    activeAt            DateTime                        @default(now())
 }
 
 model FriendRequest{

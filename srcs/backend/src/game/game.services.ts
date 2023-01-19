@@ -223,8 +223,8 @@ export class GameSocketIOService {
     private gameRoomUpdateInterval
     public socketMap: Map<string, string> //socketid, userid, maps socket id's to user id's for easy retrieval
     public sessionMap: Map<any, any>
-    //public roomMap: Array<GameRoom>
     public roomMap: Map<string, GameRoom>
+    
 
     constructor() {
         this.server = new io.Server(3001, {cors: {
