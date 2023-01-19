@@ -1,3 +1,5 @@
+import { UserStatus } from '@prisma/client';
+
 export class UserDto {
   userID: string;
   login42: string;
@@ -7,10 +9,4 @@ export class UserDto {
   authenticator: boolean;
   friends?: UserDto[];
   blocked?: UserDto[];
-}
-
-export enum UserStatus {
-  online = 0,
-  offline = 1,
-  playing = 2,
 }

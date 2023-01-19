@@ -12,8 +12,9 @@ services:
     volumes:
       - ./database:/var/lib/postgresql/data
     networks:
-      trans:
-        ipv4_address: 10.42.42.10
+      - mynetwork
+      #trans:
+       # ipv4_address: 10.42.42.10
     ports:
       - 5432:5432
 
@@ -42,8 +43,9 @@ services:
     volumes:
       - ./srcs:/app
     networks:
-      trans:
-        ipv4_address: 10.42.42.12
+      - mynetwork
+      #trans:
+        #ipv4_address: 10.42.42.12
     ports:
       - 5173:5173
       - 5555:5555
@@ -51,9 +53,10 @@ services:
       - 3001:3001
 
 networks:
-  trans:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.42.42.0/24
-          gateway: 10.42.42.1
+  mynetwork:
+ # trans:
+ #   driver: bridge
+  #  ipam:
+    #  config:
+    #    - subnet: 10.42.42.0/24
+     #     gateway: 10.42.42.1

@@ -7,6 +7,7 @@ import {
   RoomReturnDto,
 } from './chat.service';
 import { Request } from 'express';
+import { RequestWithUser } from 'src/dtos/auth.dtos';
 
 @Controller('chat')
 export class ChatController {
@@ -14,7 +15,7 @@ export class ChatController {
 
   @Get('userRooms')
   @UseGuards(JwtGuard)
-  public async getRoomsFromUser(@Req() req: Request) {
+  public async getRoomsFromUser(@Req() req: RequestWithUser) {
     const user: any = req.user;
 
     const rooms: RoomDto[] = this.chatService.getAllRoomsFromUser(user.id);
@@ -29,7 +30,7 @@ export class ChatController {
 
   @Get('userPMs')
   @UseGuards(JwtGuard)
-  public async getPMsFromUser(@Req() req: Request) {
+  public async getPMsFromUser(@Req() req: RequestWithUser) {
     const user: any = req.user;
 
     const privateMsgs: PrivateMsgsDto[] = this.chatService.getUserPrivateMsgs(

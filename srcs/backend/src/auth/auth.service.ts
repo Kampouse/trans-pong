@@ -2,14 +2,25 @@ import { Injectable, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from 'src/dtos/auth.dtos';
 import { prisma } from 'src/main';
+import { Socket, Server } from 'socket.io';
+import { parse } from 'cookie';
+import { UserDto } from 'src/dtos/user.dtos';
+import { ProfileService } from 'src/profile/profile.service';
+
 type validateUser = {
   response: { url: string; statCode: number };
   user_validity: { token: boolean; user: string | null };
 };
+
 type tokenDatas = { username: string; iat: number; exp: number };
+
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  private userSessions: Map<string, Socket[]>;
+  constructor(
+    private jwtService: JwtService,
+    private usersService: ProfileService,
+  ) {}
 
   public async validate_token(token: string): Promise<string | null> {
     if (!token) {
@@ -121,5 +132,37 @@ export class AuthService {
     } else {
       return null;
     }
+  }
+
+  public async getUserFromSocket(socket: Socket): Promise<UserDto | null> {
+    const cookies = socket.handshake.headers.cookie;
+
+    if (!cookies) {
+      return null;
+    }
+
+    const token = parse(cookies)['jwt'];
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const sub = this.jwtService.verify(token);
+      if (!sub) {
+        return null;
+      }
+
+      const userDto: UserDto | null = await this.usersService.findOneById(
+        sub.sub,
+      );
+
+      return userDto;
+    } catch {
+      return null;
+    }
+  }
+
+  getSocketsFromUser(userId: string): Socket[] {
+    return this.userSessions.get(userId);
   }
 }

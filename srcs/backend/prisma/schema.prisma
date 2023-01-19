@@ -14,14 +14,16 @@ model User {
   jwtToken         String?
   login42          String     @unique
   username         String     @unique
-  userStatus       userStatus @default(online)
+  userStatus       UserStatus @default(online)
   imagePath        String     @default("/defaultPhoto.png")
   authenticator    Boolean    @default(false)
   authKey          String     @default("none")
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
-  Channel          Channel?   @relation(fields: [channelChannelID], references: [channelID])
-  channelChannelID String?
+  friends          User[]     @relation("Friends")
+  friendsRelation  User[]     @relation("Friends")
+  blocked          User[]     @relation("Blocked Friends")
+  blockedRelations User[]     @relation("Blocked Friends")
 }
 
 model FriendRequest {
@@ -58,20 +60,7 @@ model Block {
   @@unique([blocker, blocked])
 }
 
-model Channel {
-  channelID     String   @id @default(cuid())
-  channelNumber Int      @unique @default(autoincrement())
-  Name          String   @unique @default("Name not initialised")
-  private       Boolean  @default(false)
-  password      String
-  ownerID       String
-  users         User[]
-  admin         String[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-}
-
-enum userStatus {
+enum UserStatus {
   online
   offline
   playing
