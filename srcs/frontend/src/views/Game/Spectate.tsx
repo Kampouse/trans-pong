@@ -3,12 +3,11 @@ import { useState } from 'react';
 import * as io from 'socket.io-client';
 import { useNavigate } from 'react-router';
 import {usersocket} from './Matchmaking'
+import { Fetch } from 'utils';
 
 async function getActiveGames(data: ActiveGameDto, setData)
 {
-    await fetch("http://localhost:3000/profile/active/game", {
-        method: "GET",
-    })
+    await Fetch("http://localhost:3000/profile/active/game")
         .then(response => response.json())
         .then(res => {
             if (res.status == '200')

@@ -19,12 +19,12 @@ export class GameSocketIOController {
             
             socket.on("registerId", (user) => {
                 gameSocketIO.socketMap[user.socket] = user.userId//keeping socket instance in the map so we can retrieve it later
-                console.log(gameSocketIO.socketMap)
+                //console.log(gameSocketIO.socketMap)
             })
 
             socket.on("searchGame", async () => {
                 var room = this.tryGetAvailableRoom(gameSocketIO.roomMap)
-                console.log(gameSocketIO.roomMap.size)
+                //console.log(gameSocketIO.roomMap.size)
                 if(gameSocketIO.roomMap.size == 0 || room == null){ //no room found, add new room
                     var newRoom: GameRoom = new GameRoom(new Player(this.gameSocketIO.socketMap[socket.id], socket), gameSocketIO.getServer())
                     gameSocketIO.roomMap.set(newRoom.getRoomName(), newRoom) //adds new room to list

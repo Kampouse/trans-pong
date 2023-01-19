@@ -3,7 +3,7 @@ import { usersocket } from './Matchmaking';
 
 export default function Queue({open, onClose})
 {
-    console.log("HELLO IM ACTIVE")
+    //console.log("HELLO IM ACTIVE")
     return (
         <Dialog onClose={onClose} open={open}>
             <div className='w-[400px] h-[100px] bg-sky-100 pt-1'>

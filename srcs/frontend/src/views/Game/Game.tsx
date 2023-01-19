@@ -5,7 +5,7 @@ var onlyonce = 0; //prevent functions being called twice
 
 function prepareGame()
 {
-    console.log("Wee woo we joined the room")
+    //console.log("Wee woo we joined the room")
     usersocket.emit("playerReady");
 }
 
