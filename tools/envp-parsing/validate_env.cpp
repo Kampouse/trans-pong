@@ -96,10 +96,10 @@ bool	validate_db_url(std::string db_name, std::string username, std::string pass
 	//	Validate host and port
 	std::string host_port = db_url.substr(offset, 16);
 	offset += 16;
-	if (host_port != "@10.13.8.2:5432/")
+	if (host_port != "@10.11.6.1:5432/")
 	{
 		std::cout << "error var: db_url: host or port invalid" << std::endl;
-		std::cout << "expected = @10.13.8.2:5432/ and got " << host_port << std::endl;
+		std::cout << "expected = @10.11.6.1:5432/ and got " << host_port << std::endl;
 		return (false);
 	}
 

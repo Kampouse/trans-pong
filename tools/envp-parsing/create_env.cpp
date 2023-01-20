@@ -84,7 +84,7 @@ static void	create_database_info(void)
 	std::string	username = create_db_username();
 	std::string	password = create_db_password();
 	std::string	url = "DATABASE_URL=\"postgresql://" + username + ":" +
-		password + "@10.13.8.2:5432/" + name + "?schema=public\"";
+		password + "@10.11.6.1:5432/" + name + "?schema=public\"";
 	file << "DATABASE_NAME=" + name << '\n' << "DATABASE_USERNAME=" + username <<
 		'\n' << "DATABASE_PSW=" + password << '\n' << url << '\n';
 	file.close();
