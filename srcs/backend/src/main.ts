@@ -1,6 +1,7 @@
 /* eslint-disable no-var */
 import { Redirect, Body } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { PrismaClient } from '@prisma/client';
 import * as session from 'express-session';
@@ -26,22 +27,23 @@ const startPrisma = async () => {
 export const prisma = global.prisma || new PrismaClient({ log: ['info'] });
 async function bootstrap() {
   startPrisma();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
     //origin: 'http://localhost:5173',
-    origin: function (origin, callback) {
-      //console.log(origin)
-      callback(null, true);
-    },
+    // origin: function (origin, callback) {
+    //console.log(origin)
+    // callback(null, true);
+    // },
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Access-Control-Allow-Origin',
-      'Access-Control-Allow-Headers',
-      'Access-Control-Allow-Methods',
-      'Access-Control-Allow-Credentials',
-    ],
+    // allowedHeaders: [
+    //   'Content-Type',
+    //   'Authorization',
+    //   'Access-Control-Allow-Origin',
+    //   'Access-Control-Allow-Headers',
+    //   'Access-Control-Allow-Methods',
+    //   'Access-Control-Allow-Credentials',
+    // ],
     credentials: true,
   });
   app.use(

@@ -70,6 +70,11 @@ export class AuthController {
     redirect_content.response = NewResponse;
     return redirect_content.response;
   }
+  @UseGuards(FortyTwoAuthGuard)
+  @Get('isLogged')
+  async isLoggedIn() {
+    return { loggedIn: true };
+  }
 
   @Get('42logout')
   async logout(@Req() request: RequestWithUser, @Res() res) {

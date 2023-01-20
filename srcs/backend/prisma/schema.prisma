@@ -7,17 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Friends {
-  id        String   @id @default(cuid())
-  user_id   String
-  friend_id String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  friend    User     @relation("friend_users", fields: [friend_id], references: [userID])
-  user      User     @relation("users", fields: [user_id], references: [userID])
-
-  @@unique([user_id, friend_id])
-}
 
 model User {
   userID            String     @id @default(cuid())
@@ -32,8 +21,10 @@ model User {
   authKey           String     @default("none")
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt
-  friendUserFriends Friends[]  @relation("friend_users")
-  userFriends       Friends[]  @relation("users")
+  friendsofthisuser   User[]     @relation("friends of user")
+  thisuserisfriendto User[]     @relation("friends of user")
+  blockedbythisuser  User[]     @relation("blocked users")
+  userblockedby     User[]     @relation("blocked users")
 }
 
 model FriendRequest {

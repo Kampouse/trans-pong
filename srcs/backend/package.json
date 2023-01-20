@@ -51,6 +51,7 @@
         "passport": "^0.6.0",
         "passport-42": "^1.2.6",
         "passport-google-oauth20": "^2.0.0",
+        "passport-jwt": "^4.0.1",
         "passport-oauth2": "^1.6.1",
         "path": "^0.12.7",
         "reflect-metadata": "^0.1.13",

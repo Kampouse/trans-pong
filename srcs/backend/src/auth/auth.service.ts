@@ -6,6 +6,7 @@ import { Socket, Server } from 'socket.io';
 import { parse } from 'cookie';
 import { UserDto } from 'src/dtos/user.dtos';
 import { ProfileService } from 'src/profile/profile.service';
+import { UserStatus } from '@prisma/client';
 
 type validateUser = {
   response: { url: string; statCode: number };
@@ -18,7 +19,8 @@ type tokenDatas = { username: string; iat: number; exp: number };
 export class AuthService {
   private userSessions: Map<string, Socket[]>;
   constructor(
-    private jwtService: JwtService, //private usersService: ProfileService,
+    private usersService: ProfileService,
+    private jwtService: JwtService,
   ) {}
 
   public async validate_token(token: string): Promise<string | null> {
@@ -98,7 +100,6 @@ export class AuthService {
         username: apiResponse.user.username,
         accessToken42: apiResponse.user.accessToken,
         refreshToken42: apiResponse.user.refreshToken,
-        userFriends: null,
       },
     });
     return output?.login42;
@@ -152,11 +153,11 @@ export class AuthService {
         return null;
       }
 
-      // const userDto: UserDto | null = await this.usersService.findOneById(
-      // sub.sub,
-      // );
+      const userDto: UserDto | null = await this.usersService.findOneById(
+        sub.sub,
+      );
 
-      //return userDto;
+      return userDto;
     } catch {
       return null;
     }
@@ -164,5 +165,51 @@ export class AuthService {
 
   getSocketsFromUser(userId: string): Socket[] {
     return this.userSessions.get(userId);
+  }
+
+  async modifyUserState(userDto: UserDto, u_status: UserStatus) {
+    await this.usersService.setStatus(userDto.userID, u_status);
+  }
+
+  async addToConnection(client: Socket, server: Server) {
+    const userDto: UserDto | null = await this.getUserFromSocket(client);
+
+    if (!userDto) {
+      return;
+    }
+    let sockets = this.userSessions.get(userDto.userID);
+
+    if (!sockets || sockets.length === 0) {
+      sockets = [];
+      await this.modifyUserState(userDto, UserStatus.online);
+      server.emit('onUserChange');
+    }
+    sockets.push(client);
+    this.userSessions.set(userDto.userID, sockets);
+    client.join('user_' + userDto.userID);
+  }
+
+  async removeFromConnection(client: Socket, server: Server) {
+    const userDto: UserDto | null = await this.getUserFromSocket(client);
+
+    if (!userDto) {
+      return;
+    }
+
+    const sockets = this.userSessions.get(userDto.userID);
+    if (!sockets) {
+      return;
+    }
+    const index = sockets.indexOf(client);
+    if (index > -1) {
+      sockets.splice(index, 1);
+    }
+
+    if (!sockets || sockets.length === 0) {
+      await this.modifyUserState(userDto, UserStatus.offline);
+      server.emit('onUserChange');
+    }
+
+    this.userSessions.set(userDto.userID, sockets);
   }
 }

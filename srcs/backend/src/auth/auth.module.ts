@@ -11,24 +11,19 @@ import {
   JwtGuard,
 } from './utils/Guards';
 import { ProfileModule } from 'src/profile/profile.module';
+import { PassportModule } from '@nestjs/passport';
+import { AuthGateway } from './auth.gateway';
 
 @Module({
   imports: [
     ProfileModule,
+    PassportModule,
     JwtModule.register({
       secret: 'this is a secret',
       signOptions: { expiresIn: '60s' },
     }),
   ],
-  providers: [
-    AuthService,
-    JwtService,
-    GoogleAuthGuard,
-    FortyTwoStrategy,
-    FortyTwoAuthGuard,
-    SessionSerializer,
-    JwtGuard,
-  ],
+  providers: [AuthService, AuthGateway],
   controllers: [AuthController],
   exports: [AuthService],
 })

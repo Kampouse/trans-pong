@@ -3,12 +3,7 @@ import { UserDto } from "utils/user.dto";
 export class UserAPI
 {
     public static async isLoggedIn(): Promise<{loggedIn: boolean}> {
-        const resp = await fetch(`http://localhost:3000/auth/isLogged`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': 'true',
-          },
+        const resp = await fetch(`http://10.11.6.1:3000/auth/isLogged`, {
           credentials: "include",
           method: "GET"
         });
@@ -17,12 +12,7 @@ export class UserAPI
     }
 
     public static async getUserProfile(): Promise<UserDto | null> {
-        const resp = await fetch(`http://localhost:3000/auth/who`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Credentials': 'true',
-            },
+        const resp = await fetch(`http://10.11.6.1:3000/auth/who`, {
             credentials: "include",
             method: "GET"
         });
@@ -30,14 +20,9 @@ export class UserAPI
         return (resp.ok? resp.json() : null);
     }
     public static async addBlock(blockedId: string): Promise<UserDto | null> {
-        const resp = await fetch(`http://localhost:3000/users/blocked`, {
+        const resp = await fetch(`http://10.11.6.1:3000/users/blocked`, {
           credentials: "include",
           method: "POST",
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': 'true',
-          },
           body: blockedId,
         });
     
@@ -45,14 +30,9 @@ export class UserAPI
       }
     
       public static async removeBlock(blockedId: string): Promise<UserDto | null> {
-        const resp = await fetch(`http://localhost:3000/users/blocked`, {
+        const resp = await fetch(`http://10.11.6.1:3000/users/blocked`, {
           credentials: "include",
           method: "DELETE",
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': 'true',
-          },
           body: blockedId,
         });
     

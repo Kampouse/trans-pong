@@ -13,27 +13,35 @@ import { GameSocketIOService } from './game/game.services';
 import { GameSocketIOController } from './game/game.controller';
 import { GameSocketIOModule } from './game/game.module';
 import { ChatModule } from './chat/chat.module';
+import { ChatService } from './chat/chat.service';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   //  Module imports
   imports: [
-    ConfigModule.forRoot(),
-    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
     MulterModule.register({ dest: '../frontend/public' }),
+    ProfileModule,
+    AuthModule,
     ChatModule,
+    GameSocketIOModule,
   ],
 
   //  Controllers imports
-  controllers: [AuthController, ProfileController, GameSocketIOController],
+  controllers: [AppController],
 
   //  Services imports
-  providers: [
-    AuthService,
+  providers: [],
+})
+export class AppModule {}
+/*
+AuthController, ProfileController, GameSocketIOController
+
+AuthService,
     ProfileService,
     AuthService,
     JwtService,
     AppService,
     GameSocketIOService,
-  ],
-})
-export class AppModule {}
+    ChatService,
+*/

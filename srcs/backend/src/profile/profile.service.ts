@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import {
   ActiveGameDto,
   FriendDto,
@@ -17,11 +17,11 @@ import {
   responseUploadPhoto,
 } from 'src/dtos/responseTools.dtos';
 import { UserDto } from 'src/dtos/user.dtos';
-import { User, Friends } from '@prisma/client';
+import { User, UserStatus } from '@prisma/client';
 
 @Injectable()
 export class ProfileService {
-  @Inject(AuthService)
+  @Inject(forwardRef(() => AuthService))
   private readonly authService: AuthService;
 
   async authentificate(data: Request): Promise<string> {
@@ -1074,6 +1074,12 @@ export class ProfileService {
     userDto.login42 = user.login42;
     userDto.username = user.username;
     userDto.userStatus = user.userStatus;
+    userDto.friends = user.friendsofthisuser
+      ? user.friendsofthisuser.map((x) => this.entityToDto(x))
+      : [];
+    userDto.blocked = user.blockedbythisuser
+      ? user.blockedbythisuser.map((x) => this.entityToDto(x))
+      : [];
     //userDto.friends = user.userFriends.map;
     //userDto.blocked = null;
 
@@ -1088,10 +1094,24 @@ export class ProfileService {
   public async findOneById(id: string) {
     const user: User = await prisma.user.findUnique({
       where: { userID: id },
-      include: { userFriends: true },
+      //include: { userFriends: true },
     });
     if (!user) return null;
     const userDto: UserDto = this.entityToDto(user);
+    return userDto;
+  }
+
+  public async setStatus(id: string, status: UserStatus): Promise<UserDto> {
+    const user = await prisma.user.findUnique({ where: { userID: id } });
+    if (!user) {
+      return null;
+    }
+    const updatedUser = await prisma.user.update({
+      where: { userID: id },
+      data: { userStatus: status },
+    });
+    // convert the updated user object to a DTO
+    const userDto = this.entityToDto(updatedUser);
     return userDto;
   }
 }
