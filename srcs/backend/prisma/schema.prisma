@@ -8,16 +8,15 @@ datasource db {
 }
 
 model Friends {
-  id        String @id @default(cuid())
-  friend    User   @relation("friend_users", fields: [friend_id], references: [userID])
+  id        String   @id @default(cuid())
   user_id   String
-  user      User   @relation("users", fields: [user_id], references: [userID])
   friend_id String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  friend    User     @relation("friend_users", fields: [friend_id], references: [userID])
+  user      User     @relation("users", fields: [user_id], references: [userID])
 
   @@unique([user_id, friend_id])
-  @@map("blocked")
 }
 
 model User {
@@ -33,9 +32,8 @@ model User {
   authKey           String     @default("none")
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt
- userFriends       Friends[]  @relation("users")
- friendUserFriends Friends[]  @relation("friend_users")
- hasfriend          Boolean
+  friendUserFriends Friends[]  @relation("friend_users")
+  userFriends       Friends[]  @relation("users")
 }
 
 model FriendRequest {

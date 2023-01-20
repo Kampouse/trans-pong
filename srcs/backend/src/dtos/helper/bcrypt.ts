@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 export async function hashPwd(rawPwd: string) {
   const SALT = await bcrypt.genSalt();

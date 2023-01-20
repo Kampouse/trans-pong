@@ -1,7 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from 'src/auth/auth.module';
+import { ProfileController } from './profile.controller';
+import { ProfileService } from './profile.service';
+import { HttpModule } from '@nestjs/axios';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [AuthModule],
+  controllers: [ProfileController],
+  providers: [ProfileService, AuthService, JwtService],
+  imports: [HttpModule],
+  exports: [ProfileService],
 })
 export class ProfileModule {}

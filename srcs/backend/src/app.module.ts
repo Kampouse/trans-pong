@@ -12,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GameSocketIOService } from './game/game.services';
 import { GameSocketIOController } from './game/game.controller';
 import { GameSocketIOModule } from './game/game.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   //  Module imports
@@ -19,6 +20,7 @@ import { GameSocketIOModule } from './game/game.module';
     ConfigModule.forRoot(),
     AuthModule,
     MulterModule.register({ dest: '../frontend/public' }),
+    ChatModule,
   ],
 
   //  Controllers imports

@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 import { Redirect, Body } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -6,7 +7,7 @@ import * as session from 'express-session';
 // import { env } from 'process';
 // import { cors } from 'cors';
 import * as cookieParser from 'cookie-parser';
-import * as io from 'socket.io'
+import * as io from 'socket.io';
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -30,7 +31,8 @@ async function bootstrap() {
     //origin: 'http://localhost:5173',
     origin: function (origin, callback) {
       //console.log(origin)
-      callback(null, true)},
+      callback(null, true);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: [
       'Content-Type',
@@ -40,10 +42,10 @@ async function bootstrap() {
       'Access-Control-Allow-Methods',
       'Access-Control-Allow-Credentials',
     ],
-    credentials: true
+    credentials: true,
   });
   app.use(
-    cookieParser("trans"),
+    cookieParser('trans'),
     session({
       secret: 'secret',
       resave: false,

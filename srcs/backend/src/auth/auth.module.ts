@@ -10,9 +10,11 @@ import {
   SessionSerializer,
   JwtGuard,
 } from './utils/Guards';
+import { ProfileModule } from 'src/profile/profile.module';
 
 @Module({
   imports: [
+    ProfileModule,
     JwtModule.register({
       secret: 'this is a secret',
       signOptions: { expiresIn: '60s' },
@@ -27,5 +29,7 @@ import {
     SessionSerializer,
     JwtGuard,
   ],
+  controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}

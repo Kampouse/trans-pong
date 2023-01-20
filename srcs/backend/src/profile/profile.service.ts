@@ -1076,7 +1076,7 @@ export class ProfileService {
     userDto.userStatus = user.userStatus;
     //userDto.friends = user.userFriends.map;
     //userDto.blocked = null;
-    userDto.friends = user.userFriends;
+
     //userDto.friends = (await user.friends).map((x) => this.entityToDto(x));
     //userDto.blocked = (await user.blocked).map((x) => this.entityToDto(x));
     userDto.authenticator = user.authenticator;
