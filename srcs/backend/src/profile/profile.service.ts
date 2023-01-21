@@ -1074,17 +1074,12 @@ export class ProfileService {
     userDto.login42 = user.login42;
     userDto.username = user.username;
     userDto.userStatus = user.userStatus;
-    userDto.friends = user.friendsofthisuser
-      ? user.friendsofthisuser.map((x) => this.entityToDto(x))
-      : [];
-    userDto.blocked = user.blockedbythisuser
-      ? user.blockedbythisuser.map((x) => this.entityToDto(x))
-      : [];
-    //userDto.friends = user.userFriends.map;
-    //userDto.blocked = null;
-
-    //userDto.friends = (await user.friends).map((x) => this.entityToDto(x));
-    //userDto.blocked = (await user.blocked).map((x) => this.entityToDto(x));
+    // userDto.friends = user.friendsofthisuser
+    //   ? user.friendsofthisuser.map((x) => this.entityToDto(x))
+    //   : [];
+    // userDto.blocked = user.blockedbythisuser
+    //   ? user.blockedbythisuser.map((x) => this.entityToDto(x))
+    //   : [];
     userDto.authenticator = user.authenticator;
     userDto.imagePath = user.imagePath;
     return userDto;

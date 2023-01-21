@@ -36,50 +36,50 @@ async function main() {
     });
   } catch {}
 
-  const user1 = await prisma.user.create({
-    data: {
-      login42: 'mleblanc',
-      username: 'mleblanc',
-      userStatus: 'offline',
-      imagePath: '/mleblancPhoto.png',
-    },
-  });
+  // const user1 = await prisma.user.create({
+  //   data: {
+  //     login42: 'mleblanc1',
+  //     username: 'mleblanc1',
+  //     userStatus: 'offline',
+  //     imagePath: '/mleblancPhoto.png',
+  //   },
+  // });
 
-  const user2 = await prisma.user.create({
-    data: {
-      login42: 'jvigneau',
-      username: 'jvigneau',
-      userStatus: 'offline',
-      imagePath: '/jvigneauPhoto.png',
-    },
-  });
+  // const user2 = await prisma.user.create({
+  //   data: {
+  //     login42: 'jvigneau',
+  //     username: 'jvigneau',
+  //     userStatus: 'offline',
+  //     imagePath: '/jvigneauPhoto.png',
+  //   },
+  // });
 
-  const user3 = await prisma.user.create({
-    data: {
-      login42: 'jbadia',
-      username: 'jbadia',
-      userStatus: 'offline',
-      imagePath: '/jbadiaPhoto.png',
-    },
-  });
+  // const user3 = await prisma.user.create({
+  //   data: {
+  //     login42: 'jbadia',
+  //     username: 'jbadia',
+  //     userStatus: 'offline',
+  //     imagePath: '/jbadiaPhoto.png',
+  //   },
+  // });
 
-  try {
-    await prisma.user.create({
-      data: {
-        login42: 'hbanthiy',
-        username: 'hbanthiy',
-        userStatus: 'playing',
-        imagePath: '/defaultPhoto.jpeg',
-        friendsofthisuser: {
-          connect: [
-            { userID: user1.userID },
-            { userID: user2.userID },
-            { userID: user3.userID },
-          ],
-        },
-      },
-    });
-  } catch {}
+  // try {
+  //   await prisma.user.create({
+  //     data: {
+  //       login42: 'hbanthiy',
+  //       username: 'hbanthiy',
+  //       userStatus: 'playing',
+  //       imagePath: '/defaultPhoto.jpeg',
+  //       friendsofthisuser: {
+  //         connect: [
+  //           { userID: user1.userID },
+  //           { userID: user2.userID },
+  //           { userID: user3.userID },
+  //         ],
+  //       },
+  //     },
+  //   });
+  // } catch {}
 
   try {
     await prisma.user.create({
