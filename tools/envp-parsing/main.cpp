@@ -22,7 +22,7 @@ int	main(void)
 		file.close();
 		if (validate_env())
 			return (0);
-		std::cout << "error: envp invalid, you can delete it and make again to create one or edit your'e .env file" << std::endl;
+		std::cout << "error: envp invalid, you can delete it and make again to create one or edit your .env file" << std::endl;
 		exit(1);
 	}
 	else

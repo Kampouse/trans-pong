@@ -1,10 +1,25 @@
 import React from 'react'
+import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
+import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
+import { useBallColor, useBackgroundColor, usePaddleColor } from 'Router/Router'
+import { useAtom } from 'jotai'
 
 interface DrawProps {
   canvas: React.MutableRefObject<HTMLCanvasElement | null>
-  mouse: {
-    y: number
-  }
+}
+
+interface UpdateProps {
+	gameover: React.MutableRefObject<boolean>,
+	keyActions: {
+		up: boolean,
+		down: boolean
+	}
+}
+
+interface ColorProps {
+	ballColor: string,
+	backgroundColor: string,
+	paddleColor: string
 }
 
 const gameBall = {
@@ -17,16 +32,14 @@ const gameBall = {
 }
 
 const leftPlayer = {
-	playerUser: '',
-	playerPhoto: '',
 	playerScore: 0,
+	prevPlayerScore: 0,
 	playerPos: 0
 }
 
 const rightPlayer = {
-  playerUser: '',
-	playerPhoto: '',
 	playerScore: 0,
+	prevPlayerScore: 0,
 	playerPos: 0
 }
 
@@ -50,7 +63,7 @@ function getCanvasSize(props: DrawProps) {
 }
 
 export function init(props: DrawProps) {
-  const { canvas, mouse } = props
+  const { canvas } = props
 
   getCanvasSize(props)
 
@@ -67,12 +80,10 @@ export function init(props: DrawProps) {
 
   gameBall.ballDirX = -1.0
   gameBall.ballDirY = 0.0
-
-  mouse.y = leftPlayer.playerPos
 }
 
-export function draw(props: DrawProps) {
-  const { canvas } = props
+export function singlePlayerDraw(props: DrawProps, colors: ColorProps){
+	const { canvas } = props
   var ctx = canvas!.current!.getContext('2d')
 
   if (!ctx) {
@@ -93,7 +104,7 @@ export function draw(props: DrawProps) {
 	const paddleWidth =  Math.floor(canvasSize.width * 0.01)
 	const paddleHeight =  Math.floor(canvasSize.height * 0.15)
 
-  ctx.fillStyle = 'red'
+  ctx.fillStyle = colors.backgroundColor
   ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
 
   ctx.fillStyle = '#FFF'
@@ -127,17 +138,86 @@ export function draw(props: DrawProps) {
   for (let i = 0; i <= canvasSize.height; i += 15)
     ctx.fillRect((canvasSize.width - 2) / 2, i, 2, 10)
 
+	ctx.fillStyle = colors.paddleColor
   ctx.fillRect(0, (leftPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
   ctx.fillRect(canvasSize.width - paddleWidth, (rightPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
 
+	ctx.fillStyle = colors.ballColor
   ctx.beginPath()
   ctx.arc(canvasSize.width * gameBall.ballPosX, canvasSize.height * gameBall.ballPosY, canvasSize.width * gameBall.ballRadius, 0, Math.PI * 2, true)
   ctx.closePath()
   ctx.fill()
 }
 
-export function drawGameover(props: DrawProps) {
-  const { canvas } = props
+export function draw(props: DrawProps, gameData: UpdateGameDto, colors: ColorProps) {
+	const { canvas } = props
+  var ctx = canvas!.current!.getContext('2d')
+
+  if (!ctx) {
+    return
+  }
+
+  getCanvasSize(props)
+
+  if (
+    canvas.current!.height !== canvasSize.height ||
+    canvas.current!.width !== canvasSize.width
+  ) {
+    canvasSize.height = canvas.current!.height
+    canvasSize.width = canvas.current!.width
+    gameData.gameBall.ballRadius = canvasSize.width * 0.01
+  }
+
+	const paddleWidth =  Math.floor(canvasSize.width * 0.01)
+	const paddleHeight =  Math.floor(canvasSize.height * 0.15)
+
+  ctx.fillStyle = colors.backgroundColor
+  ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
+
+  ctx.fillStyle = '#FFF'
+
+  if (canvasSize.width === 300) {
+    ctx.font = '50px font'
+    ctx.fillText(
+      gameData.leftPlayer.playerScore.toString(),
+      canvasSize.width / 4 - 10,
+      canvasSize.height / 5
+    )
+    ctx.fillText(
+      gameData.rightPlayer.playerScore.toString(),
+      (3 * canvasSize.width) / 4 - 10,
+      canvasSize.height / 5
+    )
+  } else {
+    ctx.font = '75px font'
+    ctx.fillText(
+      gameData.leftPlayer.playerScore.toString(),
+      canvasSize.width / 4 - 15,
+      canvasSize.height / 5
+    )
+    ctx.fillText(
+      gameData.rightPlayer.playerScore.toString(),
+      (3 * canvasSize.width) / 4 - 15,
+      canvasSize.height / 5
+    )
+  }
+
+  for (let i = 0; i <= canvasSize.height; i += 15)
+    ctx.fillRect((canvasSize.width - 2) / 2, i, 2, 10)
+
+	ctx.fillStyle = colors.paddleColor
+  ctx.fillRect(0, (gameData.leftPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
+  ctx.fillRect(canvasSize.width - paddleWidth, (gameData.rightPlayer.playerPos - 0.075) * canvasSize.height, paddleWidth, paddleHeight)
+
+	ctx.fillStyle = colors.ballColor
+  ctx.beginPath()
+  ctx.arc(canvasSize.width * gameData.gameBall.ballPosX, canvasSize.height * gameData.gameBall.ballPosY, canvasSize.width * gameData.gameBall.ballRadius, 0, Math.PI * 2, true)
+  ctx.closePath()
+  ctx.fill()
+}
+
+function drawGameover(props: DrawProps, leftScore: number, rightScore: number) {
+	const { canvas } = props
   var ctx = canvas!.current!.getContext('2d')
 
   if (!ctx) {
@@ -152,54 +232,64 @@ export function drawGameover(props: DrawProps) {
   ctx.fillStyle = '#6e6767'
   ctx.fillRect(0, 0, canvasSize.width, canvasSize.height)
 
-  let playerWon: string
-
-  playerWon = leftPlayer.playerScore >= 5 ? 'Player 1 won!' : 'Player 2 won!'
-
-  ctx.fillStyle = '#FFF'
+	ctx.fillStyle = '#FFF'
 
   if (canvasSize.width === 300) {
     ctx.font = '50px font'
     ctx.fillText(
-      playerWon,
+      "Game Over!",
       (canvasSize.width - 280) / 2,
       canvasSize.height / 2 + 20
     )
     ctx.fillText(
-      leftPlayer.playerScore.toString(),
+      leftScore.toString(),
       canvasSize.width / 4 - 10,
       canvasSize.height / 5
     )
     ctx.fillText(
-      rightPlayer.playerScore.toString(),
+      rightScore.toString(),
       (3 * canvasSize.width) / 4 - 10,
       canvasSize.height / 5
     )
   } else {
     ctx.font = '75px font'
     ctx.fillText(
-      playerWon,
+      "Game Over!",
       (canvasSize.width - 415) / 2,
       canvasSize.height / 2 + 20
     )
     ctx.fillText(
-      leftPlayer.playerScore.toString(),
+      leftScore.toString(),
       canvasSize.width / 4 - 15,
       canvasSize.height / 5
     )
     ctx.fillText(
-      rightPlayer.playerScore.toString(),
+      rightScore.toString(),
       (3 * canvasSize.width) / 4 - 15,
       canvasSize.height / 5
     )
   }
 }
 
-export const update = ({ gameover }) => {
+export function drawSingleGameover(props: DrawProps, winner: React.MutableRefObject<string>) {
+  winner.current = leftPlayer.playerScore >= 5 ? "You" : "Computer"
+  drawGameover(props, leftPlayer.prevPlayerScore, rightPlayer.prevPlayerScore);
+}
+
+export function drawMultiGameover(props: DrawProps, gameData: UpdateGameDto, winner: React.MutableRefObject<string>) {
+  winner.current = gameData.leftPlayer.playerScore >= 5 ? gameData.leftPlayer.playerUser : gameData.rightPlayer.playerUser
+  drawGameover(props, gameData.leftPlayer.playerScore, gameData.rightPlayer.playerScore)
+}
+
+export const update = (props: UpdateProps) => {
 	const playerHeight = 0.15
 	const playerWidth = 0.01
 
-  leftPlayer.playerPos = 0.5
+  if (leftPlayer.playerPos > 0 && props.keyActions.up)
+		leftPlayer.playerPos -= 0.01
+	if (leftPlayer.playerPos < 1 && props.keyActions.down)
+		leftPlayer.playerPos += 0.01
+
   rightPlayer.playerPos += (gameBall.ballPosY - rightPlayer.playerPos) * 0.1
 
   gameBall.ballPosX += (gameBall.ballDirX * gameBall.ballSpeed) / 1000
@@ -235,8 +325,19 @@ export const update = ({ gameover }) => {
     gameBall.ballDirX = direction * Math.cos(angleRad)
     gameBall.ballDirY = Math.sin(angleRad)
 	} else if (gameBall.ballPosX <= gameBall.ballRadius || gameBall.ballPosX + gameBall.ballRadius >= 1) {
-    if (gameBall.ballPosX > 0.5) leftPlayer.playerScore++
-    else rightPlayer.playerScore++
+    if (gameBall.ballPosX > 0.5){
+      leftPlayer.playerScore++
+    }
+    else{
+      rightPlayer.playerScore++
+    }
+		if (leftPlayer.playerScore >= 5 || rightPlayer.playerScore >= 5) {
+			props.gameover.current = true;
+			leftPlayer.prevPlayerScore = leftPlayer.playerScore; 
+			rightPlayer.prevPlayerScore = rightPlayer.playerScore; 
+			leftPlayer.playerScore = 0;
+			rightPlayer.playerScore = 0;
+		}
     gameBall.ballPosX = 0.5
     gameBall.ballPosY = 0.5
     gameBall.ballSpeed = 10.0

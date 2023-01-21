@@ -1,3 +1,11 @@
+export class SinglePlayerDto
+{
+    constructor(
+        public player: string,
+        public photo: string,
+    ){};
+}
+
 export class BallDto
 {
 		constructor(

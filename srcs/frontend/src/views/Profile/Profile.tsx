@@ -9,8 +9,9 @@ import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 import { AlertColor } from '@mui/material';
 import { UserOption } from '../UserOptions/User.Option'
 import { GoogleReset } from 'views/GoogleAuth/google.reset';
+import { useNavigate } from 'react-router-dom';
 import Error404 from 'views/Error/Error404';
-
+import {Fetch } from 'utils';
 
 //  =============== User status         =============== //
 
@@ -22,6 +23,11 @@ import Error404 from 'views/Error/Error404';
 const ONLINE = "text-green-600 text-md";
 const PLAYING = "text-amber-500 text-md";
 const OFFLINE = "text-red-600 text-md";
+
+async function delay(ms: number)
+{
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const getStatusCSS = (status) =>
 {
@@ -45,18 +51,14 @@ const useFetch = (username) =>
 	const [profileReq, setProfileReq] = useState<any>(null);
 	
 	useEffect(() => {
-		fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "") , {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Credentials': 'true'
-			}
-		})
+		Fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "")
+		)
             .then((response) => response.json())
 			.then((data) => {
 				setProfileReq(data);
-			})
+			}).catch((err) => {
+                    console.error(err);
+            })
 	}, [username])
 	return {profileReq};
 }
@@ -75,16 +77,16 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                     <div className="w-[26%] my-auto text-center"><p>Result</p></div>
                     <div className="w-[37%] my-auto text-center"><p>Right Player</p></div>
                     </li>
-                    {data.matchHistory.map((currentMatch) =>
+                    {  data.matchHistory && data.matchHistory.map((currentMatch) =>
                     {
                         return (
-                                    <li className="flex py-4" key={currentMatch.matchNum}>
+                                    <li className="flex py-4" key={currentMatch.updatedAt + currentMatch.winner}>
                                         <div className="flex w-[37%] my-auto items-center ml-2">
                                             <div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full rounded-full`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
+                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                             <div className="ml-2">
-                                                <p className={`text-gray-900`} onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
+                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.leftPlayer}
                                                 </p>
                                             </div>
@@ -99,12 +101,12 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                                         </div>
                                         <div className="flex w-[37%] my-auto justify-end items-center mr-2">
                                             <div className="mr-2">
-                                                <p className={`text-gray-900`} onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
+                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.rightPlayer}
                                                 </p>
                                             </div>
                                             <div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full rounded-full`} src={currentMatch.rightPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
+                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.rightPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                         </div>
                                     </li>
@@ -118,31 +120,37 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
 
 //  =============== Friend List component       =============== //
 
-function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>})
+function FriendList({userClicked, setOpenUserOptions, username}: {userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined})
 {
+	const {profileReq: friendsData} = useFetch(username);
+
     return (
         <div className="flex h-[100%] flex-col -my-4">
             <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
                 <div className="flow-root overflow-y-scroll scrollbar-hide">
-                    <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
-                        {data.friendList.map((currentFriend) =>
-                        {
-                            return (
-                                <li className="py-4" key={currentFriend.friendUser}>
-                                    <div className="flex items-center space-x-4">
-                                        <div className="shrink-0">
-                                            <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true);}}/>
-                                        </div>
-                                        <div className="min-w-0 flex-1">
-                                            <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true); }}>
-                                                {currentFriend.friendUser}
-                                            </p>
-                                            <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentFriend.friendStatus)}>●</span> {currentFriend.friendStatus[0].toUpperCase() + currentFriend.friendStatus.substring(1)}</p>
-                                        </div>
-                                    </div>
-                                </li>);
-                        })}
-                    </ul>
+									 {friendsData && friendsData.error == false && (
+										<>
+	                    <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
+                        {friendsData.friendList.map((currentFriend) =>
+	                        {
+	                          return (
+	                              <li className="py-4" key={currentFriend.friendUser}>
+	                                  <div className="flex items-center space-x-4">
+	                                      <div className="shrink-0">
+	                                          <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true);}}/>
+	                                      </div>
+	                                      <div className="min-w-0 flex-1">
+	                                          <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true); }}>
+	                                              {currentFriend.friendUser}
+	                                          </p>
+	                                          <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentFriend.friendStatus)}>●</span> {currentFriend.friendStatus[0].toUpperCase() + currentFriend.friendStatus.substring(1)}</p>
+	                                      </div>
+	                                  </div>
+	                              </li>);
+	                        })}
+	                    </ul>
+										</>
+									 )}
                 </div>
             </div>
         </div>
@@ -154,128 +162,98 @@ function FriendList({data, userClicked, setOpenUserOptions}: {data: any, userCli
 //  Accept request GET request
 async function acceptRequest(username: string)
 {
-    await fetch('http://localhost:3000/profile/add/' + username)
+    await Fetch('http://localhost:3000/profile/add/' + username)
     .then(function(){})
     .catch(function() {console.log("error on accept friend request fetch");});
-    window.location.reload();
 }
 
 async function denyRequest(username: string)
 {
-    await fetch('http://localhost:3000/profile/deny/' + username)
+    await Fetch('http://localhost:3000/profile/deny/' + username)
     .then(function(){})
     .catch(function() {console.log("error on deny request fetch");});
-    window.location.reload();
 }
 
-function FriendRequests({data, userClicked, setOpenUserOptions}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>}): JSX.Element {
+function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined}): JSX.Element {
+	const {profileReq: friendsData} = useFetch(username);
+
+    const nav = useNavigate();
+
+		const [friendRequests, setFriendRequests] = useState<Array<any>>([])
+
+		useEffect(() => {
+			if (friendsData)
+				setFriendRequests(friendsData.friendRequests)
+		}, [friendsData])
+
+		const deleteRequest = (fromUser: string ) => {
+			setFriendRequests(
+				friendRequests.filter((request) => {
+					return request.fromUser != fromUser
+				})
+			)
+		}
 
     return (
     <div className="flex h-[100%] flex-col -my-4">
       <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
         <div className="flow-root overflow-y-scroll scrollbar-hide">
-          <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
-            { data.friendRequests.map((currentRequest) =>
-            {
-                return (
-                    <li className="py-4" key={currentRequest.fromUser}>
-                        <div className="flex items-center space-x-4">
-                            <div className="shrink-0">
-                                <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentRequest.fromPhoto} alt="" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
-                                />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                                <p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
-                                >
-                                    {currentRequest.fromUser}
-                                </p>
-                            </div>
-                            <div className='flex w-fit justify-end'>
-                                <IconButton onClick={() => {acceptRequest(currentRequest.fromUser);}}>
-                                    <CheckCircle sx={{ color: blue[700] }} />
-                                </IconButton>
-                                <IconButton onClick={() => {denyRequest(currentRequest.fromUser);}}>
-                                    <Cancel sx={{ color: blue[700] }} />
-                                </IconButton>
-                            </div>
-                        </div>
-                    </li>);})}
-            </ul>
+					{friendsData && friendsData.error == false && friendRequests && (
+						<>
+		          <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300">
+		            { friendRequests.map((currentRequest) =>
+		            {
+		                return (
+		                    <li className="py-4" key={currentRequest.fromUser}>
+		                        <div className="flex items-center space-x-4">
+		                            <div className="shrink-0">
+		                                <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentRequest.fromPhoto} alt="" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
+		                                />
+		                            </div>
+		                            <div className="min-w-0 flex-1">
+		                                <p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentRequest.fromUser;setOpenUserOptions(true);}}
+		                                >
+		                                    {currentRequest.fromUser}
+		                                </p>
+		                            </div>
+		                            <div className='flex w-fit justify-end'>
+		                                <IconButton onClick={() => {acceptRequest(currentRequest.fromUser); deleteRequest(currentRequest.fromUser);}}>
+		                                    <CheckCircle sx={{ color: blue[700] }} />
+		                                </IconButton>
+		                                <IconButton onClick={() => {denyRequest(currentRequest.fromUser); deleteRequest(currentRequest.fromUser);}}>
+		                                    <Cancel sx={{ color: blue[700] }} />
+		                                </IconButton>
+		                            </div>
+		                        </div>
+		                    </li>);})}
+		           </ul>
+						</>
+					)}
         </div>
       </div>
     </div>
   );
 }
 
-//  =============== Achievement component       =============== //
-
-function Achievements({data}: {data: any}) {
-	return (
-		<div className="flex h-[100%] flex-col -my-4">
-            <div className="container-snap rounded-lg dark:border-gray-300 dark:bg-transparent">
-                <div className="flow-root overflow-y-scroll scrollbar-hide">
-                    <ul role="list" className="divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg">
-						{ data.achievement.map((currentAchievement) =>
-                        {
-							return (
-								<li className="py-4">
-									<div className="flex items-center m-auto">
-										{
-                                            (currentAchievement.achieved) ? 
-                                            ( <React.Fragment>
-											    <div className="w-12 h-12">
-													<div className="h-[32px] w-[32px]">
-														<WorkspacePremium sx={{ width: 32, height: 32, m: 1}} />
-													</div>
-												</div>
-												<div className="min-w-0 flex-1 pl-2">
-													<p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600">{currentAchievement.name}</p>
-													<p className="text-sm text-gray-500 dark:text-slate-500">{currentAchievement.description}</p>
-												</div>
-											</React.Fragment>
-										    )
-                                            : 
-                                            (
-											<React.Fragment>
-												<div className="w-12 h-12">
-													<div className="h-[32px] w-[32px]">
-														<Lock sx={{ height: 32, width: 32, m: 1 }} />
-													</div>
-												</div>
-												<div className="min-w-0 flex-1 pl-2">
-													<p className="truncate text-lg font-semibold text-gray-900 dark:text-slate-600">Locked</p>
-												</div>
-											</React.Fragment>
-										    )
-                                        }
-									</div>
-								</li>
-							);
-						})}
-                    </ul>
-                </div>
-            </div>
-        </div>
-	    );
-}
-
 //  =============== Stats component       =============== //
 
 function Stats({data}: {data: any})
 {
-    var played = data.stats.played;
-    var win = data.stats.win;
-    var ratio = data.stats.winRatio;
+
+    let played = data?.stats?.played ? data?.stats?.played : 0;
+    let win = data?.stats?.win ? data?.stats?.win : 0;
+    let ratio = data?.stats?.winRatio ? data?.stats?.winRatio : 0;
     ratio = (ratio * 100).toPrecision(4) + ' %';
-    var leftPlayed = data.stats.leftPlayed;
-    var leftWin = data.stats.leftWin;
-    var leftRatio = data.stats.leftWinRatio;
+    let leftPlayed = data?.stats?.leftPlayed ? data?.stats?.leftPlayed : 0;
+    let leftWin = data?.stats?.leftWin ? data?.stats?.leftWin : 0;
+    let leftRatio = data?.stats?.leftWinRatio ? data?.stats?.leftWinRatio : 0;
     leftRatio = (leftRatio * 100).toPrecision(4) + ' %'
-    var rightPlayed = data.stats.rightPlayed;
-    var rightWin = data.stats.rightWin;
-    var rightRatio = data.stats.rightWinRatio;
+    let rightPlayed = data?.stats?.rightPlayed ? data?.stats?.rightPlayed : 0;
+    let rightWin = data?.stats?.rightWin ? data?.stats?.rightWin : 0;
+    let rightRatio = data?.stats?.rightWinRatio ? data?.stats?.rightWinRatio : 0;
+
     rightRatio = (rightRatio * 100).toPrecision(4) + ' %'
-    var classInfo = 'py-2 pl-16'
+    let classInfo = 'py-2 pl-16'
 
     return (
     <div className="h-[100%]">
@@ -334,20 +312,81 @@ export interface EditProfileProps
     data: any
 }
 
-export function EditProfile({open, onClose, data} : EditProfileProps)
+async function updateUsername(newUsername: any, data: any, setOpenSnackbar: any, snackbarMsg: any, snackbarSeverity: any)
 {
-    //  =============== Google auth             =============== //
-    
+    var username = {username: newUsername.value}
+
+    Fetch("http://localhost:3000/profile/update/username", "POST", JSON.stringify(username))
+        .then(response => response.json())
+        .then(res => {
+            if (res.status == "200")
+            {
+                data.username = username.username;
+                setOpenSnackbar(true);
+                snackbarMsg.current = res.message;
+                snackbarSeverity.current = 'success'
+            }
+            else
+            {
+                setOpenSnackbar(true);
+                snackbarMsg.current = res.message;
+                snackbarSeverity.current = 'error'
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
+
+async function getPhoto(data: any)
+{
+    await Fetch("http://localhost:3000/profile/get/photo")
+        .then(response => response.json())
+        .then(res =>
+            {
+                data.imagePath = res.message;
+            })
+        .catch(error =>
+            {
+                console.error("Error:", error);
+            });
+}
+
+async function getAuth(data: any, setOpenSnackbar, snackbarMsg, snackbarSeverity)
+{
+    await Fetch("http://localhost:3000/profile/get/auth")
+        .then(response => response.json())
+        .then(res => {
+            if (res.message == "active")
+            {
+                data.authenticator = true;
+                setOpenSnackbar(true);
+                snackbarMsg.current = "Google two way auth is active";
+                snackbarSeverity.current = 'success'
+            }
+            else
+            {
+                data.authenticator = false;
+                setOpenSnackbar(true);
+                snackbarMsg.current ="Google two way auth is inactive";
+                snackbarSeverity.current = 'error'
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+}
+
+export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, snackbarSeverity} : EditProfileProps)
+{
     const [openGoogleAuth, setGoogleAuth] = useState(false);
     const [openGoogleReset, setGoogleReset] = useState(false);
-
-    //  Edit profile without authentificator activated
 
     return (
         <Dialog onClose={onClose} open={open} className="font-Raleway">
         <div className=" w-96">
             <DialogTitle className='bg-sky-200'>
-                <p className=' text-center font-Raleway font-bold text-3xl '>
+                <p className=' text-center font-Raleway  font-bold text-3xl '>
                     Edit Profile
                 </p>
             </DialogTitle>
@@ -357,10 +396,13 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                         Change username
                     </p>
                     <div className=''>
-                        <form action='http://localhost:3000/profile/update/username' method='POST'>
                             <input name="newUsername" id="newUsername" type="text" className='text-center h-fit w-fit my-2 px-8 mx-[10%]' placeholder="Enter New Display Name"/>
-                            <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
-                        </form>
+                            <button onClick={() =>
+                            {
+                                updateUsername(document.getElementById("newUsername"), data, setOpenSnackbar, snackbarMsg, snackbarSeverity)
+                                onClose();
+                            }}
+                            className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                     </div>
                 </div>
                 <div className='my-2'>
@@ -368,9 +410,20 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                         Upload new Photo
                     </p>
                     <div>
-                        <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data'>
-                            <input accept="image/*" type="file" name='file' className=' justify-center'></input>
-                            <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Upload</button>
+                        <iframe name="dummyframe" id="dummyframe" className='w-0 h-0'></iframe>
+                        <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data' target='dummyframe'>
+                            <input accept="image/*" id="file" type="file" name='file' className=' justify-center'></input>
+                            <button onClick={ async () =>
+                                {
+                                    await delay(300);
+                                    await getPhoto(data);
+                                    setOpenSnackbar(true);
+                                    snackbarMsg.current = "Photo upload successful";
+                                    snackbarSeverity.current = 'success';
+                                    onClose();
+                                }} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
+                                Upload
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -382,7 +435,7 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                             onClick=
                             {() =>
                                 {
-                                    if (data.authentificator == false)
+                                    if (data.authenticator == false)
                                     {
                                         setGoogleAuth(true);
                                     }
@@ -397,8 +450,8 @@ export function EditProfile({open, onClose, data} : EditProfileProps)
                 </div>
             </DialogContent>
             </div>
-            <GoogleAuth open={openGoogleAuth} onClose={() => setGoogleAuth(false)}></GoogleAuth>
-            <GoogleReset open={openGoogleReset} onClose={() => setGoogleReset(false)}></GoogleReset>
+            <GoogleAuth open={openGoogleAuth} onClose={async () => {await getAuth(data, setOpenSnackbar, snackbarMsg, snackbarSeverity);setGoogleAuth(false)}}></GoogleAuth>
+            <GoogleReset open={openGoogleReset} onClose={async () => {await getAuth(data, setOpenSnackbar, snackbarMsg, snackbarSeverity); setGoogleReset(false)}}></GoogleReset>
             </Dialog>
             );
 }
@@ -487,20 +540,20 @@ export default function Profile()
     */
 
     const { username } = useParams();
-	const {profileReq: data} = useFetch(username);
-
-    if (data && data.error == true)
-    {
-        return (<Error404></Error404>);
-    }
-
+		const {profileReq: data} = useFetch(username);
+ if(data && data?.statusCode && data.statusCode != 200)
+      {
+           data.error = true;
+           data.status = data.statusCode;
+      }
+    useEffect(() => {}, [username])
     return (
-    <div className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
+    <div  className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
         <div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
             {data && (
             <>
             <div className='w-full h-[30%] flex py-4 px-5'>
-                <div className='w-fit h-full flex'>
+                <div className='w-fit h-full flex items-center justify-center'>
                     {username === undefined && hover && 
                     <div className='absolute mx-auto z-50 h-[35px] w-[35px] hover:cursor-pointer' onMouseEnter={() => setHover(true)} onClick={() => {setOpenEditProfile(true); setHover(false)}}>
                         <Edit sx={{color: blue[700], height: 35, width: 35}} />
@@ -515,7 +568,7 @@ export default function Profile()
                 <div className='w-[50%] h-full flex mx-auto'>
                     <div className='h-fit my-auto'>
                         <p className='text-4xl font-Merriweather '>{ data.username }</p>
-                        <p className="text-lg font-Merriweather pt-2"><span className={getStatusCSS(data.status)}>●</span> {data.status[0].toUpperCase() + data.status.substring(1)}</p>
+                        <p className="text-lg font-Merriweather pt-2"><span className={getStatusCSS(data?.status)}>●</span> {data?.status[0]?.toUpperCase()}</p>
                     </div>
                 </div>
             </div>
@@ -526,25 +579,23 @@ export default function Profile()
                             <Tab icon={<History />} label="Match History" sx={{ fontWeight: 'bold' }} value="1" />
                             <Tab icon={<Favorite />} label="Friends" sx={{ fontWeight: 'bold' }} value="2" />
                                 {username === undefined && <Tab icon={<PersonAdd />} label="Friend Requests" sx={{ fontWeight: 'bold' }} value="3" />}
-                            <Tab icon={<EmojiEvents />} label="Achievements" sx={{ fontWeight: 'bold' }} value="4" />
-                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="5" />
+                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="4" />
                         </TabList>
                     </Box>
                 </div>
                 <div className='grow overflow-hidden'>
-                    <div className='max-h-[100%] overflow-y-scroll overflow-hidden'>
+                    <div className='max-h-[100%] overflow-y-scroll overflow-hidden scrollbar-hide'>
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-                        <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-                            {username === undefined && <TabPanel value="3"><FriendRequests data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>}
-                        <TabPanel value="4"><Achievements data={data} /></TabPanel>
-                        <TabPanel value="5"><Stats data={data} /></TabPanel>
+                        <TabPanel value="2"><FriendList userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
+                            {username === undefined && <TabPanel value="3"><FriendRequests userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>}
+                        <TabPanel value="4"><Stats data={data} /></TabPanel>
                     </div>
                 </div>
             </TabContext>
             </>)}
         </div>
-        <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked}></UserOption>
-        <EditProfile onClose={() => setOpenEditProfile(false)} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
+        <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked} setValue={setValue}></UserOption>
+        <EditProfile onClose={ async () => {setOpenEditProfile(false);}} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
         <GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
     </div>
   );

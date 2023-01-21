@@ -20,7 +20,7 @@ export const Menu = (): React.ReactElement => {
       <div className="overflow-y-scroll scrollbar-hide h-fit max-h-screen m-auto pt-[50px]">
         <div className="  flex  flex-wrap justify-center">
           <Contenter>
-            <Link to="/Watch" className="h-full w-full">
+            <Link to="/Spectate" className="h-full w-full">
               <div className="mt-32 flex justify-center">
                 <Watch />
               </div>
@@ -50,7 +50,7 @@ export const Menu = (): React.ReactElement => {
             </Link>
           </ContenterLarge>
           <ContenterLarge>
-            <Link to="/CreateGame" className="relative h-full w-full">
+            <Link to="/ColorOptions" className="relative h-full w-full">
               <div className="mt-32 flex justify-center">
                 <SettingSvg />
               </div>

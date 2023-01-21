@@ -16,17 +16,16 @@ model User {
     username            String                          @unique
     userStatus          userStatus                      @default(online)
     imagePath           String                          @default("/defaultPhoto.png")
-    authentificator     Boolean                         @default(false)
+    authenticator       Boolean                         @default(false)
     authKey             String                          @default("none")
-    achievement         Achievement?
     channels            Channel[]
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
+    activeAt            DateTime                        @default(now())
 }
 
 model FriendRequest{
     friendRequestID     String                          @id @default(cuid())
-    friendRequestNumber Int                             @unique @default(autoincrement())
     sender              String
     receiver            String
     status              requestStatus                   @default(pending)
@@ -37,7 +36,7 @@ model FriendRequest{
 
 model Game{
     gameID              String                          @id @default(cuid())
-    gameNumber          Int                             @unique @default(autoincrement())
+    gameRoomID          String?                         @unique 
     leftPlayer          String
     leftPlayerScore     Int                             @default(0)
     rightPlayer         String
@@ -69,41 +68,6 @@ model Channel{
     admin               String[]
     createdAt           DateTime    @default(now())
     updatedAt           DateTime    @updatedAt
-}
-
-model Achievement{
-    userID              String      @id @default(cuid())
-    profile             User        @relation(fields: [userID], references: [userID])
-    achiev1             Boolean     @default(false)
-    achiev2             Boolean     @default(false)
-    achiev3             Boolean     @default(false)
-    achiev4             Boolean     @default(false)
-    achiev5             Boolean     @default(false)
-    achiev6             Boolean     @default(false)
-    achiev7             Boolean     @default(false)
-    achiev8             Boolean     @default(false)
-    achiev9             Boolean     @default(false)
-    achiev10            Boolean     @default(false)
-    achiev11            Boolean     @default(false)
-    achiev12            Boolean     @default(false)
-    achiev13            Boolean     @default(false)
-    achiev14            Boolean     @default(false)
-    achiev15            Boolean     @default(false)
-    achiev16            Boolean     @default(false)
-    achiev17            Boolean     @default(false)
-    achiev18            Boolean     @default(false)
-    achiev19            Boolean     @default(false)
-    achiev20            Boolean     @default(false)
-    achiev21            Boolean     @default(false)
-    achiev22            Boolean     @default(false)
-    achiev23            Boolean     @default(false)
-    achiev24            Boolean     @default(false)
-    achiev25            Boolean     @default(false)
-    achiev26            Boolean     @default(false)
-    achiev27            Boolean     @default(false)
-    achiev28            Boolean     @default(false)
-    achiev29            Boolean     @default(false)
-    achiev30            Boolean     @default(false)
 }
 
 enum userStatus{

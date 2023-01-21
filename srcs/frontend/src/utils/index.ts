@@ -16,13 +16,16 @@ export function generateSerial() {
   return randomSerial
 }
 
-export function Fetch(url: string) {
-    let  header = {
-      'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': 'true',
-    }
-     return fetch(url, {headers:header, credentials: 'include'})
-  
+export function Fetch(url: string, method?: string, body?: string) {
+  let header = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': 'true',
+  }
+  if(method != ""){
+    return fetch(url, {headers: header, credentials: 'include', method: method, body: body})
+  }
+  return fetch(url, { headers: header, credentials: 'include', body:body })
+
 
 }

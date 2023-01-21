@@ -1,31 +1,35 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, Children } from 'react'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 import { useNavigate } from 'react-router'
 import { Routes, Route } from 'react-router-dom'
 import { useAtom, atom } from 'jotai'
 import Nav from 'views/Nav/Nav'
 import { Menu } from 'views/Menu/menu'
-import Game, { GameWatch } from 'views/Game/Game'
+import Game from 'views/Game/Game'
+import { SpectateMenu } from 'views/Game/Spectate'
 import Matchmaking from 'views/Game/Matchmaking'
-import CreateGame from 'views/Game/CreateGame'
-import PlayMenu from 'views/Game/PlayMenu'
 import Login from 'views/Login/Login'
 import Profile from 'views/Profile/Profile'
+import SinglePlayerCanvas from 'views/Game/components/SinglePlayerCanvas'
 import '@styles/main.css'
 import Error404 from 'views/Error/Error404'
 import Chat from 'views/Chat/Chat'
 import { ChatRoom, User } from 'utils/types'
 import '@styles/main.css'
-import { generateSerial } from 'utils'
+import { generateSerial,Fetch } from 'utils'
+import ColorOptions from 'views/Game/ColorOptions'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
 export const useRoomCode = atom('');
 
+export const useBallColor = atom('#ffffff')
+export const useBackgroundColor = atom('#ff0000')
+export const usePaddleColor = atom('#ffffff')
+
 export const getUserDetails = () =>
 {
 }
-
 export interface SearchUserProps {
 	open: boolean;
 	onClose: () => void;
@@ -33,6 +37,29 @@ export interface SearchUserProps {
 	userClicked: React.MutableRefObject<User | null>;
 }
 
+interface WrapperProps {
+  children: React.ReactNode;
+}
+
+const Wrapper: React.FC<WrapperProps> = ({ children }) => {
+	const [user, setUser] = useState(myProfile)
+	const [login, setLogin] = useAtom(useLogin)
+  const [isLogin, setIsLogin] = useState(useLogin)
+	const [openSearchUser, setOpenSearchUser] = useState(false);
+	const [searchUser, setSearchUser] = useState('');
+	const [users, setUsers] = useAtom(useUsers);
+	const [rooms, setRooms] = useAtom(useRooms);
+	const userClicked = useRef<User | null>(null);
+	const navigate = useNavigate();
+  return (
+    <>
+        <main>
+            <Nav Status={'f'} setStatus={setUser} setOpenSearchUser={setOpenSearchUser} searchUser={searchUser} setSearchUser={setSearchUser} />
+          </main>
+        { isLogin &&  children }
+    </>
+  );
+}
 export function SearchUser({ open, onClose, searchInput, userClicked }: SearchUserProps) {
 	const [users, setUsers] = useAtom(useUsers);
 	const usersList: User[] = users.filter((user: User) => {return user.username.search(searchInput.toLowerCase()) > -1});
@@ -82,10 +109,14 @@ export default function App()
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
 
+	// const [ballColor, setBallColor] = useAtom(useBallColor)
+	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
+	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
+
 //  Here we check with the backend if the user is authentificated
 const check = async () =>
 {
-    fetch('http://localhost:3000/auth/who')
+    Fetch('http://localhost:3000/auth/who')
       .then((response) => response.status)
       .then((status) =>
       {
@@ -96,6 +127,7 @@ const check = async () =>
         }
         else
         {
+          navigate('/')
             console.log("No user logged, please login.")
         }
       })
@@ -103,32 +135,27 @@ const check = async () =>
 
 useEffect(() => { check()}, [])
   return (
-    <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
-      {login == 'login' ? (
         <>
-          <main>
-            <Nav Status={'f'} setStatus={setUser} setOpenSearchUser={setOpenSearchUser} searchUser={searchUser} setSearchUser={setSearchUser} />
-          </main>
+    <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
           <Routes>
-            <Route path="/" element={<Menu />} />
-            <Route path="/Menu" element={<Menu />} />
-            <Route path="/CreateGame" element={<CreateGame />} />
-            <Route path="/Watch" element={<GameWatch />} />
-            <Route path="/PlayMenu" element={<PlayMenu />} />
-            <Route path="/Play" element={<Game />}></Route>
-            <Route path="/MatchMaking" element={<Matchmaking />}></Route>
+           <Route path="/" element={  <Login Status={login} /> } />
+            <Route path="/Menu" element={ <Wrapper><Menu/></Wrapper>} />
+            <Route path="/Spectate" element={<Wrapper><SpectateMenu /> </Wrapper>} />
+            <Route path="/Play" element={ <Wrapper> <Game /> </Wrapper>}></Route>
+            <Route path="/MatchMaking" element={ <Wrapper><Matchmaking/></Wrapper>}></Route>
             <Route path="/Profile">
-                <Route path=":username" element={<Profile />} />
-                <Route path="" element={<Profile />} />
+                <Route path=":username" element={ <Wrapper> <Profile/></Wrapper>} />
+                <Route path="" element={  <Wrapper> <Profile/></Wrapper>} />
             </Route>
-            <Route path="/Chat" element={<Chat />}></Route>
+            <Route path="/Chat" element={<Wrapper> <Chat /></Wrapper>}></Route>
             <Route path="*" element={<Error404 />}></Route>
-          </Routes>
-        </>
-      ) : (
-        <Login Status={login} />
-      )}
-			<SearchUser open={openSearchUser} onClose={() => {setOpenSearchUser(false); setSearchUser('')}} searchInput={searchUser} userClicked={userClicked} />
-    </div>
-  )
+            <Route path="/Game">
+                <Route path="" element={<Wrapper> <SinglePlayerCanvas/></Wrapper> }></Route>
+                <Route path=":id" element={<Wrapper><Game/></Wrapper>}></Route>
+            </Route>
+                <Route path="/ColorOptions" element={ <Wrapper> <ColorOptions/> </Wrapper>}></Route>
+            </Routes>
+        </div>
+    </>
+   )
 }

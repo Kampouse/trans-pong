@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { useAtom } from 'jotai'
-import { useLogin } from "../../Router/Router";
-
-
+import { SearchUser, useLogin } from "../../Router/Router";
+import { useNavigate } from 'react-router'
+import { Fetch } from '../../utils'
 export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, setSearchUser}) {
+  const navigate = useNavigate();
   const [setLogin] = useAtom(useLogin)
-
+ const [status , setLog] = useAtom(useLogin)
 	const buttonHandler = ( func: () => void, event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     func();
@@ -14,7 +15,12 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
 
   const logout = () => 
   {
-    //  Call logout method here
+    console.log('logout')
+     Fetch ('http://localhost:3000/auth/42logout')
+      setLog('logout')
+      navigate('/')
+     
+    //  TODO: Call logout method here
   }
 
   return (
@@ -30,7 +36,7 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
           aria-label="Toggle navigation"
         ></button>
         <div className=" grow " id="navbarSupportedContent1">
-          <Link to="/" className="font-Merriweather text-xl text-white">
+          <Link to="/Menu" className="font-Merriweather text-xl text-white">
             Transcendence
           </Link>
           <Link to={"/Profile"} className=" ml-2 pl-3 font-Merriweather text-white">
@@ -39,22 +45,19 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
           <Link to="/Matchmaking" className=" ml-2 pl-3 font-Merriweather text-white">
             Play
           </Link>
-
+          <Link to="/Spectate" className=" ml-2 pl-3 font-Merriweather text-white">
+            Spectate
+          </Link>
+          <Link to="/ColorOptions" className=" ml-2 pl-3 font-Merriweather text-white">
+            Game options
+          </Link>
+          <Link to="/Chat" className=" ml-2 pl-3 font-Merriweather text-white">
+            Chat
+          </Link>
           <ul className="  mr-auto flex flex-col pl-0"></ul>
-        </div>
 
+        </div>
         <div className="relative flex items-center font-Merriweather">
-            <form onSubmit={(e) =>
-                {
-                    e.preventDefault();
-                    if (searchUser !== '')
-                    {
-                        //  TODO: change this to -> href profile/searchUser ?
-                        setOpenSearchUser(true);
-                    }}
-                }>
-                <input value={searchUser} type="text" placeholder="Search User" onChange={e => setSearchUser(e.target.value)} className="w-[125px] rounded-sm text-gray-700" />
-            </form>
             <button  onClick={(event) => buttonHandler(logout, event) } type="submit" className="pl-4" >Logout </button>
         </div>
       </div>

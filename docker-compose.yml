@@ -24,6 +24,7 @@ services:
     restart: unless-stopped
     environment:
       - DATABASE_URL=${DATABASE_URL}
+      - LOGIN=${LOGIN}
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
       - REDIRECT=${REDIRECT}
@@ -33,6 +34,7 @@ services:
       dockerfile: Dockerfile
       args:
         - DATABASE_URL=${DATABASE_URL}
+        - LOGIN=${LOGIN}
         - CLIENT_ID=${CLIENT_ID}
         - CLIENT_SECRET=${CLIENT_SECRET}
         - REDIRECT=${REDIRECT}
@@ -46,6 +48,7 @@ services:
       - 5173:5173
       - 5555:5555
       - 3000:3000
+      - 3001:3001
 
 networks:
   trans:
