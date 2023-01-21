@@ -130,6 +130,8 @@ const check = async () =>
           navigate('/')
             console.log("No user logged, please login.")
         }
+      }).catch((error) => {
+        console.log(error)
       })
 }
 

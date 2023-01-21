@@ -13,20 +13,20 @@
       "email": "joaopaulomoraes@outlook.com"
     },
     "scripts": {
-      "backend": "cd ./backend/ && npx prisma generate && npx prisma db push && npx prisma db seed && concurrently 'npm run start' 'npx prisma studio'",
-      "frontend": "cd ./frontend/ && npm run start",
-      "backend-install": "cd ./backend/ && npm i",
-      "frontend-install": "cd ./frontend/ && npm i",
-      "backend-build": "cd ./backend/ && npm run build",
-      "frontend-build": "cd ./frontend/ && npm run build",
-      "backend-prod": "cd ./backend/ && npm run prod",
-      "frontend-prod": "cd ./frontend/ && npm run prod",
-      "dev": "sh ./script.sh && concurrently 'npm run backend' 'npm run  frontend'",
-      "build": "(concurrently 'npm run frontend-build' 'npm run  backend-build')",
-      "prod": "(concurrently 'npm run frontend-prod' 'npm run  backend-prod')",
-      "install": "concurrently 'npm run backend-install' 'npm run frontend-install'",
-      "bootstrap": "npm i && concurrently 'npm run backend-install' 'npm run frontend-install'",
-      "start": "npm i && sh ./script.sh && concurrently 'npm run backend' 'npm run frontend'"
+      "backend": "cd ./backend/ && npx prisma generate && npx prisma db push && npx prisma db seed && concurrently 'pnpm run start' 'npx prisma studio'",
+      "frontend": "cd ./frontend/ && pnpm run start",
+      "backend-install": "cd ./backend/ && pnpm i",
+      "frontend-install": "cd ./frontend/ && pnpm i",
+      "backend-build": "cd ./backend/ && pnpm run build",
+      "frontend-build": "cd ./frontend/ && pnpm run build",
+      "backend-prod": "cd ./backend/ && pnpm run prod",
+      "frontend-prod": "cd ./frontend/ && pnpm run prod",
+      "dev": "sh ./script.sh && concurrently 'pnpm run backend' 'pnpm run  frontend'",
+      "build": "(concurrently 'pnpm run frontend-build' 'pnpm run  backend-build')",
+      "prod": "(concurrently 'pnpm run frontend-prod' 'pnpm run  backend-prod')",
+      "install": "concurrently 'pnpm run backend-install' 'pnpm run frontend-install'",
+      "bootstrap": "pnpm i && concurrently 'pnpm run backend-install' 'pnpm run frontend-install'",
+      "start": "pnpm i && sh ./script.sh && concurrently 'pnpm run backend' 'pnpm run frontend'"
     },
     "devDependencies": {
       "@lightwing/eslint-config": "0.0.8",
@@ -37,8 +37,7 @@
       "rimraf": "3.0.2",
       "simple-git-hooks": "2.8.1",
       "typescript": "4.9.3",
-      "vite": "3.2.4",
-      "vite-plugin-doubleshot": "0.0.6"
+      "vite": "4.0.1"
     },
     "dependencies": {
       "turbo": "^1.6.3",
