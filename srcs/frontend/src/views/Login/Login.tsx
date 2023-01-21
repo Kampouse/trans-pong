@@ -28,16 +28,27 @@ export default function Login(Status)
         func(inputs)
         const button: HTMLButtonElement = event.currentTarget
     }
+	
+const localStorageLookup = async () => {
+  const data = localStorage.getItem('userData')
+  if (data) {
+     return data
+  }
+  return ""
+}
+
 //  Here we check if the client passed throught 42api
 const check = async () =>
 {
+    const localdata = await localStorageLookup()
     Fetch ('http://localhost:3000/auth/who').then((response) =>
     {
-        if(response.status != 200)
-            login() 
-        else if ( response.status == 200)
+        if(response.status === 200)
         {
-          loginOffline();
+        }
+        else
+        {
+            login() 
         }
     })
 }
