@@ -14,8 +14,12 @@ export class AuthController {
     const should2fa = await this.authService.should2fa(output)
     // console.log("should2fa", should2fa) and is activated
 
-    if (output) {
+    if (output && !should2fa.should2fa) {
       res.status(200).send();
+    }
+    if (output && should2fa.should2fa) {
+      res.status(401).send();
+      return { error: "User needs to activate 2fa" };
     }
     res.status(401).send();
     return { error: "No user found" };
@@ -38,7 +42,9 @@ export class AuthController {
       console.log("Error occured during authentifcation", token)
       return ErrorLogin
     }
-    const path = await this.authService.should2fa(request.user.username) ? "http://localhost:5173/2fa" : "http://localhost:5173/Profile"
+    const tfa = await this.authService.should2fa(request.user.username)
+    console.log("tfa", tfa)
+    const path = tfa.should2fa ? "http://localhost:5173/2fa" : "http://localhost:5173/Profile"
     const NewResponse = {
       statCode: 302,
       url: path

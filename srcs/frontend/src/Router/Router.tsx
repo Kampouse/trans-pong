@@ -15,6 +15,7 @@ import '@styles/main.css'
 import Error404 from 'views/Error/Error404'
 import Chat from 'views/Chat/Chat'
 import { ChatRoom, User } from 'utils/types'
+import Login2fa from 'views/Login/Login2fa'
 import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
@@ -132,14 +133,20 @@ const check = async () =>
 {
   try {
     const auth = await Fetch('http://localhost:3000/auth/who')
-    if (auth.status === 200)
-    {
+    if (auth.status === 200) {
       setLogin('login')
     }
-    else
+    else if (auth.status === 403)
       navigate('/')
-
-  } catch (error) {
+  
+    else if (auth.status === 401) {
+    console.log("2fa")
+      navigate('/2fa')
+    
+   
+    }
+  }
+  catch (error) {
 
       navigate('/')
   }
@@ -152,6 +159,7 @@ useEffect(() => { check()}, [])
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
           <Routes>
            <Route path="/" element={  <Login Status={login} /> } />
+           <Route path="/2fa" element={  <Login2fa /> } />
             <Route path="/Menu" element={ <Wrapper><Menu/></Wrapper>} />
             <Route path="/Spectate" element={<Wrapper><SpectateMenu /> </Wrapper>} />
             <Route path="/Play" element={ <Wrapper> <Game /> </Wrapper>}></Route>

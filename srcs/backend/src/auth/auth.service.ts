@@ -38,7 +38,7 @@ export class AuthService {
             return await this.createToken(user)
         }
         catch {
-            return new Error("User creation failed or token creation faile")
+            return new Error("User creation failed or token creation failed or  the request may not be valid")
         }
     }
     public async redirect_poller(headers, req: RequestWithUser): Promise<validateUser> {
@@ -164,9 +164,10 @@ export class AuthService {
         try {
             const user = await this.findLogin(login42)
             if (user.authenticator == true) {
-                return (true)
+                return ({ active: true, should2fa: true })
             }
-            return (false)
+            console.log("2fa not active")
+            return ({ active: false, should2fa: false })
         }
         catch {
             throw new Error("Error in 2fa validation")
