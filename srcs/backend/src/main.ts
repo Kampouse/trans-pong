@@ -22,19 +22,21 @@ const startPrisma = async () => {
   }
 };
 
-var updateStatusInterval = setInterval( async () => {
-  const users = await prisma.user.findMany({where: {userStatus: "online"}})
+var updateStatusInterval = setInterval(async () => {
+  const users = await prisma.user.findMany({ where: { userStatus: "online" } })
   //finish this shit later, socket is done
-  for(let user of users ){
+  for (let user of users) {
     var date = Date.now();
     var userDate = new Date(user.activeAt);
 
     var timeDistance = Math.floor((date - userDate.getTime()) / 1000);
-    if (timeDistance > 5){
+    if (timeDistance > 5) {
       console.log(`user ${user.userID} set to offline`)
-      await prisma.user.update({where: {userID: user.userID}, data: {
-        userStatus: "offline"
-      }})
+      await prisma.user.update({
+        where: { userID: user.userID }, data: {
+          userStatus: "offline"
+        }
+      })
     }
   }
 }, 120000)
@@ -56,6 +58,7 @@ async function bootstrap() {
       'Access-Control-Allow-Headers',
       'Access-Control-Allow-Methods',
       'Access-Control-Allow-Credentials',
+      'Origin, X-Requested-With, Content-Type, Accept'
     ],
     credentials: true
   });

@@ -114,25 +114,36 @@ export default function App()
 	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
 
 //  Here we check with the backend if the user is authentificated
+  const SecondAuthStatus = async () => {
+    const secondAuth = await Fetch('http://localhost:3000/profile/get/auth')
+    if (secondAuth.status === 200) {
+      const isAuth2 = await secondAuth.json()
+      if (isAuth2.message && isAuth2.message === 'active') {
+         return true
+      }
+      else if (isAuth2.message) {
+        return  false
+      }
+    }
+  }
+  //when a user as 2fa enable force  the redirection to the 2fa page or to the login page
+  //where the user can fiill the data to access   the rest of the app
 const check = async () =>
 {
-    Fetch('http://localhost:3000/auth/who')
-      .then((response) => response.status)
-      .then((status) =>
-      {
-        if (status == 200)
-        {
-            console.log("User is authentificated, proceed to open the dashboard")
-            setLogin('login')
-        }
-        else
-        {
-          navigate('/')
-            console.log("No user logged, please login.")
-        }
-      }).catch((error) => {
-        console.log(error)
-      })
+  try {
+    const auth = await Fetch('http://localhost:3000/auth/who')
+    if (auth.status === 200)
+    {
+      setLogin('login')
+    }
+    else
+      navigate('/')
+
+  } catch (error) {
+
+      navigate('/')
+  }
+  
 }
 
 useEffect(() => { check()}, [])

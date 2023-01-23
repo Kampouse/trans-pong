@@ -17,13 +17,13 @@ export class ProfileController {
     @UseGuards(JwtGuard)
     async getProfileEdit(@Req() request: RequestWithUser): Promise<PrivateProfileDto | Error> {
         try {
-        const login42 = await this.profileService.authentificate(request);
-        const privateProfile: PrivateProfileDto = await this.profileService.getProfileEdit(login42);
-        return (privateProfile);
-    } catch (error) {
-        return (Error ("Error: invalid token "));
+            const login42 = await this.profileService.authentificate(request);
+            const privateProfile: PrivateProfileDto = await this.profileService.getProfileEdit(login42);
+            return (privateProfile);
+        } catch (error) {
+            return (Error("Error: invalid token "));
+        }
     }
-}
 
     //  Get the public profile information of the username in /username
     @Get(':username')
@@ -66,8 +66,14 @@ export class ProfileController {
         }
 
         const response = await this.profileService.getAuth(login42);
+        console.log(response);
+        console.log(response);
         if (response.error == true) {
             res.status(403).send({ message: "error", status: '403' });
+            return;
+        }
+        if (response.message == 'innactive') {
+            res.status(200).send({ message: response.message, status: '200' });
             return;
         }
         res.status(200).send({ message: response.message, status: '200' });
@@ -148,7 +154,7 @@ export class ProfileController {
     }
 
     //  Update the username of the user authentificated
-    
+
     @UseGuards(JwtGuard)
     @Post('update/username')
     async updateUsername(@Res() res, @Body() newUsername: any, @Req() request: RequestWithUser): Promise<responseDefault> {
@@ -227,23 +233,23 @@ export class ProfileController {
         if (login42 == undefined) {
             return ('failed');
         }
+        console.log("login42: " + login42)
         return (this.profileService.createAuth(login42));
     }
 
 
     @UseGuards(JwtGuard)
     @Post('create/validation')
-    @Redirect()
     @Header('Content-type', 'application/json; charset=utf-8')
     async validateCreation(@Body() token, @Req() request: RequestWithUser): Promise<any> {
         const login42 = await this.profileService.authentificate(request);
 
         if (login42 == undefined || token == undefined) {
-            return { statCode: 302, url: "http://localhost:5173/Profile" }
+            return { 200: "failed" }
         }
 
-        this.profileService.creationValidation(login42, token.token)
-        return { statCode: 302, url: "http://localhost:5173/Profile" }
+        const status = await this.profileService.creationValidation(login42, token.token)
+        return { 200: "success" }
     }
 
     @UseGuards(JwtGuard)
@@ -256,10 +262,7 @@ export class ProfileController {
         if (login42 == undefined || token == undefined) {
             return { statCode: 302, url: "http://localhost:5173/Profile" }
         }
-
-        console.log(login42, token.token)
         const status = this.profileService.removeAuth(login42, token.token)
-        console.log(status)
         return { statCode: 302, url: "http://localhost:5173/Profile" }
     }
 
@@ -284,8 +287,8 @@ export class ProfileController {
     }
 
     //  Get currently logged in user ID
-    
-   @UseGuards(JwtGuard) 
+
+    @UseGuards(JwtGuard)
     @Get('/play/solo')
     @Header('Content-type', 'application/json; charset=utf-8')
     async getClientInfo(@Req() request: RequestWithUser): Promise<any> {
