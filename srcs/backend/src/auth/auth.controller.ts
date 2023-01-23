@@ -11,6 +11,9 @@ export class AuthController {
   @UseGuards(JwtGuard)
   async whoAmI(@Req() request: RequestWithUser, @Res() res) {
     const output = await this.authService.validate_token(request.headers['cookie'].split("=")[1])
+    const should2fa = await this.authService.should2fa(output)
+    // console.log("should2fa", should2fa) and is activated
+
     if (output) {
       res.status(200).send();
     }
@@ -24,7 +27,6 @@ export class AuthController {
   async handleLogin42(@Req() request: RequestWithUser, @Res() res, @Headers() headers) {
     let redirect_content = await this.authService.redirect_poller(headers, request)
     if (redirect_content.user_validity.user && redirect_content.user_validity.token) {
-      console.log("User is valid and token is valid", redirect_content)
       return redirect_content.response
     }
     const token = await this.authService.process_poller(request, redirect_content)
@@ -36,9 +38,10 @@ export class AuthController {
       console.log("Error occured during authentifcation", token)
       return ErrorLogin
     }
+    const path = await this.authService.should2fa(request.user.username) ? "http://localhost:5173/2fa" : "http://localhost:5173/Profile"
     const NewResponse = {
       statCode: 302,
-      url: "http://localhost:5173/Profile"
+      url: path
     }
     res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true })
     redirect_content.response = NewResponse

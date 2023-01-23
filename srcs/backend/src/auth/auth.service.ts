@@ -1,4 +1,5 @@
 import { Injectable, Res } from '@nestjs/common';
+import * as authenticator from 'authenticator';
 import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { prisma } from 'src/main'
@@ -108,8 +109,10 @@ export class AuthService {
     }
 
     public async authentificateSession(data: any): Promise<string> {
-        let request: Request = data;
-        const cookie_string = request.headers['cookie']?.split("=")[1]
+        let request = data;
+        //find if the cookie in the headers
+        //look if 
+        const cookie_string = request?.headers['cookie']?.split("=")[1]
         if (cookie_string) {
             const is_valid = await this.validate_token(cookie_string)
             if (is_valid) {
@@ -123,45 +126,22 @@ export class AuthService {
 
 
     async createAuth(login42: string) {
-        'use strict';
-
-        let authentificator = require('authenticator');
-
         //  Look if the user already has a key generated
-
-        let user;
-
-        try {
-            user = await prisma.user.findUnique({
-                where: {
-                    login42: login42
-                }
-            })
-        }
-        catch { }
-
         //  If the user already has a key, load a qr code associated
-        if (user.authKey != "none") {
-            console.log("Key already exist")
-            let otAuth = authentificator.generateTotpUri(user.authKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
-            return ({ QRcode: otAuth });
-        }
-
-        //  Else, create a new key
-
-        let formattedKey = authentificator.generateKey();
-
         try {
-            user = await prisma.user.findUnique({
-                where: {
-                    login42: login42
-                }
-            })
+            const user = await this.findLogin(login42)
+            if (user.authKey != "none") {
+                console.log("Key already exist")
+                let otAuth = authenticator.generateTotpUri(user.authKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
+                return ({ QRcode: otAuth });
+            }
+            //  Else, create a new key
+            const formattedKey = authenticator.generateKey();
 
-            if (!user || user.authenticator == true) {
+            const ouputUser = await this.findLogin(login42)
+            if (!ouputUser || ouputUser.authenticator == true) {
                 return ({ QRcode: 'failed' });
             }
-
             await prisma.user.update({
                 where: {
                     login42: login42
@@ -170,55 +150,36 @@ export class AuthService {
                     authKey: formattedKey
                 }
             })
-
-            let otAuth = authentificator.generateTotpUri(formattedKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
+            const otAuth = authenticator.generateTotpUri(formattedKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
             return ({ QRcode: otAuth });
         }
         catch
-        { }
+        {
+            throw new Error("Error in  2fa creation")
+        }
 
     }
 
-    async creationValidation(login42: string, token: string) {
-        'use strict';
-
-        let authenticator = require('authenticator');
-
-        //  Validate token entered and format it
-        token.trim();
-        if (token.length != 6 && !(token.length == 7 && token[3] == ' ')) {
-            return (null)
-        }
-
-        let formattedToken;
-
-        if (token.length == 7) {
-            formattedToken = token.substring(0, 3) + token.substring(4, 7);
-        }
-        else {
-            formattedToken = token;
-        }
-
-        let user;
-
-        //  Get user and protection
+    async should2fa(login42: string) {
         try {
-            user = await prisma.user.findUnique({
-                where: {
-                    login42: login42
-                }
-            })
-
-            if (!user || !user.authKey) {
-                return (null);
+            const user = await this.findLogin(login42)
+            if (user.authenticator == true) {
+                return (true)
             }
+            return (false)
         }
-        catch { }
+        catch {
+            throw new Error("Error in 2fa validation")
+        }
+    }
 
-        let status = authenticator.verifyToken(user.authKey, formattedToken);
+    async creationValidation(login42: string, token: string) {
+        try {
+            const formattedToken = this.parse2fa(token);
+            const user = await this.findLogin(login42)
+            let fa2Status = authenticator.verifyToken(user.authKey, formattedToken);
+            if (fa2Status != null && user) {
 
-        if (status != null) {
-            try {
                 await prisma.user.update({
                     where: {
                         login42: login42
@@ -228,30 +189,31 @@ export class AuthService {
                     }
                 })
             }
-            catch { }
         }
-        return (status)
+        catch {
+            throw new Error("Error in 2fa validation creation")
+        }
+    }
+    findLogin = async (login42: string) => {
+        try {
+            const output = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+            return output
+        } catch (error) {
+            console.log(error)
+            return null
+        }
     }
 
-    async removeAuth(login42: string, token: string) {
-        let authenticator = require('authenticator');
-        const parseInput = (input: string) => {
-            const output = String(input).split(' ').join('')
-            return output.length === 6 ? output : ""
-        }
-        const findUser = async (login42: string) => {
-            try {
-                const output = await prisma.user.findUnique({
-                    where: {
-                        login42: login42
-                    }
-                })
-                return output
-            } catch (error) {
-                console.log(error)
-                return null
-            }
-        }
+    parse2fa = (input: string) => {
+        const output = String(input).split(' ').join('')
+        return output.length === 6 ? output : ""
+    }
+
+    remove2fa = async (input: any, token: string) => {
         const updateUser = async (login42: string) => {
             try {
                 await prisma.user.update({
@@ -263,18 +225,19 @@ export class AuthService {
                 return false
             }
         }
-        const removeAuth = async (input: any, token: string) => {
-            if (input && token) {
-                const vaidated = authenticator.verifyToken(input.authKey, token)
-                return vaidated ? updateUser(input.login42) : false
-            }
-            else {
-                return false
-            }
+        if (input && token) {
+            const vaidated = authenticator.verifyToken(input.authKey, token)
+            return vaidated ? updateUser(input.login42) : false
         }
-        const formattedToken = parseInput(token);
-        const user = await findUser(login42);
-        const output = await removeAuth(user, formattedToken);
+        else {
+            return false
+        }
+    }
+
+    async removeAuth(login42: string, token: string) {
+        const formattedToken = this.parse2fa(token);
+        const user = await this.findLogin(login42);
+        const output = await this.remove2fa(user, formattedToken);
         return output
     }
 }

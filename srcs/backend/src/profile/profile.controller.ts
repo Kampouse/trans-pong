@@ -65,7 +65,7 @@ export class ProfileController {
     @UseGuards(JwtGuard)
     async getProfileAuth(@Res() res, @Req() request: RequestWithUser): Promise<ActiveGameDto> {
         const login42 = await this.profileService.authentificate(request);
-
+        console.log(login42);
         if (login42 == undefined) {
             res.status(401).send({ message: 'Error: Unauthorized || !file', status: '401' });
             return;
@@ -264,7 +264,7 @@ export class ProfileController {
         if (login42 == undefined || token == undefined) {
             return { statCode: 302, url: "http://localhost:5173/Profile" }
         }
-        const status = this.removeAuth(login42, token.token)
+        const status = this.authService.removeAuth(login42, token.token)
         return { statCode: 302, url: "http://localhost:5173/Profile" }
     }
 

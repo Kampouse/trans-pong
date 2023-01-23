@@ -16,6 +16,7 @@ export var pingInterval = setInterval( async () => {
 
 export default function Matchmaking()
 {
+
     const nav = useNavigate();
     usersocket.disconnect(); //automatically disconnect socket on render
     const userid = fetchUserId();
@@ -71,7 +72,7 @@ function startSinglePlayer(e, nav: NavigateFunction){
 
 async function getUserId(): Promise<string> {
     var userid;
-    await Fetch ('http://localhost:3000/profile/get/userid')
+    await Fetch ('api/profile/get/userid')
         .then((response) => response.json())
         .then((data) => {
            userid = data.userid;
@@ -83,7 +84,7 @@ function fetchUserId() {
     const [userId, setUserId] = useState<any>(null);
 
     useEffect(() => {
-		Fetch ('http://localhost:3000/profile/get/userid')
+		Fetch ('api/profile/get/userid')
         .then((response) => response.json())
         .then((data) => {
             setUserId(data.userid);

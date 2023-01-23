@@ -9,7 +9,7 @@ const [input, setInput] = useState<string>('')
      const body = { token: input }
     Fetch("/api/profile/remove/authenticator", "POST", JSON.stringify(body)).then((response) => {
       if (response.status === 200) {
-        const isActive = Fetch('api/profile/get/auth').then((response) => response.json()).then((data) => {
+        const isActive =  Fetch('api/profile/get/auth').then((response) => response.json()).then((data) => {
           const activeState = data.message === "inactive" ? true : false;
            if(activeState)
            {
