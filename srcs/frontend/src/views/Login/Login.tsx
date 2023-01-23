@@ -33,7 +33,7 @@ export default function Login(Status)
 const check = async () =>
 {
   
-    Fetch ('http://localhost:3000/auth/who').then((response) =>
+    Fetch ('api/auth/who').then((response) =>
     {
       if(response.status === 200)
         {

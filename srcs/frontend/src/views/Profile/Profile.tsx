@@ -59,6 +59,7 @@ const useFetch = (username) =>
 			}).catch((err) => {
                     console.error(err);
             })
+             
 	}, [username])
 	return {profileReq};
 }
@@ -77,10 +78,11 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                     <div className="w-[26%] my-auto text-center"><p>Result</p></div>
                     <div className="w-[37%] my-auto text-center"><p>Right Player</p></div>
                     </li>
-                    {  data.matchHistory && data.matchHistory.map((currentMatch) =>
+                    {  data.matchHistory && data.matchHistory.map((currentMatch,index) =>
                     {
+ //                    console.log(currentMatch,index);
                         return (
-                                    <li className="flex py-4" key={currentMatch.updatedAt + currentMatch.winner}>
+                                    <li className="flex py-4" key={currentMatch.updatedAt + currentMatch.winner + String(index)}>
                                         <div className="flex w-[37%] my-auto items-center ml-2">
                                             <div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
                                                 <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
@@ -352,7 +354,7 @@ async function getPhoto(data: any)
             });
 }
 
-async function getAuth(data: any, setOpenSnackbar, snackbarMsg, snackbarSeverity)
+export async function getAuth(data: any, setOpenSnackbar, snackbarMsg, snackbarSeverity)
 {
     await Fetch("http://localhost:3000/profile/get/auth")
         .then(response => response.json())
@@ -382,6 +384,21 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
     const [openGoogleAuth, setGoogleAuth] = useState(false);
     const [openGoogleReset, setGoogleReset] = useState(false);
 
+    const toggleModalAuth = async (output) => {
+        if (output)
+        {
+             getAuth(data, setOpenSnackbar, snackbarMsg, snackbarSeverity)
+        }
+        console.log(data.authenticator)
+        setGoogleAuth(!openGoogleAuth)
+    }
+    const toggleModalAuthReset = async (output) => {
+        if (output)
+        {
+             getAuth(data, setOpenSnackbar, snackbarMsg, snackbarSeverity)
+        }
+        setGoogleReset(!openGoogleReset)
+    }
     return (
         <Dialog onClose={onClose} open={open} className="font-Raleway">
         <div className=" w-96">
@@ -435,23 +452,16 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                             onClick=
                             {() =>
                                 {
-                                    if (data.authenticator == false)
-                                    {
-                                        setGoogleAuth(true);
-                                    }
-                                    else
-                                    {
-                                        setGoogleReset(true);
-                                    }
+                                     data.authenticator ? setGoogleReset(!openGoogleReset) :  setGoogleAuth(!openGoogleAuth);
                                 }}>
-                            Settings
+                            {data?.authenticator == false ? "Activate" : "Reset"}
                         </button>
                     </div>
                 </div>
             </DialogContent>
             </div>
-            <GoogleAuth open={openGoogleAuth} onClose={async () => {await getAuth(data, setOpenSnackbar, snackbarMsg, snackbarSeverity);setGoogleAuth(false)}}></GoogleAuth>
-            <GoogleReset open={openGoogleReset} onClose={async () => {await getAuth(data, setOpenSnackbar, snackbarMsg, snackbarSeverity); setGoogleReset(false)}}></GoogleReset>
+            <GoogleAuth open={ openGoogleAuth} onClose={toggleModalAuth}></GoogleAuth>
+            <GoogleReset open={openGoogleReset} onClose={toggleModalAuthReset}></GoogleReset>
             </Dialog>
             );
 }

@@ -11,7 +11,7 @@ srcs/frontend/public
 # dependencies
 */node_modules
 node_modules
-/.pnp
+*/.pnp*
 .pnp.js
 
 # testing

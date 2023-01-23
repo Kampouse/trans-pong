@@ -39,10 +39,11 @@
       "react-responsive-canvas": "^1.0.2",
       "react-router": "^6.3.0",
       "sass": "^1.55.0",
+      "@popperjs/core": "2.11.6",
       "socket.io-client": "4.5.4"
     },
     "devDependencies": {
-      "@babel/core": "latest",
+      "@babel/core": "7.20.12",
       "@babel/preset-env": "^7.18.10",
       "@babel/preset-react": "^7.18.6",
       "@babel/preset-typescript": "^7.18.6",

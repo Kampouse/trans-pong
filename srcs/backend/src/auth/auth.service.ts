@@ -1,4 +1,5 @@
 import { Injectable, Res } from '@nestjs/common';
+import * as authenticator from 'authenticator';
 import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { prisma } from 'src/main'
@@ -108,8 +109,10 @@ export class AuthService {
     }
 
     public async authentificateSession(data: any): Promise<string> {
-        let request: Request = data;
-        const cookie_string = request.headers['cookie']?.split("=")[1]
+        let request = data;
+        //find if the cookie in the headers
+        //look if 
+        const cookie_string = request?.headers['cookie']?.split("=")[1]
         if (cookie_string) {
             const is_valid = await this.validate_token(cookie_string)
             if (is_valid) {
@@ -119,5 +122,122 @@ export class AuthService {
         else {
             return (null)
         }
+    }
+
+
+    async createAuth(login42: string) {
+        //  Look if the user already has a key generated
+        //  If the user already has a key, load a qr code associated
+        try {
+            const user = await this.findLogin(login42)
+            if (user.authKey != "none") {
+                console.log("Key already exist")
+                let otAuth = authenticator.generateTotpUri(user.authKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
+                return ({ QRcode: otAuth });
+            }
+            //  Else, create a new key
+            const formattedKey = authenticator.generateKey();
+
+            const ouputUser = await this.findLogin(login42)
+            if (!ouputUser || ouputUser.authenticator == true) {
+                return ({ QRcode: 'failed' });
+            }
+            await prisma.user.update({
+                where: {
+                    login42: login42
+                },
+                data: {
+                    authKey: formattedKey
+                }
+            })
+            const otAuth = authenticator.generateTotpUri(formattedKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
+            return ({ QRcode: otAuth });
+        }
+        catch
+        {
+            throw new Error("Error in  2fa creation")
+        }
+
+    }
+
+    async should2fa(login42: string) {
+        try {
+            const user = await this.findLogin(login42)
+            if (user.authenticator == true) {
+                return (true)
+            }
+            return (false)
+        }
+        catch {
+            throw new Error("Error in 2fa validation")
+        }
+    }
+
+    async creationValidation(login42: string, token: string) {
+        try {
+            const formattedToken = this.parse2fa(token);
+            const user = await this.findLogin(login42)
+            let fa2Status = authenticator.verifyToken(user.authKey, formattedToken);
+            if (fa2Status != null && user) {
+
+                await prisma.user.update({
+                    where: {
+                        login42: login42
+                    },
+                    data: {
+                        authenticator: true
+                    }
+                })
+            }
+        }
+        catch {
+            throw new Error("Error in 2fa validation creation")
+        }
+    }
+    findLogin = async (login42: string) => {
+        try {
+            const output = await prisma.user.findUnique({
+                where: {
+                    login42: login42
+                }
+            })
+            return output
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+    }
+
+    parse2fa = (input: string) => {
+        const output = String(input).split(' ').join('')
+        return output.length === 6 ? output : ""
+    }
+
+    remove2fa = async (input: any, token: string) => {
+        const updateUser = async (login42: string) => {
+            try {
+                await prisma.user.update({
+                    where: { login42: login42 },
+                    data: { authenticator: false, authKey: "none" }
+                })
+                return true
+            } catch (error) {
+                return false
+            }
+        }
+        if (input && token) {
+            const vaidated = authenticator.verifyToken(input.authKey, token)
+            return vaidated ? updateUser(input.login42) : false
+        }
+        else {
+            return false
+        }
+    }
+
+    async removeAuth(login42: string, token: string) {
+        const formattedToken = this.parse2fa(token);
+        const user = await this.findLogin(login42);
+        const output = await this.remove2fa(user, formattedToken);
+        return output
     }
 }

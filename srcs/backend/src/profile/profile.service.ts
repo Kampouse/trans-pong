@@ -1,3 +1,4 @@
+import { User } from './../dtos/auth.dtos';
 import { Inject, Injectable } from '@nestjs/common';
 import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
@@ -6,59 +7,52 @@ import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dto
 import { DEFAULT_FACTORY_CLASS_METHOD_KEY } from '@nestjs/common/module-utils/constants';
 
 @Injectable()
-export class ProfileService
-{
+export class ProfileService {
     @Inject(AuthService)
     private readonly authService: AuthService
 
-    async authentificate(data: Request) : Promise<string> {
-        return(await this.authService.authentificateSession(data));
+    async authentificate(data: Request): Promise<string> {
+        return (await this.authService.authentificateSession(data));
     }
 
     friendList: FriendDto[] = [];
     friendRequests: FriendRequestDto[] = [];
     matchHistory: MatchDto[] = [];
 
-    insertFriend(user: string, photo: string, status: string)
-    {
+    insertFriend(user: string, photo: string, status: string) {
         const newFriend = new FriendDto(user, photo, status);
         this.friendList.push(newFriend);
     }
 
-    insertFriendRequest(from: string, photo: string)
-    {
+    insertFriendRequest(from: string, photo: string) {
         const newFriendRequest = new FriendRequestDto(from, photo);
         this.friendRequests.push(newFriendRequest);
     }
 
     insertMatch(leftPlayer: string, leftPhoto: string, leftScore: number,
         rightPlayer: string, rightPhoto: string, rightScore: number,
-        winner: string, updated: Date)
-    {
+        winner: string, updated: Date) {
         const newMatch = new MatchDto(leftPlayer, leftPhoto, leftScore, rightPlayer,
             rightPhoto, rightScore, winner, updated);
         this.matchHistory.push(newMatch);
     }
 
-    async getProfilePublic(login42: string): Promise<PublicProfileDto>
-    {
+    async getProfilePublic(login42: string): Promise<PublicProfileDto> {
         // Create prisma client and look if the username exist in the database
 
-        var user;
-        
-        try
-        {
+        let user;
+
+        try {
             user = await prisma.user.findUnique({
-            where: {
-                username: login42,
-            },
+                where: {
+                    username: login42,
+                },
             });
         }
-        catch{}
+        catch { }
 
         //  If he dosen't exist, return error true and everything at null
-        if (!user)
-        {
+        if (!user) {
             return new PublicProfileDto(true, null, null, null, null, null, null);
         }
 
@@ -89,10 +83,8 @@ export class ProfileService
             }
         })
 
-        if (friendSent)
-        {
-            for (let i in friendSent)
-            {
+        if (friendSent) {
+            for (let i in friendSent) {
                 const friendUser = await prisma.user.findFirst({
                     where: {
                         login42: friendSent[i].receiver,
@@ -103,10 +95,8 @@ export class ProfileService
             }
         }
 
-        if (friendReceived)
-        {
-            for (let i in friendReceived)
-            {
+        if (friendReceived) {
+            for (let i in friendReceived) {
                 const friendUser = await prisma.user.findFirst({
                     where: {
                         login42: friendReceived[i].sender,
@@ -132,15 +122,13 @@ export class ProfileService
             },
         })
 
-        var leftPlayed = matchLeft.length;
-        var leftWin = 0;
-        var rightPlayed = matchRight.length;
-        var rightWin = 0;
+        let leftPlayed = matchLeft.length;
+        let leftWin = 0;
+        let rightPlayed = matchRight.length;
+        let rightWin = 0;
 
-        if (matchLeft)
-        {
-            for (let i in matchLeft)
-            {
+        if (matchLeft) {
+            for (let i in matchLeft) {
                 if (matchLeft[i].winner == user.login42)
                     leftWin = leftWin + 1;
                 const adversaire = await prisma.user.findFirst({
@@ -148,20 +136,17 @@ export class ProfileService
                         login42: matchLeft[i].rightPlayer,
                     },
                 })
-                if (adversaire)
-                {
+                if (adversaire) {
                     this.insertMatch(user.username, user.imagePath,
                         matchLeft[i].leftPlayerScore, adversaire.username,
                         adversaire.imagePath, matchLeft[i].rightPlayerScore,
-                        matchLeft[i].winner,matchLeft[i].updatedAt);
+                        matchLeft[i].winner, matchLeft[i].updatedAt);
                 }
             }
         }
 
-        if (matchRight)
-        {
-            for (let i in matchRight)
-            {
+        if (matchRight) {
+            for (let i in matchRight) {
                 if (matchRight[i].winner == user.username)
                     rightWin = rightWin + 1;
                 const adversaire = await prisma.user.findFirst({
@@ -169,8 +154,7 @@ export class ProfileService
                         login42: matchRight[i].leftPlayer,
                     },
                 })
-                if (adversaire)
-                {
+                if (adversaire) {
                     this.insertMatch(adversaire.username,
                         adversaire.imagePath, matchRight[i].leftPlayerScore, user.username, user.imagePath,
                         matchRight[i].rightPlayerScore, matchRight[i].winner, matchRight[i].updatedAt);
@@ -178,29 +162,26 @@ export class ProfileService
             }
         }
 
-        var played = leftPlayed + rightPlayed;
-        var win = leftWin + rightWin;
-        var winRatio = win / played;
-        var letfWinRatio = leftWin / leftPlayed;
-        var rightWinRatio = rightWin / rightPlayed;
+        let played = leftPlayed + rightPlayed;
+        let win = leftWin + rightWin;
+        let winRatio = win / played;
+        let letfWinRatio = leftWin / leftPlayed;
+        let rightWinRatio = rightWin / rightPlayed;
 
         const stats = new StatisticsDto(played, win, winRatio, rightPlayed,
-                rightWin, rightWinRatio, leftPlayed, leftWin, letfWinRatio);
+            rightWin, rightWinRatio, leftPlayed, leftWin, letfWinRatio);
 
         // Order match in chronologic order
-        var x = 0;
-        var longeur = this.matchHistory.length;
-        while (x < longeur)
-        {
-            if (x !== longeur - 1 && this.matchHistory[x].updatedAt < this.matchHistory[x + 1].updatedAt)
-            {
-                var temp = this.matchHistory[x];
+        let x = 0;
+        let longeur = this.matchHistory.length;
+        while (x < longeur) {
+            if (x !== longeur - 1 && this.matchHistory[x].updatedAt < this.matchHistory[x + 1].updatedAt) {
+                let temp = this.matchHistory[x];
                 this.matchHistory[x] = this.matchHistory[x + 1];
                 this.matchHistory[x + 1] = temp;
                 x = 0;
             }
-            else
-            {
+            else {
                 x = x + 1;
             }
         }
@@ -209,23 +190,21 @@ export class ProfileService
             this.friendList, this.matchHistory, stats);
     }
 
-    async getProfileEdit(login42: string): Promise<PrivateProfileDto>
-    {
+    async getProfileEdit(login42: string): Promise<PrivateProfileDto> {
         // Create prisma client and look if the username exist in the database
-        var user;
-        
-        try
-        {
+        let user;
+
+        try {
             user = await prisma.user.findUnique({
                 where: {
                     login42: login42
-                }})
+                }
+            })
         }
-        catch{}
+        catch { }
 
         //  If he dosen't exist, return error true and everything at null
-        if (!user)
-        {
+        if (!user) {
             return new PrivateProfileDto(true, null, null, null, null, null, null, null, null);
         }
 
@@ -251,10 +230,8 @@ export class ProfileService
             }
         })
 
-        if (friendSent)
-        {
-            for (let i in friendSent)
-            {
+        if (friendSent) {
+            for (let i in friendSent) {
                 const friendUser = await prisma.user.findFirst({
                     where: {
                         login42: friendSent[i].receiver,
@@ -265,10 +242,8 @@ export class ProfileService
             }
         }
 
-        if (friendReceived)
-        {
-            for (let i in friendReceived)
-            {
+        if (friendReceived) {
+            for (let i in friendReceived) {
                 const friendUser = await prisma.user.findFirst({
                     where: {
                         login42: friendReceived[i].sender,
@@ -289,10 +264,8 @@ export class ProfileService
             },
         })
 
-        if (friendReqs)
-        {
-            for (let i in friendReqs)
-            {
+        if (friendReqs) {
+            for (let i in friendReqs) {
                 const senderUser = await prisma.user.findFirst({
                     where: {
                         login42: friendReqs[i].sender,
@@ -319,15 +292,13 @@ export class ProfileService
             },
         })
 
-        var leftPlayed = matchLeft.length;
-        var leftWin = 0;
-        var rightPlayed = matchRight.length;
-        var rightWin = 0;
+        let leftPlayed = matchLeft.length;
+        let leftWin = 0;
+        let rightPlayed = matchRight.length;
+        let rightWin = 0;
 
-        if (matchLeft)
-        {
-            for (let i in matchLeft)
-            {
+        if (matchLeft) {
+            for (let i in matchLeft) {
                 if (matchLeft[i].winner == user.login42)
                     leftWin = leftWin + 1;
                 const adversaire = await prisma.user.findFirst({
@@ -335,8 +306,7 @@ export class ProfileService
                         login42: matchLeft[i].rightPlayer,
                     },
                 })
-                if (adversaire)
-                {
+                if (adversaire) {
                     this.insertMatch(user.username, user.imagePath,
                         matchLeft[i].leftPlayerScore, adversaire.username,
                         adversaire.imagePath, matchLeft[i].rightPlayerScore,
@@ -345,10 +315,8 @@ export class ProfileService
             }
         }
 
-        if (matchRight)
-        {
-            for (let i in matchRight)
-            {
+        if (matchRight) {
+            for (let i in matchRight) {
                 if (matchRight[i].winner == user.username)
                     rightWin = rightWin + 1;
                 const adversaire = await prisma.user.findFirst({
@@ -356,8 +324,7 @@ export class ProfileService
                         login42: matchRight[i].leftPlayer,
                     },
                 })
-                if (adversaire)
-                {
+                if (adversaire) {
                     this.insertMatch(adversaire.username,
                         adversaire.imagePath, matchRight[i].leftPlayerScore, user.username, user.imagePath,
                         matchRight[i].rightPlayerScore, matchRight[i].winner, matchRight[i].updatedAt);
@@ -365,29 +332,26 @@ export class ProfileService
             }
         }
 
-        var played = leftPlayed + rightPlayed;
-        var win = leftWin + rightWin;
-        var winRatio = win / played;
-        var letfWinRatio = leftWin / leftPlayed;
-        var rightWinRatio = rightWin / rightPlayed;
+        let played = leftPlayed + rightPlayed;
+        let win = leftWin + rightWin;
+        let winRatio = win / played;
+        let letfWinRatio = leftWin / leftPlayed;
+        let rightWinRatio = rightWin / rightPlayed;
 
         const stats = new StatisticsDto(played, win, winRatio, rightPlayed,
-                rightWin, rightWinRatio, leftPlayed, leftWin, letfWinRatio);
+            rightWin, rightWinRatio, leftPlayed, leftWin, letfWinRatio);
 
         // Order match in chronologic order
-        var x = 0;
-        var longeur = this.matchHistory.length;
-        while (x < longeur)
-        {
-            if (x !== longeur - 1 && this.matchHistory[x].updatedAt < this.matchHistory[x + 1].updatedAt)
-            {
-                var temp = this.matchHistory[x];
+        let x = 0;
+        let longeur = this.matchHistory.length;
+        while (x < longeur) {
+            if (x !== longeur - 1 && this.matchHistory[x].updatedAt < this.matchHistory[x + 1].updatedAt) {
+                let temp = this.matchHistory[x];
                 this.matchHistory[x] = this.matchHistory[x + 1];
                 this.matchHistory[x + 1] = temp;
                 x = 0;
             }
-            else
-            {
+            else {
                 x = x + 1;
             }
         }
@@ -397,9 +361,8 @@ export class ProfileService
             this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator);
     }
 
-    async updateUsername(newUsername: string, login42: string) : Promise<responseDefault>
-    {
-        var response = new responseDefault(true, "Username change to " + newUsername + " successful.")
+    async updateUsername(newUsername: string, login42: string): Promise<responseDefault> {
+        let response = new responseDefault(true, "Username change to " + newUsername + " successful.")
 
         //  Find the user to update to
         const user = await prisma.user.findUnique({
@@ -407,21 +370,18 @@ export class ProfileService
                 login42: login42,
             },
         })
-        if (!user)
-        {
+        if (!user) {
             response.message = "Update username Error 00: Unauthorised client."
             return (response);
         }
 
         //  Parse username for valid entry
-        if (newUsername.length < 5)
-        {
+        if (newUsername.length < 5) {
             response.message = "Update username Error 01: Username must have more than 4 character's."
             return (response);
         }
 
-        if (newUsername.length > 12)
-        {
+        if (newUsername.length > 12) {
             response.message = "Update username Error 02: Username max number of character's is 12."
             return (response)
         }
@@ -429,8 +389,7 @@ export class ProfileService
         //  Put the username with a capital first letter and the rest in lowercase
         newUsername = newUsername.toLowerCase();
         newUsername = newUsername.at(0).toUpperCase() + newUsername.substring(1);
-        try
-        {
+        try {
             await prisma.user.update({
                 where: {
                     login42: login42
@@ -450,44 +409,38 @@ export class ProfileService
         return (response);
     }
 
-    async getPhoto(login42:string) : Promise<responseDefault>
-    {
-        var response = new responseDefault(true, "/defaultPhoto.png");
-        var user;
+    async getPhoto(login42: string): Promise<responseDefault> {
+        let response = new responseDefault(true, "/defaultPhoto.png");
+        let user;
 
-        try{
-            user = await prisma.user.findUnique( {
-               where: {login42: login42} 
-            } )
+        try {
+            user = await prisma.user.findUnique({
+                where: { login42: login42 }
+            })
         }
-        catch{}
+        catch { }
 
-        if(user != undefined)
-        {
+        if (user != undefined) {
             response.message = user.imagePath;
             response.error = false;
         }
         return (response);
     }
 
-    async getAuth(login42:string) : Promise<responseDefault>
-    {
-        var response = new responseDefault(false, "inactive");
-        var user;
+    async getAuth(login42: string): Promise<responseDefault> {
+        let response = new responseDefault(false, "inactive");
+        let user;
 
-        try
-        {
+        try {
             user = await prisma.user.findUnique(
                 {
-                    where: {login42: login42} 
-                } )
+                    where: { login42: login42 }
+                })
         }
-        catch{}
+        catch { }
 
-        if(user != undefined)
-        {
-            if (user.authenticator == true)
-            {
+        if (user != undefined) {
+            if (user.authenticator == true) {
                 console.log("auth is active")
                 response.message = "active";
                 return (response)
@@ -496,56 +449,52 @@ export class ProfileService
         return (response);
     }
 
-    async getActiveGames() : Promise<ActiveGameDto>
-    {
-        var array: Game[] = [];
-        var games;
-        var leftPlayer;
-        var rightPlayer
+    async getActiveGames(): Promise<ActiveGameDto> {
+        let array: Game[] = [];
+        let games;
+        let leftPlayer;
+        let rightPlayer
 
         //  Get every active games
         //  TODO: change active to true after tests
-        try
-        {
+        try {
             games = await prisma.game.findMany({
                 where: {
                     active: true
                 }
             })
         }
-        catch{}
+        catch { }
 
         //  If there is some active games, insert them in an array of games
-        if (games)
-        {
-            for (let i in games)
-            {
+        if (games) {
+            for (let i in games) {
                 //  Set both player to undefined
 
                 leftPlayer = undefined;
                 rightPlayer = undefined;
 
                 //  Try to Find left Player
-                try
-                {
+                try {
                     leftPlayer = await prisma.user.findUnique({
                         where: {
                             login42: games[i].leftPlayer
-                        }})
-                }catch{}
+                        }
+                    })
+                } catch { }
 
                 //  Try to find right player
-                try
-                {
+                try {
                     rightPlayer = await prisma.user.findUnique({
                         where: {
-                            login42: games[i].rightPlayer}})
-                }catch{}
+                            login42: games[i].rightPlayer
+                        }
+                    })
+                } catch { }
 
                 //  Add the game to the array if both player are found in the database
-                if (leftPlayer != undefined && rightPlayer != undefined)
-                {
-                    var newGame = new Game(leftPlayer.username, leftPlayer.imagePath, rightPlayer.username, rightPlayer.imagePath, games[i].gameRoomID);
+                if (leftPlayer != undefined && rightPlayer != undefined) {
+                    let newGame = new Game(leftPlayer.username, leftPlayer.imagePath, rightPlayer.username, rightPlayer.imagePath, games[i].gameRoomID);
                     array.push(newGame);
                 }
             }
@@ -556,24 +505,21 @@ export class ProfileService
         return (response);
     }
 
-    async updatePhoto(newFilePath: string, login42: string) : Promise<responseUploadPhoto>
-    {
-        var response = new responseUploadPhoto(true, "Photo upload successful", "not changed");
+    async updatePhoto(newFilePath: string, login42: string): Promise<responseUploadPhoto> {
+        let response = new responseUploadPhoto(true, "Photo upload successful", "not changed");
 
         const user = await prisma.user.findUnique({
-            where:{
+            where: {
                 login42: login42,
             },
         })
-        
-        if (!user)
-        {
+
+        if (!user) {
             response.message = "Upload photo Error 00: Unauthorised client"
             return (response);
         }
         const path = "/" + newFilePath;
-        try
-        {
+        try {
             await prisma.user.update({
                 where: {
                     login42: login42,
@@ -590,35 +536,31 @@ export class ProfileService
         {
             response.message = "Upload photo Error 01: Upload photo in database failed."
             return (response);
-            }
+        }
     }
 
-    async addFriend(login42: string, newFriend: string)
-    {
+    async addFriend(login42: string, newFriend: string) {
 
         //  First, find the login42 linked with the newFriend username
-        var user;
+        let user;
 
-        try
-        {
+        try {
             user = await prisma.user.findUnique({
                 where: {
                     username: newFriend
                 }
             })
-    
+
             //  If the user dosent exist, return 
-            if (!user)
-            {
+            if (!user) {
                 return;
             }
         }
-        catch{}
+        catch { }
 
         //  Then look if the two user pair in friend request already exist 
-        try
-        {
-            var requestExist = await prisma.friendRequest.findUnique({
+        try {
+            let requestExist = await prisma.friendRequest.findUnique({
                 where: {
                     sender_receiver: {
                         sender: login42,
@@ -627,14 +569,12 @@ export class ProfileService
                 }
             })
 
-            if (requestExist)
-            {
+            if (requestExist) {
                 return;
             }
 
-            if (!requestExist)
-            {
-                var requestExist = await prisma.friendRequest.findUnique({
+            if (!requestExist) {
+                let requestExist = await prisma.friendRequest.findUnique({
                     where: {
                         sender_receiver: {
                             sender: user.login42,
@@ -643,10 +583,9 @@ export class ProfileService
                     }
                 })
 
-                if (requestExist)
-                {
+                if (requestExist) {
                     await prisma.friendRequest.update({
-                        where :
+                        where:
                         {
                             sender_receiver: {
                                 sender: user.login42,
@@ -670,11 +609,10 @@ export class ProfileService
 
             }
         }
-        catch{}
+        catch { }
 
         //  If we are here, the request dosen't exist so lets create it
-        try
-        {
+        try {
             await prisma.friendRequest.create({
                 data: {
                     sender: login42,
@@ -682,16 +620,14 @@ export class ProfileService
                 }
             })
         }
-        catch{}
+        catch { }
     }
 
-    async denyRequest(login42: string, sender: string)
-    {
+    async denyRequest(login42: string, sender: string) {
         //  First, find the login42 linked with the newFriend username
-        var user;
+        let user;
 
-        try
-        {
+        try {
             user = await prisma.user.findUnique({
                 where: {
                     username: sender
@@ -699,17 +635,15 @@ export class ProfileService
             })
 
             //  If the user dosent exist, return 
-            if (!user)
-            {
+            if (!user) {
                 return;
             }
         }
-        catch{}
+        catch { }
 
         //  Then, we look for the request this username -> login42 has sent an deny it
-        try
-        {
-            var requestExist = await prisma.friendRequest.findUnique({
+        try {
+            let requestExist = await prisma.friendRequest.findUnique({
                 where: {
                     sender_receiver: {
                         sender: user.login42,
@@ -719,30 +653,29 @@ export class ProfileService
             })
 
             //  Then we change the request status to denied
-            if (requestExist)
-            {
+            if (requestExist) {
                 await prisma.friendRequest.update({
                     where: {
                         sender_receiver: {
-                            sender:  user.login42,
-                            receiver: login42}},
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    },
                     data: {
                         status: "declined",
                     }
                 })
             }
         }
-        catch {}
+        catch { }
         return;
     }
 
-    async blockUser(login42: string, userToBlock: string)
-    {
+    async blockUser(login42: string, userToBlock: string) {
         //  First, find the user associated with userToBlock
-        var user;
+        let user;
 
-        try
-        {
+        try {
             user = await prisma.user.findUnique({
                 where: {
                     username: userToBlock
@@ -750,16 +683,14 @@ export class ProfileService
             })
 
             //  If the user dosent exist, return
-            if (!user)
-            {
+            if (!user) {
                 return;
             }
         }
-        catch{}
+        catch { }
 
         //  Create a block rule in the database
-        try
-        {
+        try {
             await prisma.block.create({
                 data: {
                     blocker: login42,
@@ -768,17 +699,16 @@ export class ProfileService
             })
 
             //  Remove friend request if they were friends
-            var request = await prisma.friendRequest.findUnique({
+            let request = await prisma.friendRequest.findUnique({
                 where: {
-                    sender_receiver :{
+                    sender_receiver: {
                         sender: login42,
                         receiver: user.login42
                     }
                 }
             })
 
-            if (request)
-            {
+            if (request) {
                 await prisma.friendRequest.delete({
                     where: {
                         sender_receiver: {
@@ -789,11 +719,10 @@ export class ProfileService
                 })
             }
 
-            if (!request)
-            {
+            if (!request) {
                 request = await prisma.friendRequest.findUnique({
                     where: {
-                        sender_receiver :{
+                        sender_receiver: {
                             sender: user.login42,
                             receiver: login42
                         }
@@ -801,8 +730,7 @@ export class ProfileService
                 })
             }
 
-            if (request)
-            {
+            if (request) {
                 await prisma.friendRequest.delete({
                     where: {
                         sender_receiver: {
@@ -813,235 +741,48 @@ export class ProfileService
                 })
             }
         }
-        catch {}
+        catch { }
     }
 
-    async createAuth(login42: string)
-    {
-        'use strict';
 
-        var authentificator = require('authenticator');
+    async getUserId(login42: string): Promise<{ userid: number }> | undefined {
+        let user;
 
-        //  Look if the user already has a key generated
-
-        var user;
-
-        try
-        {
+        try {
             user = await prisma.user.findUnique({
-                where: {
-                    login42: login42
-                }
+                where: { login42: login42 }
             })
         }
-        catch{}
+        catch { }
 
-        //  If the user already has a key, load a qr code associated
-        if (user.authKey != "none")
-        {
-            console.log("Key already exist")
-            var otAuth = authentificator.generateTotpUri(user.authKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
-            return ({QRcode: otAuth});
+        if (user) {
+            return ({ userid: user.userID });
         }
+        return (null);
+    }
 
-        //  Else, create a new key
+    async getSinglePlayerData(login42: string): Promise<{ login: string, photo: string }> | null {
+        type User = {
+            username: string,
+            imagePath: string
+        }
+        let user: User;
 
-        var formattedKey = authentificator.generateKey();
-
-        try
-        {
+        try {
             user = await prisma.user.findUnique({
-                where: {
-                    login42: login42
-                }
+                where: { login42: login42 }
             })
-
-            if (!user || user.authenticator == true)
-            {
-                return ({QRcode: 'failed'});
-            }
-
-            await prisma.user.update({
-                where: {
-                    login42: login42
-                },
-                data: {
-                    authKey: formattedKey
-                }
-            })
-
-            var otAuth = authentificator.generateTotpUri(formattedKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
-            return ({QRcode: otAuth});
         }
-        catch
-        {}
+        catch { }
 
-    }
-    
-    async creationValidation(login42: string, token: string)
-    {
-        'use strict';
-
-        var authenticator = require('authenticator');
-
-        //  Validate token entered and format it
-        token.trim();
-        if (token.length != 6 && !(token.length == 7 && token[3] == ' '))
-        {
-            return (null)
-        }
-
-        var formattedToken;
-
-        if (token.length == 7)
-        {
-            formattedToken = token.substring(0,3) + token.substring(4, 7);
-        }
-        else
-        {
-            formattedToken = token;
-        }
-
-        var user;
-
-        //  Get user and protection
-        try
-        {
-            user = await prisma.user.findUnique({
-                where: {
-                    login42: login42
-                }
-            })
-
-            if (!user || !user.authKey)
-            {
-                return (null);
-            }
-        }
-        catch{}
-
-        var status = authenticator.verifyToken(user.authKey, formattedToken);
-
-        if (status != null)
-        {
-            try
-            {
-                await prisma.user.update({
-                    where: {
-                        login42: login42
-                    },
-                    data: {
-                        authenticator: true
-                    }
-                })
-            }
-            catch{}
-        }
-        return (status)
-    }
-
-    async removeAuth(login42: string, token: string)
-    {
-        'use strict';
-
-        var authenticator = require('authenticator');
-
-        //  Validate token entered and format it
-        token.trim();
-        if (token.length != 6 && !(token.length == 7 && token[3] == ' '))
-        {
-            return (null)
-        }
-
-        var formattedToken;
-
-        if (token.length == 7)
-        {
-            formattedToken = token.substring(0,3) + token.substring(4, 7);
-        }
-        else
-        {
-            formattedToken = token;
-        }
-
-        var user;
-
-        //  Get user and protection
-        try
-        {
-            user = await prisma.user.findUnique({
-                where: {
-                    login42: login42
-                }
-            })
-
-            if (!user || !user.authKey)
-            {
-                return (null);
-            }
-        }
-        catch{}
-
-        console.log(user.authKey, formattedToken);
-
-        var status = authenticator.verifyToken(user.authKey, formattedToken);
-
-        if (status != null)
-        {
-            try
-            {
-                await prisma.user.update({
-                    where: {
-                        login42: login42
-                    },
-                    data: {
-                        authenticator: false,
-                        authKey: "none"
-                    }
-                })
-            }
-            catch{}
-        }
-        return (status)
-    }
-
-    async getUserId(login42: string)
-    {
-        var user;
-
-        try{
-            user = await prisma.user.findUnique( {
-               where: {login42: login42} 
-            } )
-        }
-        catch{}
-
-        if(user != undefined){
-            return({userid: user.userID});
-        }
-        return (undefined);
-    }
-
-    async getSinglePlayerData(login42: string)
-    {
-        var user;
-
-        try{
-            user = await prisma.user.findUnique( {
-               where: {login42: login42} 
-            } )
-        }
-        catch{}
-
-        if (user != undefined)
-        {
-            var login = user.username;
-            var photo = user.imagePath;
-            return({
+        if (user) {
+            let login = user.username;
+            let photo = user.imagePath;
+            return ({
                 login: login,
                 photo: photo
             });
         }
-        return (undefined);
+        return (null);
     }
 }
