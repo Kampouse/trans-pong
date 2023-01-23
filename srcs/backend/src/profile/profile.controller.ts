@@ -1,5 +1,7 @@
+import { AuthService } from 'src/auth/auth.service';
+import { AuthModule } from 'src/auth/auth.module';
 import { JwtGuard } from './../auth/utils/Guards';
-import { Req, Res, Controller, Get, Header, Param, Post, UseInterceptors, Body, Redirect, UseGuards } from "@nestjs/common";
+import { Req, Res, Controller, Inject, Get, Header, Param, Post, UseInterceptors, Body, Redirect, UseGuards } from "@nestjs/common";
 import { ProfileService } from "./profile.service";
 import { PrivateProfileDto, PublicProfileDto, ActiveGameDto } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -11,6 +13,10 @@ import { extname } from "path";
 @Controller('profile')
 export class ProfileController {
     constructor(private readonly profileService: ProfileService) { }
+    @Inject(AuthService)
+    private readonly authService: AuthService
+
+
 
     //  Get the private profile information of the user logged
     @Get()
@@ -66,8 +72,6 @@ export class ProfileController {
         }
 
         const response = await this.profileService.getAuth(login42);
-        console.log(response);
-        console.log(response);
         if (response.error == true) {
             res.status(403).send({ message: "error", status: '403' });
             return;
@@ -234,7 +238,7 @@ export class ProfileController {
             return ('failed');
         }
         console.log("login42: " + login42)
-        return (this.profileService.createAuth(login42));
+        return (this.authService.createAuth(login42));
     }
 
 
@@ -243,12 +247,10 @@ export class ProfileController {
     @Header('Content-type', 'application/json; charset=utf-8')
     async validateCreation(@Body() token, @Req() request: RequestWithUser): Promise<any> {
         const login42 = await this.profileService.authentificate(request);
-
         if (login42 == undefined || token == undefined) {
             return { 200: "failed" }
         }
-
-        const status = await this.profileService.creationValidation(login42, token.token)
+        const status = await this.authService.creationValidation(login42, token.token)
         return { 200: "success" }
     }
 
@@ -262,7 +264,7 @@ export class ProfileController {
         if (login42 == undefined || token == undefined) {
             return { statCode: 302, url: "http://localhost:5173/Profile" }
         }
-        const status = this.profileService.removeAuth(login42, token.token)
+        const status = this.removeAuth(login42, token.token)
         return { statCode: 302, url: "http://localhost:5173/Profile" }
     }
 
