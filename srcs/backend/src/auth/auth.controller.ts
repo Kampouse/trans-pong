@@ -2,7 +2,7 @@ import { Controller, Get, Req, UseGuards, Redirect, Res, Headers } from '@nestjs
 import { AuthService } from './auth.service';
 import { FortyTwoAuthGuard, JwtGuard } from './utils/Guards';
 import { RequestWithUser, SessionUser } from "src/dtos/auth.dtos";
-
+import { tokenDatas } from './auth.service';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
@@ -11,10 +11,14 @@ export class AuthController {
   @UseGuards(JwtGuard)
   async whoAmI(@Req() request: RequestWithUser, @Res() res) {
     const output = await this.authService.validate_token(request.headers['cookie'].split("=")[1])
+    const data: tokenDatas = await this.authService.validate_token_raw(request.headers['cookie'].split("=")[1]) as tokenDatas
+
     const should2fa = await this.authService.should2fa(output)
-    // console.log("should2fa", should2fa) and is activated
 
     if (output && !should2fa.should2fa) {
+      res.status(200).send();
+    }
+    if (output && data.fa2 && should2fa.should2fa) {
       res.status(200).send();
     }
     if (output && should2fa.should2fa) {

@@ -29,7 +29,8 @@ export default function Login2fa(Status)
 	
     const submit2fa = async (input) => {
         const body = { token : input }
-         const output = await  Fetch("/api/profile/create/validation", "POST", JSON.stringify(body))
+        const output = await  Fetch("/api/profile/action/validate2fa", "POST", JSON.stringify(body))
+        const data = await output.json()
             if (output.status === 200)
             {
                 setLogin('login')

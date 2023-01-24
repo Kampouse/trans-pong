@@ -4,10 +4,32 @@ import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { prisma } from 'src/main'
 type validateUser = { response: { url: string, statCode: number }, user_validity: { token: boolean, user: string | null } }
-type tokenDatas = { username: string, iat: number, exp: number }
+export type tokenDatas = { username: string, fa2: boolean, iat: number, exp: number }
 @Injectable()
 export class AuthService {
     constructor(private jwtService: JwtService) { }
+
+
+
+    public async validate_token_raw(token: string): Promise<string | null | tokenDatas> {
+        if (!token) {
+            return (null)
+        }
+        try {
+            const secret = process.env.JWT_KEY;
+            const decoded = this.jwtService.verify(token, { secret }) as tokenDatas;
+            if (decoded && decoded.username) {
+                return (decoded)
+            }
+            return (null);
+        }
+        catch (error) {
+            return (null);
+        }
+    }
+
+
+
 
     public async validate_token(token: string): Promise<string | null> {
         if (!token) {
@@ -29,12 +51,19 @@ export class AuthService {
         }
     }
 
-    public process_poller = async (req: RequestWithUser, redirect_content: validateUser): Promise<string | null | Error> => {
+    public process_poller = async (req: RequestWithUser, redirect_content: validateUser, fa2 = false): Promise<string | null | Error> => {
+
         let user = redirect_content?.user_validity?.user;
         try {
-            if (!redirect_content.user_validity.user) {
+            if (!fa2 && !redirect_content.user_validity.user) {
+
                 user = await this.createUser(req)
             }
+            if (fa2) {
+                user = await this.validate_token(req.headers['cookie'].split("=")[1])
+                return await this.createToken(user, fa2)
+            }
+            console.log("user", user)
             return await this.createToken(user)
         }
         catch {
@@ -57,12 +86,12 @@ export class AuthService {
             }
         }
     }
-    async createToken(validate: string): Promise<string | null> {
+    async createToken(validate: string, fa2 = false): Promise<string | null> {
         const user = await prisma.user.findUnique({ where: { login42: validate } })
         const secret = process.env.JWT_KEY; // private key for jwt should be in env
         const expiresIn = '1d';
         const token = this.jwtService.sign(
-            { username: validate },
+            { username: validate, fa2: fa2 },
             { secret, expiresIn });
         const output = await prisma.user.update({
             where: {
@@ -213,6 +242,17 @@ export class AuthService {
         const output = String(input).split(' ').join('')
         return output.length === 6 ? output : ""
     }
+
+    //validate 2fa
+    validate2fa = async (login42: string, code2fa: string) => {
+        const formattedToken = this.parse2fa(code2fa);
+        const user = await this.findLogin(login42)
+        if (user) {
+            return authenticator.verifyToken(user.authKey, formattedToken)
+        }
+        return false
+    }
+
 
     remove2fa = async (input: any, token: string) => {
         const updateUser = async (login42: string) => {
