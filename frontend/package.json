@@ -1,0 +1,90 @@
+{
+    "name": "frontend",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@emotion/react": "^11.10.5",
+        "@emotion/styled": "^11.10.5",
+        "@material-tailwind/react": "^1.2.4",
+        "@mui/icons-material": "^5.10.9",
+        "@mui/lab": "5.0.0-alpha.109",
+        "@mui/material": "^5.10.13",
+        "@types/bcrypt": "5.0.0",
+        "@types/node": "18.11.18",
+        "@types/qrcode": "^1.5.0",
+        "@types/react": "18.0.27",
+        "@types/react-dom": "^18.0.0",
+        "@types/react-router": "^5.1.18",
+        "bcrypt": "^5.1.0",
+        "i": "^0.3.7",
+        "jotai": "^1.9.1",
+        "passport-42": "^1.2.6",
+        "qrcode.react": "^3.1.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-responsive-canvas": "^1.0.2",
+        "react-router": "^6.3.0",
+        "react-scripts": "^5.0.1",
+        "sass": "^1.55.0",
+        "socket.io-client": "4.5.4"
+    },
+    "scripts": {
+      "dev": "vite",
+      "start": "vite",
+      "build": "tsc && vite build --outDir dist",
+      "prod": "vite preview",
+      "test": "jest",
+      "lint": "eslint src --max-warnings=0",
+      "typecheck": "tsc --project tsconfig.json --noEmit"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@babel/core": "latest",
+        "@babel/preset-env": "^7.18.10",
+        "@babel/preset-react": "^7.18.6",
+        "@babel/preset-typescript": "^7.18.6",
+        "@testing-library/jest-dom": "latest",
+        "@testing-library/react": "latest",
+        "@types/jest": "latest",
+        "@types/node": "^18.11.18",
+        "@types/react-swipeable-views": "0.13.1",
+        "@types/react-window": "1.8.5",
+        "@typescript-eslint/eslint-plugin": "^5.33.0",
+        "@typescript-eslint/parser": "^5.33.0",
+        "@vitejs/plugin-react": "latest",
+        "autoprefixer": "^10.4.8",
+        "babel-jest": "^28.1.3",
+        "css-loader": "6.7.3",
+        "dotenv": "^16.0.3",
+        "eslint": "^8.22.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-react": "^7.30.1",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-tailwindcss": "^3.6.0",
+        "postcss": "^8.4.16",
+        "prettier": "2.7.1",
+        "react-router-dom": "^6.3.0",
+        "tailwindcss": "^3.1.8",
+        "typescript": "^4.7.4",
+        "vite": "latest",
+        "vite-tsconfig-paths": "^3.5.0"
+    }
+}

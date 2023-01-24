@@ -1,62 +1,64 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  postgres:
-    container_name: postgres
-    restart: unless-stopped
-    image: postgres:latest
-    environment:
-      - POSTGRES_DB=${DATABASE_NAME}
-      - POSTGRES_USER=${DATABASE_USERNAME}
-      - POSTGRES_PASSWORD=${DATABASE_PSW}
-    volumes:
-      - ./database:/var/lib/postgresql/data
-    networks:
-      - mynetwork
-      #trans:
-       # ipv4_address: 10.42.42.10
-    ports:
-      - 5432:5432
-
-  web-app:
+  frontend:
+    build: ./frontend
     depends_on:
-      - postgres
-    container_name: web-app
-    restart: unless-stopped
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - LOGIN=${LOGIN}
-      - CLIENT_ID=${CLIENT_ID}
-      - CLIENT_SECRET=${CLIENT_SECRET}
-      - REDIRECT=${REDIRECT}
-      - JWT_KEY=${JWT_KEY}
-    build:
-      context: ./srcs/.
-      dockerfile: Dockerfile
-      args:
-        - DATABASE_URL=${DATABASE_URL}
-        - LOGIN=${LOGIN}
-        - CLIENT_ID=${CLIENT_ID}
-        - CLIENT_SECRET=${CLIENT_SECRET}
-        - REDIRECT=${REDIRECT}
-        - JWT_KEY=${JWT_KEY}
-    volumes:
-      - ./srcs:/app
+      - backend
+    ports:
+      - "3000:3000"
+    restart: always
+    container_name: frontend
+    networks: 
+      - mynetwork
+
+  backend:
+    build: ./backend
+    depends_on: 
+      - db
+    ports: 
+      - "8000:8000"
+    container_name: backend-docker
+    restart: always
+    networks: 
+      - mynetwork
+
+  db:
+    container_name: database-docker
+    restart: always
+    image: postgres:latest
+    env_file:
+      - .env
     networks:
       - mynetwork
-      #trans:
-        #ipv4_address: 10.42.42.12
     ports:
-      - 5173:5173
-      - 5555:5555
-      - 3000:3000
-      - 3001:3001
+      - "5432:5432"
 
 networks:
   mynetwork:
- # trans:
- #   driver: bridge
-  #  ipam:
-    #  config:
-    #    - subnet: 10.42.42.0/24
-     #     gateway: 10.42.42.1
+
+  # web-app:
+  #   depends_on:
+  #     - postgres
+  #   container_name: web-app
+  #   restart: unless-stopped
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL}
+  #     - LOGIN=${LOGIN}
+  #     - CLIENT_ID=${CLIENT_ID}
+  #     - CLIENT_SECRET=${CLIENT_SECRET}
+  #     - REDIRECT=${REDIRECT}
+  #     - JWT_KEY=${JWT_KEY}
+    
+  #   volumes:
+  #     - ./srcs:/app
+  #   networks:
+  #     - mynetwork
+  #     #trans:
+  #       #ipv4_address: 10.42.42.12
+  #   ports:
+  #     - 5173:5173
+  #     - 5555:5555
+  #     - 3000:3000
+  #     - 3001:3001
+
