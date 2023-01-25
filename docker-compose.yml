@@ -7,6 +7,7 @@ services:
       - backend
     ports:
       - "3000:3000"
+      - "5173:5173"
     restart: always
     container_name: frontend
     networks: 
@@ -27,6 +28,12 @@ services:
     container_name: database-docker
     restart: always
     image: postgres:latest
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PSW}
+    volumes:
+      - ./database:/var/lib/postgresql/data
     env_file:
       - .env
     networks:
