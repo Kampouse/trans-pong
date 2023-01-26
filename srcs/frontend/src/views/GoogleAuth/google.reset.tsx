@@ -16,14 +16,10 @@ const [input, setInput] = useState<string>('')
              return  onClose(activeState);
            }
            else {
-             throw new Error('token is invalid') 
-
            }
         })
       }
       else {
-        //should be a ui alert that token is invalid
-        console.log("token is invalid");
       }
     })
 }

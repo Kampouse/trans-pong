@@ -154,7 +154,6 @@ export class AuthService {
         try {
             const user = await this.findLogin(login42)
             if (user.authKey != "none") {
-                console.log("Key already exist")
                 let otAuth = authenticator.generateTotpUri(user.authKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
                 return ({ QRcode: otAuth });
             }
