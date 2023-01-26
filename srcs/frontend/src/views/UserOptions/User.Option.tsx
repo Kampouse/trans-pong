@@ -41,11 +41,25 @@ export function UserOption({open, onClose, userClicked, setValue})
         .catch(function() {console.log("error on adding " + username);});
     }
 
+    async function removeFriend(username: string)
+    {
+        await Fetch('http://localhost:3000/profile/remove/' + username)
+        .then(function(){})
+        .catch(function() {console.log("error on removing friend " + username);});
+    }
+
     async function blockUser(username: string)
     {
         await Fetch('http://localhost:3000/profile/block/' + username)
         .then(function(){})
         .catch(function() {console.log("error on blocking " + username);});
+    }
+
+    async function unBlockUser(username: string)
+    {
+        await Fetch('http://localhost:3000/profile/unblock/' + username)
+        .then(function(){})
+        .catch(function() {console.log("error on unblocking " + username);});
     }
 
     return (
