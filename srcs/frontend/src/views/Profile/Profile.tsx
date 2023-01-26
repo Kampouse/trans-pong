@@ -80,7 +80,6 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                     </li>
                     {  data.matchHistory && data.matchHistory.map((currentMatch,index) =>
                     {
- //                    console.log(currentMatch,index);
                         return (
                                     <li className="flex py-4" key={currentMatch.updatedAt + currentMatch.winner + String(index)}>
                                         <div className="flex w-[37%] my-auto items-center ml-2">
@@ -389,7 +388,6 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
         {
              getAuth(data, setOpenSnackbar, snackbarMsg, snackbarSeverity)
         }
-        console.log(data.authenticator)
         setGoogleAuth(!openGoogleAuth)
     }
     const toggleModalAuthReset = async (output) => {

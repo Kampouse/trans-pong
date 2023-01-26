@@ -9,11 +9,9 @@ export function GoogleAuth({open, onClose})
   const [token, setToken] = useState<string>("");
 
   useEffect(() => {
-      console.log('useEffect');
     Fetch('http://localhost:3000/profile/create/googleAuth')
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setQrCode(data.QRcode);
       })
   }, []);
@@ -30,7 +28,6 @@ export function GoogleAuth({open, onClose})
          const output = await isActive.json()
         const activeState = output.message === "active" ? true : false;
         if (!activeState)
-          //should display an alert that token is invalid
           throw new Error('invalid token')
         else {
           return onClose(activeState);

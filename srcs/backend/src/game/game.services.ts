@@ -18,7 +18,6 @@ export class Player {
         this.status = "waiting";
         this.socket = socket;
         socket.on("updatePlayerPosition", (keyActions) => {
-            console.log(keyActions);
             if (keyActions.direction == "ArrowUp") {
                 this.setKeyArrowUp();
             }
