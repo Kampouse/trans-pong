@@ -1,22 +1,20 @@
 import { AuthService } from 'src/auth/auth.service';
-import { AuthModule } from 'src/auth/auth.module';
 import { JwtGuard } from './../auth/utils/Guards';
 import { Req, Res, Controller, Inject, Get, Header, Param, Post, UseInterceptors, Body, Redirect, UseGuards } from "@nestjs/common";
 import { ProfileService } from "./profile.service";
-import { PrivateProfileDto, PublicProfileDto, ActiveGameDto } from "src/dtos/profile.dtos";
+import { PrivateProfileDto, PublicProfileDto, ActiveGameDto, Relation } from "src/dtos/profile.dtos";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
 import { UploadedFile } from "@nestjs/common";
 import { RequestWithUser } from "src/dtos/auth.dtos";
 import { extname } from "path";
+
 @Controller('profile')
 export class ProfileController {
     constructor(private readonly profileService: ProfileService) { }
     @Inject(AuthService)
     private readonly authService: AuthService
-
-
 
     //  Get the private profile information of the user logged
     @Get()
@@ -29,6 +27,18 @@ export class ProfileController {
         } catch (error) {
             return (Error("Error: invalid token "));
         }
+    }
+
+    @Get('/relation/:username')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    @UseGuards(JwtGuard)
+    async getUserRelation(@Param('username') username: string, @Req() request: RequestWithUser): Promise<Relation> {
+        const login42 = await this.profileService.authentificate(request);
+        if (login42 == undefined || username == undefined) {
+            return (await this.profileService.getUserRelation(undefined, undefined));
+        }
+        const relation = await this.profileService.getUserRelation(login42, username);
+        return (relation);
     }
 
     //  Get the public profile information of the username in /username
@@ -196,6 +206,19 @@ export class ProfileController {
         return;
     }
 
+    @UseGuards(JwtGuard)
+    @Get('/remove/:username')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async removeFriend(@Param('username') username: string, @Req() request: RequestWithUser): Promise<any> {
+        const login42 = await this.profileService.authentificate(request);
+
+        if (login42 == undefined || username == undefined) {
+            return ({ error: "Authentification failed" });
+        }
+
+        this.profileService.removeFriend(login42, username);
+        return;
+    }
 
     @UseGuards(JwtGuard)
     @Get('/deny/:username')
@@ -225,8 +248,19 @@ export class ProfileController {
         return;
     }
 
+    @UseGuards(JwtGuard)
+    @Get('/unblock/:username')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async unblockUser(@Param('username') username: string, @Req() request: RequestWithUser): Promise<any> {
+        const login42 = await this.profileService.authentificate(request);
 
+        if (login42 == undefined || username == undefined) {
+            return ({ error: "Authentification failed" });
+        }
 
+        this.profileService.unblockUser(login42, username);
+        return;
+    }
 
     @UseGuards(JwtGuard)
     @Get('create/googleAuth')
@@ -237,10 +271,8 @@ export class ProfileController {
         if (login42 == undefined) {
             return ('failed');
         }
-        console.log("login42: " + login42)
         return (this.authService.createAuth(login42));
     }
-
 
     @UseGuards(JwtGuard)
     @Post('create/validation')
