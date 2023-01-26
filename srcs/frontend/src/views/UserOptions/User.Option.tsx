@@ -40,7 +40,7 @@ export function UserOption({open, onClose, userClicked, setValue})
                     </button>
                 </div>
                 <div className='py-3'>
-                    <button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username), nav('/profile/' + username, {replace: true}); onClose();}}>
+                    <button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username), nav('/profile/' + username, {replace: true}); onClose(); setValue("1");}}>
                         Add friend
                     </button>
                 </div>
@@ -50,6 +50,7 @@ export function UserOption({open, onClose, userClicked, setValue})
                             blockUser(username);
                             nav('/profile/' + username, {replace: true});
                             onClose();
+														setValue("1");
                         }}>
                         Block user
                     </button>

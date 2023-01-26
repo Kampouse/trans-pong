@@ -578,7 +578,7 @@ export default function Profile()
                 <div className='w-[50%] h-full flex mx-auto'>
                     <div className='h-fit my-auto'>
                         <p className='text-4xl font-Merriweather '>{ data.username }</p>
-                        <p className="text-lg font-Merriweather pt-2"><span className={getStatusCSS(data?.status)}>●</span> {data?.status[0]?.toUpperCase()}</p>
+                        <p className="text-lg font-Merriweather pt-2"><span className={getStatusCSS(data?.status)}>●</span> {data?.status[0]?.toUpperCase() + data?.status?.substring(1)}</p>
                     </div>
                 </div>
             </div>
