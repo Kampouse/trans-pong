@@ -2,6 +2,8 @@ import { Dialog } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 import {Fetch } from 'utils';
 
+//  Get data about the friend relation
+
 export function UserOption({open, onClose, userClicked, setValue})
 {
     //  Username of the user clicked and his profile path

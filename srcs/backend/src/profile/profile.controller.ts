@@ -38,9 +38,9 @@ export class ProfileController {
     async getProfilePublic(@Param('username') username: string, @Req() request: RequestWithUser): Promise<PublicProfileDto> {
         const login42 = await this.profileService.authentificate(request);
         if (login42 == undefined || username == undefined) {
-            return (await this.profileService.getProfilePublic(undefined));
+            return (await this.profileService.getProfilePublic(undefined, undefined));
         }
-        const publicProfile = await this.profileService.getProfilePublic(username);
+        const publicProfile = await this.profileService.getProfilePublic(login42, username);
         return (publicProfile);
     }
 

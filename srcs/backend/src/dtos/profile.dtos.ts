@@ -9,6 +9,11 @@ export class Game
     ){}
 }
 
+export class Relation
+{
+
+}
+
 export class ActiveGameDto
 {
     constructor(
@@ -86,5 +91,6 @@ export class PublicProfileDto {
         public imagePath: string,
         public friendList: FriendDto[],
         public matchHistory: MatchDto[],
-        public stats: StatisticsDto){}
+        public stats: StatisticsDto,
+        public requestFrom: string){}
 }
