@@ -555,7 +555,6 @@ export default function Profile()
         data.status = data.statusCode;
     }
 
-    console.log(data);
     useEffect(() => {}, [username])
     return (
     <div  className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">

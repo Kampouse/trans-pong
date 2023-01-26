@@ -11,7 +11,11 @@ export class Game
 
 export class Relation
 {
-
+    constructor(
+        public error:   boolean,
+        public friend:  boolean,
+        public block:   boolean
+    ){}
 }
 
 export class ActiveGameDto
