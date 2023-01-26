@@ -187,10 +187,11 @@ export class GameRoom {
             //console.log(this.gameUpdateObject.updateGame);
             if (this.gameUpdateObject.leftPlayer.playerScore == 5 || this.gameUpdateObject.rightPlayer.playerScore == 5) {
                 //posting data stuff maybe ?
-                server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //send event to make client sockets leave room as security measure
                 this.status = "finished"
                 this.gameUpdateObject.updateGame.gameOver = true;
                 this.gameUpdateObject.updateGame.winner = this.gameUpdateObject.leftPlayer.playerScore == 5 ? this.gameUpdateObject.leftPlayer.playerUser : this.gameUpdateObject.rightPlayer.playerUser;
+                server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
+                server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //send event to make client sockets leave room as security measure
                 clearInterval(this.updateInterval);
                 clearInterval(this.handleSocketDisconnect);
                 await prisma.game.update({
