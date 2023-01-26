@@ -51,15 +51,14 @@ const useFetch = (username) =>
 	const [profileReq, setProfileReq] = useState<any>(null);
 	
 	useEffect(() => {
-		Fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "")
-		)
-            .then((response) => response.json())
+		Fetch('http://localhost:3000/profile' + ((username) ? "/" + username : ""))
+      .then((response) => response.json())
 			.then((data) => {
 				setProfileReq(data);
-			}).catch((err) => {
-                    console.error(err);
-            })
-             
+			})
+			.catch((err) => {
+        console.error(err);
+      })       
 	}, [username])
 	return {profileReq};
 }
@@ -239,7 +238,7 @@ function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicke
 //  =============== Stats component       =============== //
 
 function BlockedUsers({data}: {data: any}) {
-	
+
 }
 
 
