@@ -7,24 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  userID            String     @id @default(cuid())
-  accessToken42     String?
-  refreshToken42    String?
-  jwtToken          String?
-  login42           String     @unique
-  username          String     @unique
-  userStatus        UserStatus @default(online)
-  imagePath         String     @default("/defaultPhoto.png")
-  authenticator     Boolean    @default(false)
-  authKey           String     @default("none")
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
-  friendsofthisuser   User[]     @relation("friends of user")
-  thisuserisfriendto User[]     @relation("friends of user")
-  blockedbythisuser  User[]     @relation("blocked users")
-  userblockedby     User[]     @relation("blocked users")
+  userID          String     @id @default(cuid())
+  accessToken42   String?
+  refreshToken42  String?
+  jwtToken        String?
+  login42         String     @unique
+  username        String     @unique
+  userStatus      UserStatus @default(online)
+  imagePath       String     @default("/defaultPhoto.png")
+  authenticator   Boolean    @default(false)
+  authKey         String     @default("none")
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  friends         User[]     @relation("friends")
+  friendsrelation User[]     @relation("friends")
+  blockedusers    User[]     @relation("blocked users")
+  blockedbyusers  User[]     @relation("blocked users")
 }
 
 model FriendRequest {
