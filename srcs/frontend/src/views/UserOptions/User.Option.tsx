@@ -1,6 +1,6 @@
 import { Dialog } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
-import {Fetch } from 'utils';
+import { Fetch } from 'utils';
 import { useEffect, useState } from 'react';
 
 //  Get data about the friend relation
@@ -82,9 +82,9 @@ export function UserOption({open, onClose, userClicked, setValue})
                     <button name='blockUserEvent' className={buttonCss} onClick={() =>
                         {
                             blockUser(username);
+                            setValue("1");
                             nav('/profile/' + username, {replace: true});
                             onClose();
-														setValue("1");
                         }}>
                         Block user
                     </button>

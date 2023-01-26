@@ -235,10 +235,36 @@ function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicke
   );
 }
 
-//  =============== Stats component       =============== //
+//  =============== Block list component       =============== //
 
-function BlockedUsers({data}: {data: any}) {
+async function unBlockUser(username: string)
+{
+    await Fetch('http://localhost:3000/profile/unblock/' + username)
+    .then(function(){})
+    .catch(function() {console.log("error on unblocking " + username);});
+}
 
+function BlockedUsers({data, setValue})
+{
+    const nav = useNavigate();
+
+    return (
+    <div className="flex h-[100%] flex-col -my-4">
+        <div className="flow-root overflow-y-scroll scrollbar-hide">
+            <ul role="list" className="px-2 divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg">
+                {data.blockList && data.blockList.map((currentBlock) => {return (
+                <li className="flex py-4" key={currentBlock.key}>
+                    <img className="h-12 w-12 border-2 border-blue-700 rounded-full" src={currentBlock.friendPhoto}></img>
+                    <div className='px-[15%] w-40'>
+                        <p className='py-2 text-lg'>{currentBlock.friendUser}</p>
+                    </div>
+                    <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[40%] px-5 text-lg rounded-md bg-[#1976d2] text-white' onClick={ async () =>{unBlockUser(currentBlock.friendUser);setValue("1"); nav('/profile/' + currentBlock.friendUser, {replace: true});}}>
+                        Unblock
+                    </button>
+                </li>);})}
+            </ul>
+        </div>
+    </div>);
 }
 
 
@@ -604,7 +630,7 @@ export default function Profile()
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
                         <TabPanel value="2"><FriendList userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
                             {username === undefined && <TabPanel value="3"><FriendRequests userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>}
-                            {username === undefined && <TabPanel value="4"></TabPanel>}
+                            {username === undefined && <TabPanel value="4"><BlockedUsers data={data} setValue={setValue}></BlockedUsers></TabPanel>}
                         <TabPanel value="5"><Stats data={data} /></TabPanel>
                     </div>
                 </div>
