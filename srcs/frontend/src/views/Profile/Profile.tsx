@@ -2,7 +2,7 @@ import { Tab, Box, IconButton, Dialog, DialogContent, DialogTitle } from '@mui/m
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import { GoogleAuth } from 'views/GoogleAuth/google.auth';
 import React, { useState, useRef, useEffect } from 'react';
-import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
+import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit, Block } from '@mui/icons-material';
 import { blue } from '@mui/material/colors';
 import { useParams } from 'react-router';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
@@ -51,15 +51,14 @@ const useFetch = (username) =>
 	const [profileReq, setProfileReq] = useState<any>(null);
 	
 	useEffect(() => {
-		Fetch('http://localhost:3000/profile' + ((username) ? "/" + username : "")
-		)
-            .then((response) => response.json())
+		Fetch('http://localhost:3000/profile' + ((username) ? "/" + username : ""))
+      .then((response) => response.json())
 			.then((data) => {
 				setProfileReq(data);
-			}).catch((err) => {
-                    console.error(err);
-            })
-             
+			})
+			.catch((err) => {
+        console.error(err);
+      })       
 	}, [username])
 	return {profileReq};
 }
@@ -235,6 +234,13 @@ function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicke
     </div>
   );
 }
+
+//  =============== Stats component       =============== //
+
+function BlockedUsers({data}: {data: any}) {
+
+}
+
 
 //  =============== Stats component       =============== //
 
@@ -578,7 +584,7 @@ export default function Profile()
                 <div className='w-[50%] h-full flex mx-auto'>
                     <div className='h-fit my-auto'>
                         <p className='text-4xl font-Merriweather '>{ data.username }</p>
-                        <p className="text-lg font-Merriweather pt-2"><span className={getStatusCSS(data?.status)}>●</span> {data?.status[0]?.toUpperCase()}</p>
+                        <p className="text-lg font-Merriweather pt-2"><span className={getStatusCSS(data?.status)}>●</span> {data?.status[0]?.toUpperCase() + data?.status?.substring(1)}</p>
                     </div>
                 </div>
             </div>
@@ -589,7 +595,8 @@ export default function Profile()
                             <Tab icon={<History />} label="Match History" sx={{ fontWeight: 'bold' }} value="1" />
                             <Tab icon={<Favorite />} label="Friends" sx={{ fontWeight: 'bold' }} value="2" />
                                 {username === undefined && <Tab icon={<PersonAdd />} label="Friend Requests" sx={{ fontWeight: 'bold' }} value="3" />}
-                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="4" />
+                                {username === undefined && <Tab icon={<Block />} label="Blocked Users" sx={{ fontWeight: 'bold' }} value="4" />}
+                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="5" />
                         </TabList>
                     </Box>
                 </div>
@@ -598,7 +605,8 @@ export default function Profile()
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
                         <TabPanel value="2"><FriendList userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
                             {username === undefined && <TabPanel value="3"><FriendRequests userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>}
-                        <TabPanel value="4"><Stats data={data} /></TabPanel>
+                            {username === undefined && <TabPanel value="4"></TabPanel>}
+                        <TabPanel value="5"><Stats data={data} /></TabPanel>
                     </div>
                 </div>
             </TabContext>
