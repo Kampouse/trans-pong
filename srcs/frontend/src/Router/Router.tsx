@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Children } from 'react'
+import React, { useState, useEffect, useRef, Children, useContext } from 'react'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 import { useNavigate } from 'react-router'
 import { Routes, Route } from 'react-router-dom'
@@ -18,6 +18,8 @@ import { ChatRoom, User } from 'utils/types'
 import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
+import { UserDto } from 'utils/user.dto'
+import { WebsocketContext, WebsocketProvider } from 'context/WebSocketContext'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -98,6 +100,9 @@ export const myProfile = atom({
   userId: ''
 })
 
+export const UserContext = React.createContext<UserDto | null >(null);
+export const SetUserContext = React.createContext<any>(null);
+
 export default function App()
 {
 	const [user, setUser] = useState(myProfile)
@@ -109,6 +114,9 @@ export default function App()
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
 
+  // const [user, setUser] = React.useState<UserDto | null>(null);
+  const socket = useContext(WebsocketContext);
+  // const [loggedIn, setLoggedIn] = React.useState(false);
 	// const [ballColor, setBallColor] = useAtom(useBallColor)
 	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
 	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
@@ -150,6 +158,8 @@ useEffect(() => { check()}, [])
   return (
         <>
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
+          <UserContext.Provider value={user}>
+          <SetUserContext.Provider value={setUser}>
           <Routes>
            <Route path="/" element={  <Login Status={login} /> } />
             <Route path="/Menu" element={ <Wrapper><Menu/></Wrapper>} />
@@ -160,7 +170,7 @@ useEffect(() => { check()}, [])
                 <Route path=":username" element={ <Wrapper> <Profile/></Wrapper>} />
                 <Route path="" element={  <Wrapper> <Profile/></Wrapper>} />
             </Route>
-            <Route path="/Chat" element={<Wrapper> <Chat /></Wrapper>}></Route>
+            <Route path="/Chat" element={<Wrapper> <WebsocketProvider value={socket}> <Chat /> </WebsocketProvider></Wrapper>}></Route>
             <Route path="*" element={<Error404 />}></Route>
             <Route path="/Game">
                 <Route path="" element={<Wrapper> <SinglePlayerCanvas/></Wrapper> }></Route>
@@ -168,6 +178,8 @@ useEffect(() => { check()}, [])
             </Route>
                 <Route path="/ColorOptions" element={ <Wrapper> <ColorOptions/> </Wrapper>}></Route>
             </Routes>
+            </SetUserContext.Provider>
+        </UserContext.Provider>
         </div>
     </>
    )
