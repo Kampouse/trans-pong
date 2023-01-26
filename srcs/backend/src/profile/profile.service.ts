@@ -1,5 +1,5 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game } from '../dtos/profile.dtos';
+import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game, Relation } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
@@ -37,7 +37,87 @@ export class ProfileService {
         this.matchHistory.push(newMatch);
     }
 
-    async getProfilePublic(asker: string, login42: string): Promise<PublicProfileDto> {
+    async getUserRelation(client: string, otherUser: string): Promise<Relation>
+    {
+        let user0;
+        let user1;
+
+        if (client == undefined || otherUser == undefined)
+            return new Relation(true, false, false);
+        try {
+            user0 = await prisma.user.findUnique({
+                where: {
+                    username: client,
+                },
+            });
+
+            user1 = await prisma.user.findUnique({
+                where: {
+                    username: otherUser,
+                },
+            });
+        }
+        catch {}
+
+        //  If they dosen't exist, return error true and everything at null
+        if (!user0 || !user1) {
+            return new Relation(true, false, false);
+        }
+
+        //  Look if they are friend or blocked
+        var friend = false;
+        var block = false;
+        try
+        {
+            var request = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver:
+                    {
+                        sender: client,
+                        receiver: user1.login42
+                    }
+                }
+            })
+
+            if (request)
+                friend = true;
+
+            request = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver:
+                    {
+                        sender: user1.login42,
+                        receiver: client
+                    }
+                    }
+                })
+
+            if (request)
+                friend = true;
+
+            var blockReq = await prisma.block.findUnique({
+                where: {
+                    blocker_blocked :
+                    {
+                        blocker: client,
+                        blocked: user1.login42
+                    }
+                }
+            })
+
+            if (blockReq)
+                block = true;
+        }
+        catch (error)
+        {
+            return new Relation(true, false, false);
+        }
+
+        return new Relation(false, friend, block);
+    }
+
+    async getProfilePublic(asker: string, login42: string): Promise<PublicProfileDto>
+    {
         // Create prisma client and look if the username exist in the database
 
         let user;
@@ -635,6 +715,83 @@ export class ProfileService {
         catch { }
     }
 
+    async removeFriend(login42: string, oldFriend:string)
+    {
+        //  First, find the login42 linked with the oldfriend username
+        let user;
+        
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: oldFriend
+                }})
+
+            //  If the user dosent exist, return 
+            if (!user)
+            {
+                return;
+            }
+        }
+        catch {return;}
+
+     //  Then look if the two user pair in friend request already exist 
+        try
+        {
+            let requestExist = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver:
+                    {
+                        sender: login42,
+                        receiver: user.login42
+                    }}})
+
+            if (requestExist)
+            {
+                await prisma.friendRequest.delete({
+                    where:
+                    {
+                        sender_receiver:
+                        {
+                            sender: login42,
+                            receiver: user.login42
+                        }
+                    }
+                })
+                return;
+            }
+
+            if (!requestExist)
+            {
+                let requestExist = await prisma.friendRequest.findUnique({
+                    where:
+                    {
+                        sender_receiver:
+                        {
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }})
+
+             if (requestExist)
+             {
+                await prisma.friendRequest.delete({
+                    where:
+                    {
+                        sender_receiver:
+                        {
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }
+                })
+                return;
+             }
+         }
+     }
+     catch {return}
+    }
+
     async denyRequest(login42: string, sender: string) {
         //  First, find the login42 linked with the newFriend username
         let user;
@@ -756,6 +913,39 @@ export class ProfileService {
         catch { }
     }
 
+    async unblockUser(login42: string, userToUnblock: string)
+    {
+        //  First, find the user associated with userToBlock
+        let user;
+
+        try {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: userToUnblock
+                }
+            })
+
+            //  If the user dosent exist, return
+            if (!user) {
+                return;
+            }
+        }
+        catch {return;}
+
+        //  remove the block rule in the database
+        try
+        {
+            await prisma.block.delete({
+                where: {
+                    blocker_blocked: {
+                        blocker: login42,
+                        blocked: user.login42
+                    }
+                }
+            })
+        }
+        catch {return;}
+    }
 
     async getUserId(login42: string): Promise<{ userid: number }> | undefined {
         let user;
