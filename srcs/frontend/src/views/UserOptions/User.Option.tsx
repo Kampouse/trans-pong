@@ -1,6 +1,6 @@
 import { Dialog } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
-import {Fetch } from 'utils';
+import { Fetch } from 'utils';
 import { useEffect, useState } from 'react';
 
 //  Get data about the friend relation
