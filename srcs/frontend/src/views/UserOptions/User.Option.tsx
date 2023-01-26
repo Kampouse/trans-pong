@@ -5,23 +5,6 @@ import { useEffect, useState } from 'react';
 
 //  Get data about the friend relation
 
-const useFetch = () =>
-{
-	const [relation, setRelation] = useState<any>(null);
-	
-	// useEffect(() => {
-		Fetch('http://localhost:3000/profile')
-      .then((response) => response.json())
-			.then((data) => {
-				setRelation(data);
-			})
-			.catch((err) => {
-        console.error(err);
-      })       
-	// }, [])
-	return {relation};
-}
-
 export function UserOption({open, onClose, userClicked, setValue})
 {
     //  Username of the user clicked and his profile path
