@@ -83,10 +83,10 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                                     <li className="flex py-4" key={currentMatch.updatedAt + currentMatch.winner + String(index)}>
                                         <div className="flex w-[37%] my-auto items-center ml-2">
                                             <div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
+                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.requestFrom != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                             <div className="ml-2">
-                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
+                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.leftPlayer; if (data.requestFrom != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.leftPlayer}
                                                 </p>
                                             </div>
@@ -101,12 +101,12 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                                         </div>
                                         <div className="flex w-[37%] my-auto justify-end items-center mr-2">
                                             <div className="mr-2">
-                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
+                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.requestFrom != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.rightPlayer}
                                                 </p>
                                             </div>
                                             <div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.rightPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
+                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.rightPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.requestFrom != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                         </div>
                                     </li>
@@ -120,7 +120,7 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
 
 //  =============== Friend List component       =============== //
 
-function FriendList({userClicked, setOpenUserOptions, username}: {userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined})
+function FriendList({data, userClicked, setOpenUserOptions, username}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined})
 {
 	const {profileReq: friendsData} = useFetch(username);
 
@@ -137,10 +137,10 @@ function FriendList({userClicked, setOpenUserOptions, username}: {userClicked: R
 	                              <li className="py-4" key={currentFriend.friendUser}>
 	                                  <div className="flex items-center space-x-4">
 	                                      <div className="shrink-0">
-	                                          <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true);}}/>
+	                                          <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {userClicked.current = currentFriend.friendUser; if (data.requestFrom != userClicked.current){setOpenUserOptions(true);} }}/>
 	                                      </div>
 	                                      <div className="min-w-0 flex-1">
-	                                          <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true); }}>
+	                                          <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentFriend.friendUser; if (data.requestFrom != userClicked.current){setOpenUserOptions(true);} }}>
 	                                              {currentFriend.friendUser}
 	                                          </p>
 	                                          <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentFriend.friendStatus)}>●</span> {currentFriend.friendStatus[0].toUpperCase() + currentFriend.friendStatus.substring(1)}</p>
@@ -602,7 +602,7 @@ export default function Profile()
                 <div className='grow overflow-hidden'>
                     <div className='max-h-[100%] overflow-y-scroll overflow-hidden scrollbar-hide'>
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-                        <TabPanel value="2"><FriendList userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
+                        <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
                             {username === undefined && <TabPanel value="3"><FriendRequests userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>}
                             {username === undefined && <TabPanel value="4"></TabPanel>}
                         <TabPanel value="5"><Stats data={data} /></TabPanel>
@@ -611,7 +611,7 @@ export default function Profile()
             </TabContext>
             </>)}
         </div>
-        <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked} setValue={setValue}></UserOption>
+        <UserOption onClose={() => {setOpenUserOptions(false); userClicked.current = ""}} open={openUserOptions} userClicked={userClicked} setValue={setValue}></UserOption>
         <EditProfile onClose={ async () => {setOpenEditProfile(false);}} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
         <GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
     </div>
