@@ -12,6 +12,8 @@ import { ConfigModule } from '@nestjs/config';
 import {GameSocketIOService} from './game/game.services'
 import {GameSocketIOController} from './game/game.controller'
 import {GameSocketIOModule} from './game/game.module'
+import { ProfileModule } from './profile/profile.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module(
     {
@@ -20,22 +22,27 @@ import {GameSocketIOModule} from './game/game.module'
             ConfigModule.forRoot(),
             AuthModule,
             MulterModule.register({dest: '../frontend/public'}),
+            ProfileModule,
+            ChatModule,
+            GameSocketIOModule,
             ],
 
         //  Controllers imports
-        controllers:[
-            AuthController,
-            ProfileController,
-            GameSocketIOController
-            ],
-
+        controllers: [AppController],
+        // controllers:[
+        //     AuthController,
+        //     ProfileController,
+        //     GameSocketIOController
+        //     ],
+            
+        providers: []
         //  Services imports
-        providers:[
-            AuthService,
-            ProfileService,
-            AuthService,
-            JwtService,
-            AppService,
-            GameSocketIOService]
+        // providers:[
+        //     AuthService,
+        //     ProfileService,
+        //     AuthService,
+        //     JwtService,
+        //     AppService,
+        //     GameSocketIOService]
 })
 export class AppModule {}

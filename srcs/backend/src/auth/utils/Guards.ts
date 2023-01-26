@@ -4,6 +4,7 @@ import { ExecutionContext, Injectable, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
 import { doesNotMatch } from 'assert';
+import { ProfileService } from 'src/profile/profile.service';
 
 type SessionUser = { [key: string]: any };
 @Injectable()
@@ -21,7 +22,7 @@ export class FortyTwoAuthGuard extends AuthGuard('42') {
 //make an auth guard  from the jwt token 
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
-  Service = new AuthService(new JwtService)
+  Service = new AuthService(new ProfileService, new JwtService)
   async canActivate(context: ExecutionContext): Promise<boolean> {
 
 

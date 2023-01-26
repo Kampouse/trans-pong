@@ -10,11 +10,16 @@ import {
   SessionSerializer,
   JwtGuard,
 } from './utils/Guards';
+import { ProfileModule } from 'src/profile/profile.module';
+import { PassportModule } from '@nestjs/passport';
+import { AuthGateway } from './auth.gateway';
 
 @Module({
   imports:
     [
-    JwtModule.register({secret: "this is a secret",signOptions: { expiresIn: '60s' },}),
+      ProfileModule,
+      // PassportModule,
+      JwtModule.register({secret: "this is a secret",signOptions: { expiresIn: '60s' },}),
     ],
   providers:
     [
@@ -25,6 +30,9 @@ import {
     FortyTwoAuthGuard,
     SessionSerializer,
     JwtGuard,
-    ]
+    AuthGateway
+    ],
+    controllers: [AuthController],
+    exports: [AuthService]
 })
 export class AuthModule {}
