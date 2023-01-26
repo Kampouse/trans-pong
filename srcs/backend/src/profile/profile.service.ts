@@ -37,7 +37,7 @@ export class ProfileService {
         this.matchHistory.push(newMatch);
     }
 
-    async getProfilePublic(login42: string): Promise<PublicProfileDto> {
+    async getProfilePublic(asker: string, login42: string): Promise<PublicProfileDto> {
         // Create prisma client and look if the username exist in the database
 
         let user;
@@ -53,8 +53,21 @@ export class ProfileService {
 
         //  If he dosen't exist, return error true and everything at null
         if (!user) {
-            return new PublicProfileDto(true, null, null, null, null, null, null);
+            return new PublicProfileDto(true, null, null, null, null, null, null, null);
         }
+
+        var goingto = login42;
+
+        try
+        {
+            let temp = await prisma.user.findUnique({
+                where: {
+                    login42: asker
+                }
+            })
+            goingto = temp.username;
+        }
+        catch{}
 
         //  Free the array's from previous values
         this.friendList = [];
@@ -187,7 +200,7 @@ export class ProfileService {
         }
         // At last, return the ProfileResponse
         return new PublicProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.matchHistory, stats);
+            this.friendList, this.matchHistory, stats, goingto);
     }
 
     async getProfileEdit(login42: string): Promise<PrivateProfileDto> {

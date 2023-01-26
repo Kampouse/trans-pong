@@ -60,17 +60,10 @@ const loginOffline = () =>
           trans-pong
         </h1>
         <button
-          onClick={(event) => buttonHandler(loginOffline, event)}
+          onClick={(event) => buttonHandler(check, event)}
           className="relative mr-2 mb-2 ml-[50%] translate-x-[-50%] rounded bg-pink-500 py-2 px-4 font-carattere text-lg font-bold text-white sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl"
         >
           Login
-        </button>
-        <button
-          className=" border-0  bg-slate-800 py-2 px-2.5 text-gray-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0"
-          onClick={(event) => buttonHandler(check, event)}
-          type="submit"
-        >
-          Login{' '}
         </button>
       </div>
     </div>
