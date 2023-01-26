@@ -272,19 +272,15 @@ export class ProfileController {
     @UseGuards(JwtGuard)
     @Get('/get/userid')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async getUserId(@Req() request: RequestWithUser): Promise<any> {
-        console.log("test")
+    async getUserId(@Req() request: RequestWithUser): Promise<any>
+    {
         const login42 = await this.profileService.authentificate(request);
 
         if (login42 == undefined) {
-            // return (await this.profileService.getProfileEdit(undefined));
-            console.log("woops")
             return ("undefined user!")
         }
 
-        //const privateProfile: PrivateProfileDto = await this.profileService.getProfileEdit(login42);
         const userId = await this.profileService.getUserId(login42);
-        //console.log(userId)
         return (userId);
     }
 
@@ -294,7 +290,6 @@ export class ProfileController {
     @Get('/play/solo')
     @Header('Content-type', 'application/json; charset=utf-8')
     async getClientInfo(@Req() request: RequestWithUser): Promise<any> {
-        console.log("test")
         const login42 = await this.profileService.authentificate(request);
 
         if (login42 == undefined) {

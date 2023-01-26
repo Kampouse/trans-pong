@@ -1,10 +1,8 @@
-import { User_R } from './../dtos/auth.dtos';
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
-import { DEFAULT_FACTORY_CLASS_METHOD_KEY } from '@nestjs/common/module-utils/constants';
 import { UserDto } from 'src/dtos/user.dtos';
 import { User, userStatus } from '@prisma/client';
 
@@ -458,7 +456,6 @@ export class ProfileService {
         let rightPlayer
 
         //  Get every active games
-        //  TODO: change active to true after tests
         try {
             games = await prisma.game.findMany({
                 where: {
@@ -787,6 +784,7 @@ export class ProfileService {
         }
         return (null);
     }
+
      // Utility Method to get dto from entity
   private entityToDto(user: User): UserDto {
     const userDto = new UserDto();

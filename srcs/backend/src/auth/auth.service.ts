@@ -115,14 +115,30 @@ export class AuthService {
         return null;
     }
 
-    public async authentificateSession(data: any): Promise<string> {
+    public async authentificateSession(data: any): Promise<string>
+    {
         let request = data;
-        //find if the cookie in the headers
-        //look if 
+
         const cookie_string = request?.headers['cookie']?.split("=")[1]
-        if (cookie_string) {
-            const is_valid = await this.validate_token(cookie_string)
-            if (is_valid) {
+        if (cookie_string)
+        {
+            const is_valid = await this.validate_token(cookie_string);
+
+            if (is_valid)
+            {
+                //  Update timestamp of update for that login42
+                try
+                {
+                    await prisma.user.update({
+                        where: {
+                            login42: is_valid
+                        },
+                        data: {
+                            userStatus: "online"
+                        }
+                    })
+                }
+                catch{}
                 return (is_valid as string)
             }
         }
