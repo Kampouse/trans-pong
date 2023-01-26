@@ -36,6 +36,9 @@ export class Player {
         socket.on("disconnect", () => {
             this.status = "disconnected"
         })
+        socket.on("giveup", () => {
+            this.status = "disconnected"
+        })
     }
     public setKeyArrowUp() {
         this.actions.keyActions.up = true;
@@ -57,7 +60,7 @@ export class Player {
         return this.userId;
     }
     public isSocketDisconnected() {
-        if (this.socket.disconnected == true)
+        if (this.status == "disconnected")
             return true
         return false
     }
@@ -170,7 +173,7 @@ export class GameRoom {
                         }
                     });
                     server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //frontend to handle game end
-                }, 5000) //one of our players did not reconnect in 10 seconds, end the game
+                }, 3000) //one of our players did not reconnect in 10 seconds, end the game
                 let checkForReconnection = setInterval(() => {
                     if (this.player1.isSocketDisconnected() == false && this.player2.isSocketDisconnected() == false) {
                         clearTimeout(timeoutReconnection)
