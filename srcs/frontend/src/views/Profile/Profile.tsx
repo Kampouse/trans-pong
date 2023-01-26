@@ -150,7 +150,7 @@ function FriendList({userClicked, setOpenUserOptions, username}: {userClicked: R
 	                              </li>);
 	                        })}
 	                    </ul>
-										</>
+                        </>
 									 )}
                 </div>
             </div>

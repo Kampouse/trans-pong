@@ -913,6 +913,40 @@ export class ProfileService {
         catch { }
     }
 
+    async unblockUser(login42: string, userToUnblock: string)
+    {
+        //  First, find the user associated with userToBlock
+        let user;
+
+        try {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: userToUnblock
+                }
+            })
+
+            //  If the user dosent exist, return
+            if (!user) {
+                return;
+            }
+        }
+        catch {return;}
+
+        //  remove the block rule in the database
+        try
+        {
+            await prisma.block.delete({
+                where: {
+                    blocker_blocked: {
+                        blocker: login42,
+                        blocked: user.login42
+                    }
+                }
+            })
+        }
+        catch {return;}
+    }
+
     async getUserId(login42: string): Promise<{ userid: number }> | undefined {
         let user;
 

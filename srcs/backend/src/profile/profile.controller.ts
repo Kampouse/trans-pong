@@ -207,7 +207,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
-    @Get('/add/:username')
+    @Get('/remove/:username')
     @Header('Content-type', 'application/json; charset=utf-8')
     async removeFriend(@Param('username') username: string, @Req() request: RequestWithUser): Promise<any> {
         const login42 = await this.profileService.authentificate(request);
@@ -248,8 +248,19 @@ export class ProfileController {
         return;
     }
 
+    @UseGuards(JwtGuard)
+    @Get('/unblock/:username')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async unblockUser(@Param('username') username: string, @Req() request: RequestWithUser): Promise<any> {
+        const login42 = await this.profileService.authentificate(request);
 
+        if (login42 == undefined || username == undefined) {
+            return ({ error: "Authentification failed" });
+        }
 
+        this.profileService.unblockUser(login42, username);
+        return;
+    }
 
     @UseGuards(JwtGuard)
     @Get('create/googleAuth')
@@ -262,7 +273,6 @@ export class ProfileController {
         }
         return (this.authService.createAuth(login42));
     }
-
 
     @UseGuards(JwtGuard)
     @Post('create/validation')
