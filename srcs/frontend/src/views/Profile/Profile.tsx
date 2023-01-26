@@ -2,7 +2,7 @@ import { Tab, Box, IconButton, Dialog, DialogContent, DialogTitle } from '@mui/m
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import { GoogleAuth } from 'views/GoogleAuth/google.auth';
 import React, { useState, useRef, useEffect } from 'react';
-import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit } from '@mui/icons-material';
+import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit, Block } from '@mui/icons-material';
 import { blue } from '@mui/material/colors';
 import { useParams } from 'react-router';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
@@ -235,6 +235,13 @@ function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicke
     </div>
   );
 }
+
+//  =============== Stats component       =============== //
+
+function BlockedUsers({data}: {data: any}) {
+	
+}
+
 
 //  =============== Stats component       =============== //
 
@@ -587,7 +594,8 @@ export default function Profile()
                             <Tab icon={<History />} label="Match History" sx={{ fontWeight: 'bold' }} value="1" />
                             <Tab icon={<Favorite />} label="Friends" sx={{ fontWeight: 'bold' }} value="2" />
                                 {username === undefined && <Tab icon={<PersonAdd />} label="Friend Requests" sx={{ fontWeight: 'bold' }} value="3" />}
-                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="4" />
+                                {username === undefined && <Tab icon={<Block />} label="Blocked Users" sx={{ fontWeight: 'bold' }} value="4" />}
+                            <Tab icon={<Equalizer />} label="Statistics" sx={{ fontWeight: 'bold' }} value="5" />
                         </TabList>
                     </Box>
                 </div>
@@ -596,7 +604,8 @@ export default function Profile()
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
                         <TabPanel value="2"><FriendList userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
                             {username === undefined && <TabPanel value="3"><FriendRequests userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>}
-                        <TabPanel value="4"><Stats data={data} /></TabPanel>
+                            {username === undefined && <TabPanel value="4"></TabPanel>}
+                        <TabPanel value="5"><Stats data={data} /></TabPanel>
                     </div>
                 </div>
             </TabContext>
