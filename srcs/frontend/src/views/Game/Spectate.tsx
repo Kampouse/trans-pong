@@ -81,7 +81,6 @@ export function SpectateMenu()
                                         //  Open the game component here with gameRoomId stored in : currentMatch.gameID
                                         usersocket.emit("spectateGame", currentMatch.gameID);
                                         usersocket.on("roomIsReady", () => {
-                                            console.log("wooooo")
                                             usersocket.off("roomIsReady");
                                             nav(`/game/${currentMatch.gameID}`)
                                         })

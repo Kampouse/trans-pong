@@ -87,30 +87,30 @@ export function UserOption({open, onClose, userClicked, setValue})
 											{username}
 									</h1>
 									<div className='py-3'>
-											<button name='viewProfileButton' className={buttonCss} onClick={() =>{nav(redirect, {replace: true}); onClose(); setValue("1");}}>
+											<button name='viewProfileButton' className={buttonCss} onClick={() =>{nav(redirect); onClose(); setValue("1");}}>
 													Profile page
 											</button>
 									</div>
 									<div className='py-3'>
 										{relation.friend === false &&
-											<button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username), nav('/profile/' + username, {replace: true}); onClose(); setValue("1");}}>
+											<button name='addFriendButton' className={buttonCss} onClick={() =>{addFriend(username), nav('/profile/' + username); onClose(); setValue("1");}}>
 													Add friend
 											</button>
 										}
 										{relation.friend === true &&
-											<button name='removeFriendButton' className={buttonCss} onClick={() =>{removeFriend(username), nav('/profile/' + username, {replace: true}); onClose(); setValue("1");}}>
+											<button name='removeFriendButton' className={buttonCss} onClick={() =>{removeFriend(username), nav('/profile/' + username); onClose(); setValue("1");}}>
 													Remove friend
 											</button>
 										}
 									</div>
 									<div className='py-3'>
 										{relation.block === false &&
-											<button name='blockUserEvent' className={buttonCss} onClick={() => {blockUser(username); nav('/profile/' + username, {replace: true}); onClose(); setValue("1");}}>
+											<button name='blockUserEvent' className={buttonCss} onClick={() => {blockUser(username); nav('/profile/' + username); onClose(); setValue("1");}}>
 													Block user
 											</button>
 										}
 										{relation.block === true &&
-											<button name='unblockUserEvent' className={buttonCss} onClick={() => {unBlockUser(username); nav('/profile/' + username, {replace: true}); onClose(); setValue("1");}}>
+											<button name='unblockUserEvent' className={buttonCss} onClick={() => {unBlockUser(username); nav('/profile/' + username); onClose(); setValue("1");}}>
 													Unblock user
 											</button>
 										}

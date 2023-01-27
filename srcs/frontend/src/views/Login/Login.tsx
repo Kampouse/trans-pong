@@ -26,8 +26,6 @@ export default function Login(Status)
         func(inputs)
         const button: HTMLButtonElement = event.currentTarget
     }
-	
-
 
 //  Here we check if the client passed throught 42api
 const check = async () =>

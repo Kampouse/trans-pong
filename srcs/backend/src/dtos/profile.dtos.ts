@@ -93,7 +93,8 @@ export class PrivateProfileDto {
         public matchHistory: MatchDto[],
         public stats: StatisticsDto,
         public authenticator: boolean,
-        public blockList: BlockDto[]){}
+        public blockList: BlockDto[],
+        public requestFrom: string){}
 }
 
 export class PublicProfileDto {

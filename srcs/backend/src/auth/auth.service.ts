@@ -70,7 +70,6 @@ export class AuthService {
                 user = await this.validate_token(req.headers['cookie'].split("=")[1])
                 return await this.createToken(user, fa2)
             }
-            console.log("user", user)
             return await this.createToken(user)
         }
         catch {
@@ -229,7 +228,6 @@ export class AuthService {
             if (user.authenticator == true) {
                 return ({ active: true, should2fa: true })
             }
-            console.log("2fa not active")
             return ({ active: false, should2fa: false })
         }
         catch {

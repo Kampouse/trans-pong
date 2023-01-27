@@ -43,7 +43,7 @@ export default function Login2fa(Status)
       <div className="m-auto">
         <h1 className="font-kaushan text-[75px] text-white sm:text-[100px] md:text-[150px] lg:text-[200px] xl:text-[250px] ">
         2FA Login</h1>
-         <input onChange={(e)=> setContent(e.target.value) } className='bg-transparent border-b-2 ml-[50%] translate-x-[-50%] mb-3' type='text' placeholder='2FA Code' />
+         <input onChange={(e)=> setContent(e.target.value) } className=' text-center bg-transparent border-b-2 ml-[50%] translate-x-[-50%] mb-3' type='text' placeholder='2FA Code' />
         <button
           onClick={(event) => buttonHandler(submit2fa, event)}
           className="relative mr-2 mb-2 ml-[50%] translate-x-[-50%] rounded bg-pink-500 py-2 px-4 font-carattere text-lg font-bold text-white sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl"
