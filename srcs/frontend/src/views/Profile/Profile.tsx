@@ -438,7 +438,7 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                 </p>
             </DialogTitle>
             <DialogContent className="bg-sky-200 flex flex-col">
-                <div className='my-2'>
+                <div className='my-1'>
                     <p className=' font-Raleway font-bold text-center my-2 px-1 text-lg'>
                         Change username
                     </p>
@@ -449,10 +449,10 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                                 updateUsername(document.getElementById("newUsername"), data, setOpenSnackbar, snackbarMsg, snackbarSeverity)
                                 onClose();
                             }}
-                            className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
+                            className='hover:bg-purple-200 hover:text-black h-fit w-28  my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                     </div>
                 </div>
-                <div className='my-2'>
+                <div className='my-1'>
                     <p className='font-Raleway font-bold text-center my-2 px-1 text-lg'>
                         Upload new Photo
                     </p>
@@ -468,17 +468,17 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                                     snackbarMsg.current = "Photo upload successful";
                                     snackbarSeverity.current = 'success';
                                     onClose();
-                                }} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
+                                }} className='hover:bg-purple-200 hover:text-black h-fit w-28  my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
                                 Upload
                             </button>
                         </form>
                     </div>
                 </div>
-                <div className=' text-center my-2 px-1 '>
+                <div className=' text-center my-1 px-1 '>
                     <p className='py-1 font-Raleway font-bold text-lg'>Google Authenticator</p>
                     <p className='py-1 text-sm'></p>
                     <div>
-                        <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'
+                        <button className='hover:bg-purple-200 hover:text-black h-fit w-28 my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'
                             onClick=
                             {() =>
                                 {
@@ -488,6 +488,9 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                         </button>
                     </div>
                 </div>
+                <button className='hover:bg-purple-200 hover:text-black h-fit w-28 my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white' onClick={() =>{onClose();}}>
+                    Close
+                </button>
             </DialogContent>
             </div>
             <GoogleAuth open={ openGoogleAuth} onClose={toggleModalAuth}></GoogleAuth>
@@ -585,6 +588,7 @@ export default function Profile()
     {
         data.error = true;
         data.status = data.statusCode;
+        return (<Error404></Error404>);
     }
 
     useEffect(() => {}, [username])

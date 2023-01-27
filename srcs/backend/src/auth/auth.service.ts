@@ -129,6 +129,18 @@ export class AuthService {
                 //  Update timestamp of update for that login42
                 try
                 {
+                    var user = await prisma.user.findUnique({
+                        where: {
+                            login42: is_valid
+                        }
+                    })
+
+                    if (!user)
+                        return (null);
+
+                    if (user.userStatus == 'offline')
+                        console.log(is_valid + "activity detected. Set user to online.");
+
                     await prisma.user.update({
                         where: {
                             login42: is_valid

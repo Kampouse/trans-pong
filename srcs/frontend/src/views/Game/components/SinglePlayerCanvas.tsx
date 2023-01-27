@@ -23,7 +23,6 @@ const useFetch = () =>
       .then((response) => response.json())
 			.then((data) => {
 				setGameReq(data);
-				console.log(data);
 			})
 	}, [])
 	return {gameReq};
@@ -73,7 +72,6 @@ const SinglePlayerCanvas = () => {
 			keyActions.up = true;
 		if (event.key === 's' || event.key === 'ArrowDown')
 			keyActions.down = true;
-    console.log('User pressed: ', event.key);
   };
 
 	const handleKeyUp = event => {
@@ -82,7 +80,6 @@ const SinglePlayerCanvas = () => {
 			keyActions.up = false;
 		if (event.key === 's' || event.key === 'ArrowDown')
 			keyActions.down = false;
-    console.log('User released: ', event.key);
   };
 
   return (

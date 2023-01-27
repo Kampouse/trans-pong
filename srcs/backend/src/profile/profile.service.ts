@@ -47,7 +47,7 @@ export class ProfileService {
         try {
             user0 = await prisma.user.findUnique({
                 where: {
-                    username: client,
+                    login42: client,
                 },
             });
 
@@ -63,7 +63,6 @@ export class ProfileService {
         if (!user0 || !user1) {
             return new Relation(true, false, false);
         }
-
         //  Look if they are friend or blocked
         var friend = false;
         var block = false;
