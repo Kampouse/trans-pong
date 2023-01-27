@@ -235,10 +235,36 @@ function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicke
   );
 }
 
-//  =============== Stats component       =============== //
+//  =============== Block list component       =============== //
 
-function BlockedUsers({data}: {data: any}) {
+async function unBlockUser(username: string)
+{
+    await Fetch('http://localhost:3000/profile/unblock/' + username)
+    .then(function(){})
+    .catch(function() {console.log("error on unblocking " + username);});
+}
 
+function BlockedUsers({data, setValue})
+{
+    const nav = useNavigate();
+
+    return (
+    <div className="flex h-[100%] flex-col -my-4">
+        <div className="flow-root overflow-y-scroll scrollbar-hide">
+            <ul role="list" className="px-2 divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg">
+                {data.blockList && data.blockList.map((currentBlock) => {return (
+                <li className="flex py-4" key={currentBlock.key}>
+                    <img className="h-12 w-12 border-2 border-blue-700 rounded-full" src={currentBlock.friendPhoto}></img>
+                    <div className='px-[15%] w-40'>
+                        <p className='py-2 text-lg'>{currentBlock.friendUser}</p>
+                    </div>
+                    <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[40%] px-5 text-lg rounded-md bg-[#1976d2] text-white' onClick={ async () =>{unBlockUser(currentBlock.friendUser);setValue("1"); nav('/profile/' + currentBlock.friendUser, {replace: true});}}>
+                        Unblock
+                    </button>
+                </li>);})}
+            </ul>
+        </div>
+    </div>);
 }
 
 
@@ -412,7 +438,7 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                 </p>
             </DialogTitle>
             <DialogContent className="bg-sky-200 flex flex-col">
-                <div className='my-2'>
+                <div className='my-1'>
                     <p className=' font-Raleway font-bold text-center my-2 px-1 text-lg'>
                         Change username
                     </p>
@@ -423,10 +449,10 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                                 updateUsername(document.getElementById("newUsername"), data, setOpenSnackbar, snackbarMsg, snackbarSeverity)
                                 onClose();
                             }}
-                            className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
+                            className='hover:bg-purple-200 hover:text-black h-fit w-28  my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                     </div>
                 </div>
-                <div className='my-2'>
+                <div className='my-1'>
                     <p className='font-Raleway font-bold text-center my-2 px-1 text-lg'>
                         Upload new Photo
                     </p>
@@ -442,17 +468,17 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                                     snackbarMsg.current = "Photo upload successful";
                                     snackbarSeverity.current = 'success';
                                     onClose();
-                                }} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
+                                }} className='hover:bg-purple-200 hover:text-black h-fit w-28  my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
                                 Upload
                             </button>
                         </form>
                     </div>
                 </div>
-                <div className=' text-center my-2 px-1 '>
+                <div className=' text-center my-1 px-1 '>
                     <p className='py-1 font-Raleway font-bold text-lg'>Google Authenticator</p>
                     <p className='py-1 text-sm'></p>
                     <div>
-                        <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'
+                        <button className='hover:bg-purple-200 hover:text-black h-fit w-28 my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'
                             onClick=
                             {() =>
                                 {
@@ -462,6 +488,9 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                         </button>
                     </div>
                 </div>
+                <button className='hover:bg-purple-200 hover:text-black h-fit w-28 my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white' onClick={() =>{onClose();}}>
+                    Close
+                </button>
             </DialogContent>
             </div>
             <GoogleAuth open={ openGoogleAuth} onClose={toggleModalAuth}></GoogleAuth>
@@ -559,6 +588,7 @@ export default function Profile()
     {
         data.error = true;
         data.status = data.statusCode;
+        return (<Error404></Error404>);
     }
 
     useEffect(() => {}, [username])
@@ -604,7 +634,7 @@ export default function Profile()
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
                         <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
                             {username === undefined && <TabPanel value="3"><FriendRequests userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>}
-                            {username === undefined && <TabPanel value="4"></TabPanel>}
+                            {username === undefined && <TabPanel value="4"><BlockedUsers data={data} setValue={setValue}></BlockedUsers></TabPanel>}
                         <TabPanel value="5"><Stats data={data} /></TabPanel>
                     </div>
                 </div>

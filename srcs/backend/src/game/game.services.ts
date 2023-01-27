@@ -36,6 +36,9 @@ export class Player {
         socket.on("disconnect", () => {
             this.status = "disconnected"
         })
+        socket.on("giveup", () => {
+            this.status = "disconnected"
+        })
     }
     public setKeyArrowUp() {
         this.actions.keyActions.up = true;
@@ -57,7 +60,7 @@ export class Player {
         return this.userId;
     }
     public isSocketDisconnected() {
-        if (this.socket.disconnected == true)
+        if (this.status == "disconnected")
             return true
         return false
     }
@@ -90,6 +93,9 @@ export class GameRoom {
             if (this.player1.status == "ready" && this.player2.status == "ready") {
                 clearInterval(this.tempWaitForPlayerReadyInterval);
                 this.startGameUpdateInterval(this.server)
+            }
+            if (this.player1.isSocketDisconnected()){
+                this.status = "finished"
             }
         }, 500) //every 500 milliseconds the interval will check if players are ready
     }
@@ -170,7 +176,7 @@ export class GameRoom {
                         }
                     });
                     server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //frontend to handle game end
-                }, 5000) //one of our players did not reconnect in 10 seconds, end the game
+                }, 3000) //one of our players did not reconnect in 10 seconds, end the game
                 let checkForReconnection = setInterval(() => {
                     if (this.player1.isSocketDisconnected() == false && this.player2.isSocketDisconnected() == false) {
                         clearTimeout(timeoutReconnection)
@@ -187,12 +193,13 @@ export class GameRoom {
             //console.log(this.gameUpdateObject.updateGame);
             if (this.gameUpdateObject.leftPlayer.playerScore == 5 || this.gameUpdateObject.rightPlayer.playerScore == 5) {
                 //posting data stuff maybe ?
-                server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //send event to make client sockets leave room as security measure
                 this.status = "finished"
                 this.gameUpdateObject.updateGame.gameOver = true;
                 this.gameUpdateObject.updateGame.winner = this.gameUpdateObject.leftPlayer.playerScore == 5 ? this.gameUpdateObject.leftPlayer.playerUser : this.gameUpdateObject.rightPlayer.playerUser;
                 clearInterval(this.updateInterval);
                 clearInterval(this.handleSocketDisconnect);
+                server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
+                server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //send event to make client sockets leave room as security measure
                 await prisma.game.update({
                     where: { gameRoomID: this.getRoomName() },
                     data: {
@@ -258,8 +265,6 @@ export class GameSocketIOService {
                 if (gameroom[1].status == "finished") {
                     this.roomMap.delete(gameroom[0])
                 }
-                //add a check for rooms with disconnected sockets or just plain empty for any type of status
-                //else if (gameroom[1].
             }
         }, 500)
     }
