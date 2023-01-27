@@ -290,6 +290,33 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @Post('action/validate2fa')
+    @Header('Content-type', 'application/json; charset=utf-8')
+    async validate(@Body() token, @Req() request: RequestWithUser, @Res() res): Promise<any> {
+        const login42 = await this.profileService.authentificate(request);
+        console.log("login42: " + login42)
+        if (login42 == undefined || token == undefined) {
+            return { 200: "failed" }
+        }
+        const status = await this.authService.validate2fa(login42, token.token)
+        console.log("status: " + status)
+        if (status) {
+            const token = await this.authService.process_poller(request, undefined, true);
+            res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true })
+            res.status(200)
+            res.send({ 200: "success" })
+        }
+        else {
+            res.status(403)
+            res.send({ 403: "failed" })
+        }
+    }
+
+
+
+
+
+    @UseGuards(JwtGuard)
     @Post('remove/authenticator')
     @Redirect()
     @Header('Content-type', 'application/json; charset=utf-8')
