@@ -1,10 +1,7 @@
 import { defaultMaxListeners } from 'events'
 import React, { useEffect, useRef, useState } from 'react'
 import { init, draw, update, drawSingleGameover, singlePlayerDraw } from './ReactiveDraw'
-<<<<<<< HEAD
 import Robot from "../../../../../assets/robot.png"
-=======
->>>>>>> 7705665f7a10b532fffa8d36f3490e56928539f5
 import {usersocket} from '../Matchmaking'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
