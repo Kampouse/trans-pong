@@ -82,6 +82,7 @@ export function SpectateMenu()
                                         usersocket.emit("spectateGame", currentMatch.gameID);
                                         usersocket.on("roomIsReady", () => {
                                             console.log("wooooo")
+                                            console.log(currentMatch.gameID)
                                             usersocket.off("roomIsReady");
                                             nav(`/game/${currentMatch.gameID}`)
                                         })
