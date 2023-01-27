@@ -1,5 +1,5 @@
 //  A user object expected in the request ?
-export type User =
+export type User_R =
 {
     id: string;
     username: string;
@@ -22,9 +22,9 @@ export type passportType =
 export type SessionUser = { [key: string]: any };
   
   //  This is a request type expected from the front end
-export type RequestWithUser = Request & { user: User; response: any } &
+export type RequestWithUser = Request & { user: User_R; response: any } &
 {
-    session: { passport: { user: User } };
+    session: { passport: { user: User_R } };
 };
 
 export class ApiResponse

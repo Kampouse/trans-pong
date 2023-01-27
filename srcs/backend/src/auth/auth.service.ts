@@ -3,11 +3,18 @@ import * as authenticator from 'authenticator';
 import { JwtService } from '@nestjs/jwt';
 import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { prisma } from 'src/main'
+import { Socket, Server } from 'socket.io';
+import { parse } from 'cookie';
+import { UserDto } from 'src/dtos/user.dtos';
+import { ProfileService } from 'src/profile/profile.service';
+import { userStatus } from '@prisma/client';
+
 type validateUser = { response: { url: string, statCode: number }, user_validity: { token: boolean, user: string | null } }
 export type tokenDatas = { username: string, fa2: boolean, iat: number, exp: number }
 @Injectable()
 export class AuthService {
-    constructor(private jwtService: JwtService) { }
+    private userSessions: Map<string, Socket[]>;
+    constructor(  private usersService: ProfileService, private jwtService: JwtService) { }
 
 
 
@@ -137,14 +144,42 @@ export class AuthService {
         return null;
     }
 
-    public async authentificateSession(data: any): Promise<string> {
+    public async authentificateSession(data: any): Promise<string>
+    {
         let request = data;
-        //find if the cookie in the headers
-        //look if 
+
         const cookie_string = request?.headers['cookie']?.split("=")[1]
-        if (cookie_string) {
-            const is_valid = await this.validate_token(cookie_string)
-            if (is_valid) {
+        if (cookie_string)
+        {
+            const is_valid = await this.validate_token(cookie_string);
+
+            if (is_valid)
+            {
+                //  Update timestamp of update for that login42
+                try
+                {
+                    var user = await prisma.user.findUnique({
+                        where: {
+                            login42: is_valid
+                        }
+                    })
+
+                    if (!user)
+                        return (null);
+
+                    if (user.userStatus == 'offline')
+                        console.log(is_valid + "activity detected. Set user to online.");
+
+                    await prisma.user.update({
+                        where: {
+                            login42: is_valid
+                        },
+                        data: {
+                            userStatus: "online"
+                        }
+                    })
+                }
+                catch{}
                 return (is_valid as string)
             }
         }
@@ -160,7 +195,6 @@ export class AuthService {
         try {
             const user = await this.findLogin(login42)
             if (user.authKey != "none") {
-                console.log("Key already exist")
                 let otAuth = authenticator.generateTotpUri(user.authKey, login42 + "@42qc.ca", "Trans-Pong", 'SHA1', 6, 30);
                 return ({ QRcode: otAuth });
             }
@@ -281,4 +315,82 @@ export class AuthService {
         const output = await this.remove2fa(user, formattedToken);
         return output
     }
+    public async getUserFromSocket(socket: Socket): Promise<UserDto | null> {
+        const cookies = socket.handshake.headers.cookie;
+    
+        if (!cookies) {
+          return null;
+        }
+    
+        const token = parse(cookies)['jwt'];
+        if (!token) {
+          return null;
+        }
+    
+        try {
+          const sub = this.jwtService.verify(token);
+          if (!sub) {
+            return null;
+          }
+    
+          const userDto: UserDto | null = await this.usersService.findOneById(
+            sub.sub,
+          );
+    
+          return userDto;
+        } catch {
+          return null;
+        }
+      }
+    
+      getSocketsFromUser(userId: string): Socket[] {
+        return this.userSessions.get(userId);
+      }
+    
+      async modifyUserState(userDto: UserDto, u_status: userStatus) {
+        await this.usersService.setStatus(userDto.userID, u_status);
+      }
+    
+      async addToConnection(client: Socket, server: Server) {
+        const userDto: UserDto | null = await this.getUserFromSocket(client);
+    
+        if (!userDto) {
+          return;
+        }
+        let sockets = this.userSessions.get(userDto.userID);
+    
+        if (!sockets || sockets.length === 0) {
+          sockets = [];
+          await this.modifyUserState(userDto, userStatus.online);
+          server.emit('onUserChange');
+        }
+        sockets.push(client);
+        this.userSessions.set(userDto.userID, sockets);
+        client.join('user_' + userDto.userID);
+      }
+    
+      async removeFromConnection(client: Socket, server: Server) {
+        const userDto: UserDto | null = await this.getUserFromSocket(client);
+    
+        if (!userDto) {
+          return;
+        }
+    
+        const sockets = this.userSessions.get(userDto.userID);
+        if (!sockets) {
+          return;
+        }
+        const index = sockets.indexOf(client);
+        if (index > -1) {
+          sockets.splice(index, 1);
+        }
+    
+        if (!sockets || sockets.length === 0) {
+          await this.modifyUserState(userDto, userStatus.offline);
+          server.emit('onUserChange');
+        }
+    
+        this.userSessions.set(userDto.userID, sockets);
+      }
+
 }

@@ -1,14 +1,14 @@
-import { User } from './../dtos/auth.dtos';
-import { Inject, Injectable } from '@nestjs/common';
-import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game } from '../dtos/profile.dtos';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game, Relation, BlockDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
-import { DEFAULT_FACTORY_CLASS_METHOD_KEY } from '@nestjs/common/module-utils/constants';
+import { UserDto } from 'src/dtos/user.dtos';
+import { User, userStatus } from '@prisma/client';
 
 @Injectable()
 export class ProfileService {
-    @Inject(AuthService)
+    @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService
 
     async authentificate(data: Request): Promise<string> {
@@ -37,7 +37,86 @@ export class ProfileService {
         this.matchHistory.push(newMatch);
     }
 
-    async getProfilePublic(login42: string): Promise<PublicProfileDto> {
+    async getUserRelation(client: string, otherUser: string): Promise<Relation>
+    {
+        let user0;
+        let user1;
+
+        if (client == undefined || otherUser == undefined)
+            return new Relation(true, false, false);
+        try {
+            user0 = await prisma.user.findUnique({
+                where: {
+                    login42: client,
+                },
+            });
+
+            user1 = await prisma.user.findUnique({
+                where: {
+                    username: otherUser,
+                },
+            });
+        }
+        catch {}
+
+        //  If they dosen't exist, return error true and everything at null
+        if (!user0 || !user1) {
+            return new Relation(true, false, false);
+        }
+        //  Look if they are friend or blocked
+        var friend = false;
+        var block = false;
+        try
+        {
+            var request = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver:
+                    {
+                        sender: client,
+                        receiver: user1.login42
+                    }
+                }
+            })
+
+            if (request)
+                friend = true;
+
+            request = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver:
+                    {
+                        sender: user1.login42,
+                        receiver: client
+                    }
+                    }
+                })
+
+            if (request)
+                friend = true;
+
+            var blockReq = await prisma.block.findUnique({
+                where: {
+                    blocker_blocked :
+                    {
+                        blocker: client,
+                        blocked: user1.login42
+                    }
+                }
+            })
+
+            if (blockReq)
+                block = true;
+        }
+        catch (error)
+        {
+            return new Relation(true, false, false);
+        }
+
+        return new Relation(false, friend, block);
+    }
+
+    async getProfilePublic(asker: string, login42: string): Promise<PublicProfileDto>
+    {
         // Create prisma client and look if the username exist in the database
 
         let user;
@@ -53,8 +132,21 @@ export class ProfileService {
 
         //  If he dosen't exist, return error true and everything at null
         if (!user) {
-            return new PublicProfileDto(true, null, null, null, null, null, null);
+            return new PublicProfileDto(true, null, null, null, null, null, null, null);
         }
+
+        var goingto = login42;
+
+        try
+        {
+            let temp = await prisma.user.findUnique({
+                where: {
+                    login42: asker
+                }
+            })
+            goingto = temp.username;
+        }
+        catch{}
 
         //  Free the array's from previous values
         this.friendList = [];
@@ -187,7 +279,7 @@ export class ProfileService {
         }
         // At last, return the ProfileResponse
         return new PublicProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.matchHistory, stats);
+            this.friendList, this.matchHistory, stats, goingto);
     }
 
     async getProfileEdit(login42: string): Promise<PrivateProfileDto> {
@@ -205,7 +297,7 @@ export class ProfileService {
 
         //  If he dosen't exist, return error true and everything at null
         if (!user) {
-            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null);
+            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null, await this.getBlockedUsers(login42));
         }
 
         //  Free the array's from previous values
@@ -357,8 +449,10 @@ export class ProfileService {
         }
 
         // At last, return the ProfileResponse
+        var blockL = await this.getBlockedUsers(login42);
+
         return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator);
+            this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator, blockL);
     }
 
     async updateUsername(newUsername: string, login42: string): Promise<responseDefault> {
@@ -456,7 +550,6 @@ export class ProfileService {
         let rightPlayer
 
         //  Get every active games
-        //  TODO: change active to true after tests
         try {
             games = await prisma.game.findMany({
                 where: {
@@ -503,6 +596,50 @@ export class ProfileService {
         //  Create the Active game data object with the array and return it.
         const response = new ActiveGameDto(array);
         return (response);
+    }
+
+    async getBlockedUsers(login42: string): Promise<BlockDto []> {
+        let array: BlockDto[] = [];
+        let blockArray;
+
+        //  Get every active games
+        try {
+            blockArray = await prisma.block.findMany({
+                where: {
+                    blocker: login42
+                }
+            })
+        }
+        catch {}
+
+        //  If there is some active games, insert them in an array of games
+        if (blockArray) {
+            for (let i in blockArray) {
+                //  Set both player to undefined
+
+                var blocked;
+
+                //  Try to Find left user
+                try {
+                    blocked = await prisma.user.findUnique({
+                        where: {
+                            login42: blockArray[i].blocked
+                        }
+                    })
+                } catch { }
+
+                //  Add the game to the array if both player are found in the database
+                if (blocked != undefined && login42 != undefined)
+                {
+                    let r = (Math.random() + 1).toString(36).substring(2);
+                    let newBlock = new BlockDto(blocked.username, blocked.imagePath, r);
+                    array.push(newBlock);
+                }
+            }
+        }
+
+        //  Create the Active game data object with the array and return it.
+        return (array);
     }
 
     async updatePhoto(newFilePath: string, login42: string): Promise<responseUploadPhoto> {
@@ -621,6 +758,83 @@ export class ProfileService {
             })
         }
         catch { }
+    }
+
+    async removeFriend(login42: string, oldFriend:string)
+    {
+        //  First, find the login42 linked with the oldfriend username
+        let user;
+        
+        try
+        {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: oldFriend
+                }})
+
+            //  If the user dosent exist, return 
+            if (!user)
+            {
+                return;
+            }
+        }
+        catch {return;}
+
+     //  Then look if the two user pair in friend request already exist 
+        try
+        {
+            let requestExist = await prisma.friendRequest.findUnique({
+                where: {
+                    sender_receiver:
+                    {
+                        sender: login42,
+                        receiver: user.login42
+                    }}})
+
+            if (requestExist)
+            {
+                await prisma.friendRequest.delete({
+                    where:
+                    {
+                        sender_receiver:
+                        {
+                            sender: login42,
+                            receiver: user.login42
+                        }
+                    }
+                })
+                return;
+            }
+
+            if (!requestExist)
+            {
+                let requestExist = await prisma.friendRequest.findUnique({
+                    where:
+                    {
+                        sender_receiver:
+                        {
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }})
+
+             if (requestExist)
+             {
+                await prisma.friendRequest.delete({
+                    where:
+                    {
+                        sender_receiver:
+                        {
+                            sender: user.login42,
+                            receiver: login42
+                        }
+                    }
+                })
+                return;
+             }
+         }
+     }
+     catch {return}
     }
 
     async denyRequest(login42: string, sender: string) {
@@ -744,6 +958,39 @@ export class ProfileService {
         catch { }
     }
 
+    async unblockUser(login42: string, userToUnblock: string)
+    {
+        //  First, find the user associated with userToBlock
+        let user;
+
+        try {
+            user = await prisma.user.findUnique({
+                where: {
+                    username: userToUnblock
+                }
+            })
+
+            //  If the user dosent exist, return
+            if (!user) {
+                return;
+            }
+        }
+        catch {return;}
+
+        //  remove the block rule in the database
+        try
+        {
+            await prisma.block.delete({
+                where: {
+                    blocker_blocked: {
+                        blocker: login42,
+                        blocked: user.login42
+                    }
+                }
+            })
+        }
+        catch {return;}
+    }
 
     async getUserId(login42: string): Promise<{ userid: number }> | undefined {
         let user;
@@ -785,4 +1032,48 @@ export class ProfileService {
         }
         return (null);
     }
+
+     // Utility Method to get dto from entity
+  private entityToDto(user: User): UserDto {
+    const userDto = new UserDto();
+
+    userDto.userID = user.userID;
+    userDto.login42 = user.login42;
+    userDto.username = user.username;
+    userDto.userStatus = user.userStatus;
+    // // userDto.friends = user.friendsofthisuser
+    //   ? user.friendsofthisuser.map((x) => this.entityToDto(x))
+    //   : [];
+    // userDto.blocked = user.blockedbythisuser
+    //   ? user.blockedbythisuser.map((x) => this.entityToDto(x))
+    //   : [];
+    userDto.authenticator = user.authenticator;
+    userDto.imagePath = user.imagePath;
+    return userDto;
+  }
+
+  // Find one user by id
+  public async findOneById(id: string) {
+    const user: User = await prisma.user.findUnique({
+      where: { userID: id },
+      //include: { userFriends: true },
+    });
+    if (!user) return null;
+    const userDto: UserDto = this.entityToDto(user);
+    return userDto;
+  }
+
+  public async setStatus(id: string, status: userStatus): Promise<UserDto> {
+    const user = await prisma.user.findUnique({ where: { userID: id } });
+    if (!user) {
+      return null;
+    }
+    const updatedUser = await prisma.user.update({
+      where: { userID: id },
+      data: { userStatus: status },
+    });
+    // convert the updated user object to a DTO
+    const userDto = this.entityToDto(updatedUser);
+    return userDto;
+  }
 }

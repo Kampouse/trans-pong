@@ -33,7 +33,7 @@ async function main()
             data: {
                 login42: 'jvigneau',
                 username: 'jvigneau',
-                userStatus: 'playing',
+                userStatus: 'online',
                 imagePath: '/jvigneauPhoto.jpeg',
             },
         })
@@ -46,7 +46,7 @@ async function main()
         data: {
                 login42: 'mleblanc',
                 username: 'mleblanc',
-                userStatus: 'playing',
+                userStatus: 'online',
                 imagePath: '/mleblancPhoto.jpeg',
             },
         })
@@ -72,7 +72,7 @@ async function main()
             data: {
                 login42: 'alvachon',
                 username: 'alvachon',
-                userStatus: 'offline',
+                userStatus: 'online',
                 imagePath: '/alvachonPhoto.jpeg',
             },
         })
@@ -85,7 +85,7 @@ async function main()
             data: {
                 login42: 'jbadia',
                 username: 'jbadia',
-                userStatus: 'playing',
+                userStatus: 'online',
                 imagePath: '/jbadiaPhoto.jpeg',
             },
         })
@@ -98,7 +98,7 @@ async function main()
             data: {
                 login42: 'gehebert',
                 username: 'gehebert',
-                userStatus: 'offline',
+                userStatus: 'online',
                 imagePath: '/gehebertPhoto.jpeg',
             },
         })
@@ -111,7 +111,7 @@ async function main()
             data: {
                 login42: 'tberube',
                 username: 'tberube',
-                userStatus: 'playing',
+                userStatus: 'online',
                 imagePath: '/tberubePhoto.jpeg',
             },
         })
@@ -137,7 +137,7 @@ async function main()
             data: {
                 login42: 'bperron',
                 username: 'bperron',
-                userStatus: 'playing',
+                userStatus: 'online',
                 imagePath: '/bperronPhoto.jpeg',
             },
         })

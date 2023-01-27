@@ -62,4 +62,10 @@ export class AuthController {
     res.cookie('token', "", { httpOnly: true, sameSite: 'None', secure: true }).status(200).send();
     return { message: "User logged out" }
   }
+
+  // @UseGuards(FortyTwoAuthGuard)
+  // @Get('isLogged')
+  // async isLoggedIn() {
+  //   return { loggedIn: true };
+  // }
 }

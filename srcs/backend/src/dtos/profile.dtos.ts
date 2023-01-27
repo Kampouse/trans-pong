@@ -9,6 +9,15 @@ export class Game
     ){}
 }
 
+export class Relation
+{
+    constructor(
+        public error:   boolean,
+        public friend:  boolean,
+        public block:   boolean
+    ){}
+}
+
 export class ActiveGameDto
 {
     constructor(
@@ -28,6 +37,14 @@ export class FriendDto {
         public friendUser:         string,
         public friendPhoto:        string,
         public friendStatus:       string
+    ){}
+}
+
+export class BlockDto {
+    constructor (
+        public friendUser:         string,
+        public friendPhoto:        string,
+        public key:                string
     ){}
 }
 
@@ -75,7 +92,8 @@ export class PrivateProfileDto {
         public friendRequests: FriendRequestDto[],
         public matchHistory: MatchDto[],
         public stats: StatisticsDto,
-        public authenticator: boolean){}
+        public authenticator: boolean,
+        public blockList: BlockDto[]){}
 }
 
 export class PublicProfileDto {
@@ -86,5 +104,6 @@ export class PublicProfileDto {
         public imagePath: string,
         public friendList: FriendDto[],
         public matchHistory: MatchDto[],
-        public stats: StatisticsDto){}
+        public stats: StatisticsDto,
+        public requestFrom: string){}
 }
