@@ -94,6 +94,9 @@ export class GameRoom {
                 clearInterval(this.tempWaitForPlayerReadyInterval);
                 this.startGameUpdateInterval(this.server)
             }
+            if (this.player1.isSocketDisconnected()){
+                this.status = "finished"
+            }
         }, 500) //every 500 milliseconds the interval will check if players are ready
     }
 
@@ -262,8 +265,6 @@ export class GameSocketIOService {
                 if (gameroom[1].status == "finished") {
                     this.roomMap.delete(gameroom[0])
                 }
-                //add a check for rooms with disconnected sockets or just plain empty for any type of status
-                //else if (gameroom[1].
             }
         }, 500)
     }
