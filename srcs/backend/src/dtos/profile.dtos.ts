@@ -40,6 +40,14 @@ export class FriendDto {
     ){}
 }
 
+export class BlockDto {
+    constructor (
+        public friendUser:         string,
+        public friendPhoto:        string,
+        public key:                string
+    ){}
+}
+
 export class FriendRequestDto{
     constructor(
         public fromUser:           string,
@@ -84,7 +92,8 @@ export class PrivateProfileDto {
         public friendRequests: FriendRequestDto[],
         public matchHistory: MatchDto[],
         public stats: StatisticsDto,
-        public authenticator: boolean){}
+        public authenticator: boolean,
+        public blockList: BlockDto[]){}
 }
 
 export class PublicProfileDto {

@@ -1,5 +1,5 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game, Relation } from '../dtos/profile.dtos';
+import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game, Relation, BlockDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
@@ -47,7 +47,7 @@ export class ProfileService {
         try {
             user0 = await prisma.user.findUnique({
                 where: {
-                    username: client,
+                    login42: client,
                 },
             });
 
@@ -63,7 +63,6 @@ export class ProfileService {
         if (!user0 || !user1) {
             return new Relation(true, false, false);
         }
-
         //  Look if they are friend or blocked
         var friend = false;
         var block = false;
@@ -298,7 +297,7 @@ export class ProfileService {
 
         //  If he dosen't exist, return error true and everything at null
         if (!user) {
-            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null);
+            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null, await this.getBlockedUsers(login42));
         }
 
         //  Free the array's from previous values
@@ -450,8 +449,10 @@ export class ProfileService {
         }
 
         // At last, return the ProfileResponse
+        var blockL = await this.getBlockedUsers(login42);
+
         return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator);
+            this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator, blockL);
     }
 
     async updateUsername(newUsername: string, login42: string): Promise<responseDefault> {
@@ -595,6 +596,50 @@ export class ProfileService {
         //  Create the Active game data object with the array and return it.
         const response = new ActiveGameDto(array);
         return (response);
+    }
+
+    async getBlockedUsers(login42: string): Promise<BlockDto []> {
+        let array: BlockDto[] = [];
+        let blockArray;
+
+        //  Get every active games
+        try {
+            blockArray = await prisma.block.findMany({
+                where: {
+                    blocker: login42
+                }
+            })
+        }
+        catch {}
+
+        //  If there is some active games, insert them in an array of games
+        if (blockArray) {
+            for (let i in blockArray) {
+                //  Set both player to undefined
+
+                var blocked;
+
+                //  Try to Find left user
+                try {
+                    blocked = await prisma.user.findUnique({
+                        where: {
+                            login42: blockArray[i].blocked
+                        }
+                    })
+                } catch { }
+
+                //  Add the game to the array if both player are found in the database
+                if (blocked != undefined && login42 != undefined)
+                {
+                    let r = (Math.random() + 1).toString(36).substring(2);
+                    let newBlock = new BlockDto(blocked.username, blocked.imagePath, r);
+                    array.push(newBlock);
+                }
+            }
+        }
+
+        //  Create the Active game data object with the array and return it.
+        return (array);
     }
 
     async updatePhoto(newFilePath: string, login42: string): Promise<responseUploadPhoto> {
