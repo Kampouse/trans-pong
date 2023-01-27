@@ -32,9 +32,12 @@ export class ProfileController {
     @Get('/relation/:username')
     @Header('Content-type', 'application/json; charset=utf-8')
     @UseGuards(JwtGuard)
-    async getUserRelation(@Param('username') username: string, @Req() request: RequestWithUser): Promise<Relation> {
+    async getUserRelation(@Param('username') username: string, @Req() request: RequestWithUser): Promise<Relation>
+    {
         const login42 = await this.profileService.authentificate(request);
-        if (login42 == undefined || username == undefined) {
+
+        if (login42 == undefined || username == undefined)
+        {
             return (await this.profileService.getUserRelation(undefined, undefined));
         }
         const relation = await this.profileService.getUserRelation(login42, username);

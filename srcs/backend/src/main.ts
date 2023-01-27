@@ -31,7 +31,7 @@ var updateStatusInterval = setInterval(async () => {
 
     var timeDistance = Math.floor((date - userDate.getTime()) / 1000);
     if (timeDistance > 5) {
-      console.log(`user ${user.username} set to offline`)
+      console.log(`user ${user.username} is inactive. He as been set to offline.`)
       await prisma.user.update({
         where: { userID: user.userID }, data: {
           userStatus: "offline"

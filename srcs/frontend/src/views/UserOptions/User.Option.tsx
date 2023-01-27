@@ -41,11 +41,10 @@ export function UserOption({open, onClose, userClicked, setValue})
     //  Username of the user clicked and his profile path
 
     const username = userClicked.current;
-		const {relation} = useFetch(username);
-		// console.log(relation);
+    const {relation} = useFetch(username);
     var redirect = "/profile/" + username;
     const nav = useNavigate();
-		
+
 
     //  CSS style for button
     const buttonCss = 'bg-slate-100 text-2xl font-Raleway hover:bg-purple-100 ring-1 ring-slate-500 rounded-lg mx-[25%] w-[50%] h-10'

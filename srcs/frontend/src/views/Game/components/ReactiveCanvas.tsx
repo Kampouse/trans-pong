@@ -47,14 +47,12 @@ const ReactiveCanvas = () => {
   }, [])
 
 	const handleKeyDown = event => {
-    console.log('User pressed: ', event.key);
     if(event.key == "ArrowUp" || event.key == "ArrowDown")
       usersocket.emit("updatePlayerPosition", {direction: event.key}); //need to find a way to emit this only once until a keyup event is fired
   };
 
   
 	const handleKeyUp = event => {
-    console.log('User released: ', event.key);
     usersocket.emit("stopUpdatePlayerPosition")
   };
 
