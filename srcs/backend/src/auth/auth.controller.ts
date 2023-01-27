@@ -47,7 +47,6 @@ export class AuthController {
       return ErrorLogin
     }
     const tfa = await this.authService.should2fa(request.user.username)
-    console.log("tfa", tfa)
     const path = tfa.should2fa ? "http://localhost:5173/2fa" : "http://localhost:5173/Profile"
     const NewResponse = {
       statCode: 302,

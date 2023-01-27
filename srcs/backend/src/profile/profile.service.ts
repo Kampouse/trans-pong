@@ -59,7 +59,6 @@ export class ProfileService {
         }
         catch {}
 
-        //  If they dosen't exist, return error true and everything at null
         if (!user0 || !user1) {
             return new Relation(true, false, false);
         }
@@ -297,7 +296,7 @@ export class ProfileService {
 
         //  If he dosen't exist, return error true and everything at null
         if (!user) {
-            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null, await this.getBlockedUsers(login42));
+            return new PrivateProfileDto(true, null, null, null, null, null, null, null, null, await this.getBlockedUsers(login42), "none");
         }
 
         //  Free the array's from previous values
@@ -452,7 +451,7 @@ export class ProfileService {
         var blockL = await this.getBlockedUsers(login42);
 
         return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator, blockL);
+            this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator, blockL, user.username);
     }
 
     async updateUsername(newUsername: string, login42: string): Promise<responseDefault> {
@@ -535,7 +534,6 @@ export class ProfileService {
 
         if (user != undefined) {
             if (user.authenticator == true) {
-                console.log("auth is active")
                 response.message = "active";
                 return (response)
             }
@@ -1005,7 +1003,7 @@ export class ProfileService {
         if (user) {
             return ({ userid: user.userID });
         }
-        return (null);
+        return ({userid: 999});
     }
 
     async getSinglePlayerData(login42: string): Promise<{ login: string, photo: string }> | null {

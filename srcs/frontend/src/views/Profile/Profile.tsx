@@ -2,7 +2,7 @@ import { Tab, Box, IconButton, Dialog, DialogContent, DialogTitle } from '@mui/m
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import { GoogleAuth } from 'views/GoogleAuth/google.auth';
 import React, { useState, useRef, useEffect } from 'react';
-import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit, Block } from '@mui/icons-material';
+import { History, Favorite, PersonAdd, EmojiEvents, Equalizer, Lock, WorkspacePremium, CheckCircle, Cancel, Edit, Block, ErrorOutline } from '@mui/icons-material';
 import { blue } from '@mui/material/colors';
 import { useParams } from 'react-router';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
@@ -258,7 +258,7 @@ function BlockedUsers({data, setValue})
                     <div className='px-[15%] w-40'>
                         <p className='py-2 text-lg'>{currentBlock.friendUser}</p>
                     </div>
-                    <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[40%] px-5 text-lg rounded-md bg-[#1976d2] text-white' onClick={ async () =>{unBlockUser(currentBlock.friendUser);setValue("1"); nav('/profile/' + currentBlock.friendUser, {replace: true});}}>
+                    <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[40%] px-5 text-lg rounded-md bg-[#1976d2] text-white' onClick={ async () =>{unBlockUser(currentBlock.friendUser);setValue("1"); nav('/profile/' + currentBlock.friendUser);}}>
                         Unblock
                     </button>
                 </li>);})}
@@ -484,7 +484,7 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                                 {
                                      data.authenticator ? setGoogleReset(!openGoogleReset) :  setGoogleAuth(!openGoogleAuth);
                                 }}>
-                            {data?.authenticator == false ? "Activate" : "Reset"}
+                            {data?.authenticator == false ? "Activate" : "Remove"}
                         </button>
                     </div>
                 </div>
@@ -584,6 +584,7 @@ export default function Profile()
 
     const { username } = useParams();
     const {profileReq: data} = useFetch(username);
+
     if (data && data?.statusCode && data.statusCode != 200)
     {
         data.error = true;
@@ -595,7 +596,7 @@ export default function Profile()
     return (
     <div  className="m-auto pt-[50px] items-center lg:flex-row  h-[90%] max-h-[750px] w-[90%] max-w-[700px] font-Raleway">
         <div className='w-full h-[100%] flex flex-col bg-sky-200 rounded-lg m-auto'>
-            {data && (
+            {data && data.error != true && (
             <>
             <div className='w-full h-[30%] flex py-4 px-5'>
                 <div className='w-fit h-full flex items-center justify-center'>
@@ -640,6 +641,19 @@ export default function Profile()
                 </div>
             </TabContext>
             </>)}
+            {data && data.error == true && (
+                <>
+                    <div>
+                        <p className='mx-[20%] mt-20 text-6xl font-Raleway'>
+                            User not found
+                        </p>
+                    </div>
+                    <div className='w-[60%] h-[60%] mx-[20%] my-[10%]'>
+                            <img src='/userNotFound.webp' className='rounded-full h-full relative border-2 border-black'>
+                            </img>
+                    </div>
+                </>
+            )}
         </div>
         <UserOption onClose={() => {setOpenUserOptions(false); userClicked.current = ""}} open={openUserOptions} userClicked={userClicked} setValue={setValue}></UserOption>
         <EditProfile onClose={ async () => {setOpenEditProfile(false);}} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>

@@ -148,10 +148,7 @@ const check = async () =>
       navigate('/')
   
     else if (auth.status === 401) {
-    console.log("2fa")
-      navigate('/2fa')
-    
-   
+      navigate('/2fa')   
     }
   }
   catch (error) {

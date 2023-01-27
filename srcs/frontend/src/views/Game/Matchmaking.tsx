@@ -53,7 +53,7 @@ export default function Matchmaking()
                 <h1 className="text-center text-6xl pt-10 pb-40 font-Merriweather">Matchmaking</h1>
                 <div className="pb-12 flex flex-row items-center justify-center px-10">
                     <button type='button' id="singleplayer" onClick={(e) => startSinglePlayer(e, nav)} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
-                        Singler Player
+                        Single Player
                     </button>
                     <button type='button' id="multiplayer" onClick={((e) => startMultiplayerMatchmake(e, nav, userid, setOpenQueue))} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Multi Player
@@ -70,10 +70,14 @@ function startSinglePlayer(e, nav: NavigateFunction){
 	nav('/game');
 }
 
-async function getUserId(): Promise<string> {
+async function getUserId(): Promise<string>
+{
     var userid;
     await Fetch ('api/profile/get/userid')
         .then((response) => response.json())
+        .catch((err) => {
+            return ("None");
+        })
         .then((data) => {
            userid = data.userid;
         })
@@ -99,7 +103,6 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, set
     console.log("Creating socket");
     usersocket.disconnect();
     //setOpenQueue(true);
-    console.log("ok allo")
     usersocket = io.connect("http://localhost:3001")
     //usersocket.connect()
     alert("Waiting for other player...")
