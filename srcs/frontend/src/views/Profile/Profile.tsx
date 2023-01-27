@@ -83,10 +83,10 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                                     <li className="flex py-4" key={currentMatch.updatedAt + currentMatch.winner + String(index)}>
                                         <div className="flex w-[37%] my-auto items-center ml-2">
                                             <div className="h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
+                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.leftPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.requestFrom != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                             <div className="ml-2">
-                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.leftPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
+                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.leftPlayer; if (data.requestFrom != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.leftPlayer}
                                                 </p>
                                             </div>
@@ -101,12 +101,12 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
                                         </div>
                                         <div className="flex w-[37%] my-auto justify-end items-center mr-2">
                                             <div className="mr-2">
-                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}>
+                                                <p className={`text-gray-900 hover:cursor-pointer hover:underline underline-offset-2`} onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.requestFrom != userClicked.current){setOpenUserOptions(true)}}}>
                                                     {currentMatch.rightPlayer}
                                                 </p>
                                             </div>
                                             <div className=" h-[32px] w-[32px] shrink-0 sm:table-cell">
-                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.rightPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.username != userClicked.current){setOpenUserOptions(true)}}}/>
+                                                <img className={`h-full w-full border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer`} src={currentMatch.rightPhoto} alt="" onClick={() =>{userClicked.current = currentMatch.rightPlayer;if (data.requestFrom != userClicked.current){setOpenUserOptions(true)}}}/>
                                             </div>
                                         </div>
                                     </li>
@@ -120,7 +120,7 @@ function MatchResult({data, userClicked, setOpenUserOptions}: {data: any, userCl
 
 //  =============== Friend List component       =============== //
 
-function FriendList({userClicked, setOpenUserOptions, username}: {userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined})
+function FriendList({data, userClicked, setOpenUserOptions, username}: {data: any, userClicked: React.MutableRefObject<string | null>, setOpenUserOptions: React.Dispatch<React.SetStateAction<boolean>>, username: string | undefined})
 {
 	const {profileReq: friendsData} = useFetch(username);
 
@@ -137,10 +137,10 @@ function FriendList({userClicked, setOpenUserOptions, username}: {userClicked: R
 	                              <li className="py-4" key={currentFriend.friendUser}>
 	                                  <div className="flex items-center space-x-4">
 	                                      <div className="shrink-0">
-	                                          <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true);}}/>
+	                                          <img className="h-12 w-12 border-2 border-blue-700 rounded-full hover:border-pink-500 hover:cursor-pointer" src={currentFriend.friendPhoto} alt="" onClick={() => {userClicked.current = currentFriend.friendUser; if (data.requestFrom != userClicked.current){setOpenUserOptions(true);} }}/>
 	                                      </div>
 	                                      <div className="min-w-0 flex-1">
-	                                          <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentFriend.friendUser;setOpenUserOptions(true); }}>
+	                                          <p className="truncate text-md font-semibold text-gray-900 dark:text-slate-600 hover:cursor-pointer hover:underline underline-offset-2" onClick={() => {userClicked.current = currentFriend.friendUser; if (data.requestFrom != userClicked.current){setOpenUserOptions(true);} }}>
 	                                              {currentFriend.friendUser}
 	                                          </p>
 	                                          <p className="text-sm text-gray-500 dark:text-slate-500"><span className={getStatusCSS(currentFriend.friendStatus)}>●</span> {currentFriend.friendStatus[0].toUpperCase() + currentFriend.friendStatus.substring(1)}</p>
@@ -235,10 +235,36 @@ function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicke
   );
 }
 
-//  =============== Stats component       =============== //
+//  =============== Block list component       =============== //
 
-function BlockedUsers({data}: {data: any}) {
+async function unBlockUser(username: string)
+{
+    await Fetch('http://localhost:3000/profile/unblock/' + username)
+    .then(function(){})
+    .catch(function() {console.log("error on unblocking " + username);});
+}
 
+function BlockedUsers({data, setValue})
+{
+    const nav = useNavigate();
+
+    return (
+    <div className="flex h-[100%] flex-col -my-4">
+        <div className="flow-root overflow-y-scroll scrollbar-hide">
+            <ul role="list" className="px-2 divide-y divide-gray-500 dark:divide-slate-300 bg-white/[55%] rounded-lg">
+                {data.blockList && data.blockList.map((currentBlock) => {return (
+                <li className="flex py-4" key={currentBlock.key}>
+                    <img className="h-12 w-12 border-2 border-blue-700 rounded-full" src={currentBlock.friendPhoto}></img>
+                    <div className='px-[15%] w-40'>
+                        <p className='py-2 text-lg'>{currentBlock.friendUser}</p>
+                    </div>
+                    <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[40%] px-5 text-lg rounded-md bg-[#1976d2] text-white' onClick={ async () =>{unBlockUser(currentBlock.friendUser);setValue("1"); nav('/profile/' + currentBlock.friendUser, {replace: true});}}>
+                        Unblock
+                    </button>
+                </li>);})}
+            </ul>
+        </div>
+    </div>);
 }
 
 
@@ -412,7 +438,7 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                 </p>
             </DialogTitle>
             <DialogContent className="bg-sky-200 flex flex-col">
-                <div className='my-2'>
+                <div className='my-1'>
                     <p className=' font-Raleway font-bold text-center my-2 px-1 text-lg'>
                         Change username
                     </p>
@@ -423,10 +449,10 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                                 updateUsername(document.getElementById("newUsername"), data, setOpenSnackbar, snackbarMsg, snackbarSeverity)
                                 onClose();
                             }}
-                            className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[36%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
+                            className='hover:bg-purple-200 hover:text-black h-fit w-28  my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white' type='submit'>Apply</button>
                     </div>
                 </div>
-                <div className='my-2'>
+                <div className='my-1'>
                     <p className='font-Raleway font-bold text-center my-2 px-1 text-lg'>
                         Upload new Photo
                     </p>
@@ -442,17 +468,17 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                                     snackbarMsg.current = "Photo upload successful";
                                     snackbarSeverity.current = 'success';
                                     onClose();
-                                }} className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[35%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
+                                }} className='hover:bg-purple-200 hover:text-black h-fit w-28  my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'>
                                 Upload
                             </button>
                         </form>
                     </div>
                 </div>
-                <div className=' text-center my-2 px-1 '>
+                <div className=' text-center my-1 px-1 '>
                     <p className='py-1 font-Raleway font-bold text-lg'>Google Authenticator</p>
                     <p className='py-1 text-sm'></p>
                     <div>
-                        <button className='hover:bg-purple-200 hover:text-black h-fit w-fit my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'
+                        <button className='hover:bg-purple-200 hover:text-black h-fit w-28 my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white'
                             onClick=
                             {() =>
                                 {
@@ -462,6 +488,9 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                         </button>
                     </div>
                 </div>
+                <button className='hover:bg-purple-200 hover:text-black h-fit w-28 my-2 mx-[33%] px-5 text-lg rounded-md bg-[#1976d2] text-white' onClick={() =>{onClose();}}>
+                    Close
+                </button>
             </DialogContent>
             </div>
             <GoogleAuth open={ openGoogleAuth} onClose={toggleModalAuth}></GoogleAuth>
@@ -559,6 +588,7 @@ export default function Profile()
     {
         data.error = true;
         data.status = data.statusCode;
+        return (<Error404></Error404>);
     }
 
     useEffect(() => {}, [username])
@@ -602,16 +632,16 @@ export default function Profile()
                 <div className='grow overflow-hidden'>
                     <div className='max-h-[100%] overflow-y-scroll overflow-hidden scrollbar-hide'>
                         <TabPanel value="1"><MatchResult data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions}/></TabPanel>
-                        <TabPanel value="2"><FriendList userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
+                        <TabPanel value="2"><FriendList data={data} userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>
                             {username === undefined && <TabPanel value="3"><FriendRequests userClicked={userClicked} setOpenUserOptions={setOpenUserOptions} username={username}/></TabPanel>}
-                            {username === undefined && <TabPanel value="4"></TabPanel>}
+                            {username === undefined && <TabPanel value="4"><BlockedUsers data={data} setValue={setValue}></BlockedUsers></TabPanel>}
                         <TabPanel value="5"><Stats data={data} /></TabPanel>
                     </div>
                 </div>
             </TabContext>
             </>)}
         </div>
-        <UserOption onClose={() => setOpenUserOptions(false)} open={openUserOptions} userClicked={userClicked} setValue={setValue}></UserOption>
+        <UserOption onClose={() => {setOpenUserOptions(false); userClicked.current = ""}} open={openUserOptions} userClicked={userClicked} setValue={setValue}></UserOption>
         <EditProfile onClose={ async () => {setOpenEditProfile(false);}} open={openEditProfile} setOpenSnackbar={setOpenSnackbar} snackbarMsg={snackbarMsg} snackbarSeverity={snackbarSeverity} data={data}/>
         <GeneralSnackbar message={snackbarMsg.current} open={openSnackbar} severity={snackbarSeverity.current} onClose={() => setOpenSnackbar(false)}/>
     </div>
