@@ -2,8 +2,7 @@ import { Group, GroupAdd, Lock } from "@mui/icons-material";
 import { Avatar, IconButton } from '@mui/material';
 import { blue } from "@mui/material/colors";
 import React, { useState } from "react";
-import { ChatRoom, User } from '../types'
-import { getUserDetails } from "components/App";
+import { ChatRoom, User } from 'utils/types'
 import { generateSerial } from "utils";
 
 export interface SidebarRoomsProps {
@@ -34,7 +33,20 @@ const SidebarSwitch = ({switchSide, setSwitchSide}:{switchSide : boolean, setSwi
 }
 
 const SidebarRooms = ({rooms, setRoomCode, setOpenNewRoom}: SidebarRoomsProps) => {
-	const userDetails: User  = getUserDetails();
+	const userDetails: User = {
+	username : "",
+	id : "",
+	blockedUsers : [],
+	status : "",
+	matchHistory : [],
+	friendList : [],
+	friendRequests : [],
+	achievements : [],
+	firstname : "",
+	lastname : ""
+	
+	
+	}
 	const [switchSide, setSwitchSide] = useState(false); // false = public rooms; true = private rooms
 
 	const getOtherUser = (room : ChatRoom) => {

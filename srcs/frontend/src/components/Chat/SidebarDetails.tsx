@@ -3,8 +3,7 @@ import { Group, Person, PersonAdd, Delete, Image, MeetingRoom, Lock } from '@mui
 import { Popover, PopoverHandler, PopoverContent, Button } from "@material-tailwind/react"
 import { blue } from '@mui/material/colors';
 import React, { useRef } from 'react';
-import { ChatRoom, User } from 'components/types';
-import { getUserDetails } from "components/App";
+import { ChatRoom, User } from 'utils/types'
 import "../main.css";
 
 export interface SidebarDetailsProps {
@@ -52,7 +51,7 @@ const generateOptions = ({ userDetails }: { userDetails: User}, {roomDetails, se
 }
 
 const ListUsers = ({roomDetails, setOpenUserOptions, userClicked}: SidebarDetailsProps) => {
-	const userDetails: User = getUserDetails();
+	let userDetails: User;
 
 	return (
 		<div className="w-full overflow-y-scroll overflow-y-hidden">
@@ -99,8 +98,20 @@ export const SidebarMembers = ({roomDetails, setOpenNewPassword, setOpenDeleteCh
 }
 
 export const SidebarOptions = ({roomDetails, setOpenNewPassword, setOpenDeleteChannel, setOpenQuitChannel, setOpenAddUser, setOpenUserOptions, userClicked}: SidebarDetailsProps) => {
-	const  userDetails: User = getUserDetails();
-
+	let userDetails: User;
+	userDetails = {
+	username : "",
+	id : "",
+	blockedUsers : [],
+	status : "",
+	matchHistory : [],
+	friendList : [],
+	friendRequests : [],
+	achievements : [],
+	firstname : "",
+	lastname : ""
+	
+	} 
 	return (
 		<div className='col-span-5 md:col-span-2 row-span-4 md:row-span-6 border-t-0 border-r-0 border-l-[1px] border-b-[1px] md:border-t-[1px] md:border-r-[1px] md:border-l-0 md:border-b-0 border-slate-300'>
 			<div className="h-[50%] overflow-y-scroll scrollbar-hide flex w-full space-x-3">

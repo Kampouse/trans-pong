@@ -30,9 +30,6 @@ export const useBallColor = atom('#ffffff')
 export const useBackgroundColor = atom('#ff0000')
 export const usePaddleColor = atom('#ffffff')
 
-export const getUserDetails = () =>
-{
-}
 export interface SearchUserProps {
 	open: boolean;
 	onClose: () => void;

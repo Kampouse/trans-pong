@@ -8,10 +8,11 @@ import { render } from 'react-dom';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 
 export var usersocket: io.Socket = io.connect("http://localhost:3001")
-export const userid = await getUserId();
+export const userid =  getUserId();
 export var pingInterval = setInterval( async () => {
-    if (userid != "" && userid != null) //userid not empty so we know suer is logged in
-        usersocket.emit("ping", userid) //ping with userid to tell if user is alive
+const  userID   = await getUserId();
+    if (userID != "" && userID != null) //userid not empty so we know suer is logged in
+        usersocket.emit("ping", userID) //ping with userid to tell if user is alive
 }, 5000) //every 10 seconds or whatever
 
 export default function Matchmaking()
