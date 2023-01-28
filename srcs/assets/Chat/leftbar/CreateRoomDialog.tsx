@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@mui/material"
-import { WebsocketContext } from "contexts/WebsocketContext"
+import { WebsocketContext } from "context/WebSocketContext"
 import React from "react"
 
 interface CreateRoomDialogProps {

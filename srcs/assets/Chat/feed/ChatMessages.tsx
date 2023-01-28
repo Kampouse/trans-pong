@@ -1,8 +1,8 @@
 import { styled, Typography } from "@mui/material";
-import { MessageDto, PrivateMsgsDto } from "api/chat.api";
-import { UserDto } from "api/dto/user.dto";
-import { UserContext } from "App";
+import { MessageDto, RoomDto } from "api/chat.api";
+import { UserContext } from "Router/Router";
 import React from "react";
+import { User } from '@prisma/client';
 
 const RecvMessage = styled('div')(({ theme }) => ({
     color: 'white',
@@ -20,23 +20,23 @@ const SendMessage = styled('div')(({ theme }) => ({
     margin: '15px 20px 15px 200px',
 }));
 
-interface privateMessagesProps {
-    pms: PrivateMsgsDto
+interface ChatMessagesProps {
+    room: RoomDto
 }
 
-export const PrivateMessages = ({
-    pms
-}: privateMessagesProps) => {
+export const ChatMessages = ({
+    room
+}: ChatMessagesProps) => {
 
-    const user: UserDto | null = React.useContext(UserContext);
-    
+    const user: User | null = React.useContext(UserContext);
+
     return (
         <>
-        {pms.messages.map((message: MessageDto, index: number) => {
+        {room.messages.map((message: MessageDto, index: number) => {
         return (
             <div key={index}>
             { 
-            user?.id === message.userId?
+            user?.userID === message.userID?
 
             <SendMessage>
             <Typography className="sender" style={{backgroundColor: "background.paper"}} >
@@ -45,13 +45,13 @@ export const PrivateMessages = ({
             <Typography className="message" style={{wordWrap: "break-word", backgroundColor: "background.paper"}} >{message.message}</Typography> 
             </SendMessage>
 
-            : !user?.blocked?.find(({id}) => message.userId === id) ?
+            : !user?.blocked?.find(({userID}) => message.userID === userID) ?
             
             <RecvMessage>
-            <Typography className="sender" style={{fontWeight: 600, backgroundColor: "background.paper"}} >
+            <Typography className="sender" style={{backgroundColor: "background.paper"}} >
                 <strong>{message.userName}</strong>
             </Typography> 
-            <Typography className="message" style={{wordWrap: "break-word", backgroundColor: "background.paper"}} >{message.message}</Typography>
+            <Typography className="message" style={{wordWrap: "break-word", backgroundColor: "background.paper"}} >{message.message}</Typography> 
             </RecvMessage>
             : 
             null

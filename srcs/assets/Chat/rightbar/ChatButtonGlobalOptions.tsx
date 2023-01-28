@@ -3,15 +3,15 @@ import Switch from '@mui/material/Switch';
 import PersonIcon from '@mui/icons-material/Person';
 import BlockIcon from '@mui/icons-material/Block';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import { UserContext, SetUserContext } from 'App';
+import { UserContext, SetUserContext } from 'Router/Router';
 import * as React from 'react';
-import { UserDto } from "api/dto/user.dto";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { UserAPI } from "api/user.api";
-import { WebsocketContext } from "contexts/WebsocketContext";
+import { User } from '@prisma/client';
+import { WebsocketContext } from "context/WebSocketContext";
 
 interface ChatButtonGlobalOptionProps {
-    chosenUser: UserDto, 
+    chosenUser: User, 
     handleClose: () => void
 }
 
@@ -21,7 +21,7 @@ export const ChatButtonGlobalOption = ({
 
 }: ChatButtonGlobalOptionProps) => {
 
-    const user: UserDto | null = React.useContext(UserContext);
+    const user: User | null = React.useContext(UserContext);
     const setUser: Function = React.useContext(SetUserContext);
     const socket = React.useContext(WebsocketContext);
     const navigate: NavigateFunction = useNavigate();
@@ -29,28 +29,28 @@ export const ChatButtonGlobalOption = ({
     const [isBlocked, setIsBlocked] = React.useState<boolean>(false);
 
     const handleBlock = async (event: React.MouseEvent<HTMLElement>) => {
-        let resp: UserDto | null;
+        let resp: User | null;
         if (!isBlocked) {
-            resp = await UserAPI.addBlock(chosenUser.id);
+            resp = await UserAPI.addBlock(chosenUser.userID); // 
         }
         else {
-            resp = await UserAPI.removeBlock(chosenUser.id);
+            resp = await UserAPI.removeBlock(chosenUser.userID); // 
         }
         setUser(resp);
     };
   
     const handleProfile = () => {
-        navigate(`/profile/${chosenUser.id}`, { replace: true });
+        navigate(`/profile/${chosenUser.userID}`, { replace: true });
     };
 
     const handlePrivateMsg = () => {
         handleClose();
-        socket.emit('sendPM', {userId: chosenUser.id});
+        socket.emit('sendPM', {userId: chosenUser.userID});
     };
   
     const handleInvitation = () => {
         handleClose();
-        socket.emit("inviteGame", chosenUser.id);
+        socket.emit("inviteGame", chosenUser.userID);
     };
 
     React.useEffect(() => {
@@ -58,7 +58,7 @@ export const ChatButtonGlobalOption = ({
             let blocked = false;
 
             if (user && user.blocked) {
-                if (user.blocked.find(({id}) => id === chosenUser.id )) {
+                if (user.blocked.find(({userID}) => userID === chosenUser.userID )) {
                     blocked = true;
                 }
             }

@@ -2,7 +2,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { PrivateMsgsDto} from "api/chat.api"
+import { RoomDto } from "api/chat.api"
 import { Tab, Tabs, Typography } from '@mui/material';
 
 function a11yProps(index: number) {
@@ -12,18 +12,18 @@ function a11yProps(index: number) {
     };
 }
 
-interface DiscussionTabsProps {
+interface RoomTabsProps {
     value: number | false
-    rooms: PrivateMsgsDto[]
+    rooms: RoomDto[]
     handleChangeChannel: (event: React.SyntheticEvent | null, newValue: number) => void
 }
 
-export const DiscussionTabs = ({
+export const RoomTabs = ({
     value,
     rooms,
     handleChangeChannel
 
-}: DiscussionTabsProps) => {
+}: RoomTabsProps) => {
 
     return (
     <Accordion>
@@ -32,7 +32,7 @@ export const DiscussionTabs = ({
             aria-controls="panel1a-content"
             id="panel1a-header"
         >
-        <Typography style={{paddingLeft:'8px'}}>Private messages</Typography>
+        <Typography style={{paddingLeft:'8px'}}>Channels</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Tabs 
@@ -45,9 +45,9 @@ export const DiscussionTabs = ({
           sx={{ borderRight: 1, borderColor: 'divider', height: '28vh' }}
           >
 
-            {rooms.map((privateMsgs: PrivateMsgsDto, index: number) => {
+            {rooms.map((channel: RoomDto, index: number) => {
               return (
-                <Tab key={index} label={privateMsgs.userDto.name} {...a11yProps(index)}/> 
+                <Tab key={index} label={channel.roomName} {...a11yProps(index)}/> 
               );
             })}
 

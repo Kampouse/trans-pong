@@ -3,12 +3,12 @@ import { Autocomplete, Box, Grid, IconButton, styled, Toolbar } from "@mui/mater
 import AddIcon from '@mui/icons-material/Add';
 import React from "react";
 import { CreateRoomDialog } from "./CreateRoomDialog";
-import { WhiteBorderTextField } from "components/utils/WhiteBorderTextField";
+import { WhiteBorderTextField } from "./WhiteBorderTextField";
 import { JoinRoomDialog } from "./JoinRoomDialog";
 import { ChatAPI } from "api/chat.api";
 import LockIcon from '@mui/icons-material/Lock';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { WebsocketContext } from "contexts/WebsocketContext";
+import { WebsocketContext } from "context/WebSocketContext";
 
 const SearchPersonn = styled('div')(({ theme }) => ({
     color: 'primary',

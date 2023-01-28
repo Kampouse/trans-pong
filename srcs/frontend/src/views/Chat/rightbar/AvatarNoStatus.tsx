@@ -1,13 +1,13 @@
 import { Avatar, Tooltip} from "@mui/material";
-import defaultAvatar from '../../../../public/defaultPhoto.png';
-import { User, userStatus } from '@prisma/client';
+import defaultAvatar from '../../../default_avatar/profile_image.jpeg';
+import { UserDto } from "api/dto/user.dto";
 
-export const AvatarNoStatus = ({user}: {user: User}) => {
+export const AvatarNoStatus = ({user}: {user: UserDto}) => {
 
     return (
-    <Tooltip title={user.username}>
+    <Tooltip title={user.name}>
         <Avatar
-            src={user?.imagePath? `data:image/jpeg;base64,${user.imagePath}`: defaultAvatar}
+            src={user?.currentAvatar? `data:image/jpeg;base64,${user.currentAvatar.data}`: defaultAvatar}
             alt='avatar'
             sx={{ width: 56, height: 56 }}                 
         />

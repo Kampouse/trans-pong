@@ -1,7 +1,7 @@
 import { styled, Typography } from "@mui/material";
 import { MessageDto, PrivateMsgsDto } from "api/chat.api";
-import { UserDto } from "api/dto/user.dto";
-import { UserContext } from "App";
+import { User } from '@prisma/client';
+import { UserContext } from "Router/Router";
 import React from "react";
 
 const RecvMessage = styled('div')(({ theme }) => ({
@@ -28,7 +28,7 @@ export const PrivateMessages = ({
     pms
 }: privateMessagesProps) => {
 
-    const user: UserDto | null = React.useContext(UserContext);
+    const user: User | null = React.useContext(UserContext);
     
     return (
         <>
@@ -36,7 +36,7 @@ export const PrivateMessages = ({
         return (
             <div key={index}>
             { 
-            user?.id === message.userId?
+            user?.userID === message.userID?
 
             <SendMessage>
             <Typography className="sender" style={{backgroundColor: "background.paper"}} >
@@ -45,7 +45,7 @@ export const PrivateMessages = ({
             <Typography className="message" style={{wordWrap: "break-word", backgroundColor: "background.paper"}} >{message.message}</Typography> 
             </SendMessage>
 
-            : !user?.blocked?.find(({id}) => message.userId === id) ?
+            : !user?.blocked?.find(({userID}) => message.userID === userID) ?
             
             <RecvMessage>
             <Typography className="sender" style={{fontWeight: 600, backgroundColor: "background.paper"}} >

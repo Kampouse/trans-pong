@@ -5,18 +5,18 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import Menu from '@mui/material/Menu';
 import Tooltip from "@mui/material/Tooltip";
 import { RoomDto } from 'api/chat.api';
-import { WebsocketContext } from 'contexts/WebsocketContext';
+import { WebsocketContext } from 'context/WebSocketContext';
 import { Button, MenuItem } from '@mui/material';
-import ValidationPopup from 'components/utils/ValidationPopup';
-import { UserContext } from 'App';
-import { UserDto } from 'api/dto/user.dto';
+import { User } from '@prisma/client';
+import { UserContext } from 'Router/Router';
 import { ChangeRoomPwdDialog } from './ChangeRoomPwdDialog';
+import  ValidationPopup  from './ValidationPopup';
 
 export const ChatSettings = ({room}: {room: RoomDto}) => {
 
     const [settings, setSettings] = React.useState<null | HTMLElement>(null);
     const socket = React.useContext(WebsocketContext);
-    const user: UserDto | null = React.useContext(UserContext);
+    const user: User | null = React.useContext(UserContext);
 
     const handleCloseSettings = () => {
       setSettings(null);
@@ -73,7 +73,7 @@ export const ChatSettings = ({room}: {room: RoomDto}) => {
                     <Button onClick={onLeaveChannelClick}>Leave room</Button>
                 </MenuItem>
                 {
-                    user?.id === room.owner &&
+                    user?.userID === room.owner &&
                     <MenuItem >
                         <Button onClick={() => setOpenChangePwd(true)}>Change password</Button>
                     </MenuItem>
@@ -87,7 +87,7 @@ export const ChatSettings = ({room}: {room: RoomDto}) => {
             setValidation={setValidation}
             title={`Leave room ${room.roomName} ?`}
             message={
-                user?.id === room.owner ?
+                user?.userID === room.owner ?
                 'The room will be destroyed because you are the owner.'
                 :
                 'You will no longer be in this room.'

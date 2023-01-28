@@ -1,11 +1,10 @@
 import { Button, ListItem, ListItemAvatar, ListItemText } from "@mui/material"
-import { UserDto } from "api/dto/user.dto"
 import { AvatarNoStatus } from "./AvatarNoStatus"
-import { ChatAvatar } from "./ChatAvatar"
+import { User, userStatus } from '@prisma/client';
 
 interface UserChatOpenButtonProps {
-    displayedUser: UserDto
-    handleOpenContact: (event: React.MouseEvent<HTMLElement>, userDto: UserDto) => void
+    displayedUser: User
+    handleOpenContact: (event: React.MouseEvent<HTMLElement>, user: User) => void
     displayStatus: boolean
   }
 
@@ -26,23 +25,17 @@ export const UserChatOpenButton = ({
         onClick={(e : any) => {handleOpenContact(e, displayedUser)}}
       >
         
-        <ListItem key={displayedUser.id}>
+        <ListItem key={displayedUser.userID}>
             <ListItemAvatar >
-              {displayStatus?
-                <ChatAvatar 
-                  user={displayedUser}
-                />
-                :
                 <AvatarNoStatus 
                   user={displayedUser}
                 />
-              }
             </ListItemAvatar>
             <ListItemText primary={
-              displayedUser.name.length > 8?
-              displayedUser.name.substring(8) + '...'
+              displayedUser.username.length > 8?
+              displayedUser.username.substring(8) + '...'
               :
-              displayedUser.name
+              displayedUser.username
               } 
               sx={{ ml:2 }}
             />
