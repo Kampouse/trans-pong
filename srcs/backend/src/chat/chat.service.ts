@@ -1,10 +1,10 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
-import { UserDto } from 'src/dtos/user.dtos';
 import { Socket } from 'socket.io';
 import { hashPwd } from 'src/helper/bcrypt';
 import { ProfileService } from 'src/profile/profile.service';
+import { User } from '.prisma/client';
 
 export class MessageDto {
   userId: string;
@@ -13,7 +13,7 @@ export class MessageDto {
 }
 
 export class PrivateMsgsDto {
-  userDto: UserDto;
+  user: User;
   messages: Array<MessageDto>;
 }
 
@@ -21,7 +21,7 @@ export class RoomDto {
   roomName: string;
   owner: string;
   admins: Array<string>;
-  users: Array<UserDto>;
+  users: Array<User>;
   messages: Array<MessageDto>;
   password: string;
   mutedMap: Map<string, string>;
@@ -32,7 +32,7 @@ export class RoomReturnDto {
   roomName: string;
   owner: string;
   admins: Array<string>;
-  users: Array<UserDto>;
+  users: Array<User>;
   messages: Array<MessageDto>;
 }
 
@@ -59,13 +59,13 @@ export class ChatService {
   async createRoom(
     roomName: string,
     password: string,
-    userDto: UserDto,
+    user: User,
   ): Promise<RoomDto> {
     const roomDto = new RoomDto();
 
     roomDto.roomName = roomName;
-    roomDto.owner = userDto.userID;
-    roomDto.admins = [userDto.userID];
+    roomDto.owner = user.userID;
+    roomDto.admins = [user.userID];
     roomDto.users = [];
     roomDto.messages = [];
     if (password && password !== '') {
@@ -77,29 +77,29 @@ export class ChatService {
     roomDto.banMap = new Map();
 
     this.RoomList.set(roomName.toUpperCase(), roomDto);
-    this.addToRoom(userDto, roomDto);
+    this.addToRoom(user, roomDto);
     return roomDto;
   }
 
   /*********************** JOIN ROOM  ************************/
 
-  addToRoom(userDto: UserDto, room: RoomDto) {
-    if (room.users.find(({ userID }) => userID === userDto.userID)) {
+  addToRoom(user: User, room: RoomDto) {
+    if (room.users.find(({ userID }) => userID === user.userID)) {
       return;
     }
 
-    room.users.push(userDto);
+    room.users.push(user);
     this.RoomList.set(room.roomName.toUpperCase(), room);
 
     const sockets: Socket[] = this.authService.getSocketsFromUser(
-      userDto.userID,
+      user.userID,
     );
     sockets.forEach((socket) => socket.join(room.roomName));
   }
 
   /*********************** SEND MESSAGE ROOM && PRIVATE MESSAGE ************************/
 
-  addNewRoomMessage(room: RoomDto, user: UserDto, message: string): MessageDto {
+  addNewRoomMessage(room: RoomDto, user: User, message: string): MessageDto {
     const messageDto: MessageDto = new MessageDto();
     messageDto.message = message;
     messageDto.userId = user.userID;
@@ -185,31 +185,31 @@ export class ChatService {
     this.RoomList.set(roomDto.roomName.toUpperCase(), roomDto);
   }
 
-  addToPmList(sender: UserDto, receiver: UserDto) {
+  addToPmList(sender: User, receiver: User) {
     let allSenderMsgs = this.PrivateMsgList.get(sender.userID);
     let allReceiverMsgs = this.PrivateMsgList.get(receiver.userID);
 
     if (!allSenderMsgs) {
-      allSenderMsgs = [{ userDto: receiver, messages: [] }];
+      allSenderMsgs = [{ user: receiver, messages: [] }];
     } else {
       const userMessagesIdx = allSenderMsgs.findIndex(
-        ({ userDto }) => userDto.userID === receiver.userID,
+        ({ user }) => user.userID === receiver.userID,
       );
 
       if (userMessagesIdx < 0) {
-        allSenderMsgs.push({ userDto: receiver, messages: [] });
+        allSenderMsgs.push({ user: receiver, messages: [] });
       }
     }
 
     if (!allReceiverMsgs) {
-      allReceiverMsgs = [{ userDto: sender, messages: [] }];
+      allReceiverMsgs = [{ user: sender, messages: [] }];
     } else {
       const userMessagesIdx = allReceiverMsgs.findIndex(
-        ({ userDto }) => userDto.userID === sender.userID,
+        ({ user }) => user.userID === sender.userID,
       );
 
       if (userMessagesIdx < 0) {
-        allReceiverMsgs.push({ userDto: sender, messages: [] });
+        allReceiverMsgs.push({ user: sender, messages: [] });
       }
     }
 
@@ -218,8 +218,8 @@ export class ChatService {
   }
 
   addPrivateMessage(
-    sender: UserDto,
-    receiver: UserDto,
+    sender: User,
+    receiver: User,
     message: string,
   ): MessageDto {
     const allSenderMsgs = this.PrivateMsgList.get(sender.userID);
@@ -231,10 +231,10 @@ export class ChatService {
     messageDto.userName = sender.username;
 
     allSenderMsgs
-      .find(({ userDto }) => userDto.userID === receiver.userID)
+      .find(({ user }) => user.userID === receiver.userID)
       .messages.push(messageDto);
     allReceiverMsgs
-      .find(({ userDto }) => userDto.userID === sender.userID)
+      .find(({ user }) => user.userID === sender.userID)
       .messages.push(messageDto);
 
     this.PrivateMsgList.set(sender.userID, allSenderMsgs);
@@ -274,9 +274,9 @@ export class ChatService {
     return this.PrivateMsgList.get(userId);
   }
 
-  async getUserFromSocket(socket: Socket): Promise<UserDto> {
-    const userDto: UserDto = await this.authService.getUserFromSocket(socket);
-    return userDto;
+  async getUserFromSocket(socket: Socket): Promise<User> {
+    const user: User = await this.authService.getUserFromSocket(socket);
+    return user;
   }
 
   getRoomFromName(name: string): RoomDto {
@@ -325,18 +325,18 @@ export class ChatService {
     return roomReturnDto;
   }
 
-  async getUserFromId(id: string): Promise<UserDto> {
+  async getUserFromId(id: string): Promise<User> {
     return await this.userService.findOneById(id);
   }
 
   async addSocketToRooms(socket: Socket) {
-    const userDto: UserDto = await this.authService.getUserFromSocket(socket);
-    if (!userDto) {
+    const user: User = await this.authService.getUserFromSocket(socket);
+    if (!user) {
       return;
     }
 
     this.RoomList.forEach((value) => {
-      value.users.find(({ userID }) => userID === userDto.userID) &&
+      value.users.find(({ userID }) => userID === user.userID) &&
         socket.join(value.roomName);
     });
   }

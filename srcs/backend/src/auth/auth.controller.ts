@@ -62,9 +62,9 @@ export class AuthController {
     return { message: "User logged out" }
   }
 
-  // @UseGuards(FortyTwoAuthGuard)
-  // @Get('isLogged')
-  // async isLoggedIn() {
-  //   return { loggedIn: true };
-  // }
+  @UseGuards(FortyTwoAuthGuard)
+  @Get('isLogged')
+  async isLoggedIn() {
+    return { loggedIn: true };
+  }
 }

@@ -1,4 +1,4 @@
-import { UserDto } from "utils/user.dto";
+import { User} from '@prisma/client';
 
 export class UserAPI
 {
@@ -11,7 +11,7 @@ export class UserAPI
       return (resp.ok? resp.json() : {loggedIn: false});
     }
 
-    public static async getUserProfile(): Promise<UserDto | null> {
+    public static async getUserProfile(): Promise<User | null> {
         const resp = await fetch(`http://localhost:3000/auth/who`, {
             credentials: "include",
             method: "GET"
@@ -19,7 +19,7 @@ export class UserAPI
           
         return (resp.ok? resp.json() : null);
     }
-    public static async addBlock(blockedId: string): Promise<UserDto | null> {
+    public static async addBlock(blockedId: string): Promise<User | null> {
         const resp = await fetch(`http://localhost:3000/users/blocked`, {
           credentials: "include",
           method: "POST",
@@ -29,7 +29,7 @@ export class UserAPI
         return (resp.ok? resp.json() : null);
       }
     
-      public static async removeBlock(blockedId: string): Promise<UserDto | null> {
+      public static async removeBlock(blockedId: string): Promise<User | null> {
         const resp = await fetch(`http://localhost:3000/users/blocked`, {
           credentials: "include",
           method: "DELETE",

@@ -1,11 +1,10 @@
 import { Button, ListItem, ListItemAvatar, ListItemText } from "@mui/material"
-import { UserDto } from "utils/user.dto"
 import { AvatarNoStatus } from "./AvatarNoStatus"
-
+import { User, userStatus } from '@prisma/client';
 
 interface UserChatOpenButtonProps {
-    displayedUser: UserDto
-    handleOpenContact: (event: React.MouseEvent<HTMLElement>, userDto: UserDto) => void
+    displayedUser: User
+    handleOpenContact: (event: React.MouseEvent<HTMLElement>, user: User) => void
     displayStatus: boolean
   }
 

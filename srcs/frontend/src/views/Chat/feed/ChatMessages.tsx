@@ -1,8 +1,8 @@
 import { styled, Typography } from "@mui/material";
 import { MessageDto, RoomDto } from "api/chat.api";
-import { UserDto } from "utils/user.dto";
 import { UserContext } from "Router/Router";
 import React from "react";
+import { User } from '@prisma/client';
 
 const RecvMessage = styled('div')(({ theme }) => ({
     color: 'white',
@@ -28,7 +28,7 @@ export const ChatMessages = ({
     room
 }: ChatMessagesProps) => {
 
-    const user: UserDto | null = React.useContext(UserContext);
+    const user: User | null = React.useContext(UserContext);
 
     return (
         <>

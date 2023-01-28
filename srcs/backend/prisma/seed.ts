@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { exit } from 'process';
+import { FriendRequestDto } from "src/dtos/profile.dtos";
 
 //  Create a seed which will create data in our database for testing
 async function main()
@@ -143,7 +144,46 @@ async function main()
         })
     }
     catch{}
+    const user1 = await prisma.user.create({
+    data: {
+      login42: 'mleblanc1',
+      username: 'mleblanc1',
+      userStatus: 'offline',
+      imagePath: '/mleblancPhoto.png',
+    },
+  });
 
+  const user2 = await prisma.user.create({
+    data: {
+      login42: 'jvigneau1',
+      username: 'jvigneau1',
+      userStatus: 'offline',
+      imagePath: '/jvigneauPhoto.png',
+    },
+  });
+
+  const user3 = await prisma.user.create({
+    data: {
+      login42: 'jbadia1',
+      username: 'jbadia1',
+      userStatus: 'offline',
+      imagePath: '/jbadiaPhoto.png',
+    
+    },
+  });
+
+    const friends = await prisma.friends.create({
+        data: {
+            left: {
+                connect: {userID: user1.userID},
+            },
+            right: 
+            {
+                connect: {userID: user2.userID},
+            },
+        }
+    });
+    console.log("User and friends seeded successfully")
     //  Create a bunch of friend request's
 
     console.log("Creating a bunch of friend request's")

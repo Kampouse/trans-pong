@@ -46,20 +46,21 @@ async function bootstrap() {
   startPrisma();
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    //origin: 'http://localhost:5173',
-    origin: function (origin, callback) {
-      callback(null, true)
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Access-Control-Allow-Origin',
-      'Access-Control-Allow-Headers',
-      'Access-Control-Allow-Methods',
-      'Access-Control-Allow-Credentials',
-      'Origin, X-Requested-With, Content-Type, Accept'
-    ],
+    // origin: 'http://localhost:5173',
+    // origin: function (origin, callback) {
+    //   callback(null, true)
+    // },
+    origin: true,
+    // methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    // allowedHeaders: [
+    //   'Content-Type',
+    //   'Authorization',
+    //   'Access-Control-Allow-Origin',
+    //   'Access-Control-Allow-Headers',
+    //   'Access-Control-Allow-Methods',
+    //   'Access-Control-Allow-Credentials',
+    //   'Origin, X-Requested-With, Content-Type, Accept'
+    // ],
     credentials: true
   });
   app.use(

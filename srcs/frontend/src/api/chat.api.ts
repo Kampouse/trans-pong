@@ -1,4 +1,4 @@
-import { UserDto } from "utils/user.dto";
+import { User } from 'prisma/prisma-client'
 
 export interface MessageDto
 {
@@ -9,7 +9,7 @@ export interface MessageDto
 
 export interface PrivateMsgsDto 
 {
-    userDto : UserDto;
+    user : User;
     messages : Array<MessageDto>;
 }
 
@@ -18,7 +18,7 @@ export interface RoomDto
     roomName: string;
     owner:    string;
     admins:   Array<string>;
-    users:    Array<UserDto>;
+    users:    Array<User>;
     messages: Array<MessageDto>;
 }
 
@@ -33,7 +33,7 @@ export class ChatAPI
             method: "GET",
           }
         );
-    
+          console.log('tried it rooms from user');
         return resp.ok ? resp.json() : {rooms : []};
       }
     
@@ -47,6 +47,7 @@ export class ChatAPI
           }
         );
     
+        console.log('tried it PMS from user');
         return resp.ok ? resp.json() : {privateMsgs : []};
       }
     

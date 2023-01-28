@@ -47,7 +47,7 @@ export const DiscussionTabs = ({
 
             {rooms.map((privateMsgs: PrivateMsgsDto, index: number) => {
               return (
-                <Tab key={index} label={privateMsgs.userDto.username} {...a11yProps(index)}/> 
+                <Tab key={index} label={privateMsgs.user.username} {...a11yProps(index)}/> 
               );
             })}
 

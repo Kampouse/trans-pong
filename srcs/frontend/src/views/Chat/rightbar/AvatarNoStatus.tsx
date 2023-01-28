@@ -1,8 +1,8 @@
 import { Avatar, Tooltip} from "@mui/material";
 import defaultAvatar from '../../../../public/defaultPhoto.png';
-import { UserDto } from "utils/user.dto";
+import { User, userStatus } from '@prisma/client';
 
-export const AvatarNoStatus = ({user}: {user: UserDto}) => {
+export const AvatarNoStatus = ({user}: {user: User}) => {
 
     return (
     <Tooltip title={user.username}>

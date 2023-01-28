@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-    userID              String                          @id @default(cuid())
+    userID              String                          @id @default(uuid()) @db.Uuid
     accessToken42       String?
     refreshToken42      String?
     jwtToken            String?
@@ -22,6 +22,17 @@ model User {
     createdAt           DateTime                        @default(now())
     updatedAt           DateTime                        @updatedAt
     activeAt            DateTime                        @default(now())
+    friendsAsLeft       Friends[]                       @relation("friendshipAsLeft")
+    friendsAsRight      Friends[]                       @relation("friendshipAsRight")
+}
+
+model Friends {
+    left                User                            @relation("friendshipAsLeft", fields: [leftId], references: [userID])
+    leftId              String                          @default(uuid()) @db.Uuid
+    right               User                            @relation("friendshipAsRight", fields: [rightId], references: [userID])
+    rightId             String                          @default(uuid()) @db.Uuid
+
+     @@id([leftId, rightId])
 }
 
 model FriendRequest{

@@ -1,6 +1,5 @@
 import { UserContext } from 'Router/Router';
 import * as React from 'react';
-import { UserDto } from 'utils/user.dto';
 import { WebsocketContext } from 'context/WebSocketContext';
 import FormGroup from '@mui/material/FormGroup';
 import FormControl from '@mui/material/FormControl';
@@ -9,9 +8,9 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import { RoomDto } from 'api/chat.api';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { BanMuteButton } from './BanMuteButton';
-
+import { User } from '@prisma/client';
 interface ChatButtonAdminOptionProps {
-    chosenUser: UserDto, 
+    chosenUser: User, 
     room: RoomDto | null
     handleClose: () => void
 }
@@ -23,7 +22,7 @@ export const ChatButtonAdminOption = ({
     
 }: ChatButtonAdminOptionProps) => {
 
-  const user: UserDto | null = React.useContext(UserContext);
+  const user: User | null = React.useContext(UserContext);
   const socket = React.useContext(WebsocketContext);
   const [isChosenUserAdmin, setIsChosenUserAdmin] = React.useState<boolean>(false);
 

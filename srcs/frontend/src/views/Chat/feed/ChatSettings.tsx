@@ -7,9 +7,8 @@ import Tooltip from "@mui/material/Tooltip";
 import { RoomDto } from 'api/chat.api';
 import { WebsocketContext } from 'context/WebSocketContext';
 import { Button, MenuItem } from '@mui/material';
-
+import { User } from '@prisma/client';
 import { UserContext } from 'Router/Router';
-import { UserDto } from 'utils/user.dto';
 import { ChangeRoomPwdDialog } from './ChangeRoomPwdDialog';
 import  ValidationPopup  from './ValidationPopup';
 
@@ -17,7 +16,7 @@ export const ChatSettings = ({room}: {room: RoomDto}) => {
 
     const [settings, setSettings] = React.useState<null | HTMLElement>(null);
     const socket = React.useContext(WebsocketContext);
-    const user: UserDto | null = React.useContext(UserContext);
+    const user: User | null = React.useContext(UserContext);
 
     const handleCloseSettings = () => {
       setSettings(null);

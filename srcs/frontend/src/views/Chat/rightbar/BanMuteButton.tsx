@@ -2,10 +2,11 @@ import { MenuItem } from "@mui/material";
 import DangerousIcon from '@mui/icons-material/Dangerous';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import React from "react";
-import { UserDto } from "utils/user.dto";
+
 import { ChooseSentenceTimePopup } from "./ChooseSentenceTimePopup";
 import { WebsocketContext } from "context/WebSocketContext";
 import { RoomDto } from "api/chat.api";
+import { User} from '@prisma/client';
 
 enum Sentence {
     none = -1,
@@ -14,7 +15,7 @@ enum Sentence {
 }
 
 interface BanMuteButtonProps {
-    user: UserDto,
+    user: User,
     room: RoomDto,
     handleClose: any
 }

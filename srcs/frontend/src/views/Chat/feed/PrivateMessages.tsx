@@ -1,6 +1,6 @@
 import { styled, Typography } from "@mui/material";
 import { MessageDto, PrivateMsgsDto } from "api/chat.api";
-import { UserDto } from "utils/user.dto";
+import { User } from '@prisma/client';
 import { UserContext } from "Router/Router";
 import React from "react";
 
@@ -28,7 +28,7 @@ export const PrivateMessages = ({
     pms
 }: privateMessagesProps) => {
 
-    const user: UserDto | null = React.useContext(UserContext);
+    const user: User | null = React.useContext(UserContext);
     
     return (
         <>

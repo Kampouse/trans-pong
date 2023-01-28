@@ -32,7 +32,7 @@
         "@nestjs/platform-express": "^9.0.0",
         "@nestjs/platform-socket.io": "^9.2.1",
         "@nestjs/websockets": "^9.2.1",
-        "@prisma/client": "^4.7.1",
+        "@prisma/client": "^4.9.0",
         "@quixo3/prisma-session-store": "^3.1.9",
         "@types/express-serve-static-core": "^4.17.31",
         "@types/jsonwebtoken": "^9.0.0",

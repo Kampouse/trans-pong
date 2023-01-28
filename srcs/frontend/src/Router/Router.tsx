@@ -19,8 +19,9 @@ import Login2fa from 'views/Login/Login2fa'
 import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
-import { UserDto } from 'utils/user.dto'
+// import { User } from '@prisma/client'
 import { WebsocketContext, WebsocketProvider } from 'context/WebSocketContext'
+import { UserAPI } from 'api/user.api'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -101,7 +102,7 @@ export const myProfile = atom({
   userId: ''
 })
 
-export const UserContext = React.createContext<UserDto | null >(null);
+export const UserContext = React.createContext<User | null >(null);
 export const SetUserContext = React.createContext<any>(null);
 
 export default function App()
@@ -117,10 +118,10 @@ export default function App()
 
   // const [user, setUser] = React.useState<UserDto | null>(null);
   const socket = useContext(WebsocketContext);
-  // const [loggedIn, setLoggedIn] = React.useState(false);
-	// const [ballColor, setBallColor] = useAtom(useBallColor)
-	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
-	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
+  const [loggedIn, setLoggedIn] = React.useState(false);
+	const [ballColor, setBallColor] = useAtom(useBallColor)
+	const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
+	const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
 
 //  Here we check with the backend if the user is authentificated
   const SecondAuthStatus = async () => {
@@ -141,8 +142,10 @@ const check = async () =>
 {
   try {
     const auth = await Fetch('http://localhost:3000/auth/who')
+    // socket.emit("onUserChange", (response: any) => {
     if (auth.status === 200) {
       setLogin('login')
+      socket.emit("userUpdate")
     }
     else if (auth.status === 403)
       navigate('/')
@@ -150,8 +153,8 @@ const check = async () =>
     else if (auth.status === 401) {
       navigate('/2fa')   
     }
-  }
-  catch (error) {
+    // });
+  }catch (error) {
 
       navigate('/')
   }

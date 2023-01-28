@@ -1,9 +1,9 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { Inject, Injectable, forwardRef, UnsupportedMediaTypeException } from '@nestjs/common';
 import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game, Relation, BlockDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
-import { UserDto } from 'src/dtos/user.dtos';
+
 import { User, userStatus } from '@prisma/client';
 
 @Injectable()
@@ -1032,23 +1032,24 @@ export class ProfileService {
     }
 
      // Utility Method to get dto from entity
-  private entityToDto(user: User): UserDto {
-    const userDto = new UserDto();
+//   private entityToDto(user: User): User {
+//     const userDto = new UserDto();
 
-    userDto.userID = user.userID;
-    userDto.login42 = user.login42;
-    userDto.username = user.username;
-    userDto.userStatus = user.userStatus;
-    // // userDto.friends = user.friendsofthisuser
-    //   ? user.friendsofthisuser.map((x) => this.entityToDto(x))
-    //   : [];
-    // userDto.blocked = user.blockedbythisuser
-    //   ? user.blockedbythisuser.map((x) => this.entityToDto(x))
-    //   : [];
-    userDto.authenticator = user.authenticator;
-    userDto.imagePath = user.imagePath;
-    return userDto;
-  }
+//     userDto.userID = user.userID;
+//     userDto.login42 = user.login42;
+//     userDto.username = user.username;
+//     userDto.userStatus = user.userStatus;
+//     userDto.friends = 
+//     // // userDto.friends = user.friendsofthisuser
+//     //   ? user.friendsofthisuser.map((x) => this.entityToDto(x))
+//     //   : [];
+//     // userDto.blocked = user.blockedbythisuser
+//     //   ? user.blockedbythisuser.map((x) => this.entityToDto(x))
+//     //   : [];
+//     userDto.authenticator = user.authenticator;
+//     userDto.imagePath = user.imagePath;
+//     return userDto;
+//   }
 
   // Find one user by id
   public async findOneById(id: string) {
@@ -1057,11 +1058,10 @@ export class ProfileService {
       //include: { userFriends: true },
     });
     if (!user) return null;
-    const userDto: UserDto = this.entityToDto(user);
-    return userDto;
+    return user;
   }
 
-  public async setStatus(id: string, status: userStatus): Promise<UserDto> {
+  public async setStatus(id: string, status: userStatus): Promise<User> {
     const user = await prisma.user.findUnique({ where: { userID: id } });
     if (!user) {
       return null;
@@ -1070,8 +1070,8 @@ export class ProfileService {
       where: { userID: id },
       data: { userStatus: status },
     });
-    // convert the updated user object to a DTO
-    const userDto = this.entityToDto(updatedUser);
-    return userDto;
+
+    
+    return updatedUser;
   }
 }

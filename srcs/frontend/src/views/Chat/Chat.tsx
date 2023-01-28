@@ -9,12 +9,12 @@ import '@styles/main.css'
 import { ChatAPI, PrivateMsgsDto, RoomDto } from 'api/chat.api'
 import { WebsocketContext } from 'context/WebSocketContext'
 import { Box, Grid, Paper } from '@mui/material'
-import { UserDto } from 'utils/user.dto'
 import { Feed } from './feed/Feed'
 import { JoinCreateRoomBar } from './leftbar/JoinCreateRoomBar'
 import { RoomTabs } from './leftbar/RoomTabs'
 import { DiscussionTabs } from './leftbar/DiscussionTabs'
 import { Contacts } from './rightbar/Contacts'
+import { User  } from '@prisma/client';
 
 enum ChannelType {
   none = 0,
@@ -41,9 +41,9 @@ export const Chat = () => {
   }, []);
 
   React.useEffect(() => {
-    socket.on("newPrivateMsgUser", ({ userDto: newUser }) => {
-      if (!privateMsgs.find(({ userDto }) => userDto.userID === newUser.userID)) {
-        setPrivateMsgs((privateMsgs) => [...privateMsgs, { userDto: newUser, messages: [] }]);
+    socket.on("newPrivateMsgUser", ({ user: newUser }) => {
+      if (!privateMsgs.find(({ user }) => user.userID === newUser.userID)) {
+        setPrivateMsgs((privateMsgs) => [...privateMsgs, { user: newUser, messages: [] }]);
       }
     });
     return () => {
@@ -54,7 +54,7 @@ export const Chat = () => {
   React.useEffect(() => {
     socket.on("receivePrivateMsg", ({ userId, messageDto }) => {
       const addPM: PrivateMsgsDto[] = privateMsgs.map((pm) => {
-        if (pm.userDto.userID === userId) {
+        if (pm.user.userID === userId) {
           pm.messages.push(messageDto);
         }
         return pm;
@@ -82,8 +82,8 @@ export const Chat = () => {
   }, [socket, rooms]);
 
   React.useEffect(() => {
-    socket.on("goToPM", ({ userDto: newUser }) => {
-      let index = privateMsgs.findIndex(({ userDto }) => userDto.userID === newUser.id);
+    socket.on("goToPM", ({ user: newUser }) => {
+      let index = privateMsgs.findIndex(({ user}) => user.userID === newUser.id);
       if (index < 0) {
         index = privateMsgs.length + 1;
       }
@@ -193,7 +193,7 @@ export const Chat = () => {
                 channelType === ChannelType.publicChannel
                   ? rooms.at(tabIndex)?.users || null
                   : channelType === ChannelType.privateMessage
-                  ? [privateMsgs.at(tabIndex)?.userDto as UserDto] || null
+                  ? [privateMsgs.at(tabIndex)?.user as User] || null
                   : null
               }
               room={channelType === ChannelType.publicChannel ? rooms.at(tabIndex) || null : null}

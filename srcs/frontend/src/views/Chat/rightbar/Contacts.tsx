@@ -1,14 +1,15 @@
 import * as React from 'react';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
-import { UserDto } from 'utils/user.dto';
+
 import { RoomDto } from 'api/chat.api';
 import { UserContext } from 'Router/Router';
 import { UserChatOpenButton } from './UserChatOpenButton';
 import { ChatButtonList } from './ChatButtonList';
+import { User } from '@prisma/client';
 
 interface ContactsProps {
-  users: UserDto[] | null
+  users: User[] | null
   room: RoomDto | null
 }
 
@@ -17,10 +18,10 @@ export const Contacts = ({
   room
 }: ContactsProps ) => {
 
-  const user: UserDto | null = React.useContext(UserContext);
-  const [friends, setFriends] = React.useState<UserDto[]>([]);
-  const [otherUsers, setOtherUsers] = React.useState<UserDto[]>([]);
-  const [userButton, setUserButton] = React.useState<UserDto | null>(null);
+  const user: User | null = React.useContext(UserContext);
+  const [friends, setFriends] = React.useState<User[]>([]);
+  const [otherUsers, setOtherUsers] = React.useState<User[]>([]);
+  const [userButton, setUserButton] = React.useState<User | null>(null);
 
   React.useEffect(() => {
     if (user && user.friends) {
@@ -31,9 +32,9 @@ export const Contacts = ({
 
   const [openButtons, setOpenButtons] = React.useState<null | HTMLElement>(null);
 
-  const handleOpenButton = (event: React.MouseEvent<HTMLElement>, userDto: UserDto) => {
+  const handleOpenButton = (event: React.MouseEvent<HTMLElement>, user: User) => {
     setOpenButtons(event.currentTarget);
-    setUserButton(userDto);
+    setUserButton(user);
   }
     
   const handleCloseButton = () => {
