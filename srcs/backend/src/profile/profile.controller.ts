@@ -9,7 +9,8 @@ import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dto
 import { UploadedFile } from "@nestjs/common";
 import { RequestWithUser } from "src/dtos/auth.dtos";
 import { extname } from "path";
-
+import { Response } from 'express';
+import { resolve } from 'path';
 @Controller('profile')
 export class ProfileController {
     constructor(private readonly profileService: ProfileService) { }
@@ -32,17 +33,22 @@ export class ProfileController {
     @Get('/relation/:username')
     @Header('Content-type', 'application/json; charset=utf-8')
     @UseGuards(JwtGuard)
-    async getUserRelation(@Param('username') username: string, @Req() request: RequestWithUser): Promise<Relation>
-    {
+    async getUserRelation(@Param('username') username: string, @Req() request: RequestWithUser): Promise<Relation> {
         const login42 = await this.profileService.authentificate(request);
 
-        if (login42 == undefined || username == undefined)
-        {
+        if (login42 == undefined || username == undefined) {
             return (await this.profileService.getUserRelation(undefined, undefined));
         }
         const relation = await this.profileService.getUserRelation(login42, username);
         return (relation);
     }
+
+    @Get('/image/:imageName')
+    getImage(@Res() res: Response, @Param('imageName') imageName: string) {
+        res.sendFile(process.cwd() + '/assets/public/' + imageName);
+    }
+
+
 
     //  Get the public profile information of the username in /username
     @Get(':username')
@@ -143,7 +149,7 @@ export class ProfileController {
     @Post('upload/photo')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
-            destination: '../frontend/public',
+            destination: 'assets/public',
             filename: (req, file, callback) => {
                 const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
                 const ext = extname(file.originalname);
@@ -334,8 +340,7 @@ export class ProfileController {
     @UseGuards(JwtGuard)
     @Get('/get/userid')
     @Header('Content-type', 'application/json; charset=utf-8')
-    async getUserId(@Req() request: RequestWithUser): Promise<any>
-    {
+    async getUserId(@Req() request: RequestWithUser): Promise<any> {
         const login42 = await this.profileService.authentificate(request);
 
         if (login42 == undefined) {
