@@ -18,12 +18,12 @@ export class GameUpdate
 	gameBall: BallDto;
 	updateGame: UpdateGameDto;
 	constructor(player1: Player){
-		this.leftPlayer = new GamePlayerDto(player1.getUserId(), '', 0, 0.5)
+		this.leftPlayer = new GamePlayerDto(player1.getUserId().toString(), '', 0, 0.5)
 		this.gameBall = new BallDto(0.5, 0.5, 0.01, 10, -1, 0)
 		this.updateGame = new UpdateGameDto(this.leftPlayer, this.rightPlayer, this.gameBall, false, '')
 	}
 	public setPlayerRight(player: Player){
-		this.rightPlayer = this.leftPlayer = new GamePlayerDto(player.getUserId(), '', 0, 0.5)
+		this.rightPlayer = this.leftPlayer = new GamePlayerDto(player.getUserId().toString(), '', 0, 0.5)
 	}
 	update = ({ keyActions }: UpdateProps) => {
 		const playerHeight = 0.15

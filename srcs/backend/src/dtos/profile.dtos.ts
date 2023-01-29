@@ -42,6 +42,7 @@ export class FriendDto {
 
 export class BlockDto {
     constructor (
+        public id:                 string,
         public friendUser:         string,
         public friendPhoto:        string,
         public key:                string
@@ -84,6 +85,7 @@ export class StatisticsDto{
 
 export class PrivateProfileDto {
     constructor(
+        public id: number,
         public error: boolean,
         public username: string,
         public status: string,

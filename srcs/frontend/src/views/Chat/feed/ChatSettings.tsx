@@ -9,7 +9,7 @@ import { WebsocketContext } from 'context/WebSocketContext';
 import { Button, MenuItem } from '@mui/material';
 
 import { UserContext } from 'Router/Router';
-import { UserDto } from 'utils/user.dto';
+import { PrivateProfileDto } from 'utils/user.dto';
 import { ChangeRoomPwdDialog } from './ChangeRoomPwdDialog';
 import  ValidationPopup  from './ValidationPopup';
 
@@ -17,7 +17,7 @@ export const ChatSettings = ({room}: {room: RoomDto}) => {
 
     const [settings, setSettings] = React.useState<null | HTMLElement>(null);
     const socket = React.useContext(WebsocketContext);
-    const user: UserDto | null = React.useContext(UserContext);
+    const user: PrivateProfileDto | null = React.useContext(UserContext);
 
     const handleCloseSettings = () => {
       setSettings(null);
@@ -74,7 +74,7 @@ export const ChatSettings = ({room}: {room: RoomDto}) => {
                     <Button onClick={onLeaveChannelClick}>Leave room</Button>
                 </MenuItem>
                 {
-                    user?.userID === room.owner &&
+                    user?.id === room.owner &&
                     <MenuItem >
                         <Button onClick={() => setOpenChangePwd(true)}>Change password</Button>
                     </MenuItem>
@@ -88,7 +88,7 @@ export const ChatSettings = ({room}: {room: RoomDto}) => {
             setValidation={setValidation}
             title={`Leave room ${room.roomName} ?`}
             message={
-                user?.userID === room.owner ?
+                user?.id === room.owner ?
                 'The room will be destroyed because you are the owner.'
                 :
                 'You will no longer be in this room.'

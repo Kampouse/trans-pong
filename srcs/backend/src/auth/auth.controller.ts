@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { FortyTwoAuthGuard, JwtGuard } from './utils/Guards';
 import { RequestWithUser, SessionUser } from "src/dtos/auth.dtos";
 import { tokenDatas } from './auth.service';
+import { PrivateProfileDto } from 'src/dtos/profile.dtos';
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
@@ -46,12 +48,14 @@ export class AuthController {
       console.log("Error occured during authentifcation", token)
       return ErrorLogin
     }
+    //console.log(userDto);
     const tfa = await this.authService.should2fa(request.user.username)
     const path = tfa.should2fa ? "http://localhost:5173/2fa" : "http://localhost:5173/Profile"
     const NewResponse = {
       statCode: 302,
       url: path
     }
+    let userDto: PrivateProfileDto = await this.authService.fetchUser(request.user.username);
     res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true })
     redirect_content.response = NewResponse
     return redirect_content.response
@@ -62,9 +66,9 @@ export class AuthController {
     return { message: "User logged out" }
   }
 
-  // @UseGuards(FortyTwoAuthGuard)
-  // @Get('isLogged')
-  // async isLoggedIn() {
-  //   return { loggedIn: true };
-  // }
+  @UseGuards(FortyTwoAuthGuard)
+  @Get('isLogged')
+  async isLoggedIn() {
+    return { loggedIn: true };
+  }
 }

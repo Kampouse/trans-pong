@@ -19,8 +19,10 @@ import Login2fa from 'views/Login/Login2fa'
 import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
-import { UserDto } from 'utils/user.dto'
+import { PrivateProfileDto } from 'utils/user.dto'
+import { UserAPI } from 'api/user.api'
 import { WebsocketContext, WebsocketProvider } from 'context/WebSocketContext'
+// import { PrivateProfileDto } from '../../../backend/src/dtos/profile.dtos'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -45,7 +47,7 @@ interface WrapperProps {
 }
 
 const Wrapper: React.FC<WrapperProps> = ({ children }) => {
-	const [user, setUser] = useState(myProfile)
+	const [user, setUser] = React.useState<PrivateProfileDto | null>(null)
 	const [login, setLogin] = useAtom(useLogin)
   const [isLogin, setIsLogin] = useState(useLogin)
 	const [openSearchUser, setOpenSearchUser] = useState(false);
@@ -101,12 +103,12 @@ export const myProfile = atom({
   userId: ''
 })
 
-export const UserContext = React.createContext<UserDto | null >(null);
+export const UserContext = React.createContext<PrivateProfileDto | null >(null);
 export const SetUserContext = React.createContext<any>(null);
 
 export default function App()
 {
-	const [user, setUser] = useState(myProfile)
+	const [user, setUser] = React.useState<PrivateProfileDto | null>(null)
 	const [login, setLogin] = useAtom(useLogin)
 	const [openSearchUser, setOpenSearchUser] = useState(false);
 	const [searchUser, setSearchUser] = useState('');
@@ -117,6 +119,7 @@ export default function App()
 
   // const [user, setUser] = React.useState<UserDto | null>(null);
   const socket = useContext(WebsocketContext);
+  const [loggedIn, setLoggedIn] = React.useState(false);
   // const [loggedIn, setLoggedIn] = React.useState(false);
 	// const [ballColor, setBallColor] = useAtom(useBallColor)
 	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
@@ -157,15 +160,58 @@ const check = async () =>
   }
   
 }
-
 useEffect(() => { check()}, [])
-  return (
+
+React.useEffect(() => {
+  const fetchProfile = async () => {
+    const respUser = await UserAPI.getUserProfile();
+    setUser(respUser);
+
+    if (!respUser) {
+      const logged = await UserAPI.isLoggedIn();
+      setLoggedIn(logged.loggedIn);
+    }
+    else {
+      setLoggedIn(true);
+    }
+
+    if (respUser) {
+      socket.emit("userUpdate");
+    }
+  };
+
+  fetchProfile();
+  // eslint-disable-next-line
+}, []);
+
+React.useEffect(() => {
+  socket.on("onUserChange", () => {
+    const fetchProfile = async () => {
+      const respUser = await UserAPI.getUserProfile();
+      setUser(respUser);
+
+      if (!respUser) {
+        const logged = await UserAPI.isLoggedIn();
+        setLoggedIn(logged.loggedIn);
+      }
+      else {
+        setLoggedIn(true);
+      }
+    };
+
+    fetchProfile();
+  });
+  return () => {
+    socket.off("onUserChange");
+  };
+}, [socket]);
+return (
         <>
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
           <UserContext.Provider value={user}>
           <SetUserContext.Provider value={setUser}>
           <Routes>
-           <Route path="/" element={  <Login Status={login} /> } />
+           <Route path="/" element={  <Login Status={login} loggedIn={loggedIn} setLoggedIn={setLoggedIn} /> } />
            <Route path="/2fa" element={  <Login2fa /> } />
             <Route path="/Menu" element={ <Wrapper><Menu/></Wrapper>} />
             <Route path="/Spectate" element={<Wrapper><SpectateMenu /> </Wrapper>} />

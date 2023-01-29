@@ -15,8 +15,8 @@ import {
   RoomReturnDto,
 } from './chat.service';
 import { Inject } from '@nestjs/common';
-import { UserDto } from 'src/dtos/user.dtos';
 import { comparePwd } from 'src/helper/bcrypt';
+import { PrivateProfileDto } from 'src/dtos/profile.dtos';
 
 @WebSocketGateway({
   cors: {
@@ -48,18 +48,18 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const profDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
 
     const newRoom: RoomDto = await this.chatService.createRoom(
       body.roomName,
       body.password,
-      userDto,
+      profDto,
     );
 
     const roomReturn: RoomReturnDto = this.chatService.getReturnRoom(newRoom);
 
     this.server
-      .to('user_' + userDto.userID)
+      .to('user_' + profDto.id.toString())
       .emit('addRoom', { room: roomReturn });
     this.server.to(socket.id).emit('chatNotif', {
       notif: `Room ${body.roomName} created successfully!`,
@@ -81,7 +81,7 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
+    let roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
 
     if (roomDto.password !== '' && body.password === '') {
       this.server
@@ -98,9 +98,9 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
 
-    if (this.chatService.isBanned(roomDto, userDto.userID)) {
+    if (this.chatService.isBanned(roomDto, userDto.id)) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'You are banned from this room.' });
@@ -111,14 +111,14 @@ export class ChatGateway implements OnGatewayConnection {
 
     const roomReturn: RoomReturnDto = this.chatService.getReturnRoom(roomDto);
     this.server
-      .to('user_' + userDto.userID)
+      .to('user_' + userDto.id.toString())
       .emit('addRoom', { room: roomReturn });
     this.server
       .to(socket.id)
       .emit('chatNotif', { notif: 'Room joined successfully!' });
     this.server
       .to(roomDto.roomName)
-      .except('user_' + userDto.userID)
+      .except('user_' + userDto.id.toString())
       .emit('roomChanged', { newRoom: roomReturn });
   }
 
@@ -136,10 +136,10 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
     const roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
 
-    if (this.chatService.isMuted(roomDto, userDto.userID)) {
+    if (this.chatService.isMuted(roomDto, userDto.id)) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'You are muted from this room.' });
@@ -170,10 +170,10 @@ export class ChatGateway implements OnGatewayConnection {
         .emit('chatNotif', { notif: 'This room no longer exists.' });
       return;
     }
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
     const roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
 
-    if (roomDto.owner === userDto.userID) {
+    if (roomDto.owner === userDto.id) {
       this.chatService.destroyRoom(roomDto);
       this.server.emit('deleteRoom', { roomName: body.roomName });
       this.server
@@ -183,9 +183,9 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    this.chatService.leaveRoom(userDto.userID, roomDto);
+    this.chatService.leaveRoom(userDto.id, roomDto);
     this.server
-      .to('user_' + userDto.userID)
+      .to('user_' + userDto.id.toString())
       .emit('deleteRoom', { roomName: body.roomName });
     this.server
       .to(socket.id)
@@ -210,10 +210,10 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
     const roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
 
-    if (roomDto.owner !== userDto.userID) {
+    if (roomDto.owner !== userDto.id) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: `An error has occured.` });
@@ -229,7 +229,7 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('kickUser')
   async kickUser(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: { roomName: string; userId: string },
+    @MessageBody() body: { roomName: string; userId: number },
   ) {
     if (!this.chatService.roomExist(body.roomName)) {
       this.server
@@ -238,10 +238,10 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
     const roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
 
-    if (!this.chatService.isAdminFromRoom(userDto.userID, roomDto)) {
+    if (!this.chatService.isAdminFromRoom(userDto.id, roomDto)) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'An error has occured.' });
@@ -255,7 +255,7 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    if (!roomDto.users.find(({ userID }) => userID === body.userId)) {
+    if (!roomDto.users.find(({ id }) => id === body.userId)) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'This user is no longer in the room.' });
@@ -281,7 +281,7 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('setAdmin')
   async setAdmin(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: { roomName: string; userId: string },
+    @MessageBody() body: { roomName: string; userId: number },
   ) {
     if (!this.chatService.roomExist(body.roomName)) {
       this.server
@@ -290,17 +290,17 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
     const roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
 
-    if (roomDto.owner !== userDto.userID) {
+    if (roomDto.owner !== userDto.id) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'An error has occured.' });
       return;
     }
 
-    if (!roomDto.users.find(({ userID }) => userID === userDto.userID)) {
+    if (!roomDto.users.find(({ id }) => id === userDto.id)) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'This user is no longer in the room.' });
@@ -312,10 +312,10 @@ export class ChatGateway implements OnGatewayConnection {
     const roomReturn: RoomReturnDto = this.chatService.getReturnRoom(roomDto);
     this.server
       .to('user_' + body.userId)
-      .to('user_' + userDto.userID)
+      .to('user_' + userDto.id)
       .emit('roomChanged', { newRoom: roomReturn });
 
-    const newAdmin: UserDto = await this.chatService.getUserFromId(body.userId);
+    const newAdmin: PrivateProfileDto = await this.chatService.getUserFromId(body.userId);
     this.server
       .to(socket.id)
       .emit('chatNotif', { notif: `${newAdmin.username} is now admin!` });
@@ -324,7 +324,7 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('unsetAdmin')
   async unsetAdmin(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: { roomName: string; userId: string },
+    @MessageBody() body: { roomName: string; userId: number },
   ) {
     if (!this.chatService.roomExist(body.roomName)) {
       this.server
@@ -333,17 +333,17 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
     const roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
 
-    if (roomDto.owner !== userDto.userID) {
+    if (roomDto.owner !== userDto.id) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'An error has occured.' });
       return;
     }
 
-    if (!roomDto.users.find(({ userID }) => userID === userDto.userID)) {
+    if (!roomDto.users.find(({ id }) => id === userDto.id)) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'This user is no longer in the room.' });
@@ -355,10 +355,10 @@ export class ChatGateway implements OnGatewayConnection {
     const roomReturn: RoomReturnDto = this.chatService.getReturnRoom(roomDto);
     this.server
       .to('user_' + body.userId)
-      .to('user_' + userDto.userID)
+      .to('user_' + userDto.id)
       .emit('roomChanged', { newRoom: roomReturn });
 
-    const newAdmin: UserDto = await this.chatService.getUserFromId(body.userId);
+    const newAdmin: PrivateProfileDto = await this.chatService.getUserFromId(body.userId);
     this.server
       .to(socket.id)
       .emit('chatNotif', { notif: `${newAdmin.username} is no longer admin!` });
@@ -369,7 +369,7 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('banUser')
   async banUser(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: { roomName: string; userId: string; time: number },
+    @MessageBody() body: { roomName: string; userId: number; time: number },
   ) {
     if (!this.chatService.roomExist(body.roomName)) {
       this.server
@@ -378,10 +378,10 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
     const roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
 
-    if (!this.chatService.isAdminFromRoom(userDto.userID, roomDto)) {
+    if (!this.chatService.isAdminFromRoom(userDto.id, roomDto)) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'An error has occured.' });
@@ -396,7 +396,7 @@ export class ChatGateway implements OnGatewayConnection {
     }
 
     if (
-      roomDto.users.find(({ userID }) => userID === body.userId) &&
+      roomDto.users.find(({ id }) => id === body.userId) &&
       body.time >= 0
     ) {
       this.chatService.leaveRoom(body.userId, roomDto);
@@ -421,7 +421,7 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('muteUser')
   async muteUser(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: { roomName: string; userId: string; time: number },
+    @MessageBody() body: { roomName: string; userId: number; time: number },
   ) {
     if (!this.chatService.roomExist(body.roomName)) {
       this.server
@@ -430,10 +430,10 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
     const roomDto: RoomDto = this.chatService.getRoomFromName(body.roomName);
 
-    if (!this.chatService.isAdminFromRoom(userDto.userID, roomDto)) {
+    if (!this.chatService.isAdminFromRoom(userDto.id, roomDto)) {
       this.server
         .to(socket.id)
         .emit('chatNotif', { notif: 'An error has occured.' });
@@ -448,7 +448,7 @@ export class ChatGateway implements OnGatewayConnection {
     }
 
     if (
-      roomDto.users.find(({ userID }) => userID === body.userId) &&
+      roomDto.users.find(({ id }) => id === body.userId) &&
       body.time >= 0
     ) {
       this.server.to('user_' + body.userId.toString()).emit('notif', {
@@ -464,10 +464,10 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('newPrivateMessage')
   async privateMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: { userId: string; message: string },
+    @MessageBody() body: { userId: number; message: string },
   ) {
-    const sender: UserDto = await this.chatService.getUserFromSocket(socket);
-    const receiver: UserDto = await this.chatService.getUserFromId(body.userId);
+    const sender: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
+    const receiver: PrivateProfileDto = await this.chatService.getUserFromId(body.userId);
 
     const message = this.chatService.addPrivateMessage(
       sender,
@@ -475,46 +475,46 @@ export class ChatGateway implements OnGatewayConnection {
       body.message,
     );
 
-    this.server.to('user_' + sender.userID).emit('receivePrivateMsg', {
-      userId: receiver.userID,
+    this.server.to('user_' + sender.id.toString()).emit('receivePrivateMsg', {
+      userId: receiver.id,
       messageDto: message,
     });
-    this.server.to('user_' + receiver.userID).emit('receivePrivateMsg', {
-      userId: sender.userID,
+    this.server.to('user_' + receiver.id.toString()).emit('receivePrivateMsg', {
+      userId: sender.id,
       messageDto: message,
     });
     this.server
-      .to('user_' + receiver.userID)
+      .to('user_' + receiver.id.toString())
       .emit('notif', { notif: `New message from ${sender.username}` });
   }
 
   @SubscribeMessage('sendPM')
   async newPMRoom(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() body: { userId: string },
+    @MessageBody() body: { userId: number },
   ) {
-    const sender: UserDto = await this.chatService.getUserFromSocket(socket);
-    const receiver: UserDto = await this.chatService.getUserFromId(body.userId);
+    const sender: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
+    const receiver: PrivateProfileDto = await this.chatService.getUserFromId(body.userId);
 
     this.chatService.addToPmList(sender, receiver);
 
     this.server
-      .to('user_' + sender.userID)
+      .to('user_' + sender.id.toString())
       .emit('newPrivateMsgUser', { userDto: receiver });
     this.server
-      .to('user_' + receiver.userID)
+      .to('user_' + receiver.id.toString())
       .emit('newPrivateMsgUser', { userDto: sender });
     this.server
-      .to('user_' + sender.userID)
+      .to('user_' + sender.id.toString())
       .emit('goToPM', { userDto: receiver });
   }
 
   @SubscribeMessage('notifClosed')
   async closeNotif(@ConnectedSocket() socket: Socket) {
-    const userDto: UserDto = await this.chatService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.chatService.getUserFromSocket(socket);
     if (!userDto) {
       return;
     }
-    this.server.to('user_' + userDto.userID).emit('closeNotif');
+    this.server.to('user_' + userDto.id.toString()).emit('closeNotif');
   }
 }

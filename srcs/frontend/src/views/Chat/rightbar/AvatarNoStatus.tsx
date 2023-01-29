@@ -1,8 +1,8 @@
 import { Avatar, Tooltip} from "@mui/material";
 import defaultAvatar from '../../../../public/defaultPhoto.png';
-import { UserDto } from "utils/user.dto";
+import { PrivateProfileDto } from "utils/user.dto";
 
-export const AvatarNoStatus = ({user}: {user: UserDto}) => {
+export const AvatarNoStatus = ({user}: {user: PrivateProfileDto}) => {
 
     return (
     <Tooltip title={user.username}>

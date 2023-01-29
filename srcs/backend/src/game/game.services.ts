@@ -6,7 +6,7 @@ import { AnymatchFn } from "vite";
 
 
 export class Player {
-    private userId: string
+    private userId: number
     private points: number
     private socket: io.Socket; //for id
     private actions: UpdateProp = { keyActions: { up: false, down: false } };

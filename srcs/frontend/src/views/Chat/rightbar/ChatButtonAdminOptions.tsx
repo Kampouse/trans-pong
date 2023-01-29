@@ -1,6 +1,6 @@
 import { UserContext } from 'Router/Router';
 import * as React from 'react';
-import { UserDto } from 'utils/user.dto';
+import { PrivateProfileDto } from 'utils/user.dto';
 import { WebsocketContext } from 'context/WebSocketContext';
 import FormGroup from '@mui/material/FormGroup';
 import FormControl from '@mui/material/FormControl';
@@ -11,7 +11,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { BanMuteButton } from './BanMuteButton';
 
 interface ChatButtonAdminOptionProps {
-    chosenUser: UserDto, 
+    chosenUser: PrivateProfileDto, 
     room: RoomDto | null
     handleClose: () => void
 }
@@ -23,23 +23,23 @@ export const ChatButtonAdminOption = ({
     
 }: ChatButtonAdminOptionProps) => {
 
-  const user: UserDto | null = React.useContext(UserContext);
+  const user: PrivateProfileDto | null = React.useContext(UserContext);
   const socket = React.useContext(WebsocketContext);
   const [isChosenUserAdmin, setIsChosenUserAdmin] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (room) {
-      setIsChosenUserAdmin(room.admins.find((admin) => admin === chosenUser.userID) ? true : false);
+      setIsChosenUserAdmin(room.admins.find((admin) => admin === chosenUser.id) ? true : false);
     }
-  }, [room, chosenUser.userID]);
+  }, [room, chosenUser.id]);
 
   const handleAdmin = () => {
     if (room) {
       if (!isChosenUserAdmin) {
-        socket.emit('setAdmin', { roomName: room.roomName, userId: chosenUser.userID });
+        socket.emit('setAdmin', { roomName: room.roomName, userId: chosenUser.id });
       }
       else {
-        socket.emit('unsetAdmin', { roomName: room.roomName, userId: chosenUser.userID });
+        socket.emit('unsetAdmin', { roomName: room.roomName, userId: chosenUser.id });
       }
     }
     handleClose();
@@ -47,7 +47,7 @@ export const ChatButtonAdminOption = ({
 
   const handleKick = () => {
     if (room) {
-      socket.emit('kickUser', { roomName: room.roomName, userId: chosenUser.userID })
+      socket.emit('kickUser', { roomName: room.roomName, userId: chosenUser.id })
     }
     handleClose();
   };
@@ -55,7 +55,7 @@ export const ChatButtonAdminOption = ({
   return (
     <>
               {/* ************** NEW ADMIN *************** */}
-    {user && room && room.owner === user.userID &&
+    {user && room && room.owner === user.id &&
       <MenuItem onClick={handleAdmin}><LocalPoliceIcon/><p style={{ marginLeft: "15px" }} >{
         !isChosenUserAdmin?
         'Set as admin'
@@ -64,7 +64,7 @@ export const ChatButtonAdminOption = ({
         }</p></MenuItem>
     }
 
-    {user && room && room.admins.find((value) => value === user.userID) && room.owner !== chosenUser.userID &&
+    {user && room && room.admins.find((value) => value === user.id) && room.owner !== chosenUser.id &&
     
       <FormGroup>
       <FormControl>

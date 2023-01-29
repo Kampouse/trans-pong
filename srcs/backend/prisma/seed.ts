@@ -144,6 +144,50 @@ async function main()
     }
     catch{}
 
+    // try{
+    //     const user1 = await prisma.user.create({
+    //         data: {
+    //             login42: 'bperron1',
+    //             username: 'bperron1',
+    //             userStatus: 'online',
+    //             imagePath: '/bperronPhoto.jpeg',
+    //         },
+    //     })
+    //     const user2 = await prisma.user.create({
+    //         data: {
+    //             login42: 'bperron2',
+    //             username: 'bperron2',
+    //             userStatus: 'online',
+    //             imagePath: '/bperronPhoto.jpeg',
+    //         },
+    //     })
+    //     const user3 = await prisma.user.create({
+    //         data: {
+    //             login42: 'bperron3',
+    //             username: 'bperron3',
+    //             userStatus: 'online',
+    //             imagePath: '/bperronPhoto.jpeg',
+    //         },
+    //     })
+    //     const user4 = await prisma.user.create({
+    //         data: {
+    //             login42: 'bperron4',
+    //             username: 'bperron4',
+    //             userStatus: 'online',
+    //             imagePath: '/bperronPhoto.jpeg',
+    //         },
+    //     })
+    //     const user5 = await prisma.user.create({
+    //         data: {
+    //             login42: 'bperron5',
+    //             username: 'bperron5',
+    //             userStatus: 'online',
+    //             imagePath: '/bperronPhoto.jpeg',
+    //             friends: {}
+    //         },
+    //     })
+    // }catch{}
+
     //  Create a bunch of friend request's
 
     console.log("Creating a bunch of friend request's")
