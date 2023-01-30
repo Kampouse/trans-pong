@@ -5,7 +5,7 @@ import React, {
   createContext,
   useContext
 } from 'react'
-import '../../main.css'
+import '@styles/main.css'
 import { ChatAPI, PrivateMsgsDto, RoomDto } from 'api/chat.api'
 import { WebsocketContext } from 'context/WebSocketContext'
 import { Box, Grid, Paper } from '@mui/material'

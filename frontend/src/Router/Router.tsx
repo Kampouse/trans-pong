@@ -12,7 +12,7 @@ import Matchmaking from 'views/Game/Matchmaking'
 import Login from 'views/Login/Login'
 import Profile from 'views/Profile/Profile'
 import SinglePlayerCanvas from 'views/Game/components/SinglePlayerCanvas'
-import "../main.css"
+import "@styles/main.css"
 import Error404 from 'views/Error/Error404'
 import Chat from 'views/Chat/Chat'
 import { ChatRoom, User } from 'utils/types'

@@ -1,4 +1,4 @@
-import { ActiveGameDto, Game } from './../../../../backend/src/dtos/profile.dtos'
+import { ActiveGameDto, Game } from 'utils/profile.dto'; 
 import { useState } from 'react';
 import * as io from 'socket.io-client';
 import { useNavigate } from 'react-router';
