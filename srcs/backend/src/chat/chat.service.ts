@@ -63,11 +63,15 @@ export class ChatService {
     userDto: PrivateProfileDto,
   ): Promise<RoomDto> {
     const roomDto = new RoomDto();
-
+  console.log(`${userDto.id} - ${userDto.username}`)
     roomDto.roomName = roomName;
+    console.log(`${roomName}, ${roomDto.roomName}`)
     roomDto.owner = userDto.id;
+    //console.log(`${userDto.id}, ${roomDto.owner}`)
     roomDto.admins = [userDto.id];
+    //console.log(`${userDto.id}, ${roomDto.owner}`)
     roomDto.users = [];
+    //console.log(`${userDto.id}, ${roomDto.owner}`)
     roomDto.messages = [];
     if (password && password !== '') {
       roomDto.password = await hashPwd(password);
@@ -76,7 +80,9 @@ export class ChatService {
     }
     roomDto.mutedMap = new Map();
     roomDto.banMap = new Map();
-
+    
+    //console.log(`${userDto.id}, ${roomDto.owner}`)
+    console.log("hey2")
     this.RoomList.set(roomName.toUpperCase(), roomDto);
     this.addToRoom(userDto, roomDto);
     return roomDto;
@@ -345,4 +351,5 @@ export class ChatService {
   isAdminFromRoom(userId: number, roomDto: RoomDto): boolean {
     return roomDto.admins.find((id) => id === userId) ? true : false;
   }
+
 }

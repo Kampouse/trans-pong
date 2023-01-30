@@ -27,7 +27,7 @@ export class ChatAPI
     public static async getRoomsFromUser(): Promise<{ rooms: RoomDto[] }> {
 
         const resp = await fetch(
-          `http://localhost:3000/chat/userRooms`,
+          `http://192.168.2.216:3000/chat/userRooms`,
           {
             credentials: "include",
             method: "GET",
@@ -40,7 +40,7 @@ export class ChatAPI
       public static async getPMsFromUser(): Promise<{ privateMsgs: PrivateMsgsDto[] }> {
     
         const resp = await fetch(
-          `http://localost:3000/chat/userPMs`,
+          `http://192.168.2.216:3000/chat/userPMs`,
           {
             credentials: "include",
             method: "GET",
@@ -53,7 +53,7 @@ export class ChatAPI
       public static async getAllRoomNames(): Promise<{ rooms: string[] }> {
     
         const resp = await fetch(
-          `http://localhost:3000/chat/roomNames`,
+          `http://192.168.2.216:3000/chat/roomNames`,
           {
             credentials: "include",
             method: "GET",

@@ -3,7 +3,7 @@ import { PrivateProfileDto } from "utils/user.dto";
 export class UserAPI
 {
     public static async isLoggedIn(): Promise<{loggedIn: boolean}> {
-        const resp = await fetch(`http://localhost:3000/auth/isLogged`, {
+        const resp = await fetch(`http://192.168.2.216:3000/auth/isLogged`, {
           credentials: "include",
           method: "GET"
         });
@@ -12,7 +12,7 @@ export class UserAPI
     }
 
     public static async getUserProfile(): Promise<PrivateProfileDto | null> {
-        const resp = await fetch(`http://localhost:3000/profile/`, {
+        const resp = await fetch(`http://192.168.2.216:3000/profile/my-profile`, {
             credentials: "include",
             method: "GET"
         });
@@ -20,7 +20,7 @@ export class UserAPI
         return (resp.ok? resp.json() : null);
     }
     public static async addBlock(blockedId: string): Promise<PrivateProfileDto | null> {
-        const resp = await fetch(`http://localhost:3000/block/:${blockedId}`, {
+        const resp = await fetch(`http://192.168.2.216:3000/block/:${blockedId}`, {
           credentials: "include",
           method: "POST",
           body: blockedId,
@@ -30,7 +30,7 @@ export class UserAPI
       }
     
       public static async removeBlock(blockedId: string): Promise<PrivateProfileDto | null> {
-        const resp = await fetch(`http://localhost:3000/unblock/:${blockedId}`, {
+        const resp = await fetch(`http://192.168.2.216:3000/block/:${blockedId}`, {
           credentials: "include",
           method: "DELETE",
           body: blockedId,

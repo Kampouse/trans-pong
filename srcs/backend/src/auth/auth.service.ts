@@ -329,14 +329,14 @@ export class AuthService {
         }
     
         try {
-          const sub = this.jwtService.verify(token);
+            const secret = process.env.JWT_KEY;
+            const sub = this.jwtService.verify(token, { secret }) as tokenDatas;
+         
           if (!sub) {
             return null;
           }
-    
-          const userDto: PrivateProfileDto | null = await this.usersService.findOneById(
-            sub.sub
-          );
+          console.log(`${sub.username}`)
+          const userDto: PrivateProfileDto | null = await this.usersService.getProfileEdit(sub.username);
     
           return userDto;
         } catch {

@@ -498,15 +498,9 @@ export class ChatGateway implements OnGatewayConnection {
 
     this.chatService.addToPmList(sender, receiver);
 
-    this.server
-      .to('user_' + sender.id.toString())
-      .emit('newPrivateMsgUser', { userDto: receiver });
-    this.server
-      .to('user_' + receiver.id.toString())
-      .emit('newPrivateMsgUser', { userDto: sender });
-    this.server
-      .to('user_' + sender.id.toString())
-      .emit('goToPM', { userDto: receiver });
+    this.server.to('user_' + sender.id.toString()).emit('newPrivateMsgUser', { userDto: receiver });
+    this.server.to('user_' + receiver.id.toString()).emit('newPrivateMsgUser', { userDto: sender });
+    this.server.to('user_' + sender.id.toString()).emit('goToPM', { userDto: receiver });
   }
 
   @SubscribeMessage('notifClosed')

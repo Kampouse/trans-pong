@@ -45,35 +45,37 @@ export const prisma = global.prisma || new PrismaClient({ log: ['info'] });
 async function bootstrap() {
   startPrisma();
   const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
   app.enableCors({
     //origin: 'http://localhost:5173',
-    origin: function (origin, callback) {
-      callback(null, true)
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Access-Control-Allow-Origin',
-      'Access-Control-Allow-Headers',
-      'Access-Control-Allow-Methods',
-      'Access-Control-Allow-Credentials',
-      'Origin, X-Requested-With, Content-Type, Accept'
-    ],
+    // origin: function (origin, callback) {
+    //   callback(null, true)
+    // },
+    origin: true,
+    // methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    // allowedHeaders: [
+    //   'Content-Type',
+    //   'Authorization',
+    //   'Access-Control-Allow-Origin',
+    //   'Access-Control-Allow-Headers',
+    //   'Access-Control-Allow-Methods',
+    //   'Access-Control-Allow-Credentials',
+    //   'Origin, X-Requested-With, Content-Type, Accept'
+    // ],
     credentials: true
   });
-  app.use(
-    cookieParser("trans"),
-    session({
-      secret: 'secret',
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-      },
-    }),
-  );
+  // app.use(
+  //   cookieParser("trans"),
+  //   session({
+  //     secret: 'secret',
+  //     resave: false,
+  //     saveUninitialized: false,
+  //     cookie: {
+  //       secure: true,
+  //       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+  //     },
+  //   }),
+  // );
   await app.listen(3000);
 }
 bootstrap();

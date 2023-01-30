@@ -17,7 +17,7 @@ export class ChatController {
   @UseGuards(JwtGuard)
   public async getRoomsFromUser(@Req() req: RequestWithUser) {
     const user: any = req.user;
-
+   // console.log(`${req.headers['cookie'].split("=")[1]}`)
     const rooms: RoomDto[] = this.chatService.getAllRoomsFromUser(user.id);
 
     const roomReturns = new Array<RoomReturnDto>();

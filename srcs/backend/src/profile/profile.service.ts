@@ -1069,8 +1069,7 @@ export class ProfileService {
   // Find one user by id
   public async findOneById(id: number) {
     const user: User = await prisma.user.findUnique({
-      where: { userID: id },
-
+        where: { userID: id }
     });
     if (!user) return null;
     const userDto: PrivateProfileDto = await this.getProfileEdit(user.login42);

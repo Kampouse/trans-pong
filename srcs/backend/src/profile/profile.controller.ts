@@ -17,7 +17,7 @@ export class ProfileController {
     private readonly authService: AuthService
 
     //  Get the private profile information of the user logged
-    @Get()
+    @Get('/my-profile')
     @UseGuards(JwtGuard)
     async getProfileEdit(@Req() request: RequestWithUser): Promise<PrivateProfileDto | Error> {
         try {

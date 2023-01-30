@@ -110,11 +110,11 @@ export default function App()
 {
 	const [user, setUser] = React.useState<PrivateProfileDto | null>(null)
 	const [login, setLogin] = useAtom(useLogin)
-	const [openSearchUser, setOpenSearchUser] = useState(false);
-	const [searchUser, setSearchUser] = useState('');
-	const [users, setUsers] = useAtom(useUsers);
-	const [rooms, setRooms] = useAtom(useRooms);
-	const userClicked = useRef<User | null>(null);
+	// const [openSearchUser, setOpenSearchUser] = useState(false);
+	// const [searchUser, setSearchUser] = useState('');
+	// const [users, setUsers] = useAtom(useUsers);
+	// const [rooms, setRooms] = useAtom(useRooms);
+	// const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
 
   // const [user, setUser] = React.useState<UserDto | null>(null);
