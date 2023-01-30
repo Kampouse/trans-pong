@@ -7,24 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  userID            String     @id @default(cuid())
-  accessToken42     String?
-  refreshToken42    String?
-  jwtToken          String?
-  login42           String     @unique
-  username          String     @unique
-  userStatus        UserStatus @default(online)
-  imagePath         String     @default("/defaultPhoto.png")
-  authenticator     Boolean    @default(false)
-  authKey           String     @default("none")
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
-  friendsofthisuser   User[]     @relation("friends of user")
-  thisuserisfriendto User[]     @relation("friends of user")
-  blockedbythisuser  User[]     @relation("blocked users")
-  userblockedby     User[]     @relation("blocked users")
+  userID             Int            @id @default(autoincrement())
+  accessToken42      String?
+  refreshToken42     String?
+  jwtToken           String?
+  login42            String            @unique
+  username           String            @unique
+  userStatus         userStatus        @default(online)
+  imagePath          String            @default("/defaultPhoto.png")
+  authenticator      Boolean           @default(false)
+  authKey            String            @default("none")
+  channels           Channel[]
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  activeAt           DateTime          @default(now())
 }
 
 model FriendRequest {
@@ -61,7 +58,20 @@ model Block {
   @@unique([blocker, blocked])
 }
 
-enum UserStatus {
+model Channel {
+  channelID     String   @id @default(cuid())
+  channelNumber Int      @unique @default(autoincrement())
+  Name          String   @unique @default("Name not initialised")
+  private       Boolean  @default(false)
+  password      String
+  ownerID       String
+  users         User[]
+  admin         String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum userStatus {
   online
   offline
   playing
