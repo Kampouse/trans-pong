@@ -1,24 +1,24 @@
-import { UserDto } from "utils/user.dto";
+import { PrivateProfileDto } from "utils/user.dto";
 
 export interface MessageDto
 {
-    userID : string;
-    userName : string;
-    message : string;
+    userId: number;
+    userName: string;
+    message: string;
 }
 
 export interface PrivateMsgsDto 
 {
-    userDto : UserDto;
+    userDto : PrivateProfileDto;
     messages : Array<MessageDto>;
 }
 
 export interface RoomDto
 {
     roomName: string;
-    owner:    string;
-    admins:   Array<string>;
-    users:    Array<UserDto>;
+    owner:    number;
+    admins:   Array<number>;
+    users:    Array<PrivateProfileDto>;
     messages: Array<MessageDto>;
 }
 

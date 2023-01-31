@@ -6,7 +6,7 @@ import { Strategy } from 'passport-42';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class FortyTwoStrategy extends PassportStrategy(Strategy) {
+export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
   constructor() {
     super({
       authorizationURL: 'https://api.intra.42.fr/oauth/authorize',

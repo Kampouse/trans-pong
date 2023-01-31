@@ -7,7 +7,6 @@ import { PrismaClient } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import * as session from 'express-session';
 // import { env } from 'process';
-// import { cors } from 'cors';
 import * as cookieParser from 'cookie-parser';
 import * as io from 'socket.io';
 

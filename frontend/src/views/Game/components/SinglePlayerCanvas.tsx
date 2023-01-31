@@ -1,12 +1,13 @@
 import { defaultMaxListeners } from 'events'
 import React, { useEffect, useRef, useState } from 'react'
 import { init, draw, update, drawSingleGameover, singlePlayerDraw } from './ReactiveDraw'
-import Robot from "../../../../../assets/robot.png"
+// import Robot from "../../../../../assets/robot.png"
 import {usersocket} from '../Matchmaking'
-import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
+import { UpdateGameDto } from 'utils/gameupdate.dto'
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
 import { useBallColor, useBackgroundColor, usePaddleColor } from 'Router/Router'
 import { useAtom } from 'jotai'
+import { Fetch } from 'utils'
 
 let keyActions = {
 	up: false,
@@ -18,18 +19,10 @@ const useFetch = () =>
 	const [gameReq, setGameReq] = useState<any>(null);
 	
 	useEffect(() => {
-		fetch('http://localhost:3000/profile/play/solo' , {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Credentials': 'true'
-			}
-		})
+		Fetch("http://localhost:3000/profile/play/solo")
       .then((response) => response.json())
 			.then((data) => {
 				setGameReq(data);
-				console.log(data);
 			})
 	}, [])
 	return {gameReq};
@@ -79,7 +72,6 @@ const SinglePlayerCanvas = () => {
 			keyActions.up = true;
 		if (event.key === 's' || event.key === 'ArrowDown')
 			keyActions.down = true;
-    console.log('User pressed: ', event.key);
   };
 
 	const handleKeyUp = event => {
@@ -88,7 +80,6 @@ const SinglePlayerCanvas = () => {
 			keyActions.up = false;
 		if (event.key === 's' || event.key === 'ArrowDown')
 			keyActions.down = false;
-    console.log('User released: ', event.key);
   };
 
   return (
@@ -134,7 +125,7 @@ const SinglePlayerCanvas = () => {
 						/>
 					}
         </div>
-        <div
+        {/* <div
           className="rounded-full bg-white grid justify-center m-auto
 												xl:h-[125px] xl:w-[125px]
 												lg:h-[100px] lg:w-[100px]
@@ -148,7 +139,7 @@ const SinglePlayerCanvas = () => {
             src={Robot}
             alt=""
           />
-        </div>
+        </div> */}
         <p className="text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-2xl text-xl font-bold ml-[10px] grid justify-start xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2">
           Computer
         </p>

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef, useContext } from 'react'
+import React, { useState, useEffect, useRef, Children, useContext } from 'react'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
-import { UserDto } from 'utils/user.dto'
 import { useNavigate } from 'react-router'
 import { Routes, Route } from 'react-router-dom'
 import { useAtom, atom } from 'jotai'
@@ -12,16 +11,18 @@ import Matchmaking from 'views/Game/Matchmaking'
 import Login from 'views/Login/Login'
 import Profile from 'views/Profile/Profile'
 import SinglePlayerCanvas from 'views/Game/components/SinglePlayerCanvas'
-import "@styles/main.css"
+import '@styles/main.css'
 import Error404 from 'views/Error/Error404'
 import Chat from 'views/Chat/Chat'
 import { ChatRoom, User } from 'utils/types'
+import Login2fa from 'views/Login/Login2fa'
+import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
-import { WebsocketContext, WebsocketProvider } from 'context/WebSocketContext'
+import { PrivateProfileDto } from 'utils/user.dto'
 import { UserAPI } from 'api/user.api'
-
-
+import { WebsocketContext, WebsocketProvider } from 'context/WebSocketContext'
+// import { PrivateProfileDto } from '../../../backend/src/dtos/profile.dtos'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -46,7 +47,7 @@ interface WrapperProps {
 }
 
 const Wrapper: React.FC<WrapperProps> = ({ children }) => {
-	const [user, setUser] = useState(myProfile)
+	const [user, setUser] = React.useState<PrivateProfileDto | null>(null)
 	const [login, setLogin] = useAtom(useLogin)
   const [isLogin, setIsLogin] = useState(useLogin)
 	const [openSearchUser, setOpenSearchUser] = useState(false);
@@ -102,13 +103,13 @@ export const myProfile = atom({
   userId: ''
 })
 
-export const UserContext = React.createContext<UserDto | null >(null);
+export const UserContext = React.createContext<PrivateProfileDto | null >(null);
 export const SetUserContext = React.createContext<any>(null);
 
 export default function App()
 {
-	//const [user, setUser] = useState(myProfile)
-	//const [login, setLogin] = useAtom(useLogin)
+	const [user, setUser] = React.useState<PrivateProfileDto | null>(null)
+	const [login, setLogin] = useAtom(useLogin)
 	const [openSearchUser, setOpenSearchUser] = useState(false);
 	const [searchUser, setSearchUser] = useState('');
 	const [users, setUsers] = useAtom(useUsers);
@@ -116,35 +117,75 @@ export default function App()
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
 
-  const [user, setUser] = React.useState<UserDto | null>(null);
+  // const [user, setUser] = React.useState<UserDto | null>(null);
   const socket = useContext(WebsocketContext);
   const [loggedIn, setLoggedIn] = React.useState(false);
-
+  // const [loggedIn, setLoggedIn] = React.useState(false);
 	// const [ballColor, setBallColor] = useAtom(useBallColor)
 	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
 	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
 
-  //  Here we check with the backend if the user is authentificated
-  // const check = async () =>
-  // {
-  //   Fetch('http://localhost:3000/auth/who')
-  //     .then((response) => response.status)
-  //     .then((status) =>
-  //     {
-  //       if (status == 200)
-  //       {
-  //           console.log("User is authentificated, proceed to open the dashboard")
-  //           setLogin('login')
-  //           socket.emit("userUpdate")
-  //       }
-  //       else
-  //       {
-  //         navigate('/')
-  //           console.log("No user logged, please login.")
-  //       }
-  //     })
-  // }
-  React.useEffect(() => {
+//  Here we check with the backend if the user is authentificated
+  const SecondAuthStatus = async () => {
+    const secondAuth = await Fetch('http://localhost:3000/profile/get/auth')
+    if (secondAuth.status === 200) {
+      const isAuth2 = await secondAuth.json()
+      if (isAuth2.message && isAuth2.message === 'active') {
+         return true
+      }
+      else if (isAuth2.message) {
+        return  false
+      }
+    }
+  }
+  //when a user as 2fa enable force  the redirection to the 2fa page or to the login page
+  //where the user can fiill the data to access   the rest of the app
+const check = async () =>
+{
+  try {
+    const auth = await Fetch('http://localhost:3000/auth/who')
+    if (auth.status === 200) {
+      setLogin('login')
+    }
+    else if (auth.status === 403)
+      navigate('/')
+  
+    else if (auth.status === 401) {
+      navigate('/2fa')   
+    }
+  }
+  catch (error) {
+
+      navigate('/')
+  }
+  
+}
+useEffect(() => { check()}, [])
+
+React.useEffect(() => {
+  const fetchProfile = async () => {
+    const respUser = await UserAPI.getUserProfile();
+    setUser(respUser);
+
+    if (!respUser) {
+      const logged = await UserAPI.isLoggedIn();
+      setLoggedIn(logged.loggedIn);
+    }
+    else {
+      setLoggedIn(true);
+    }
+
+    if (respUser) {
+      socket.emit("userUpdate");
+    }
+  };
+
+  fetchProfile();
+  // eslint-disable-next-line
+}, []);
+
+React.useEffect(() => {
+  socket.on("onUserChange", () => {
     const fetchProfile = async () => {
       const respUser = await UserAPI.getUserProfile();
       setUser(respUser);
@@ -152,51 +193,26 @@ export default function App()
       if (!respUser) {
         const logged = await UserAPI.isLoggedIn();
         setLoggedIn(logged.loggedIn);
-        console.log("User is Authenticated, proceed to open the dashboard")
       }
       else {
         setLoggedIn(true);
       }
-
-     // if (respUser) {
-        //socket.emit("userUpdate");
-      //}
     };
 
     fetchProfile();
-    // eslint-disable-next-line
-  }, []);
-
-  React.useEffect(() => {
-    socket.on("onUserChange", () => {
-      const fetchProfile = async () => {
-        const respUser = await UserAPI.getUserProfile();
-        setUser(respUser);
-  
-        if (!respUser) {
-          const logged = await UserAPI.isLoggedIn();
-          setLoggedIn(logged.loggedIn);
-        }
-        else {
-          setLoggedIn(true);
-        }
-      };
-  
-      fetchProfile();
-    });
-    return () => {
-      socket.off("onUserChange");
-    };
-  }, [socket]);
-
-  // useEffect(() => { check()}, [])
-    return (
+  });
+  return () => {
+    socket.off("onUserChange");
+  };
+}, [socket]);
+return (
         <>
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">
           <UserContext.Provider value={user}>
           <SetUserContext.Provider value={setUser}>
           <Routes>
-           <Route path="/" element={  <Wrapper><Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} /></Wrapper> } />
+           <Route path="/" element={  <Login Status={login} loggedIn={loggedIn} setLoggedIn={setLoggedIn} /> } />
+           <Route path="/2fa" element={  <Login2fa /> } />
             <Route path="/Menu" element={ <Wrapper><Menu/></Wrapper>} />
             <Route path="/Spectate" element={<Wrapper><SpectateMenu /> </Wrapper>} />
             <Route path="/Play" element={ <Wrapper> <Game /> </Wrapper>}></Route>
@@ -205,16 +221,7 @@ export default function App()
                 <Route path=":username" element={ <Wrapper> <Profile/></Wrapper>} />
                 <Route path="" element={  <Wrapper> <Profile/></Wrapper>} />
             </Route>
-            <Route
-                path="/Chat"
-                element={
-                  <Wrapper>
-                    <WebsocketProvider value={socket}>
-                      <Chat />
-                    </WebsocketProvider>
-                  </Wrapper>
-                }
-              />
+            <Route path="/Chat" element={<Wrapper> <WebsocketProvider value={socket}> <Chat /> </WebsocketProvider></Wrapper>}></Route>
             <Route path="*" element={<Error404 />}></Route>
             <Route path="/Game">
                 <Route path="" element={<Wrapper> <SinglePlayerCanvas/></Wrapper> }></Route>
@@ -222,7 +229,7 @@ export default function App()
             </Route>
                 <Route path="/ColorOptions" element={ <Wrapper> <ColorOptions/> </Wrapper>}></Route>
             </Routes>
-        </SetUserContext.Provider>
+            </SetUserContext.Provider>
         </UserContext.Provider>
         </div>
     </>

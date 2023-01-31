@@ -1,6 +1,6 @@
 import { styled, Typography } from "@mui/material";
 import { MessageDto, RoomDto } from "api/chat.api";
-import { UserDto } from "utils/user.dto";
+import { PrivateProfileDto } from "utils/user.dto";
 import { UserContext } from "Router/Router";
 import React from "react";
 
@@ -28,7 +28,7 @@ export const ChatMessages = ({
     room
 }: ChatMessagesProps) => {
 
-    const user: UserDto | null = React.useContext(UserContext);
+    const user: PrivateProfileDto | null = React.useContext(UserContext);
 
     return (
         <>
@@ -36,7 +36,7 @@ export const ChatMessages = ({
         return (
             <div key={index}>
             { 
-            user?.userID === message.userID?
+            user?.id === message.userId?
 
             <SendMessage>
             <Typography className="sender" style={{backgroundColor: "background.paper"}} >
@@ -45,7 +45,7 @@ export const ChatMessages = ({
             <Typography className="message" style={{wordWrap: "break-word", backgroundColor: "background.paper"}} >{message.message}</Typography> 
             </SendMessage>
 
-            : !user?.blocked?.find(({userID}) => message.userID === userID) ?
+            : !user?.blockList?.find(({id}) => message.userId === id) ?
             
             <RecvMessage>
             <Typography className="sender" style={{backgroundColor: "background.paper"}} >

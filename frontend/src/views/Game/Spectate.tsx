@@ -1,14 +1,13 @@
-import { ActiveGameDto, Game } from 'utils/profile.dto'; 
+import { ActiveGameDto, Game } from 'utils/game.dto';
 import { useState } from 'react';
 import * as io from 'socket.io-client';
 import { useNavigate } from 'react-router';
 import {usersocket} from './Matchmaking'
+import { Fetch } from 'utils';
 
 async function getActiveGames(data: ActiveGameDto, setData)
 {
-    await fetch("http://localhost:3000/profile/active/game", {
-        method: "GET",
-    })
+    await Fetch("http://localhost:3000/profile/active/game")
         .then(response => response.json())
         .then(res => {
             if (res.status == '200')
@@ -82,7 +81,6 @@ export function SpectateMenu()
                                         //  Open the game component here with gameRoomId stored in : currentMatch.gameID
                                         usersocket.emit("spectateGame", currentMatch.gameID);
                                         usersocket.on("roomIsReady", () => {
-                                            console.log("wooooo")
                                             usersocket.off("roomIsReady");
                                             nav(`/game/${currentMatch.gameID}`)
                                         })

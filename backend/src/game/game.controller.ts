@@ -1,59 +1,42 @@
 import { Controller, Get, Req, Redirect, Res, Param } from "@nestjs/common";
 import { GameRoom, GameSocketIOService, Player } from "./game.services";
 import { RequestWithUser } from "src/dtos/auth.dtos";
+import { prisma } from 'src/main'
+import { userStatus } from ".prisma/client";
 
 @Controller()
 export class GameSocketIOController {
-    constructor(private gameSocketIO: GameSocketIOService){
+    constructor(private gameSocketIO: GameSocketIOService) {
         const server = this.gameSocketIO.getServer();
-        //console.log(server)
-        /*
-        server.use((socket, next) => {
 
-            const sessionID = socket.handshake.auth.sessionID;
-            if (sessionID)
-            {
-                var session = gameSocketIO.sessionMap[sessionID]
-                if (session
-                    ){
-                    socket.sessionID = sessionID
-                    socket.userID = session.userID
-                    }
-            }
-        })
-        */
         server.on("connection", (socket) => {
-            console.log("New socket: "  + socket.id);
+            console.log("New socket: " + socket.id);
 
             socket.on("disconnect", () => {
                 console.log("Socket disconnected: " + socket.id)
                 //do things here to remove user from a game it might be in maybe ?
                 delete gameSocketIO.socketMap[socket.id]
             })
-            
+
             socket.on("registerId", (user) => {
                 gameSocketIO.socketMap[user.socket] = user.userId//keeping socket instance in the map so we can retrieve it later
-                console.log(gameSocketIO.socketMap)
-                //this.getUserFromSocketId(this.gameSocketIO.socketMap, user.userId)
-                //console.log(this.getUserFromSocketId(this.gameSocketIO.socketMap, socket.id))
+                //console.log(gameSocketIO.socketMap)
             })
 
             socket.on("searchGame", async () => {
                 var room = this.tryGetAvailableRoom(gameSocketIO.roomMap)
-                console.log(gameSocketIO.roomMap.size)
-                if(gameSocketIO.roomMap.size == 0 || room == null){ //no room found, add new room
+                //console.log(gameSocketIO.roomMap.size)
+                if (gameSocketIO.roomMap.size == 0 || room == null) { //no room found, add new room
                     var newRoom: GameRoom = new GameRoom(new Player(this.gameSocketIO.socketMap[socket.id], socket), gameSocketIO.getServer())
                     gameSocketIO.roomMap.set(newRoom.getRoomName(), newRoom) //adds new room to list
                     socket.join(newRoom.getRoomName()); //make client socket join room
-                    //console.log(gameSocketIO.roomMap)
                 }
-                else{ //array isnt empty and there are rooms available
+                else { //array isnt empty and there are rooms available
                     var roomName = await this.gameSocketIO.makePlayerJoinRoom(new Player(this.gameSocketIO.socketMap[socket.id], socket));
-                    if(roomName == ""){
+                    if (roomName == "") {
                         socket.emit("noSuitableRoomFound");
                     }
-                    else{
-                        //var roomname = this.gameSocketIO.getRoomForPlayer()
+                    else {
                         socket.join(roomName); //all players are in the game, status is set to active
                         server.to(roomName).emit("roomIsReady", roomName); //pass control to game execution
                     }
@@ -70,25 +53,51 @@ export class GameSocketIOController {
                 socket.join(roomID);
                 socket.emit("roomIsReady")
             })
+            socket.on("ping", async (userid) => {
+                var date = new Date();
+                if (userid != "" && userid != null) {
+                    const user = await prisma.user.findUnique({ where: { userID: userid } })
+                    if (user && user.userStatus == "playing")
+                        await prisma.user.update({
+                            where: { userID: userid }, data: {
+                                userStatus: userStatus.playing,
+                                activeAt: date.toISOString(),
+                            }
+                        })
+                    else if (user && user.userStatus == "online")
+                        await prisma.user.update({
+                            where: { userID: userid }, data: {
+                                userStatus: userStatus.online,
+                                activeAt: date.toISOString(),
+                            }
+                        })
+                    else if (user && user.userStatus == "offline")
+                        await prisma.user.update({
+                            where: { userID: userid }, data: {
+                                userStatus: "online",
+                                activeAt: date.toISOString(),
+                            }
+                        })
+                }
+            })
         })
 
         server.on("disconnect", () => {
             console.log("server shutted down")
         })
     }
-    
+
     getUserFromSocketId(map, searchValue) {
         for (let [key, value] of map.entries()) {
-            if (value === searchValue){
-                //console.log(key)
+            if (value === searchValue) {
                 return key;
             }
             console.log("user from socket id not found")
         }
     }
     tryGetAvailableRoom(gameRoom: Map<string, GameRoom>) {
-        for(let room of gameRoom){
-            if(room[1].status == "waiting") //room has available slot
+        for (let room of gameRoom) {
+            if (room[1].status == "waiting") //room has available slot
                 return room[1];
         }
         return null;
@@ -96,7 +105,7 @@ export class GameSocketIOController {
 
 
     @Get('game/:id')
-    printId(@Param('id') id: string){
+    printId(@Param('id') id: string) {
         console.log(`accessing game ${id}`);
     }
 }

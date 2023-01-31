@@ -8,8 +8,15 @@ import { render } from 'react-dom';
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar';
 
 export var usersocket: io.Socket = io.connect("http://localhost:3001")
+export const userid = await getUserId();
+export var pingInterval = setInterval( async () => {
+    if (userid != "" && userid != null) //userid not empty so we know suer is logged in
+        usersocket.emit("ping", userid) //ping with userid to tell if user is alive
+}, 5000) //every 10 seconds or whatever
+
 export default function Matchmaking()
 {
+
     const nav = useNavigate();
     usersocket.disconnect(); //automatically disconnect socket on render
     const userid = fetchUserId();
@@ -46,7 +53,7 @@ export default function Matchmaking()
                 <h1 className="text-center text-6xl pt-10 pb-40 font-Merriweather">Matchmaking</h1>
                 <div className="pb-12 flex flex-row items-center justify-center px-10">
                     <button type='button' id="singleplayer" onClick={(e) => startSinglePlayer(e, nav)} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
-                        Singler Player
+                        Single Player
                     </button>
                     <button type='button' id="multiplayer" onClick={((e) => startMultiplayerMatchmake(e, nav, userid, setOpenQueue))} className=" hover:bg-purple-200 mx-10 font-Merriweather text-2xl rounded-lg ring-1 ring-slate-500 py-25 px-50 h-24 w-60  bg-sky-200">
                         Multi Player
@@ -63,11 +70,25 @@ function startSinglePlayer(e, nav: NavigateFunction){
 	nav('/game');
 }
 
+async function getUserId(): Promise<string>
+{
+    var userid;
+    await Fetch ('api/profile/get/userid')
+        .then((response) => response.json())
+        .catch((err) => {
+            return ("None");
+        })
+        .then((data) => {
+           userid = data.userid;
+        })
+    return userid;
+}
+
 function fetchUserId() {
     const [userId, setUserId] = useState<any>(null);
 
     useEffect(() => {
-		Fetch ('http://localhost:3000/profile/get/userid')
+		Fetch ('api/profile/get/userid')
         .then((response) => response.json())
         .then((data) => {
             setUserId(data.userid);
@@ -82,7 +103,6 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, set
     console.log("Creating socket");
     usersocket.disconnect();
     //setOpenQueue(true);
-    console.log("ok allo")
     usersocket = io.connect("http://localhost:3001")
     //usersocket.connect()
     alert("Waiting for other player...")

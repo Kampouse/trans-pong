@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/utils/Guards';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import {
   ChatService,
   PrivateMsgsDto,
@@ -8,16 +8,18 @@ import {
 } from './chat.service';
 import { Request } from 'express';
 import { RequestWithUser } from 'src/dtos/auth.dtos';
+import { AuthService } from 'src/auth/auth.service';
+import { PrivateProfileDto } from 'src/dtos/profile.dtos';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService, private authService: AuthService) {}
 
   @Get('userRooms')
-  @UseGuards(JwtGuard)
-  public async getRoomsFromUser(@Req() req: RequestWithUser) {
-    const user: any = req.user;
-
+  @UseGuards(JwtAuthGuard)
+  public async getRoomsFromUser(@Req() req: Request) {
+    const user: any = req.user
+    // const userDto: PrivateProfileDto = await this.authService.fetchUser(user);
     const rooms: RoomDto[] = this.chatService.getAllRoomsFromUser(user.id);
 
     const roomReturns = new Array<RoomReturnDto>();
@@ -29,7 +31,7 @@ export class ChatController {
   }
 
   @Get('userPMs')
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtAuthGuard)
   public async getPMsFromUser(@Req() req: RequestWithUser) {
     const user: any = req.user;
 
@@ -41,7 +43,7 @@ export class ChatController {
   }
 
   @Get('roomNames')
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtAuthGuard)
   public async GetAllRoomNames() {
     const roomNames: string[] = this.chatService.getAllRoomNames();
 

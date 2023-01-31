@@ -13,18 +13,28 @@ import {
 import { ProfileModule } from 'src/profile/profile.module';
 import { PassportModule } from '@nestjs/passport';
 import { AuthGateway } from './auth.gateway';
+import { jwtConstants } from './constants/constants';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
-  imports: [
-    ProfileModule,
-    PassportModule,
-    JwtModule.register({
-      secret: 'this is a secret',
-      signOptions: { expiresIn: '60s' },
-    }),
-  ],
-  providers: [AuthService, FortyTwoStrategy, AuthGateway],
-  controllers: [AuthController],
-  exports: [AuthService],
+  imports:
+    [
+      ProfileModule,
+      PassportModule,
+      JwtModule.register({
+        secret: jwtConstants.secret,
+        signOptions: { expiresIn: '1d' },
+      })
+    ],
+  providers:
+    [
+    AuthService,
+    JwtStrategy,
+    FortyTwoStrategy,
+    SessionSerializer,
+    AuthGateway
+    ],
+    controllers: [AuthController],
+    exports: [AuthService]
 })
 export class AuthModule {}

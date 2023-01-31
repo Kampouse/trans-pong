@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { AuthService } from 'src/auth/auth.service';
 import { AuthGuard, PassportSerializer } from '@nestjs/passport';
 import { ExecutionContext, Injectable, Inject } from '@nestjs/common';
@@ -20,15 +19,17 @@ export class FortyTwoAuthGuard extends AuthGuard('42') {
     return activate;
   }
 }
-//make an auth guard  from the jwt token
+//make an auth guard  from the jwt token 
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
-  Service = new AuthService(new ProfileService(), new JwtService());
+  Service = new AuthService(new ProfileService, new JwtService)
   async canActivate(context: ExecutionContext): Promise<boolean> {
+
+
     const request = context.switchToHttp().getRequest();
-    const token = request.headers.cookie?.split('=')[1];
+    const token = request.headers.cookie?.split("=")[1]
     try {
-      const status = await this.Service.validate_token(token);
+      let status = await this.Service.validate_token(token)
       return status !== null ? true : false;
     } catch (err) {
       return false;

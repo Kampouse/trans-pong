@@ -16,9 +16,10 @@ RUN npm install
 COPY . .
 
 # Expose port to access server
-EXPOSE 8080
-
-ENTRYPOINT [ "bash", "setup.sh" ]
+EXPOSE 8000
+CMD ["npx", "prisma", "generate"]
+CMD ["npx", "prisma",  "db", "push"]
 
 # Command to run our app
-CMD [ "npm", "run", "start"]
+# CMD [ "npm", "run", "start"]
+CMD [ "npm", "start"]

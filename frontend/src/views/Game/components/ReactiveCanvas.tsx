@@ -46,15 +46,13 @@ const ReactiveCanvas = () => {
     })
   }, [])
 
-	const handleKeyDown = (event: { key: string }) => {
-    console.log('User pressed: ', event.key);
+	const handleKeyDown = event => {
     if(event.key == "ArrowUp" || event.key == "ArrowDown")
       usersocket.emit("updatePlayerPosition", {direction: event.key}); //need to find a way to emit this only once until a keyup event is fired
   };
 
   
-	const handleKeyUp = (event: { key: any }) => {
-    console.log('User released: ', event.key);
+	const handleKeyUp = event => {
     usersocket.emit("stopUpdatePlayerPosition")
   };
 
@@ -122,7 +120,7 @@ const ReactiveCanvas = () => {
       </div>
       <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] h-fit justify-center m-auto pt-8">
         <div className="grid justify-center m-auto">
-          <button className="font-carattere bg-pink-500 text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl w-fit text-lg font-bold py-2 px-4 rounded">
+          <button onClick={((e) => handleGiveUp(e) )} className="font-carattere bg-pink-500 text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-xl w-fit text-lg font-bold py-2 px-4 rounded">
             Give Up
           </button>
         </div>
@@ -139,3 +137,7 @@ const ReactiveCanvas = () => {
 
 export default ReactiveCanvas
 
+function handleGiveUp(e){
+	e.preventDefault();
+	usersocket.emit("giveup")
+}

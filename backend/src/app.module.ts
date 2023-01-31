@@ -20,15 +20,15 @@ import { ProfileModule } from './profile/profile.module';
   //  Module imports
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MulterModule.register({ dest: '../frontend/public' }),
-    ProfileModule,
+    MulterModule.register({ dest: '../../frontend/public' }),
+   // ProfileModule,
     AuthModule,
     ChatModule,
     GameSocketIOModule,
   ],
 
   //  Controllers imports
-  controllers: [AppController],
+  controllers: [AppController, GameSocketIOController],
 
   //  Services imports
   providers: [],

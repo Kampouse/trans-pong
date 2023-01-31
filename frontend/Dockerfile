@@ -13,7 +13,8 @@ COPY . .
 # Expose port to access server
 # EXPOSE 8080
 
-ENTRYPOINT [ "bash", "setup.sh" ]
+# ENTRYPOINT [ "bash", "setup.sh" ]
 
 # Command to run our app
-CMD [ "npm", "run", "start" ]
+# CMD [ "npm", "run", "start" ]
+CMD [ "npm", "start" ]
