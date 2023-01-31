@@ -31,11 +31,9 @@ export class ChatController {
   @Get('userPMs')
   @UseGuards(JwtGuard)
   public async getPMsFromUser(@Req() req: RequestWithUser) {
-    const user: any = req.user;
+    const login: any = this.authService.authentificateSession(req);
 
-    const privateMsgs: PrivateMsgsDto[] = this.chatService.getUserPrivateMsgs(
-      user.id,
-    );
+    const privateMsgs: PrivateMsgsDto[] = this.chatService.getUserPrivateMsgs(login);
 
     return { privateMsgs: privateMsgs || [] };
   }

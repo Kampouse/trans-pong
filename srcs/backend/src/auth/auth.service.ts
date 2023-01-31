@@ -14,7 +14,9 @@ export type tokenDatas = { username: string, fa2: boolean, iat: number, exp: num
 @Injectable()
 export class AuthService {
     private userSessions: Map<string, Socket[]>;
-    constructor(  private usersService: ProfileService, private jwtService: JwtService) { }
+    constructor(  private usersService: ProfileService, private jwtService: JwtService) {
+        this.userSessions = new Map();
+    }
 
 
 
@@ -314,29 +316,9 @@ export class AuthService {
         return output
     }
     public async getUserFromSocket(socket: Socket): Promise<PrivateProfileDto | null> {
-        const cookies = socket.handshake.headers.cookie;
-    
-        if (!cookies) {
-          return null;
-        }
-        console.log(cookies);
-        const token = parse(cookies)['jwt'];
-        if (!token) {
-          return null;
-        }
-    
-        try {
-          const sub = this.jwtService.verify(token);
-          if (!sub) {
-            return null;
-          }
-    
-          const userDto: PrivateProfileDto | null = await this.usersService.getProfileEdit(sub.login42);
-    
-          return userDto;
-        } catch {
-          return null;
-        }
+        let login = await this.authentificateSession(socket.handshake);
+        const userDto: PrivateProfileDto | null = await this.usersService.getProfileEdit(login);
+        return userDto;
       }
     
       getSocketsFromUser(userId: string): Socket[] {
