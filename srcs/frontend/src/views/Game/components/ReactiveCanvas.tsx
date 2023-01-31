@@ -1,6 +1,5 @@
-import { defaultMaxListeners } from 'events'
 import React, { useEffect, useRef, useState } from 'react'
-import { init, draw, drawMultiGameover } from './ReactiveDraw'
+import { draw, drawMultiGameover } from './ReactiveDraw'
 import {usersocket} from '../Matchmaking'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
 import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
@@ -46,21 +45,23 @@ const ReactiveCanvas = () => {
     })
   }, [])
 
-	addEventListener("keydown", (event) => {
-    // console.log('User pressed: ', event.key);
-		if(event.key == "ArrowUp" || event.key == "ArrowDown") {
-			event.preventDefault();
-      usersocket.emit("updatePlayerPosition", {direction: event.key});
-		}
-	});
+	const handleKeyDown = event => {
+    if(event.key == "ArrowUp" || event.key == "ArrowDown")
+      usersocket.emit("updatePlayerPosition", {direction: event.key}); //need to find a way to emit this only once until a keyup event is fired
+  };
 
-	addEventListener("keyup", (event) => {
-    // console.log('User released: ', event.key);
-		usersocket.emit("stopUpdatePlayerPosition")
-	});
+  
+	const handleKeyUp = event => {
+    usersocket.emit("stopUpdatePlayerPosition")
+  };
 
   return (
-    <div className="mx-auto w-full h-full pt-[50px] overflow-y-scroll scrollbar-hide">
+    <div
+			className="mx-auto w-full h-full pt-[50px]"
+			tabIndex={0}
+			onKeyDownCapture={handleKeyDown}
+			onKeyUpCapture={handleKeyUp}
+		>
       <div
         id="container"
         ref={div}
@@ -72,6 +73,7 @@ const ReactiveCanvas = () => {
           style={{ border: '1px solid #000' }}
           className="m-auto"
         />
+        {/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}
       </div>
       <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] pt-24 grid xl:grid-cols-6 lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-6 grid-cols-4 items-center justify-center mx-auto">
         {gameDataGen && (
@@ -80,7 +82,7 @@ const ReactiveCanvas = () => {
 		          {gameDataGen.leftPlayer.playerUser}
 		        </p>
 		        <div
-		          className="rounded-full bg-white grid justify-center m-auto
+		          className="rounded-full grid justify-center m-auto
 														xl:h-[125px] xl:w-[125px]
 														lg:h-[100px] lg:w-[100px]
 														md:h-[75px] md:w-[75px]
@@ -95,7 +97,7 @@ const ReactiveCanvas = () => {
 		          />
 		        </div>
 		        <div
-		          className="rounded-full bg-white grid justify-center m-auto
+		          className="rounded-full grid justify-center m-auto
 														xl:h-[125px] xl:w-[125px]
 														lg:h-[100px] lg:w-[100px]
 														md:h-[75px] md:w-[75px]

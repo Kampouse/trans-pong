@@ -1,9 +1,5 @@
 import React from 'react'
 import {UpdateGameDto} from '../../../../../backend/src/dtos/gameUpdate.dtos'
-import { GeneralSnackbar } from 'views/Snackbar/Snackbar'
-import { useBallColor, useBackgroundColor, usePaddleColor } from 'Router/Router'
-import { useAtom } from 'jotai'
-import { usersocket } from '../Matchmaking'
 
 interface DrawProps {
   canvas: React.MutableRefObject<HTMLCanvasElement | null>
@@ -152,14 +148,7 @@ export function singlePlayerDraw(props: DrawProps, colors: ColorProps){
 
 export function draw(props: DrawProps, gameData: UpdateGameDto, colors: ColorProps) {
 	const { canvas } = props
-  var ctx;
-  
- try {
-	ctx = canvas!.current!.getContext('2d');
- }
- catch {
-	usersocket.disconnect();
- }
+  var ctx = canvas!.current!.getContext('2d')
 
   if (!ctx) {
     return
