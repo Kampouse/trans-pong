@@ -27,10 +27,15 @@ export class ChatAPI
     public static async getRoomsFromUser(): Promise<{ rooms: RoomDto[] }> {
 
         const resp = await fetch(
-          `http://localhost:3000/chat/userRooms`,
+          `http://localhost:8000/chat/userRooms`,
           {
             credentials: "include",
             method: "GET",
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': 'true',
+            }
           }
         );
     
@@ -40,10 +45,15 @@ export class ChatAPI
       public static async getPMsFromUser(): Promise<{ privateMsgs: PrivateMsgsDto[] }> {
     
         const resp = await fetch(
-          `http://localost:3000/chat/userPMs`,
+          `http://localost:8000/chat/userPMs`,
           {
             credentials: "include",
             method: "GET",
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': 'true',
+            }
           }
         );
     
@@ -53,10 +63,15 @@ export class ChatAPI
       public static async getAllRoomNames(): Promise<{ rooms: string[] }> {
     
         const resp = await fetch(
-          `http://localhost:3000/chat/roomNames`,
+          `http://localhost:8000/chat/roomNames`,
           {
             credentials: "include",
             method: "GET",
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': 'true',
+            }
           }
         );
     

@@ -5,16 +5,26 @@ export class UserAPI
     public static async isLoggedIn(): Promise<{loggedIn: boolean}> {
         const resp = await fetch(`http://localhost:8000/auth/isLogged`, {
           credentials: "include",
-          method: "GET"
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          }
         });
         
       return (resp.ok? resp.json() : {loggedIn: false});
     }
 
     public static async getUserProfile(): Promise<PrivateProfileDto | null> {
-        const resp = await fetch(`http://localhost:8000/profile/`, {
+        const resp = await fetch(`http://localhost:8000/auth/who`, {
             credentials: "include",
-            method: "GET"
+            method: "GET",
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': 'true',
+            }
         });
           
         return (resp.ok? resp.json() : null);
@@ -24,6 +34,11 @@ export class UserAPI
           credentials: "include",
           method: "POST",
           body: blockedId,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          }
         });
     
         return (resp.ok? resp.json() : null);
@@ -34,6 +49,11 @@ export class UserAPI
           credentials: "include",
           method: "DELETE",
           body: blockedId,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          }
         });
     
         return (resp.ok? resp.json() : null);

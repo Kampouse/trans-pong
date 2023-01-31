@@ -324,10 +324,10 @@ export class ProfileController {
         const login42 = await this.profileService.authentificate(request);
 
         if (login42 == undefined || token == undefined) {
-            return { statCode: 302, url: "http://localhost:5173/Profile" }
+            return { statCode: 302, url: "http://localhost:3000/Profile" }
         }
         const status = this.authService.removeAuth(login42, token.token)
-        return { statCode: 302, url: "http://localhost:5173/Profile" }
+        return { statCode: 302, url: "http://localhost:3000/Profile" }
     }
 
     //  Get currently logged in user ID

@@ -51,7 +51,7 @@ const useFetch = (username) =>
 	const [profileReq, setProfileReq] = useState<any>(null);
 	
 	useEffect(() => {
-		Fetch('http://localhost:3000/profile' + ((username) ? "/" + username : ""))
+		Fetch('http://localhost:8000/profile' + ((username) ? "/" + username : ""))
       .then((response) => response.json())
 			.then((data) => {
 				setProfileReq(data);
@@ -162,14 +162,14 @@ function FriendList({data, userClicked, setOpenUserOptions, username}: {data: an
 //  Accept request GET request
 async function acceptRequest(username: string)
 {
-    await Fetch('http://localhost:3000/profile/add/' + username)
+    await Fetch('http://localhost:8000/profile/add/' + username)
     .then(function(){})
     .catch(function() {console.log("error on accept friend request fetch");});
 }
 
 async function denyRequest(username: string)
 {
-    await Fetch('http://localhost:3000/profile/deny/' + username)
+    await Fetch('http://localhost:8000/profile/deny/' + username)
     .then(function(){})
     .catch(function() {console.log("error on deny request fetch");});
 }
@@ -239,7 +239,7 @@ function FriendRequests({userClicked, setOpenUserOptions, username}: {userClicke
 
 async function unBlockUser(username: string)
 {
-    await Fetch('http://localhost:3000/profile/unblock/' + username)
+    await Fetch('http://localhost:8000/profile/unblock/' + username)
     .then(function(){})
     .catch(function() {console.log("error on unblocking " + username);});
 }
@@ -349,7 +349,7 @@ async function updateUsername(newUsername: any, data: any, setOpenSnackbar: any,
 {
     var username = {username: newUsername.value}
 
-    Fetch("http://localhost:3000/profile/update/username", "POST", JSON.stringify(username))
+    Fetch("http://localhost:8000/profile/update/username", "POST", JSON.stringify(username))
         .then(response => response.json())
         .then(res => {
             if (res.status == "200")
@@ -373,7 +373,7 @@ async function updateUsername(newUsername: any, data: any, setOpenSnackbar: any,
 
 async function getPhoto(data: any)
 {
-    await Fetch("http://localhost:3000/profile/get/photo")
+    await Fetch("http://localhost:8000/profile/get/photo")
         .then(response => response.json())
         .then(res =>
             {
@@ -387,7 +387,7 @@ async function getPhoto(data: any)
 
 export async function getAuth(data: any, setOpenSnackbar, snackbarMsg, snackbarSeverity)
 {
-    await Fetch("http://localhost:3000/profile/get/auth")
+    await Fetch("http://localhost:8000/profile/get/auth")
         .then(response => response.json())
         .then(res => {
             if (res.message == "active")
@@ -458,7 +458,7 @@ export function EditProfile({open, onClose, data, setOpenSnackbar, snackbarMsg, 
                     </p>
                     <div>
                         <iframe name="dummyframe" id="dummyframe" className='w-0 h-0'></iframe>
-                        <form action='http://localhost:3000/profile/upload/photo' method='POST' encType='multipart/form-data' target='dummyframe'>
+                        <form action='http://localhost:8000/profile/upload/photo' method='POST' encType='multipart/form-data' target='dummyframe'>
                             <input accept="image/*" id="file" type="file" name='file' className=' justify-center'></input>
                             <button onClick={ async () =>
                                 {

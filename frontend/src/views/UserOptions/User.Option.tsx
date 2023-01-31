@@ -10,7 +10,7 @@ const useFetch = (username) =>
 	const [relation, setRelation] = useState<any>(null);
 	
 	useEffect(() => {
-		Fetch('http://localhost:3000/profile/relation/' + username)
+		Fetch('http://localhost:8000/profile/relation/' + username)
       .then((response) => response.json())
 			.then((data) => {
 				setRelation(data);
@@ -25,7 +25,7 @@ const useFetch = (username) =>
 export async function getRelation(username)
 {
 	const [relation, setRelation] = useState<any>(null);
-	await Fetch('http://localhost:3000/profile/relation/' + username)
+	await Fetch('http://localhost:8000/profile/relation/' + username)
 		.then((response) => response.json())
 		.then((data) => {
 			setRelation(data);
@@ -52,28 +52,28 @@ export function UserOption({open, onClose, userClicked, setValue})
     //  Get request for adding a friend
     async function addFriend(username: string)
     {
-        await Fetch('http://localhost:3000/profile/add/' + username)
+        await Fetch('http://localhost:8000/profile/add/' + username)
         .then(function(){})
         .catch(function() {console.log("error on adding " + username);});
     }
 
     async function removeFriend(username: string)
     {
-        await Fetch('http://localhost:3000/profile/remove/' + username)
+        await Fetch('http://localhost:8000/profile/remove/' + username)
         .then(function(){})
         .catch(function() {console.log("error on removing friend " + username);});
     }
 
     async function blockUser(username: string)
     {
-        await Fetch('http://localhost:3000/profile/block/' + username)
+        await Fetch('http://localhost:8000/profile/block/' + username)
         .then(function(){})
         .catch(function() {console.log("error on blocking " + username);});
     }
 
     async function unBlockUser(username: string)
     {
-        await Fetch('http://localhost:3000/profile/unblock/' + username)
+        await Fetch('http://localhost:8000/profile/unblock/' + username)
         .then(function(){})
         .catch(function() {console.log("error on unblocking " + username);});
     }

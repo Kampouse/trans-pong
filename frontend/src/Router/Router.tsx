@@ -127,7 +127,7 @@ export default function App()
 
 //  Here we check with the backend if the user is authentificated
   const SecondAuthStatus = async () => {
-    const secondAuth = await Fetch('http://localhost:3000/profile/get/auth')
+    const secondAuth = await Fetch('http://localhost:8000/profile/get/auth')
     if (secondAuth.status === 200) {
       const isAuth2 = await secondAuth.json()
       if (isAuth2.message && isAuth2.message === 'active') {
@@ -143,7 +143,7 @@ export default function App()
 const check = async () =>
 {
   try {
-    const auth = await Fetch('http://localhost:3000/auth/who')
+    const auth = await Fetch('http://localhost:8000/auth/who')
     if (auth.status === 200) {
       setLogin('login')
     }

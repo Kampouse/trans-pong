@@ -33,8 +33,22 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.enableCors({
-    origin: true,
-    credentials: true,
+    //origin: 'http://localhost:5173',
+    origin: function (origin, callback) {
+      callback(null, true)
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Access-Control-Allow-Origin',
+      'Access-Control-Allow-Headers',
+      'Access-Control-Allow-Methods',
+      'Access-Control-Allow-Credentials',
+      'Origin, X-Requested-With, Content-Type, Accept'
+    ],
+    // origin: true,
+    credentials: true
   });
 
   await app.listen(port, () => {

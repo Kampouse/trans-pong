@@ -16,7 +16,7 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
   const logout = () => 
   {
     console.log('logout')
-     Fetch ('http://localhost:3000/auth/42logout')
+     Fetch ('http://localhost:8000/auth/42logout')
       setLog('logout')
       navigate('/')
      

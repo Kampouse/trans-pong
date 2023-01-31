@@ -9,7 +9,7 @@ export function GoogleAuth({open, onClose})
   const [token, setToken] = useState<string>("");
 
   useEffect(() => {
-    Fetch('http://localhost:3000/profile/create/googleAuth')
+    Fetch('http://localhost:8000/profile/create/googleAuth')
       .then((response) => response.json())
       .then((data) => {
         setQrCode(data.QRcode);

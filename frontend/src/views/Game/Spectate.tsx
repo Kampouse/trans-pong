@@ -7,7 +7,7 @@ import { Fetch } from 'utils';
 
 async function getActiveGames(data: ActiveGameDto, setData)
 {
-    await Fetch("http://localhost:3000/profile/active/game")
+    await Fetch("http://localhost:8000/profile/active/game")
         .then(response => response.json())
         .then(res => {
             if (res.status == '200')

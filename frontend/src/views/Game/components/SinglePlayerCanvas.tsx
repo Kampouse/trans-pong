@@ -19,7 +19,7 @@ const useFetch = () =>
 	const [gameReq, setGameReq] = useState<any>(null);
 	
 	useEffect(() => {
-		Fetch("http://localhost:3000/profile/play/solo")
+		Fetch("http://localhost:8000/profile/play/solo")
       .then((response) => response.json())
 			.then((data) => {
 				setGameReq(data);

@@ -15,12 +15,16 @@ import { GameSocketIOModule } from './game/game.module';
 import { ChatModule } from './chat/chat.module';
 import { ChatService } from './chat/chat.service';
 import { ProfileModule } from './profile/profile.module';
+import { getEnvPath } from './common/helper/env.helper';
+
+//Get environment file 
+const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
   //  Module imports
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    MulterModule.register({ dest: '../../frontend/public' }),
+    ConfigModule.forRoot({ envFilePath,isGlobal: true }),
+    MulterModule.register({ dest: '../../frontend/public/' }),
    // ProfileModule,
     AuthModule,
     ChatModule,

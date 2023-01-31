@@ -76,13 +76,13 @@ export class AuthController {
     if (token instanceof Error) {
       const ErrorLogin = {
         statCode: 302,
-        url: "http://localhost:5173/ErrorLogin"
+        url: "http://localhost:3000/ErrorLogin"
       }
       console.log("Error occured during authentifcation", token)
       return ErrorLogin
     }
     const tfa = await this.authService.should2fa(request.user.username)
-    const path = tfa.should2fa ? "http://localhost:5173/2fa" : "http://localhost:5173/Profile"
+    const path = tfa.should2fa ? "http://localhost:3000/2fa" : "http://localhost:3000/Profile"
     const NewResponse = {
       statCode: 302,
       url: path

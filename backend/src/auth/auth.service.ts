@@ -86,7 +86,7 @@ export class AuthService {
             response:
             {
                 statCode: 302,
-                url: "http://localhost:5173/"
+                url: "http://localhost:3000/"
             },
             user_validity:
             {
