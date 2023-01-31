@@ -82,7 +82,7 @@ export function UserOption({open, onClose, userClicked, setValue})
 			<>
 				{relation && (
 					<Dialog onClose={onClose} open={open}>
-							<div className='w-[450px] h-[450px] bg-sky-100 pt-1'>
+							<div className='w-[350px] h-[380px] bg-sky-100 pt-1'>
 									<h1 className='text-4xl font-Raleway w-full text-center py-5'>
 											{username}
 									</h1>
@@ -114,14 +114,6 @@ export function UserOption({open, onClose, userClicked, setValue})
 													Unblock user
 											</button>
 										}
-									</div>
-									<div className='py-3'>
-											<button name='inviteChatButton' className={buttonCss} onClick={() =>
-													{
-															console.log("Insert event invite " + username + " to chat")
-													}}>
-													Invite to chat
-											</button>
 									</div>
 									<div className='py-3'>
 											<button name='invitePlayButton' className={buttonCss} onClick={() =>{onClose()}}>
