@@ -1060,8 +1060,20 @@ export class ProfileService {
     return userDto;
   }
 
-  public async setStatus(id: string, status: userStatus): Promise<PrivateProfileDto> {
-    const user = await prisma.user.findUnique({ where: { login42: id } });
+  public async setStatus(id: string, status: userStatus): Promise<PrivateProfileDto>
+  {
+	var user;
+
+	try
+	{
+	    user = await prisma.user.findUnique({
+			where: {
+				login42: id 
+			} 
+		});
+	}
+	catch{}
+
     if (!user) {
       return null;
     }
