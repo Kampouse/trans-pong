@@ -8,17 +8,17 @@ import {
 } from './chat.service';
 import { Request } from 'express';
 import { RequestWithUser } from 'src/dtos/auth.dtos';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService, private authService: AuthService) {}
 
   @Get('userRooms')
   @UseGuards(JwtGuard)
   public async getRoomsFromUser(@Req() req: RequestWithUser) {
-    const user: any = req.user;
-
-    const rooms: RoomDto[] = this.chatService.getAllRoomsFromUser(user.id);
+    const login: any = this.authService.authentificateSession(req);
+    const rooms: RoomDto[] = this.chatService.getAllRoomsFromUser(login);
 
     const roomReturns = new Array<RoomReturnDto>();
     rooms.forEach((room) =>

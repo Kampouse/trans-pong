@@ -1,4 +1,4 @@
-import { UserDto } from "utils/user.dto";
+import { PrivateProfileDto } from "utils/user.dto";
 
 export interface MessageDto
 {
@@ -9,7 +9,7 @@ export interface MessageDto
 
 export interface PrivateMsgsDto 
 {
-    userDto : UserDto;
+    userDto : PrivateProfileDto;
     messages : Array<MessageDto>;
 }
 
@@ -18,7 +18,7 @@ export interface RoomDto
     roomName: string;
     owner:    string;
     admins:   Array<string>;
-    users:    Array<UserDto>;
+    users:    Array<PrivateProfileDto>;
     messages: Array<MessageDto>;
 }
 

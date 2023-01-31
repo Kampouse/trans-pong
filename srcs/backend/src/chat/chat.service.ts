@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
-import { UserDto } from 'src/dtos/user.dtos';
+import { PrivateProfileDto } from 'src/dtos/profile.dtos';
 import { Socket } from 'socket.io';
 import { hashPwd } from 'src/helper/bcrypt';
 import { ProfileService } from 'src/profile/profile.service';
@@ -13,7 +13,7 @@ export class MessageDto {
 }
 
 export class PrivateMsgsDto {
-  userDto: UserDto;
+  userDto: PrivateProfileDto;
   messages: Array<MessageDto>;
 }
 
@@ -21,7 +21,7 @@ export class RoomDto {
   roomName: string;
   owner: string;
   admins: Array<string>;
-  users: Array<UserDto>;
+  users: Array<PrivateProfileDto>;
   messages: Array<MessageDto>;
   password: string;
   mutedMap: Map<string, string>;
@@ -32,7 +32,7 @@ export class RoomReturnDto {
   roomName: string;
   owner: string;
   admins: Array<string>;
-  users: Array<UserDto>;
+  users: Array<PrivateProfileDto>;
   messages: Array<MessageDto>;
 }
 
@@ -59,13 +59,13 @@ export class ChatService {
   async createRoom(
     roomName: string,
     password: string,
-    userDto: UserDto,
+    userDto: PrivateProfileDto,
   ): Promise<RoomDto> {
     const roomDto = new RoomDto();
 
     roomDto.roomName = roomName;
-    roomDto.owner = userDto.userID;
-    roomDto.admins = [userDto.userID];
+    roomDto.owner = userDto.username;
+    roomDto.admins = [userDto.username];
     roomDto.users = [];
     roomDto.messages = [];
     if (password && password !== '') {
@@ -83,8 +83,8 @@ export class ChatService {
 
   /*********************** JOIN ROOM  ************************/
 
-  addToRoom(userDto: UserDto, room: RoomDto) {
-    if (room.users.find(({ userID }) => userID === userDto.userID)) {
+  addToRoom(userDto: PrivateProfileDto, room: RoomDto) {
+    if (room.users.find(({ username }) => username === userDto.username)) {
       return;
     }
 
@@ -92,17 +92,17 @@ export class ChatService {
     this.RoomList.set(room.roomName.toUpperCase(), room);
 
     const sockets: Socket[] = this.authService.getSocketsFromUser(
-      userDto.userID,
+      userDto.username,
     );
     sockets.forEach((socket) => socket.join(room.roomName));
   }
 
   /*********************** SEND MESSAGE ROOM && PRIVATE MESSAGE ************************/
 
-  addNewRoomMessage(room: RoomDto, user: UserDto, message: string): MessageDto {
+  addNewRoomMessage(room: RoomDto, user: PrivateProfileDto, message: string): MessageDto {
     const messageDto: MessageDto = new MessageDto();
     messageDto.message = message;
-    messageDto.userId = user.userID;
+    messageDto.userId = user.username;
     messageDto.userName = user.username;
 
     room.messages.push(messageDto);
@@ -113,7 +113,7 @@ export class ChatService {
   /*********************** LEAVE ROOM  ************************/
 
   leaveRoom(userId: string, room: RoomDto) {
-    const userIndex = room.users.findIndex(({ userID }) => userID === userId);
+    const userIndex = room.users.findIndex(({ username }) => username === userId);
 
     if (userIndex > -1) {
       room.users.splice(userIndex, 1);
@@ -185,15 +185,15 @@ export class ChatService {
     this.RoomList.set(roomDto.roomName.toUpperCase(), roomDto);
   }
 
-  addToPmList(sender: UserDto, receiver: UserDto) {
-    let allSenderMsgs = this.PrivateMsgList.get(sender.userID);
-    let allReceiverMsgs = this.PrivateMsgList.get(receiver.userID);
+  addToPmList(sender: PrivateProfileDto, receiver: PrivateProfileDto) {
+    let allSenderMsgs = this.PrivateMsgList.get(sender.username);
+    let allReceiverMsgs = this.PrivateMsgList.get(receiver.username);
 
     if (!allSenderMsgs) {
       allSenderMsgs = [{ userDto: receiver, messages: [] }];
     } else {
       const userMessagesIdx = allSenderMsgs.findIndex(
-        ({ userDto }) => userDto.userID === receiver.userID,
+        ({ userDto }) => userDto.username === receiver.username,
       );
 
       if (userMessagesIdx < 0) {
@@ -205,7 +205,7 @@ export class ChatService {
       allReceiverMsgs = [{ userDto: sender, messages: [] }];
     } else {
       const userMessagesIdx = allReceiverMsgs.findIndex(
-        ({ userDto }) => userDto.userID === sender.userID,
+        ({ userDto }) => userDto.username === sender.username,
       );
 
       if (userMessagesIdx < 0) {
@@ -213,32 +213,32 @@ export class ChatService {
       }
     }
 
-    this.PrivateMsgList.set(sender.userID, allSenderMsgs);
-    this.PrivateMsgList.set(receiver.userID, allReceiverMsgs);
+    this.PrivateMsgList.set(sender.username, allSenderMsgs);
+    this.PrivateMsgList.set(receiver.username, allReceiverMsgs);
   }
 
   addPrivateMessage(
-    sender: UserDto,
-    receiver: UserDto,
+    sender: PrivateProfileDto,
+    receiver: PrivateProfileDto,
     message: string,
   ): MessageDto {
-    const allSenderMsgs = this.PrivateMsgList.get(sender.userID);
-    const allReceiverMsgs = this.PrivateMsgList.get(receiver.userID);
+    const allSenderMsgs = this.PrivateMsgList.get(sender.username);
+    const allReceiverMsgs = this.PrivateMsgList.get(receiver.username);
 
     const messageDto: MessageDto = new MessageDto();
     messageDto.message = message;
-    messageDto.userId = sender.userID;
+    messageDto.userId = sender.username;
     messageDto.userName = sender.username;
 
     allSenderMsgs
-      .find(({ userDto }) => userDto.userID === receiver.userID)
+      .find(({ userDto }) => userDto.username === receiver.username)
       .messages.push(messageDto);
     allReceiverMsgs
-      .find(({ userDto }) => userDto.userID === sender.userID)
+      .find(({ userDto }) => userDto.username === sender.username)
       .messages.push(messageDto);
 
-    this.PrivateMsgList.set(sender.userID, allSenderMsgs);
-    this.PrivateMsgList.set(receiver.userID, allReceiverMsgs);
+    this.PrivateMsgList.set(sender.username, allSenderMsgs);
+    this.PrivateMsgList.set(receiver.username, allReceiverMsgs);
     return messageDto;
   }
 
@@ -251,7 +251,7 @@ export class ChatService {
   getAllRoomsFromUser(userId: string): RoomDto[] {
     const userRooms = new Array<RoomDto>();
     this.RoomList.forEach((value) => {
-      value.users.find(({ userID }) => userID === userId) &&
+      value.users.find(({ username }) => username === userId) &&
         userRooms.push(value);
     });
     return userRooms;
@@ -274,8 +274,8 @@ export class ChatService {
     return this.PrivateMsgList.get(userId);
   }
 
-  async getUserFromSocket(socket: Socket): Promise<UserDto> {
-    const userDto: UserDto = await this.authService.getUserFromSocket(socket);
+  async getUserFromSocket(socket: Socket): Promise<PrivateProfileDto> {
+    const userDto: PrivateProfileDto = await this.authService.getUserFromSocket(socket);
     return userDto;
   }
 
@@ -325,18 +325,18 @@ export class ChatService {
     return roomReturnDto;
   }
 
-  async getUserFromId(id: string): Promise<UserDto> {
+  async getUserFromId(id: string): Promise<PrivateProfileDto> {
     return await this.userService.findOneById(id);
   }
 
   async addSocketToRooms(socket: Socket) {
-    const userDto: UserDto = await this.authService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.authService.getUserFromSocket(socket);
     if (!userDto) {
       return;
     }
 
     this.RoomList.forEach((value) => {
-      value.users.find(({ userID }) => userID === userDto.userID) &&
+      value.users.find(({ username }) => username === userDto.username) &&
         socket.join(value.roomName);
     });
   }

@@ -57,6 +57,15 @@ model Block{
     @@unique([blocker, blocked])
 }
 
+model Room{
+    RoomID             String                           @id@default(cuid())
+    RoomName           String
+    RoomCreatorLogin   String
+    Password           String
+    createdAt          DateTime
+    updatedAt          DateTime
+}
+
 model Channel{
     channelID           String      @id @default(cuid())
     channelNumber       Int         @unique @default(autoincrement())

@@ -81,7 +81,36 @@ export class StatisticsDto{
         public leftWinRatio:        number,
     ){}
 }
-
+export class MessageDto {
+    userId: string;
+    userName: string;
+    message: string;
+  }
+  
+  export class PrivateMsgsDto {
+    userDto: PrivateMsgsDto;
+    messages: Array<MessageDto>;
+  }
+  
+  export class RoomDto {
+    roomName: string;
+    owner: string;
+    admins: Array<string>;
+    users: Array<PrivateMsgsDto>;
+    messages: Array<MessageDto>;
+    password: string;
+    mutedMap: Map<string, string>;
+    banMap: Map<string, string>;
+  }
+  
+  export class RoomReturnDto {
+    roomName: string;
+    owner: string;
+    admins: Array<string>;
+    users: Array<PrivateMsgsDto>;
+    messages: Array<MessageDto>;
+  }
+  
 export class PrivateProfileDto {
     constructor(
         public error: boolean,
@@ -94,7 +123,8 @@ export class PrivateProfileDto {
         public stats: StatisticsDto,
         public authenticator: boolean,
         public blockList: BlockDto[],
-        public requestFrom: string){}
+        public requestFrom: string,
+        ){}
 }
 
 export class PublicProfileDto {

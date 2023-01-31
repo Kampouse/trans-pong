@@ -1,11 +1,11 @@
 import { Button, ListItem, ListItemAvatar, ListItemText } from "@mui/material"
-import { UserDto } from "utils/user.dto"
+import { PrivateProfileDto } from "utils/user.dto"
 import { AvatarNoStatus } from "./AvatarNoStatus"
 
 
 interface UserChatOpenButtonProps {
-    displayedUser: UserDto
-    handleOpenContact: (event: React.MouseEvent<HTMLElement>, userDto: UserDto) => void
+    displayedUser: PrivateProfileDto
+    handleOpenContact: (event: React.MouseEvent<HTMLElement>, userDto: PrivateProfileDto) => void
     displayStatus: boolean
   }
 
@@ -26,7 +26,7 @@ export const UserChatOpenButton = ({
         onClick={(e : any) => {handleOpenContact(e, displayedUser)}}
       >
         
-        <ListItem key={displayedUser.userID}>
+        <ListItem key={displayedUser.username}>
             <ListItemAvatar >
                 <AvatarNoStatus 
                   user={displayedUser}
