@@ -166,7 +166,12 @@ export class GameRoom {
                             userStatus: "online"
                         }
                     });
-                    var winner = this.gameUpdateObject.leftPlayer.playerScore > this.gameUpdateObject.rightPlayer.playerScore ? this.gameUpdateObject.leftPlayer.playerUser : this.gameUpdateObject.rightPlayer.playerUser;
+                    var winner = "No Winner"
+                    if (this.player1.isSocketDisconnected() == true)
+                        winner = this.gameUpdateObject.rightPlayer.playerUser
+                    else
+                        winner = this.gameUpdateObject.rightPlayer.playerUser
+
                     await prisma.game.update({
                         where: { gameRoomID: this.getRoomName() },
                         data: {
