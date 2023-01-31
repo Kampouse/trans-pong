@@ -31,6 +31,11 @@ export class ChatAPI
           {
             credentials: "include",
             method: "GET",
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': 'true',
+            }
           }
         );
     
@@ -44,6 +49,11 @@ export class ChatAPI
           {
             credentials: "include",
             method: "GET",
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': 'true',
+            }
           }
         );
     
@@ -57,6 +67,11 @@ export class ChatAPI
           {
             credentials: "include",
             method: "GET",
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': 'true',
+            }
           }
         );
     
