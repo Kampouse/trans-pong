@@ -66,29 +66,26 @@ const SinglePlayerCanvas = () => {
 		return () => clearInterval(interval)    
   }, [])
 
-	const handleKeyDown = event => {
-		event.preventDefault();
-		if (event.key === 'w' || event.key === 'ArrowUp')
+	addEventListener("keydown", (event) => {
+		if (event.key === 'ArrowUp' || event.key === 'ArrowDown')
+			event.preventDefault();
+		if (event.key === 'ArrowUp')
 			keyActions.up = true;
-		if (event.key === 's' || event.key === 'ArrowDown')
+		if (event.key === 'ArrowDown')
 			keyActions.down = true;
-  };
+    // console.log('User pressed: ', event.key);
+	});
 
-	const handleKeyUp = event => {
-		event.preventDefault();
-		if (event.key === 'w' || event.key === 'ArrowUp')
+	addEventListener("keyup", (event) => {
+		if (event.key === 'ArrowUp')
 			keyActions.up = false;
-		if (event.key === 's' || event.key === 'ArrowDown')
+		if (event.key === 'ArrowDown')
 			keyActions.down = false;
-  };
+    // console.log('User released: ', event.key);
+	});
 
   return (
-    <div
-			className="mx-auto w-full h-full pt-[50px]"
-			tabIndex={0}
-			onKeyDownCapture={handleKeyDown}
-			onKeyUpCapture={handleKeyUp}
-		>
+    <div className="mx-auto w-full h-full pt-[50px] overflow-y-scroll scrollbar-hide">
       <div
         id="container"
         ref={div}
@@ -100,9 +97,8 @@ const SinglePlayerCanvas = () => {
           style={{ border: '1px solid #000' }}
           className="m-auto"
         />
-        {/* { countdown && <div id="overlay" className="text-6xl text-red-400"><h1>Ready?</h1><CountdownTimer seconds={3}/></div>} */}
       </div>
-      <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] pt-24 grid xl:grid-cols-6 lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-6 grid-cols-4 items-center justify-center mx-auto">
+      <div className="xl:w-[1200px] lg:w-[900px] md:w-[600px] sm:w-[600px] w-[300px] pt-24 pb-10 grid xl:grid-cols-6 lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-6 grid-cols-4 items-center justify-center mx-auto">
         {data &&
 					<p className="text-white xl:text-4xl lg:text-3xl md:text-2xl sm:text-2xl text-xl font-bold mr-[10px] justify-end grid xl:col-span-2 lg:col-span-2 md:col-span-2 sm:col-span-2">
 						{data.login}
