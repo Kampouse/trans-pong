@@ -1,4 +1,4 @@
-import { UserDto } from "utils/user.dto";
+import { PrivateProfileDto } from "utils/user.dto";
 
 export class UserAPI
 {

@@ -72,7 +72,7 @@ interface TabPanelProps {
         if (message !== '' && channelType === ChannelType.privateMessage) {
           const msgs = privateMsgs.at(tabIndex);
           if (msgs) {
-            socket.emit('newPrivateMessage', {userId: msgs.userDto.userID, message: message})
+            socket.emit('newPrivateMessage', {userId: msgs.userDto.username, message: message})
           }
         }
         setSend(false);

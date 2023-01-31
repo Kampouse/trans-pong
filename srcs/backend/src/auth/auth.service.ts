@@ -5,7 +5,7 @@ import { RequestWithUser, passportType, SessionUser } from "src/dtos/auth.dtos";
 import { prisma } from 'src/main'
 import { Socket, Server } from 'socket.io';
 import { parse } from 'cookie';
-import { UserDto } from 'src/dtos/user.dtos';
+import { PrivateProfileDto } from 'src/dtos/profile.dtos';
 import { ProfileService } from 'src/profile/profile.service';
 import { userStatus } from '@prisma/client';
 
@@ -14,7 +14,9 @@ export type tokenDatas = { username: string, fa2: boolean, iat: number, exp: num
 @Injectable()
 export class AuthService {
     private userSessions: Map<string, Socket[]>;
-    constructor(  private usersService: ProfileService, private jwtService: JwtService) { }
+    constructor(  private usersService: ProfileService, private jwtService: JwtService) {
+        this.userSessions = new Map();
+    }
 
 
 
@@ -313,49 +315,27 @@ export class AuthService {
         const output = await this.remove2fa(user, formattedToken);
         return output
     }
-    public async getUserFromSocket(socket: Socket): Promise<UserDto | null> {
-        const cookies = socket.handshake.headers.cookie;
-    
-        if (!cookies) {
-          return null;
-        }
-    
-        const token = parse(cookies)['jwt'];
-        if (!token) {
-          return null;
-        }
-    
-        try {
-          const sub = this.jwtService.verify(token);
-          if (!sub) {
-            return null;
-          }
-    
-          const userDto: UserDto | null = await this.usersService.findOneById(
-            sub.sub,
-          );
-    
-          return userDto;
-        } catch {
-          return null;
-        }
+    public async getUserFromSocket(socket: Socket): Promise<PrivateProfileDto | null> {
+        let login = await this.authentificateSession(socket.handshake);
+        const userDto: PrivateProfileDto | null = await this.usersService.getProfileEdit(login);
+        return userDto;
       }
     
       getSocketsFromUser(userId: string): Socket[] {
         return this.userSessions.get(userId);
       }
     
-      async modifyUserState(userDto: UserDto, u_status: userStatus) {
-        await this.usersService.setStatus(userDto.userID, u_status);
+      async modifyUserState(userDto: PrivateProfileDto, u_status: userStatus) {
+        await this.usersService.setStatus(userDto.username, u_status);
       }
     
       async addToConnection(client: Socket, server: Server) {
-        const userDto: UserDto | null = await this.getUserFromSocket(client);
+        const userDto: PrivateProfileDto | null = await this.getUserFromSocket(client);
     
         if (!userDto) {
           return;
         }
-        let sockets = this.userSessions.get(userDto.userID);
+        let sockets = this.userSessions.get(userDto.username);
     
         if (!sockets || sockets.length === 0) {
           sockets = [];
@@ -363,18 +343,18 @@ export class AuthService {
           server.emit('onUserChange');
         }
         sockets.push(client);
-        this.userSessions.set(userDto.userID, sockets);
-        client.join('user_' + userDto.userID);
+        this.userSessions.set(userDto.username, sockets);
+        client.join('user_' + userDto.username);
       }
     
       async removeFromConnection(client: Socket, server: Server) {
-        const userDto: UserDto | null = await this.getUserFromSocket(client);
+        const userDto: PrivateProfileDto | null = await this.getUserFromSocket(client);
     
         if (!userDto) {
           return;
         }
     
-        const sockets = this.userSessions.get(userDto.userID);
+        const sockets = this.userSessions.get(userDto.username);
         if (!sockets) {
           return;
         }
@@ -388,7 +368,7 @@ export class AuthService {
           server.emit('onUserChange');
         }
     
-        this.userSessions.set(userDto.userID, sockets);
+        this.userSessions.set(userDto.username, sockets);
       }
 
 }

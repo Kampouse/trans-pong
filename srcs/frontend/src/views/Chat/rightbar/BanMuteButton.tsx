@@ -2,7 +2,7 @@ import { MenuItem } from "@mui/material";
 import DangerousIcon from '@mui/icons-material/Dangerous';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import React from "react";
-import { UserDto } from "utils/user.dto";
+import { PrivateProfileDto } from "utils/user.dto";
 import { ChooseSentenceTimePopup } from "./ChooseSentenceTimePopup";
 import { WebsocketContext } from "context/WebSocketContext";
 import { RoomDto } from "api/chat.api";
@@ -14,7 +14,7 @@ enum Sentence {
 }
 
 interface BanMuteButtonProps {
-    user: UserDto,
+    user: PrivateProfileDto,
     room: RoomDto,
     handleClose: any
 }
@@ -44,10 +44,10 @@ export const BanMuteButton = ({
 
     const handleSentence = () => {
         if (sentence === Sentence.ban && time !== -1) {
-            socket.emit('banUser', {roomName: room.roomName, userId: user.userID, time: time})
+            socket.emit('banUser', {roomName: room.roomName, userId: user.username, time: time})
         }
         if (sentence === Sentence.mute && time !== -1) {
-            socket.emit('muteUser', {roomName: room.roomName, userId: user.userID, time: time})
+            socket.emit('muteUser', {roomName: room.roomName, userId: user.username, time: time})
         }
         setOpen(false);
         setSentence(Sentence.none);
