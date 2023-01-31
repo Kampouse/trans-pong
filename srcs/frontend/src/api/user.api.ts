@@ -5,35 +5,55 @@ export class UserAPI
     public static async isLoggedIn(): Promise<{loggedIn: boolean}> {
         const resp = await fetch(`http://localhost:3000/auth/isLogged`, {
           credentials: "include",
-          method: "GET"
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          }
         });
         
       return (resp.ok? resp.json() : {loggedIn: false});
     }
 
-    public static async getUserProfile(): Promise<UserDto | null> {
+    public static async getUserProfile(): Promise<PrivateProfileDto | null> {
         const resp = await fetch(`http://localhost:3000/auth/who`, {
             credentials: "include",
-            method: "GET"
+            method: "GET",
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': 'true',
+            }
         });
           
         return (resp.ok? resp.json() : null);
     }
-    public static async addBlock(blockedId: string): Promise<UserDto | null> {
+    public static async addBlock(blockedId: string): Promise<PrivateProfileDto | null> {
         const resp = await fetch(`http://localhost:3000/users/blocked`, {
           credentials: "include",
           method: "POST",
           body: blockedId,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          }
         });
     
         return (resp.ok? resp.json() : null);
       }
     
-      public static async removeBlock(blockedId: string): Promise<UserDto | null> {
+      public static async removeBlock(blockedId: string): Promise<PrivateProfileDto | null> {
         const resp = await fetch(`http://localhost:3000/users/blocked`, {
           credentials: "include",
           method: "DELETE",
           body: blockedId,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true',
+          }
         });
     
         return (resp.ok? resp.json() : null);
