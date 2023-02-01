@@ -154,6 +154,7 @@ export class GameRoom {
                     this.status = "finished"
                     clearInterval(checkForReconnection)
                     //do things to end game and assign player who didnt disconnect
+                    try{
                     await prisma.user.update({
                         where: { userID: this.getPlayer1Id() },
                         data: {
@@ -166,12 +167,16 @@ export class GameRoom {
                             userStatus: "online"
                         }
                     });
+                    }
+                    catch{
+
+                    }
                     var winner = "No Winner"
                     if (this.player1.isSocketDisconnected() == true)
                         winner = this.gameUpdateObject.rightPlayer.playerUser
                     else
-                        winner = this.gameUpdateObject.rightPlayer.playerUser
-
+                        winner = this.gameUpdateObject.leftPlayer.playerUser
+                    try{
                     await prisma.game.update({
                         where: { gameRoomID: this.getRoomName() },
                         data: {
@@ -181,6 +186,10 @@ export class GameRoom {
                             winner: winner
                         }
                     });
+                    }
+                    catch{
+
+                    }
                     server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //frontend to handle game end
                 }, 3000) //one of our players did not reconnect in 10 seconds, end the game
                 let checkForReconnection = setInterval(() => {
@@ -206,6 +215,7 @@ export class GameRoom {
                 clearInterval(this.handleSocketDisconnect);
                 server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
                 server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //send event to make client sockets leave room as security measure
+                try{
                 await prisma.game.update({
                     where: { gameRoomID: this.getRoomName() },
                     data: {
@@ -227,6 +237,10 @@ export class GameRoom {
                         userStatus: "online"
                     }
                 });
+                }
+                catch{
+                    
+                }
             }
             server.to(this.getRoomName()).emit("gameUpdate", this.gameUpdateObject.updateGame)
         }, (1 / 60) * 1000) //60 fps
