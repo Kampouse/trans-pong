@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game, Relation, BlockDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
@@ -352,7 +353,11 @@ export class ProfileService {
                     }
                 })
                 if (senderUser)
+<<<<<<< HEAD
                     this.insertFriendRequest(senderUser.username, senderUser.imagePath, friendReqs);
+=======
+                    this.insertFriendRequest(senderUser.username, senderUser.imagePath, friendRequests);
+>>>>>>> a17cffbf8a583eb4066414ced60c983599d0cf5e
             }
         }
 
