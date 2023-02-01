@@ -95,7 +95,6 @@ export function singlePlayerDraw(props: DrawProps, colors: ColorProps){
   ) {
     canvasSize.height = canvas.current!.height
     canvasSize.width = canvas.current!.width
-    gameBall.ballRadius = canvasSize.width * 0.01
   }
 
 	const paddleWidth =  Math.floor(canvasSize.width * 0.01)
@@ -162,7 +161,6 @@ export function draw(props: DrawProps, gameData: UpdateGameDto, colors: ColorPro
   ) {
     canvasSize.height = canvas.current!.height
     canvasSize.width = canvas.current!.width
-    gameData.gameBall.ballRadius = canvasSize.width * 0.01
   }
 
 	const paddleWidth =  Math.floor(canvasSize.width * 0.01)
