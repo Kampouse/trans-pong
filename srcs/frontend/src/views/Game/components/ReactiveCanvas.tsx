@@ -57,7 +57,7 @@ const ReactiveCanvas = () => {
 
   return (
     <div
-			className="mx-auto w-full h-full pt-[50px]"
+			className="mx-auto w-full h-full pt-[50px] overflow-y-scroll scrollbar-hide"
 			tabIndex={0}
 			onKeyDownCapture={handleKeyDown}
 			onKeyUpCapture={handleKeyUp}

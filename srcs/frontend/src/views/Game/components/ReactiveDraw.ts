@@ -81,7 +81,11 @@ export function init(props: DrawProps) {
 
 export function singlePlayerDraw(props: DrawProps, colors: ColorProps){
 	const { canvas } = props
-  var ctx = canvas!.current!.getContext('2d')
+	var ctx;
+
+	try {
+		ctx = canvas!.current!.getContext('2d')
+	} catch {}
 
   if (!ctx) {
     return
@@ -147,9 +151,13 @@ export function singlePlayerDraw(props: DrawProps, colors: ColorProps){
 
 export function draw(props: DrawProps, gameData: UpdateGameDto, colors: ColorProps) {
 	const { canvas } = props
-  var ctx = canvas!.current!.getContext('2d')
+	var ctx;
 
-  if (!ctx) {
+  try {
+		ctx = canvas!.current!.getContext('2d')
+	} catch {}
+
+  if (ctx === undefined) {
     return
   }
 

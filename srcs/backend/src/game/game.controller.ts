@@ -55,6 +55,7 @@ export class GameSocketIOController {
             socket.on("ping", async (userid) => {
                 var date = new Date();
                 if (userid != "" && userid != null) {
+                    try {
                     const user = await prisma.user.findUnique({ where: { userID: userid } })
                     if (user && user.userStatus == "playing")
                         await prisma.user.update({
@@ -63,6 +64,7 @@ export class GameSocketIOController {
                                 activeAt: date.toISOString(),
                             }
                         })
+                    
                     else if (user && user.userStatus == "online")
                         await prisma.user.update({
                             where: { userID: userid }, data: {
@@ -77,6 +79,10 @@ export class GameSocketIOController {
                                 activeAt: date.toISOString(),
                             }
                         })
+                    }
+                    catch{
+                        
+                    }
                 }
             })
         })
