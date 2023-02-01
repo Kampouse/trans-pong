@@ -45,7 +45,7 @@ export class ChatAPI
       public static async getPMsFromUser(): Promise<{ privateMsgs: PrivateMsgsDto[] }> {
     
         const resp = await fetch(
-          `http://localost:3000/chat/userPMs`,
+          `http://localhost:3000/chat/userPMs`,
           {
             credentials: "include",
             method: "GET",
@@ -55,9 +55,9 @@ export class ChatAPI
               'Access-Control-Allow-Credentials': 'true',
             }
           }
-        );
+        )
     
-        return resp.ok ? resp.json() : {privateMsgs : []};
+				return resp.ok ? resp.json() : {privateMsgs : []};
       }
     
       public static async getAllRoomNames(): Promise<{ rooms: string[] }> {
