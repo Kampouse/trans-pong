@@ -1,3 +1,4 @@
+import { responsiveFontSizes } from "@mui/material";
 import { PrivateProfileDto } from "utils/user.dto";
 
 export interface MessageDto

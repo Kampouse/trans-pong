@@ -19,8 +19,8 @@ import Login2fa from 'views/Login/Login2fa'
 import '@styles/main.css'
 import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
-import { UserDto } from 'utils/user.dto'
 import { WebsocketContext, WebsocketProvider } from 'context/WebSocketContext'
+import { PrivateProfileDto } from 'utils/user.dto'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -101,7 +101,7 @@ export const myProfile = atom({
   userId: ''
 })
 
-export const UserContext = React.createContext<UserDto | null >(null);
+export const UserContext = React.createContext<PrivateProfileDto | null >(null);
 export const SetUserContext = React.createContext<any>(null);
 
 export default function App()

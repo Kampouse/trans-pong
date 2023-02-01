@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game, Relation, BlockDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
@@ -14,26 +15,22 @@ export class ProfileService {
         return (await this.authService.authentificateSession(data));
     }
 
-    friendList: FriendDto[] = [];
-    friendRequests: FriendRequestDto[] = [];
-    matchHistory: MatchDto[] = [];
-
-    insertFriend(user: string, photo: string, status: string) {
+    insertFriend(user: string, photo: string, status: string, friendlist: any) {
         const newFriend = new FriendDto(user, photo, status);
-        this.friendList.push(newFriend);
+        friendlist.push(newFriend);
     }
 
-    insertFriendRequest(from: string, photo: string) {
+    insertFriendRequest(from: string, photo: string, friendlist: any) {
         const newFriendRequest = new FriendRequestDto(from, photo);
-        this.friendRequests.push(newFriendRequest);
+        friendlist.push(newFriendRequest);
     }
 
     insertMatch(leftPlayer: string, leftPhoto: string, leftScore: number,
         rightPlayer: string, rightPhoto: string, rightScore: number,
-        winner: string, updated: Date) {
+        winner: string, updated: Date, matchHistory: any) {
         const newMatch = new MatchDto(leftPlayer, leftPhoto, leftScore, rightPlayer,
             rightPhoto, rightScore, winner, updated);
-        this.matchHistory.push(newMatch);
+        matchHistory.push(newMatch);
     }
 
     async getUserRelation(client: string, otherUser: string): Promise<Relation>
@@ -146,16 +143,10 @@ export class ProfileService {
         }
         catch{}
 
-        //  Free the array's from previous values
-        this.friendList = [];
-        this.friendRequests = [];
-        this.matchHistory = [];
-
-        //  Free the array's from previous values
-        this.friendList = [];
-        this.friendRequests = [];
-        this.matchHistory = [];
-
+        let friendList: FriendDto[] = [];
+        let friendRequests: FriendRequestDto[] = [];
+        let matchHistory: MatchDto[] = [];
+    
         //  Build the response
 
         //  Get friends of user
@@ -181,7 +172,7 @@ export class ProfileService {
                     }
                 })
                 if (friendUser)
-                    this.insertFriend(friendUser.username, friendUser.imagePath, friendUser.userStatus);
+                    this.insertFriend(friendUser.username, friendUser.imagePath, friendUser.userStatus, friendList);
             }
         }
 
@@ -193,7 +184,7 @@ export class ProfileService {
                     }
                 })
                 if (friendUser)
-                    this.insertFriend(friendUser.username, friendUser.imagePath, friendUser.userStatus);
+                    this.insertFriend(friendUser.username, friendUser.imagePath, friendUser.userStatus, friendList);
             }
         }
 
@@ -230,7 +221,7 @@ export class ProfileService {
                     this.insertMatch(user.username, user.imagePath,
                         matchLeft[i].leftPlayerScore, adversaire.username,
                         adversaire.imagePath, matchLeft[i].rightPlayerScore,
-                        matchLeft[i].winner, matchLeft[i].updatedAt);
+                        matchLeft[i].winner, matchLeft[i].updatedAt, matchHistory);
                 }
             }
         }
@@ -247,7 +238,7 @@ export class ProfileService {
                 if (adversaire) {
                     this.insertMatch(adversaire.username,
                         adversaire.imagePath, matchRight[i].leftPlayerScore, user.username, user.imagePath,
-                        matchRight[i].rightPlayerScore, matchRight[i].winner, matchRight[i].updatedAt);
+                        matchRight[i].rightPlayerScore, matchRight[i].winner, matchRight[i].updatedAt, matchHistory);
                 }
             }
         }
@@ -263,12 +254,12 @@ export class ProfileService {
 
         // Order match in chronologic order
         let x = 0;
-        let longeur = this.matchHistory.length;
+        let longeur = matchHistory.length;
         while (x < longeur) {
-            if (x !== longeur - 1 && this.matchHistory[x].updatedAt < this.matchHistory[x + 1].updatedAt) {
-                let temp = this.matchHistory[x];
-                this.matchHistory[x] = this.matchHistory[x + 1];
-                this.matchHistory[x + 1] = temp;
+            if (x !== longeur - 1 && matchHistory[x].updatedAt < matchHistory[x + 1].updatedAt) {
+                let temp = matchHistory[x];
+                matchHistory[x] = matchHistory[x + 1];
+                matchHistory[x + 1] = temp;
                 x = 0;
             }
             else {
@@ -277,7 +268,7 @@ export class ProfileService {
         }
         // At last, return the ProfileResponse
         return new PublicProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.matchHistory, stats, goingto);
+            friendList, matchHistory, stats, goingto);
     }
 
     async getProfileEdit(login42: string): Promise<PrivateProfileDto> {
@@ -299,9 +290,9 @@ export class ProfileService {
         }
 
         //  Free the array's from previous values
-        this.friendList = [];
-        this.friendRequests = [];
-        this.matchHistory = [];
+        let friendList: FriendDto[] = [];
+        let friendRequests: FriendRequestDto[] = [];
+        let matchHistory: MatchDto[] = [];
 
         //  Build the response
 
@@ -328,7 +319,7 @@ export class ProfileService {
                     }
                 })
                 if (friendUser)
-                    this.insertFriend(friendUser.username, friendUser.imagePath, friendUser.userStatus);
+                    this.insertFriend(friendUser.username, friendUser.imagePath, friendUser.userStatus, friendList);
             }
         }
 
@@ -340,7 +331,7 @@ export class ProfileService {
                     }
                 })
                 if (friendUser)
-                    this.insertFriend(friendUser.username, friendUser.imagePath, friendUser.userStatus);
+                    this.insertFriend(friendUser.username, friendUser.imagePath, friendUser.userStatus, friendList);
             }
         }
 
@@ -362,7 +353,7 @@ export class ProfileService {
                     }
                 })
                 if (senderUser)
-                    this.insertFriendRequest(senderUser.username, senderUser.imagePath);
+                    this.insertFriendRequest(senderUser.username, senderUser.imagePath, friendRequests);
             }
         }
 
@@ -400,7 +391,7 @@ export class ProfileService {
                     this.insertMatch(user.username, user.imagePath,
                         matchLeft[i].leftPlayerScore, adversaire.username,
                         adversaire.imagePath, matchLeft[i].rightPlayerScore,
-                        matchLeft[i].winner, matchLeft[i].updatedAt);
+                        matchLeft[i].winner, matchLeft[i].updatedAt, matchHistory);
                 }
             }
         }
@@ -417,7 +408,7 @@ export class ProfileService {
                 if (adversaire) {
                     this.insertMatch(adversaire.username,
                         adversaire.imagePath, matchRight[i].leftPlayerScore, user.username, user.imagePath,
-                        matchRight[i].rightPlayerScore, matchRight[i].winner, matchRight[i].updatedAt);
+                        matchRight[i].rightPlayerScore, matchRight[i].winner, matchRight[i].updatedAt, matchHistory);
                 }
             }
         }
@@ -433,12 +424,12 @@ export class ProfileService {
 
         // Order match in chronologic order
         let x = 0;
-        let longeur = this.matchHistory.length;
+        let longeur = matchHistory.length;
         while (x < longeur) {
-            if (x !== longeur - 1 && this.matchHistory[x].updatedAt < this.matchHistory[x + 1].updatedAt) {
-                let temp = this.matchHistory[x];
-                this.matchHistory[x] = this.matchHistory[x + 1];
-                this.matchHistory[x + 1] = temp;
+            if (x !== longeur - 1 && matchHistory[x].updatedAt < matchHistory[x + 1].updatedAt) {
+                let temp = matchHistory[x];
+                matchHistory[x] = matchHistory[x + 1];
+                matchHistory[x + 1] = temp;
                 x = 0;
             }
             else {
@@ -450,7 +441,7 @@ export class ProfileService {
         var blockL = await this.getBlockedUsers(login42);
 
         return new PrivateProfileDto(false, user.username, user.userStatus, user.imagePath,
-            this.friendList, this.friendRequests, this.matchHistory, stats, user.authenticator, blockL, user.username);
+            friendList, friendRequests, matchHistory, stats, user.authenticator, blockL, user.username);
     }
 
     async updateUsername(newUsername: string, login42: string): Promise<responseDefault> {
