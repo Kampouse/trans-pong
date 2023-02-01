@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Injectable } from "@nestjs/common";
 import { GameUpdate, UpdateProps, UpdateProp } from './object.game'
 import * as io from 'socket.io'
@@ -101,10 +102,10 @@ export class GameRoom {
     }
 
     public makeid(length): string { //generating random room id's
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
@@ -112,7 +113,7 @@ export class GameRoom {
 
     async setPlayer1() { //set Player1 info into game update object
         try {
-            var user = await prisma.user.findUnique({ where: { userID: this.player1.getUserId() } })
+            const user = await prisma.user.findUnique({ where: { userID: this.player1.getUserId() } })
             this.gameUpdateObject.leftPlayer.playerPhoto = user.imagePath
             this.gameUpdateObject.leftPlayer.playerUser = user.login42
         }
@@ -125,7 +126,7 @@ export class GameRoom {
         if (this.player2 == null) { //prevent possible reassignments from players who might try to trash the room
             this.player2 = player;
             try {
-                var user = await prisma.user.findUnique({ where: { userID: player.getUserId() } })
+                const user = await prisma.user.findUnique({ where: { userID: player.getUserId() } })
                 console.log(user)
                 this.gameUpdateObject.rightPlayer.playerPhoto = user.imagePath
                 this.gameUpdateObject.rightPlayer.playerUser = user.login42
@@ -150,7 +151,7 @@ export class GameRoom {
             if (this.player1.isSocketDisconnected() == true || this.player2.isSocketDisconnected() == true) {
                 clearInterval(this.updateInterval);
                 clearInterval(this.handleSocketDisconnect);
-                let timeoutReconnection = setTimeout(async () => {
+                const timeoutReconnection = setTimeout(async () => {
                     this.status = "finished"
                     clearInterval(checkForReconnection)
                     //do things to end game and assign player who didnt disconnect
@@ -166,7 +167,7 @@ export class GameRoom {
                             userStatus: "online"
                         }
                     });
-                    var winner = "No Winner"
+                    let winner = "No Winner"
                     if (this.player1.isSocketDisconnected() == true)
                         winner = this.gameUpdateObject.rightPlayer.playerUser
                     else
@@ -183,7 +184,7 @@ export class GameRoom {
                     });
                     server.to(this.getRoomName()).emit("leaveRoom", this.getRoomName()); //frontend to handle game end
                 }, 3000) //one of our players did not reconnect in 10 seconds, end the game
-                let checkForReconnection = setInterval(() => {
+                const checkForReconnection = setInterval(() => {
                     if (this.player1.isSocketDisconnected() == false && this.player2.isSocketDisconnected() == false) {
                         clearTimeout(timeoutReconnection)
                         clearInterval(checkForReconnection)
@@ -256,17 +257,18 @@ export class GameSocketIOService {
                     //console.log(origin)
                     callback(null, true)
                 },
-                methods: ["GET", "POST", "PUT", "DELETE"]
+                methods: ["GET", "POST", "PUT", "DELETE"],
             }
         });
         this.socketMap = new Map<string, string> //userid, socketid
-        //this.roomMap = new Array<GameRoom>
-        this.roomMap = new Map<string, GameRoom>
+        //this.roomMap = new Array<GameRoom>;
+        // eslint-disable-next-line prettier/prettier
+        this.roomMap = new Map<string, GameRoom>();
         this.sessionMap = new Map();
         console.log("Multiplayer socket instance started")
         this.gameRoomUpdateInterval = setInterval(() => {
-            var i = 0;
-            for (let gameroom of this.roomMap.entries()) {
+            const i = 0;
+            for (const gameroom of this.roomMap.entries()) {
                 //check statuses for finished games first
                 if (gameroom[1].status == "finished") {
                     this.roomMap.delete(gameroom[0])
@@ -282,16 +284,16 @@ export class GameSocketIOService {
 
     }
     async makePlayerJoinRoom(player2: Player) { //returning room name
-        var i = 0;
-        for (let room of this.roomMap) {
+        let i = 0;
+        for (const room of this.roomMap) {
             if (room[1].status == "waiting") {
                 if (room[1].getPlayer1Id() != player2.getUserId()) {
                     room[1].setPlayer2(player2) //assign player2 since player1 is already present
                     room[1].setPlayer1();
                     room[1].status = "active"; //change room status to active
                     try {
-                        var leftuser = await prisma.user.findUnique({ where: { userID: room[1].getPlayer1Id() } })
-                        var rightuser = await prisma.user.findUnique({ where: { userID: room[1].getPlayer2Id() } })
+                        const leftuser = await prisma.user.findUnique({ where: { userID: room[1].getPlayer1Id() } })
+                        const rightuser = await prisma.user.findUnique({ where: { userID: room[1].getPlayer2Id() } })
 
                         await prisma.game.create(
                             {

@@ -1,3 +1,4 @@
+import { responsiveFontSizes } from "@mui/material";
 import { PrivateProfileDto } from "utils/user.dto";
 
 export interface MessageDto
@@ -45,7 +46,7 @@ export class ChatAPI
       public static async getPMsFromUser(): Promise<{ privateMsgs: PrivateMsgsDto[] }> {
     
         const resp = await fetch(
-          `http://localost:3000/chat/userPMs`,
+          `http://localhost:3000/chat/userPMs`,
           {
             credentials: "include",
             method: "GET",
