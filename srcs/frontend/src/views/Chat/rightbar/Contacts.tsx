@@ -52,18 +52,19 @@ export const Contacts = ({
       }}
       subheader={<li />}
       >
-        <li key={`friends`}>
+        {/* <li key={`friends`}>
           <ul >
           <ListSubheader style={{textAlign:'center'}}>{`Friends`}</ListSubheader>
+            
+            {friends.map((displayedUser, index) => (
 
-            {friends.map((displayedUser) => (
-
-            <div key={'friend' + displayedUser.userID}>
+            <div key={'friend' + displayedUser.username + String(index)}>
 
             <UserChatOpenButton 
               displayedUser={displayedUser}
               handleOpenContact={handleOpenButton}
               displayStatus={true}
+              index = {index}
             />
 
             </div>
@@ -71,22 +72,23 @@ export const Contacts = ({
             ))}
 
           </ul>
-        </li>
+        </li> */}
 
         <li key={`members`}>
           <ul >
             <ListSubheader style={{textAlign:'center'}}>{`Members`}</ListSubheader>
 
-            {otherUsers.map((displayedUser) => (
+            {otherUsers.map((displayedUser, index) => (
 
             displayedUser.username !== user?.username &&
 
-            <div key={'members' + displayedUser.username}>
+            <div key={'members' + displayedUser.username + String(index)}>
 
             <UserChatOpenButton 
               displayedUser={displayedUser}
               handleOpenContact={handleOpenButton}
               displayStatus={false}
+              index = {index}
             />
 
 

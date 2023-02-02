@@ -12,7 +12,10 @@ import { AuthService } from 'src/auth/auth.service';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService, private authService: AuthService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private authService: AuthService,
+  ) {}
 
   @Get('userRooms')
   @UseGuards(JwtGuard)
@@ -33,7 +36,8 @@ export class ChatController {
   public async getPMsFromUser(@Req() req: RequestWithUser) {
     const login: any = this.authService.authentificateSession(req);
 
-    const privateMsgs: PrivateMsgsDto[] = this.chatService.getUserPrivateMsgs(login);
+    const privateMsgs: PrivateMsgsDto[] =
+      this.chatService.getUserPrivateMsgs(login);
 
     return { privateMsgs: privateMsgs || [] };
   }

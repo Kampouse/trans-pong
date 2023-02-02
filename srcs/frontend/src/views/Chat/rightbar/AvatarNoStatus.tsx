@@ -7,7 +7,7 @@ export const AvatarNoStatus = ({user}: {user: PrivateProfileDto}) => {
     return (
     <Tooltip title={user.username}>
         <Avatar
-            src={user?.imagePath? `data:image/jpeg;base64,${user.imagePath}`: defaultAvatar}
+            src={user?.imagePath? `${user.imagePath}`: defaultAvatar}
             alt='avatar'
             sx={{ width: 56, height: 56 }}                 
         />

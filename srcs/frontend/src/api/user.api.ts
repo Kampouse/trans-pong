@@ -30,25 +30,24 @@ export class UserAPI
         return (resp.ok? resp.json() : null);
     }
     public static async addBlock(blockedId: string): Promise<PrivateProfileDto | null> {
-        const resp = await fetch(`http://localhost:3000/users/blocked`, {
+        const resp = await fetch(`http://localhost:3000/profile/blocks/${blockedId}`, {
           credentials: "include",
-          method: "POST",
-          body: blockedId,
+          method: "GET",
+          // body: blockedId,
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Credentials': 'true',
           }
         });
-    
         return (resp.ok? resp.json() : null);
       }
     
       public static async removeBlock(blockedId: string): Promise<PrivateProfileDto | null> {
-        const resp = await fetch(`http://localhost:3000/users/blocked`, {
+        const resp = await fetch(`http://localhost:3000/profile/unblocks/${blockedId}`, {
           credentials: "include",
-          method: "DELETE",
-          body: blockedId,
+          method: "GET",
+          // body: blockedId,
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
