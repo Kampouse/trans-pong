@@ -4,8 +4,8 @@ import { AvatarNoStatus } from "./AvatarNoStatus"
 
 
 interface UserChatOpenButtonProps {
-    displayedUser: FriendDto
-    handleOpenContact: (event: React.MouseEvent<HTMLElement>, userDto: FriendDto) => void
+    displayedUser: PrivateProfileDto
+    handleOpenContact: (event: React.MouseEvent<HTMLElement>, userDto: PrivateProfileDto) => void
     displayStatus: boolean
 
   }
@@ -27,7 +27,7 @@ export const UserChatOpenButton = ({
         onClick={(e : any) => {handleOpenContact(e, displayedUser)}}
       >
         
-        <ListItem key={`${displayedUser.friendUser}`}>
+        <ListItem key={`${displayedUser.username}`}>
             <ListItemAvatar >
                 <AvatarNoStatus 
                   user={displayedUser}
@@ -40,10 +40,10 @@ export const UserChatOpenButton = ({
               //   ? displayedUser.username.substring(0, 8) + '...'
               //   : displayedUser.username
               // : 'Loading...'
-              (displayedUser && displayedUser.friendUser) &&(displayedUser.friendUser.length > 8)?
-              displayedUser.friendUser.substring(8) + '...'
+              (displayedUser && displayedUser.username) &&(displayedUser.username.length > 8)?
+              displayedUser.username.substring(8) + '...'
               :
-              displayedUser.friendUser
+              displayedUser.username
               } 
               sx={{ ml:2 }}
             />

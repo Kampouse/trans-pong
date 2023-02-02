@@ -49,7 +49,7 @@ export const Contacts = ({
 
   const [openButtons, setOpenButtons] = React.useState<null | HTMLElement>(null);
 
-  const handleOpenButton = (event: React.MouseEvent<HTMLElement>, userDto: FriendDto) => {
+  const handleOpenButton = (event: React.MouseEvent<HTMLElement>, userDto: PrivateProfileDto) => {
     setOpenButtons(event.currentTarget);
     setUserButton(userDto);
   }
@@ -78,7 +78,7 @@ export const Contacts = ({
 	            
 	            {friends.friendList.map((displayedUser) => (
 
-	            <div key={'friend' + displayedUser.friendUser}>
+	            <div key={'friend' + displayedUser.username}>
 
 	            <UserChatOpenButton 
 	              displayedUser={displayedUser}
