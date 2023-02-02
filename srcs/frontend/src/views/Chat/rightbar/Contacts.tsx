@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
 import { PrivateProfileDto } from 'utils/user.dto';
@@ -6,6 +6,24 @@ import { RoomDto } from 'api/chat.api';
 import { UserContext } from 'Router/Router';
 import { UserChatOpenButton } from './UserChatOpenButton';
 import { ChatButtonList } from './ChatButtonList';
+import {Fetch } from 'utils';
+
+const useFetch = () =>
+{
+	const [profileReq, setProfileReq] = useState<any>(null);
+	
+	useEffect(() => {
+		Fetch('http://localhost:3000/profile')
+      .then((response) => response.json())
+			.then((data) => {
+				setProfileReq(data);
+			})
+			.catch((err) => {
+        console.error(err);
+      })       
+	})
+	return {profileReq};
+}
 
 interface ContactsProps {
   users: PrivateProfileDto[] | null
@@ -18,14 +36,14 @@ export const Contacts = ({
 }: ContactsProps ) => {
 
   const user: PrivateProfileDto | null = React.useContext(UserContext);
-  const [friends, setFriends] = React.useState<PrivateProfileDto[]>([]);
+//   const [friends, setFriends] = React.useState<PrivateProfileDto[]>([]);
   const [otherUsers, setOtherUsers] = React.useState<PrivateProfileDto[]>([]);
   const [userButton, setUserButton] = React.useState<PrivateProfileDto | null>(null);
 
   React.useEffect(() => {
-    if (user && user.friendList) {
-      setFriends(user.friendList);
-    }
+    // if (user && user.friendList) {
+    //   setFriends(user.friendList);
+    // }
     setOtherUsers(users? users : [])
   }, [user, users]);
 
@@ -39,7 +57,8 @@ export const Contacts = ({
   const handleCloseButton = () => {
     setOpenButtons(null);
   };
-  
+
+  const {profileReq: friends} = useFetch();
 
   return (
     <>
@@ -52,11 +71,11 @@ export const Contacts = ({
       }}
       subheader={<li />}
       >
-        {/* <li key={`friends`}>
+        <li key={`friends`}>
           <ul >
           <ListSubheader style={{textAlign:'center'}}>{`Friends`}</ListSubheader>
             
-            {friends.map((displayedUser, index) => (
+            {friends.friendList.map((displayedUser, index) => (
 
             <div key={'friend' + displayedUser.username + String(index)}>
 
@@ -72,7 +91,7 @@ export const Contacts = ({
             ))}
 
           </ul>
-        </li> */}
+        </li>
 
         <li key={`members`}>
           <ul >

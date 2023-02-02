@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { ActiveGameDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game, Relation, BlockDto } from '../dtos/profile.dtos';
+import { ActiveGameDto, ChatFriendDto, FriendDto, FriendRequestDto, MatchDto, StatisticsDto, PrivateProfileDto, PublicProfileDto, Game, Relation, BlockDto } from '../dtos/profile.dtos';
 import { AuthService } from 'src/auth/auth.service';
 import { prisma } from 'src/main';
 import { responseDefault, responseUploadPhoto } from "src/dtos/responseTools.dtos";
@@ -584,6 +584,66 @@ export class ProfileService {
         //  Create the Active game data object with the array and return it.
         const response = new ActiveGameDto(array);
         return (response);
+    }
+
+    async getFriends(login42: string) : Promise<ChatFriendDto[]>
+    {
+        const friendList: ChatFriendDto [] = [];
+        let   tempDto: ChatFriendDto;
+        let   tempUser;
+
+        try
+        {
+            let requestSent = await prisma.friendRequest.findMany({
+                where: {
+                    sender: login42
+                }
+            })
+
+            if (requestSent)
+            {
+                for (let i in requestSent)
+                {
+                    tempUser = await prisma.user.findUnique({
+                        where: {
+                            login42: requestSent[i].receiver
+                        }
+                    })
+
+                    if (tempUser)
+                    {
+                        tempDto = new ChatFriendDto(tempUser.username, tempUser.login42, tempUser.imagePath);
+                        friendList.push(tempDto);
+                    }
+                }
+            }
+
+            let requestReceived = await prisma.friendRequest.findMany({
+                where: {
+                    receiver: login42
+                }
+            })
+
+            if (requestReceived)
+            {
+                for (let i in requestReceived)
+                {
+                    tempUser = await prisma.user.findUnique({
+                        where: {
+                            login42: requestReceived[i].receiver
+                        }
+                    })
+
+                    if (tempUser)
+                    {
+                        tempDto = new ChatFriendDto(tempUser.username, tempUser.login42, tempUser.imagePath);
+                        friendList.push(tempDto);
+                    }
+                }
+            }
+        }
+        catch{}
+        return (friendList);
     }
 
     async getBlockedUsers(login42: string): Promise<BlockDto []> {

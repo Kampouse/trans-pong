@@ -20,6 +20,7 @@ import {
   PublicProfileDto,
   ActiveGameDto,
   Relation,
+  ChatFriendDto,
 } from 'src/dtos/profile.dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -351,6 +352,21 @@ export class ProfileController {
       login42,
     );
     return userDto;
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('/chat/getFriends')
+  @Header('Content-type', 'application/json; charset=utf-8')
+  async getFriends(@Req() request: RequestWithUser,): Promise<ChatFriendDto[] | null>
+  {
+    const login42 = await this.profileService.authentificate(request);
+
+    if (login42 == undefined) {
+      return null;
+    }
+
+    const response = await this.profileService.getFriends(login42);
+    return (response);
   }
 
   @UseGuards(JwtGuard)

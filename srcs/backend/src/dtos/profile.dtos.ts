@@ -110,6 +110,15 @@ export class MessageDto {
     users: Array<PrivateMsgsDto>;
     messages: Array<MessageDto>;
   }
+
+  export class ChatFriendDto
+  {
+    constructor(
+        public username: string,
+        public login42: string,
+        public photo: string,
+    ){}
+  }
   
 export class PrivateProfileDto {
     constructor(
