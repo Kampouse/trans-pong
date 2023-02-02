@@ -1,11 +1,31 @@
 import * as React from 'react';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
-import { PrivateProfileDto } from 'utils/user.dto';
+import { FriendDto, PrivateProfileDto } from 'utils/user.dto';
 import { RoomDto } from 'api/chat.api';
 import { UserContext } from 'Router/Router';
 import { UserChatOpenButton } from './UserChatOpenButton';
 import { ChatButtonList } from './ChatButtonList';
+import { Fetch } from 'utils';
+import { FriendChatOpenButton } from './FriendChatOpenButton';
+
+const useFetch = () =>
+{
+	const [profileReq, setProfileReq] = React.useState<any>(null);
+	
+	React.useEffect(() => {
+		Fetch('http://localhost:3000/profile')
+      .then((response) => response.json())
+			.then((data) => {
+				setProfileReq(data);
+			})
+			.catch((err) => {
+        console.error(err);
+      })       
+	})
+	return {profileReq};
+}
+
 
 interface ContactsProps {
   users: PrivateProfileDto[] | null
@@ -16,16 +36,21 @@ export const Contacts = ({
   users,
   room
 }: ContactsProps ) => {
-
+  
   const user: PrivateProfileDto | null = React.useContext(UserContext);
-  const [friends, setFriends] = React.useState<PrivateProfileDto[]>([]);
+  //const [friends, setFriends] = React.useState<PrivateProfileDto[]>([]);
   const [otherUsers, setOtherUsers] = React.useState<PrivateProfileDto[]>([]);
   const [userButton, setUserButton] = React.useState<PrivateProfileDto | null>(null);
-
+  //const [frienduserbutton, setFriendUserButton] = React.useState<FriendDto | null>(null);
+  
+  // const handleUpdateFriends = (friendList: FriendDto[]) =>
+  // {
+  //   setFriends(friendList);
+  // };
   React.useEffect(() => {
-    if (user && user.friendList) {
-      setFriends(user.friendList);
-    }
+    // if (user && user.friendList) {
+    //   handleUpdateFriends(user.friendList);
+    // }
     setOtherUsers(users? users : [])
   }, [user, users]);
 
@@ -39,8 +64,18 @@ export const Contacts = ({
   const handleCloseButton = () => {
     setOpenButtons(null);
   };
+  const handleFriendOpenButton = async (event: React.MouseEvent<HTMLElement>, userDto: FriendDto) => {
+    setOpenButtons(event.currentTarget);
+    const response = await Fetch(`http://localhost:3000/profile/${userDto.friendUser}`);
+    const profile = await response.json();
+    setUserButton(profile);
+  }
+    
+  const handleFriendCloseButton = () => {
+    setOpenButtons(null);
+  };
   
-
+  const {profileReq: friends} = useFetch();
   return (
     <>
     <List key='contact-list'
@@ -52,19 +87,18 @@ export const Contacts = ({
       }}
       subheader={<li />}
       >
-        {/* <li key={`friends`}>
+        {friends && friends.error != true && (
+        <li key={`friends`}>
           <ul >
           <ListSubheader style={{textAlign:'center'}}>{`Friends`}</ListSubheader>
             
-            {friends.map((displayedUser, index) => (
+            {friends.friendList.map((displayedUser) => (
 
-            <div key={'friend' + displayedUser.username + String(index)}>
-
-            <UserChatOpenButton 
+            <div key={'friend' + displayedUser.friendUser}>
+            <FriendChatOpenButton 
               displayedUser={displayedUser}
-              handleOpenContact={handleOpenButton}
+              handleFriendOpenContact={handleFriendOpenButton}
               displayStatus={true}
-              index = {index}
             />
 
             </div>
@@ -72,20 +106,21 @@ export const Contacts = ({
             ))}
 
           </ul>
-        </li> */}
-
-        <li key={`members`}>
+        </li>
+        )}
+        {otherUsers && (
+         <li key={`members`}>
           <ul >
             <ListSubheader style={{textAlign:'center'}}>{`Members`}</ListSubheader>
 
-            {otherUsers.map((displayedUser, index) => (
+            {otherUsers.length > 0 && otherUsers.map((MdisplayedUser: PrivateProfileDto, index: number) => (
 
-            displayedUser.username !== user?.username &&
+            MdisplayedUser.username !== user?.username &&
 
-            <div key={'members' + displayedUser.username + String(index)}>
+            <div key={'members' + MdisplayedUser.username + String(index)}>
 
             <UserChatOpenButton 
-              displayedUser={displayedUser}
+              displayedUser={MdisplayedUser}
               handleOpenContact={handleOpenButton}
               displayStatus={false}
               index = {index}
@@ -98,6 +133,7 @@ export const Contacts = ({
 
           </ul>
         </li>
+        )}
     </List>
 
     <ChatButtonList 
