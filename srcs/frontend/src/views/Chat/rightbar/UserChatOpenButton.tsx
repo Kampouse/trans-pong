@@ -1,20 +1,19 @@
 import { Button, ListItem, ListItemAvatar, ListItemText } from "@mui/material"
-import { PrivateProfileDto } from "utils/user.dto"
+import { PrivateProfileDto, FriendDto } from "utils/user.dto"
 import { AvatarNoStatus } from "./AvatarNoStatus"
 
 
 interface UserChatOpenButtonProps {
-    displayedUser: PrivateProfileDto
-    handleOpenContact: (event: React.MouseEvent<HTMLElement>, userDto: PrivateProfileDto) => void
+    displayedUser: FriendDto
+    handleOpenContact: (event: React.MouseEvent<HTMLElement>, userDto: FriendDto) => void
     displayStatus: boolean
-    index: number
+
   }
 
 export const UserChatOpenButton = ({
     displayedUser,
     handleOpenContact,
     displayStatus,
-    index
 
 } : UserChatOpenButtonProps ) => {
     
@@ -28,7 +27,7 @@ export const UserChatOpenButton = ({
         onClick={(e : any) => {handleOpenContact(e, displayedUser)}}
       >
         
-        <ListItem key={`${index}`}>
+        <ListItem key={`${displayedUser.friendUser}`}>
             <ListItemAvatar >
                 <AvatarNoStatus 
                   user={displayedUser}
@@ -41,10 +40,10 @@ export const UserChatOpenButton = ({
               //   ? displayedUser.username.substring(0, 8) + '...'
               //   : displayedUser.username
               // : 'Loading...'
-              (displayedUser && displayedUser.username) &&(displayedUser.username.length > 8)?
-              displayedUser.username.substring(8) + '...'
+              (displayedUser && displayedUser.friendUser) &&(displayedUser.friendUser.length > 8)?
+              displayedUser.friendUser.substring(8) + '...'
               :
-              displayedUser.username
+              displayedUser.friendUser
               } 
               sx={{ ml:2 }}
             />

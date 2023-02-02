@@ -176,7 +176,7 @@ useEffect(() => { check()}, [])
                 <Route path=":username" element={ <Wrapper> <Profile/></Wrapper>} />
                 <Route path="" element={  <Wrapper> <Profile/></Wrapper>} />
             </Route>
-            <Route path="/Chat" element={<Wrapper><RouteProtect> <WebsocketProvider value={socket}> <Chat /> </WebsocketProvider></RouteProtect></Wrapper>}></Route>
+            <Route path="/Chat" element={<Wrapper><RouteProtect><WebsocketProvider value={socket}> <Chat /> </WebsocketProvider></RouteProtect></Wrapper>}></Route>
             <Route path="*" element={<Error404 />}></Route>
             <Route path="/Game">
                 <Route path="" element={<Wrapper> <SinglePlayerCanvas/></Wrapper> }></Route>

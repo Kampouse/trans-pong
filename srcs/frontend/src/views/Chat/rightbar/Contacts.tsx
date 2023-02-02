@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
-import { PrivateProfileDto } from 'utils/user.dto';
+import { PrivateProfileDto, FriendDto } from 'utils/user.dto';
 import { RoomDto } from 'api/chat.api';
 import { UserContext } from 'Router/Router';
 import { UserChatOpenButton } from './UserChatOpenButton';
@@ -49,7 +49,7 @@ export const Contacts = ({
 
   const [openButtons, setOpenButtons] = React.useState<null | HTMLElement>(null);
 
-  const handleOpenButton = (event: React.MouseEvent<HTMLElement>, userDto: PrivateProfileDto) => {
+  const handleOpenButton = (event: React.MouseEvent<HTMLElement>, userDto: FriendDto) => {
     setOpenButtons(event.currentTarget);
     setUserButton(userDto);
   }
@@ -71,28 +71,28 @@ export const Contacts = ({
       }}
       subheader={<li />}
       >
-        <li key={`friends`}>
-          <ul >
-          <ListSubheader style={{textAlign:'center'}}>{`Friends`}</ListSubheader>
-            
-            {friends.friendList.map((displayedUser, index) => (
+				{friends && friends.error != true && (
+	        <li key={`friends`}>
+	          <ul >
+	          <ListSubheader style={{textAlign:'center'}}>{`Friends`}</ListSubheader>
+	            
+	            {friends.friendList.map((displayedUser) => (
 
-            <div key={'friend' + displayedUser.username + String(index)}>
+	            <div key={'friend' + displayedUser.friendUser}>
 
-            <UserChatOpenButton 
-              displayedUser={displayedUser}
-              handleOpenContact={handleOpenButton}
-              displayStatus={true}
-              index = {index}
-            />
+	            <UserChatOpenButton 
+	              displayedUser={displayedUser}
+	              handleOpenContact={handleOpenButton}
+	              displayStatus={true}
+	            />
 
-            </div>
+	            </div>
 
-            ))}
+	            ))}
 
-          </ul>
-        </li>
-
+	          </ul>
+	        </li>
+				)}
         <li key={`members`}>
           <ul >
             <ListSubheader style={{textAlign:'center'}}>{`Members`}</ListSubheader>
@@ -107,7 +107,7 @@ export const Contacts = ({
               displayedUser={displayedUser}
               handleOpenContact={handleOpenButton}
               displayStatus={false}
-              index = {index}
+            
             />
 
 
