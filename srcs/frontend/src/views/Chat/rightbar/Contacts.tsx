@@ -92,7 +92,7 @@ export const Contacts = ({
           <ul >
           <ListSubheader style={{textAlign:'center'}}>{`Friends`}</ListSubheader>
             
-            {friends.friendList.map((displayedUser) => (
+            {friends.friendList.map((displayedUser: FriendDto) => (
 
             <div key={'friend' + displayedUser.friendUser}>
             <FriendChatOpenButton 

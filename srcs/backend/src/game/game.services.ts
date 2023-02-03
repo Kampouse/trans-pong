@@ -283,8 +283,49 @@ export class GameSocketIOService {
     public getRoomForPlayer(player: Player) {
 
     }
-    async makePlayerJoinRoom(player2: Player) { //returning room name
+    async makePlayerJoinRoom(player2: Player, roomId = "") { //returning room name
         let i = 0;
+        if(roomId != ""){
+            console.log(player2)
+            let room: GameRoom = this.roomMap.get(roomId)
+            if (room.getPlayer1Id() != player2.getUserId()) {
+                room.setPlayer2(player2) //assign player2 since player1 is already present
+                room.setPlayer1();
+                room.status = "active"; //change room status to active
+                try {
+                    const leftuser = await prisma.user.findUnique({ where: { userID: room.getPlayer1Id() } })
+                    const rightuser = await prisma.user.findUnique({ where: { userID: room.getPlayer2Id() } })
+
+                    await prisma.game.create(
+                        {
+                            data: {
+                                gameRoomID: room.getRoomName(),
+                                leftPlayer: leftuser.login42,
+                                rightPlayer: rightuser.login42,
+                                active: true,
+                            }
+                        })
+                    await prisma.user.update({
+                        where: { userID: room.getPlayer1Id() },
+                        data: {
+                            userStatus: "playing"
+                        }
+                    })
+                    await prisma.user.update({
+                        where: { userID: room.getPlayer2Id() },
+                        data: {
+                            userStatus: "playing"
+                        }
+                    })
+                    console.log("game created")
+                }
+                catch (e) {
+                    console.log(e)
+                }
+                return room.getRoomName(); //return room name to make socket join
+            }
+        }
+        else{
         for (const room of this.roomMap) {
             if (room[1].status == "waiting") {
                 if (room[1].getPlayer1Id() != player2.getUserId()) {
@@ -327,6 +368,7 @@ export class GameSocketIOService {
             i++;
         }
         return ("")
+    }
     }
 
 }
