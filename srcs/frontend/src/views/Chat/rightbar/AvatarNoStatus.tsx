@@ -1,5 +1,5 @@
 import { Avatar, Tooltip} from "@mui/material";
-import defaultAvatar from '../../../../public/defaultPhoto.png';
+import defaultAvatar from '../../../default_avatar/profile_image.jpeg';
 import { PrivateProfileDto } from "utils/user.dto";
 
 export const AvatarNoStatus = ({user}: {user: PrivateProfileDto}) => {
