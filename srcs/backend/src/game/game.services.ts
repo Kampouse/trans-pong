@@ -4,6 +4,7 @@ import { GameUpdate, UpdateProps, UpdateProp } from './object.game'
 import * as io from 'socket.io'
 import { prisma } from 'src/main';
 import { AnymatchFn } from "vite";
+import { time } from "console";
 
 
 export class Player {
@@ -113,6 +114,7 @@ export class GameRoom {
 
     async setPlayer1() { //set Player1 info into game update object
         try {
+            console.log(this.player1.getUserId())
             const user = await prisma.user.findUnique({ where: { userID: this.player1.getUserId() } })
             this.gameUpdateObject.leftPlayer.playerPhoto = user.imagePath
             this.gameUpdateObject.leftPlayer.playerUser = user.login42
@@ -288,6 +290,8 @@ export class GameSocketIOService {
         if(roomId != ""){
             console.log(player2)
             let room: GameRoom = this.roomMap.get(roomId)
+            console.log(room)
+
             if (room.getPlayer1Id() != player2.getUserId()) {
                 room.setPlayer2(player2) //assign player2 since player1 is already present
                 room.setPlayer1();
@@ -295,7 +299,6 @@ export class GameSocketIOService {
                 try {
                     const leftuser = await prisma.user.findUnique({ where: { userID: room.getPlayer1Id() } })
                     const rightuser = await prisma.user.findUnique({ where: { userID: room.getPlayer2Id() } })
-
                     await prisma.game.create(
                         {
                             data: {

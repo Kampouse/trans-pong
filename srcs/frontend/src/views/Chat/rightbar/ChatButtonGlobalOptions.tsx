@@ -13,15 +13,27 @@ import { usersocket } from "views/Game/Matchmaking";
 import { Fetch } from "utils";
 
 if (usersocket.disconnected == true)
+{
     usersocket.connect()
-    usersocket.emit("socketIsConnected");
+}
+let interval = setInterval(async () => {
+    let userid = await getUserId()
+    if (userid != undefined && userid != "")
+    {
+        console.log("ok testign")
+        usersocket.on("ack", async (socketId) => {
+            console.log(getUserId())
+            
+            usersocket.emit("registerId", {userId: await getUserId(), socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+            //usersocket.emit("joinRoom", roomId)
+            usersocket.off("ack")
+        })
+        usersocket.emit("socketIsConnected");
+        clearInterval(interval)
+    }
+}, 100)
+//usersocket.emit("socketIsConnected");
 
-usersocket.on("ack", async (socketId) => {
-    console.log(getUserId())
-    
-    usersocket.emit("registerId", {userId: await getUserId(), socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
-    //usersocket.emit("joinRoom", roomId)
-})
 interface ChatButtonGlobalOptionProps {
     chosenUser: PrivateProfileDto, 
     handleClose: () => void
@@ -39,6 +51,7 @@ async function getUserId(): Promise<string>
         })
     return userid;
 }
+
 export const ChatButtonGlobalOption = ({
     chosenUser,
     handleClose
@@ -74,38 +87,33 @@ export const ChatButtonGlobalOption = ({
   
     const handleInvitation = async () => {
         console.log("hello")
-        handleClose();
         usersocket.emit("socketIsConnected");
         usersocket.on("ack", async (socketId) => {
             console.log("sending invite")
             usersocket.emit("registerId", {userId: await getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
             usersocket.emit("joinPrivateGame")
+            usersocket.off("ack")
         })
         usersocket.on("joinedGame", async (roomId) => {
             //socket.emit("roomToJoin", roomId)
             //send room id to other player
+            console.log(chosenUser.username)
             usersocket.emit("inviteGame", {"user": chosenUser.username, "roomId": roomId});
+            usersocket.off("joinedGame")
         })
-        usersocket.on("roomIsReady", (room) =>
-        {
-        console.log("Match found! Redirecting to game.");
-        console.log(room);
-        navigate(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
-        })
+        handleClose();
     };
 
-
-    usersocket.on("inviteGame", async(roomId) => {
-        console.log("received invite")
-        usersocket.emit("joinRoom", roomId)
-        usersocket.emit("socketIsConnected");
-        usersocket.emit("registerId", {userId: getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
-        usersocket.on("roomIsReady", (room) =>
-        {
-        console.log("Match found! Redirecting to game.");
+    
+    usersocket.on("roomIsReady", (room) =>
+    {
+        console.log("Joining private game");
         console.log(room);
         navigate(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
-        })
+        usersocket.off("roomIsReady")
+    })
+    usersocket.on("bullshit", () => {
+        console.log("this is bullshit")
     })
 
     React.useEffect(() => {
@@ -121,7 +129,13 @@ export const ChatButtonGlobalOption = ({
         }
     
         initIsBlocked();
-
+        usersocket.on("inviteGamePrivate", async(roomId) => {
+            console.log("received invite")
+            usersocket.emit("joinRoom", roomId)
+            usersocket.emit("socketIsConnected");
+            usersocket.emit("registerId", {userId: getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+            usersocket.off("inviteGamePrivate")
+        })
     }, [user, chosenUser]);
 
     return (

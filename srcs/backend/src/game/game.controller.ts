@@ -19,9 +19,11 @@ export class GameSocketIOController {
 
       socket.on('registerId', (user) => {
         gameSocketIO.socketMap.set(user.socket, user.userId)
+        socket.join(user.socket)
         //gameSocketIO.socketMap[user.socket] = user.userId; //keeping socket instance in the map so we can retrieve it later
         //console.log(gameSocketIO.socketMap)
       });
+
 
       socket.on('searchGame', async () => {
         const room = this.tryGetAvailableRoom(gameSocketIO.roomMap);
@@ -47,6 +49,7 @@ export class GameSocketIOController {
           }
         }
       });
+
       socket.on('joinPrivateGame', async () => {
         const newRoom: GameRoom = new GameRoom(
           new Player(this.gameSocketIO.socketMap[socket.id], socket),
@@ -56,6 +59,7 @@ export class GameSocketIOController {
         socket.join(newRoom.getRoomName()); //make client socket join room
         socket.emit('joinedGame', newRoom.getRoomName());
       });
+
       socket.on('joinRoom', async (roomId) => {
         console.log(socket.id);
         socket.join(roomId);
@@ -65,7 +69,9 @@ export class GameSocketIOController {
         );
         server.to(roomId).emit('roomIsReady', roomId); //pass control to game execution
       });
+
       socket.on('inviteGame', async (inviteData) => {
+        console.log(inviteData)
         let user;
         try {
           console.log('getting user');
@@ -77,22 +83,27 @@ export class GameSocketIOController {
             user.userID,
           );
           console.log('id: ' + socketid);
-          server.to(socketid).emit('inviteGame', inviteData['roomId']);
+          console.log("emiiting to socket")
+          server.emit('inviteGamePrivate', inviteData['roomId']);
         } catch {
           console.log('oops failed');
         }
       });
+
       socket.on('socketIsConnected', () => {
         socket.emit('ack', socket.id);
       });
+
       socket.on('joinedGame', () => {
         console.log(`Socket ${socket.id} landed on the game`);
       });
+
       socket.on('spectateGame', (roomID) => {
         console.log(roomID);
         socket.join(roomID);
         socket.emit('roomIsReady');
       });
+
       socket.on('ping', async (userid) => {
         const date = new Date();
         if (userid != '' && userid != null) {
