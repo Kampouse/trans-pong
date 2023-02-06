@@ -1,7 +1,7 @@
 import * as React from 'react';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
-import { FriendDto, PrivateProfileDto } from 'utils/user.dto';
+import { FriendDto, FriendRequestDto, PrivateProfileDto } from 'utils/user.dto';
 import { RoomDto } from 'api/chat.api';
 import { UserContext } from 'Router/Router';
 import { UserChatOpenButton } from './UserChatOpenButton';
@@ -92,11 +92,11 @@ export const Contacts = ({
           <ul >
           <ListSubheader style={{textAlign:'center'}}>{`Friends`}</ListSubheader>
             
-            {friends.friendList.map((displayedUser) => (
+            {friends.friendList.map((MdisplayedUser: FriendDto, index: number) => (
 
-            <div key={'friend' + displayedUser.friendUser}>
+            <div key={'friend' + MdisplayedUser.friendUser + String(index)}>
             <FriendChatOpenButton 
-              displayedUser={displayedUser}
+              displayedUser={MdisplayedUser}
               handleFriendOpenContact={handleFriendOpenButton}
               displayStatus={true}
             />
@@ -113,14 +113,14 @@ export const Contacts = ({
           <ul >
             <ListSubheader style={{textAlign:'center'}}>{`Members`}</ListSubheader>
 
-            {otherUsers.length > 0 && otherUsers.map((MdisplayedUser: PrivateProfileDto, index: number) => (
+            {otherUsers.length > 0 && otherUsers.map((displayedUser: PrivateProfileDto, index: number) => (
 
-            MdisplayedUser.username !== user?.username &&
+            (displayedUser.username && displayedUser.username !== user?.username) &&
 
-            <div key={'members' + MdisplayedUser.username + String(index)}>
+            <div key={'members' + displayedUser.username + String(index)}>
 
             <UserChatOpenButton 
-              displayedUser={MdisplayedUser}
+              displayedUser={displayedUser}
               handleOpenContact={handleOpenButton}
               displayStatus={false}
               index = {index}
