@@ -7,12 +7,14 @@ interface UserChatOpenButtonProps {
     displayedUser: PrivateProfileDto
     handleOpenContact: (event: React.MouseEvent<HTMLElement>, userDto: PrivateProfileDto) => void
     displayStatus: boolean
+    index: number
   }
 
 export const UserChatOpenButton = ({
     displayedUser,
     handleOpenContact,
-    displayStatus
+    displayStatus,
+    index
 
 } : UserChatOpenButtonProps ) => {
     
@@ -26,17 +28,23 @@ export const UserChatOpenButton = ({
         onClick={(e : any) => {handleOpenContact(e, displayedUser)}}
       >
         
-        <ListItem key={displayedUser.username}>
+        <ListItem key={`${index}`}>
             <ListItemAvatar >
                 <AvatarNoStatus 
                   user={displayedUser}
                 />
             </ListItemAvatar>
+            
             <ListItemText primary={
-              displayedUser.username.length > 8?
-              displayedUser.username.substring(8) + '...'
-              :
-              displayedUser.username
+              displayedUser && displayedUser.username
+              ? displayedUser.username.length > 8
+                ? displayedUser.username.substring(0, 8) + '...'
+                : displayedUser.username
+              : 'Loading...'
+              // (displayedUser && displayedUser.username) &&(displayedUser.username.length > 8)?
+              // displayedUser.username.substring(8) + '...'
+              // :
+              // displayedUser.username
               } 
               sx={{ ml:2 }}
             />

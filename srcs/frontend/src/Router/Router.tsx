@@ -21,6 +21,7 @@ import { generateSerial,Fetch } from 'utils'
 import ColorOptions from 'views/Game/ColorOptions'
 import { WebsocketContext, WebsocketProvider } from 'context/WebSocketContext'
 import { PrivateProfileDto } from 'utils/user.dto'
+import RouteProtect from 'views/Chat/RouteProtect'
 export const useLogin = atom('should login')
 export const useRooms = atom([] as ChatRoom[])
 export const useUsers = atom([] as User[]);
@@ -102,7 +103,7 @@ export const myProfile = atom({
 })
 
 export const UserContext = React.createContext<PrivateProfileDto | null >(null);
-export const SetUserContext = React.createContext<any>(null);
+export const SetUserContext = React.createContext<any> (null);
 
 export default function App()
 {
@@ -175,7 +176,7 @@ useEffect(() => { check()}, [])
                 <Route path=":username" element={ <Wrapper> <Profile/></Wrapper>} />
                 <Route path="" element={  <Wrapper> <Profile/></Wrapper>} />
             </Route>
-            <Route path="/Chat" element={<Wrapper> <WebsocketProvider value={socket}> <Chat /> </WebsocketProvider></Wrapper>}></Route>
+            <Route path="/Chat" element={<Wrapper><RouteProtect><WebsocketProvider value={socket}> <Chat /> </WebsocketProvider></RouteProtect></Wrapper>}></Route>
             <Route path="*" element={<Error404 />}></Route>
             <Route path="/Game">
                 <Route path="" element={<Wrapper> <SinglePlayerCanvas/></Wrapper> }></Route>
