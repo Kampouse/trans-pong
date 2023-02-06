@@ -129,13 +129,10 @@ export const ChatButtonGlobalOption = ({
         }
     
         initIsBlocked();
-        usersocket.on("inviteGamePrivate", async(roomId) => {
-            console.log("received invite")
-            usersocket.emit("joinRoom", roomId)
-            usersocket.emit("socketIsConnected");
-            usersocket.emit("registerId", {userId: getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
-            usersocket.off("inviteGamePrivate")
-        })
+        //maybe try to move this in another component rendered not on a click but when the page is loaded ? or maybe something like 
+        //"allow game invites"
+        //LE PROBLEME YER LA ON RECOIT PAS CET EVENT LALALALALALALAL
+        
     }, [user, chosenUser]);
 
     return (
