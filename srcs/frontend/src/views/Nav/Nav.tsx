@@ -3,6 +3,7 @@ import { useAtom } from 'jotai'
 import { SearchUser, useLogin } from "../../Router/Router";
 import { useNavigate } from 'react-router'
 import { Fetch } from '../../utils'
+import {usersocket} from '../Game/Matchmaking'
 export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, setSearchUser}) {
   const navigate = useNavigate();
   const [setLogin] = useAtom(useLogin)
@@ -19,6 +20,7 @@ export default function Nav({Status, setStatus, setOpenSearchUser, searchUser, s
      Fetch ('http://localhost:3000/auth/42logout')
       setLog('logout')
       navigate('/')
+      usersocket.disconnect()
      
     //  TODO: Call logout method here
   }

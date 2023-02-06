@@ -56,9 +56,9 @@ export class ChatAPI
               'Access-Control-Allow-Credentials': 'true',
             }
           }
-        );
+        )
     
-        return resp.ok ? resp.json() : {privateMsgs : []};
+				return resp.ok ? resp.json() : {privateMsgs : []};
       }
     
       public static async getAllRoomNames(): Promise<{ rooms: string[] }> {
