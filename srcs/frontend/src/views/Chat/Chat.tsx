@@ -16,8 +16,9 @@ import { RoomTabs } from './leftbar/RoomTabs'
 import { DiscussionTabs } from './leftbar/DiscussionTabs'
 import { Contacts } from './rightbar/Contacts'
 import { useNavigate, NavigateFunction} from 'react-router'
-import { usersocket } from 'views/Game/Matchmaking'
+import { usersocket, userid } from 'views/Game/Matchmaking'
 import { Fetch } from 'utils'
+import { io } from 'socket.io-client'
 
 enum ChannelType {
   none = 0,
@@ -46,24 +47,25 @@ export const Chat = () => {
   const [channelType, setChannelType] = React.useState<ChannelType>(ChannelType.none);
   const socket = React.useContext(WebsocketContext);
   const navigate: NavigateFunction = useNavigate();
+  usersocket.connect()
 
-  usersocket.on("inviteGamePrivate", async(roomId) => {
-    console.log("received invite")
-    usersocket.emit("joinRoom", roomId)
-    usersocket.emit("socketIsConnected");
-    usersocket.emit("registerId", {userId: await getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
-    usersocket.off("inviteGamePrivate") 
-  })
-
-  usersocket.on("roomIsReady", (room) =>
-  {
-      console.log("Joining private game");
-      console.log(room);
-      navigate(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
-      usersocket.off("roomIsReady")
-  })
 
   React.useEffect(() => {
+    usersocket.on("inviteGamePrivate", async(roomId) => {
+      console.log("received invite")
+      usersocket.emit("joinRoom", roomId)
+      usersocket.emit("socketIsConnected");
+      usersocket.emit("registerId", {userId: await getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+      usersocket.off("inviteGamePrivate") 
+    })
+  
+    usersocket.on("roomIsReady", (room) =>
+    {
+        console.log("Joining private game");
+        console.log(room);
+        navigate(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
+        usersocket.off("roomIsReady")
+    })
     const fetchMsgs = async () => {
       const chans: { rooms: RoomDto[] } = await ChatAPI.getRoomsFromUser();
       setRooms(chans.rooms);

@@ -14,7 +14,7 @@ export class GameSocketIOController {
       socket.on('disconnect', () => {
         console.log('Socket disconnected: ' + socket.id);
         //do things here to remove user from a game it might be in maybe ?
-        delete gameSocketIO.socketMap[socket.id];
+        this.gameSocketIO.socketMap.delete(socket.id)
       });
 
       socket.on('registerId', (user) => {
@@ -31,7 +31,7 @@ export class GameSocketIOController {
         if (gameSocketIO.roomMap.size == 0 || room == null) {
           //no room found, add new room
           const newRoom: GameRoom = new GameRoom(
-            new Player(this.gameSocketIO.socketMap[socket.id], socket),
+            new Player(this.gameSocketIO.socketMap.get(socket.id), socket),
             gameSocketIO.getServer(),
           );
           gameSocketIO.roomMap.set(newRoom.getRoomName(), newRoom); //adds new room to list
@@ -39,7 +39,7 @@ export class GameSocketIOController {
         } else {
           //array isnt empty and there are rooms available
           const roomName = await this.gameSocketIO.makePlayerJoinRoom(
-            new Player(this.gameSocketIO.socketMap[socket.id], socket),
+            new Player(this.gameSocketIO.socketMap.get(socket.id), socket),
           );
           if (roomName == '') {
             socket.emit('noSuitableRoomFound');
@@ -52,10 +52,10 @@ export class GameSocketIOController {
 
       socket.on('joinPrivateGame', async () => {
         const newRoom: GameRoom = new GameRoom(
-          new Player(this.gameSocketIO.socketMap[socket.id], socket),
+          new Player(this.gameSocketIO.socketMap.get(socket.id), socket),
           gameSocketIO.getServer(),
         );
-        gameSocketIO.roomMap.set(newRoom.getRoomName(), newRoom); //adds new room to list
+        gameSocketIO.privateRoomMap.set(newRoom.getRoomName(), newRoom); //adds new room to list
         socket.join(newRoom.getRoomName()); //make client socket join room
         socket.emit('joinedGame', newRoom.getRoomName());
       });

@@ -9,28 +9,40 @@ import { NavigateFunction, useNavigate } from "react-router-dom";
 import { UserAPI } from "api/user.api";
 import { PrivateProfileDto } from "utils/user.dto";
 import { WebsocketContext } from "context/WebSocketContext";
-import { usersocket } from "views/Game/Matchmaking";
+import { usersocket, userid } from "views/Game/Matchmaking";
 import { Fetch } from "utils";
 
-if (usersocket.disconnected == true)
-{
-    usersocket.connect()
-}
 let interval = setInterval(async () => {
-    let userid = await getUserId()
-    if (userid != undefined && userid != "")
-    {
-        usersocket.on("ack", async (socketId) => {
-            console.log(getUserId())
-            
-            usersocket.emit("registerId", {userId: await getUserId(), socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
-            //usersocket.emit("joinRoom", roomId)
-            usersocket.off("ack")
+    try {
+        Fetch ('api/auth/who').then(async (response) =>
+        {
+        if(response.status === 200)
+            {
+                let userid = await getUserId()
+                if (userid != undefined && userid != "")
+                {
+                    usersocket.on("ack", async (socketId) => {
+                        console.log(getUserId())
+                        
+                        usersocket.emit("registerId", {userId: await getUserId(), socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+                        //usersocket.emit("joinRoom", roomId)
+                        usersocket.off("ack")
+                    })
+                    usersocket.emit("socketIsConnected");
+                    clearInterval(interval)
+                }
+            }
+            else
+            {
+                console.log("bruh")
+            }
         })
-        usersocket.emit("socketIsConnected");
-        clearInterval(interval)
     }
-}, 100)
+    catch{
+        
+    }
+}, 500)
+
 //usersocket.emit("socketIsConnected");
 
 interface ChatButtonGlobalOptionProps {
@@ -120,9 +132,6 @@ export const ChatButtonGlobalOption = ({
         }
     
         initIsBlocked();
-        //maybe try to move this in another component rendered not on a click but when the page is loaded ? or maybe something like 
-        //"allow game invites"
-        //LE PROBLEME YER LA ON RECOIT PAS CET EVENT LALALALALALALAL
         
     }, [user, chosenUser]);
 
