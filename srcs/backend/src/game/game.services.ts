@@ -338,7 +338,6 @@ export class GameSocketIOService {
                     }
                 }
                 catch (e) {
-                    console.log(e)
                 }
                 return room.getRoomName(); //return room name to make socket join
             }
@@ -377,7 +376,6 @@ export class GameSocketIOService {
                         })
                     }
                     catch (e) {
-                        console.log(e)
                     }
                     return room[1].getRoomName(); //return room name to make socket join
                 }
