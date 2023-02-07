@@ -15,11 +15,28 @@ import { JoinCreateRoomBar } from './leftbar/JoinCreateRoomBar'
 import { RoomTabs } from './leftbar/RoomTabs'
 import { DiscussionTabs } from './leftbar/DiscussionTabs'
 import { Contacts } from './rightbar/Contacts'
+import { useNavigate, NavigateFunction} from 'react-router'
+import { usersocket } from 'views/Game/Matchmaking'
+import { Fetch } from 'utils'
 
 enum ChannelType {
   none = 0,
   privateMessage = 1,
   publicChannel = 2,
+}
+
+async function getUserId(): Promise<string>
+{
+    var userid;
+    await Fetch ('api/profile/get/userid')
+        .then((response) => response.json())
+        .catch((err) => {
+            return ("None");
+        })
+        .then((data) => {
+           userid = data.userid;
+        })
+    return userid;
 }
 
 export const Chat = () => {
@@ -28,6 +45,23 @@ export const Chat = () => {
   const [privateMsgs, setPrivateMsgs] = React.useState<PrivateMsgsDto[]>([]);
   const [channelType, setChannelType] = React.useState<ChannelType>(ChannelType.none);
   const socket = React.useContext(WebsocketContext);
+  const navigate: NavigateFunction = useNavigate();
+
+  usersocket.on("inviteGamePrivate", async(roomId) => {
+    console.log("received invite")
+    usersocket.emit("joinRoom", roomId)
+    usersocket.emit("socketIsConnected");
+    usersocket.emit("registerId", {userId: await getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+    usersocket.off("inviteGamePrivate") 
+  })
+
+  usersocket.on("roomIsReady", (room) =>
+  {
+      console.log("Joining private game");
+      console.log(room);
+      navigate(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
+      usersocket.off("roomIsReady")
+  })
 
   React.useEffect(() => {
     const fetchMsgs = async () => {

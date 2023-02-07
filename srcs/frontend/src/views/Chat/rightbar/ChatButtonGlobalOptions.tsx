@@ -20,7 +20,6 @@ let interval = setInterval(async () => {
     let userid = await getUserId()
     if (userid != undefined && userid != "")
     {
-        console.log("ok testign")
         usersocket.on("ack", async (socketId) => {
             console.log(getUserId())
             
@@ -104,14 +103,6 @@ export const ChatButtonGlobalOption = ({
         handleClose();
     };
 
-    
-    usersocket.on("roomIsReady", (room) =>
-    {
-        console.log("Joining private game");
-        console.log(room);
-        navigate(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
-        usersocket.off("roomIsReady")
-    })
     usersocket.on("bullshit", () => {
         console.log("this is bullshit")
     })

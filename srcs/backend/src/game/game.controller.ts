@@ -84,7 +84,7 @@ export class GameSocketIOController {
           );
           console.log('id: ' + socketid);
           console.log("emiiting to socket")
-          server.emit('inviteGamePrivate', inviteData['roomId']);
+          server.to(socketid).emit('inviteGamePrivate', inviteData['roomId']);
         } catch {
           console.log('oops failed');
         }

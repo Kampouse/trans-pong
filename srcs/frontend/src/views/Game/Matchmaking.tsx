@@ -97,27 +97,6 @@ function fetchUserId() {
     return(userId)
 }
 
-function fuckyou() {
-    let interval = setInterval(async() => {
-        if(usersocket.disconnected != true)
-        {
-            usersocket.on("inviteGamePrivate", async(roomId) => {
-                console.log("received invite")
-                usersocket.emit("joinRoom", roomId)
-                usersocket.emit("socketIsConnected");
-                usersocket.emit("registerId", {userId: getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
-                usersocket.off("inviteGamePrivate") 
-            })
-            usersocket.on("roomIsReady", (room) =>
-            {
-                console.log("Joining private game");
-                console.log(room);
-                navigate(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
-                usersocket.off("roomIsReady")
-            })
-        }
-    }, 100)
-}
 
 function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, setOpenQueue: any){
     e.preventDefault();
