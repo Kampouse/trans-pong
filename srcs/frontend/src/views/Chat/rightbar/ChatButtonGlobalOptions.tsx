@@ -40,7 +40,7 @@ export const ChatButtonGlobalOption = ({
     };
   
     const handleProfile = () => {
-        navigate(`/profile/${chosenUser.username}`, { replace: true });
+        navigate(`/profile/${chosenUser.username}`);
     };
 
     const handlePrivateMsg = () => {

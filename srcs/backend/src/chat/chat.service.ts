@@ -70,6 +70,9 @@ export class ChatService {
     roomDto.messages = [];
     if (password && password !== '') {
       roomDto.password = await hashPwd(password);
+      console.log(
+        ` this the hashed password for ${password} - ${roomDto.password}`,
+      );
     } else {
       roomDto.password = password;
     }
@@ -99,7 +102,11 @@ export class ChatService {
 
   /*********************** SEND MESSAGE ROOM && PRIVATE MESSAGE ************************/
 
-  addNewRoomMessage(room: RoomDto, user: PrivateProfileDto, message: string): MessageDto {
+  addNewRoomMessage(
+    room: RoomDto,
+    user: PrivateProfileDto,
+    message: string,
+  ): MessageDto {
     const messageDto: MessageDto = new MessageDto();
     messageDto.message = message;
     messageDto.userId = user.username;
@@ -113,7 +120,9 @@ export class ChatService {
   /*********************** LEAVE ROOM  ************************/
 
   leaveRoom(userId: string, room: RoomDto) {
-    const userIndex = room.users.findIndex(({ username }) => username === userId);
+    const userIndex = room.users.findIndex(
+      ({ username }) => username === userId,
+    );
 
     if (userIndex > -1) {
       room.users.splice(userIndex, 1);
@@ -275,7 +284,9 @@ export class ChatService {
   }
 
   async getUserFromSocket(socket: Socket): Promise<PrivateProfileDto> {
-    const userDto: PrivateProfileDto = await this.authService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.authService.getUserFromSocket(
+      socket,
+    );
     return userDto;
   }
 
@@ -330,7 +341,9 @@ export class ChatService {
   }
 
   async addSocketToRooms(socket: Socket) {
-    const userDto: PrivateProfileDto = await this.authService.getUserFromSocket(socket);
+    const userDto: PrivateProfileDto = await this.authService.getUserFromSocket(
+      socket,
+    );
     if (!userDto) {
       return;
     }
