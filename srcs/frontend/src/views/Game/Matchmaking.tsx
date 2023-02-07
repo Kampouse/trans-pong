@@ -18,7 +18,7 @@ export default function Matchmaking()
 {
 
     const nav = useNavigate();
-    usersocket.disconnect(); //automatically disconnect socket on render
+    //usersocket.disconnect(); //automatically disconnect socket on render
     const userid = fetchUserId();
     const [openQueue, setOpenQueue] = useState(false);
     const snackbarMsg = useRef('')

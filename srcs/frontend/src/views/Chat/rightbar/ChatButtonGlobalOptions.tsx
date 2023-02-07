@@ -12,6 +12,7 @@ import { WebsocketContext } from "context/WebSocketContext";
 import { usersocket, userid } from "views/Game/Matchmaking";
 import { Fetch } from "utils";
 
+/*
 let interval = setInterval(async () => {
     try {
         Fetch ('api/auth/who').then(async (response) =>
@@ -42,7 +43,7 @@ let interval = setInterval(async () => {
         
     }
 }, 500)
-
+*/
 //usersocket.emit("socketIsConnected");
 
 interface ChatButtonGlobalOptionProps {

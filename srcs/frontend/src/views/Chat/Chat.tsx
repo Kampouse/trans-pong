@@ -40,6 +40,7 @@ async function getUserId(): Promise<string>
     return userid;
 }
 
+let i = 0
 export const Chat = () => {
   const [tabIndex, setTabIndex] = React.useState<number>(0);
   const [rooms, setRooms] = React.useState<RoomDto[]>([]);
@@ -48,9 +49,12 @@ export const Chat = () => {
   const socket = React.useContext(WebsocketContext);
   const navigate: NavigateFunction = useNavigate();
   usersocket.connect()
-
-
-  React.useEffect(() => {
+  while (i < 1)
+  {
+    usersocket.emit("socketIsConnected");
+    i++
+  }
+  useEffect(() => {
     usersocket.on("inviteGamePrivate", async(roomId) => {
       console.log("received invite")
       usersocket.emit("joinRoom", roomId)
@@ -65,7 +69,18 @@ export const Chat = () => {
         console.log(room);
         navigate(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
         usersocket.off("roomIsReady")
+        i = 0
     })
+    usersocket.on("ack", async (socketId) => {
+      console.log(getUserId())
+      
+      usersocket.emit("registerId", {userId: await getUserId(), socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+      //usersocket.emit("joinRoom", roomId)
+      usersocket.off("ack")
+    })
+  })
+
+  React.useEffect(() => {
     const fetchMsgs = async () => {
       const chans: { rooms: RoomDto[] } = await ChatAPI.getRoomsFromUser();
       setRooms(chans.rooms);

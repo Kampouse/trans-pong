@@ -9,22 +9,7 @@ import { ChatButtonList } from './ChatButtonList';
 import { Fetch } from 'utils';
 import { FriendChatOpenButton } from './FriendChatOpenButton';
 
-const useFetch = () =>
-{
-	const [profileReq, setProfileReq] = React.useState<any>(null);
-	
-	React.useEffect(() => {
-		Fetch('http://localhost:3000/profile')
-      .then((response) => response.json())
-			.then((data) => {
-				setProfileReq(data);
-			})
-			.catch((err) => {
-        console.error(err);
-      })       
-	})
-	return {profileReq};
-}
+
 
 
 interface ContactsProps {
@@ -74,7 +59,22 @@ export const Contacts = ({
   const handleFriendCloseButton = () => {
     setOpenButtons(null);
   };
-  
+  const useFetch = () =>
+{
+	const [profileReq, setProfileReq] = React.useState<any>(null);
+	
+	React.useEffect(() => {
+		Fetch('http://localhost:3000/profile')
+      .then((response) => response.json())
+			.then((data) => {
+				setProfileReq(data);
+			})
+			.catch((err) => {
+        console.error(err);
+      })       
+	})
+	return {profileReq};
+}
   const {profileReq: friends} = useFetch();
   return (
     <>
