@@ -85,7 +85,8 @@ export const Chat = () => {
       const chans: { rooms: RoomDto[] } = await ChatAPI.getRoomsFromUser();
       setRooms(chans.rooms);
       const pms: { privateMsgs: PrivateMsgsDto[] } = await ChatAPI.getPMsFromUser();
-      setPrivateMsgs(pms.privateMsgs);
+			if (pms)
+      	setPrivateMsgs(pms.privateMsgs);
     };
 
     fetchMsgs();

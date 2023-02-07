@@ -66,7 +66,7 @@ const SinglePlayerCanvas = () => {
 		return () => clearInterval(interval)    
   }, [])
 
-	addEventListener("keydown", (event) => {
+	const handleKeyDown = (event) => {
 		if (event.key === 'ArrowUp' || event.key === 'ArrowDown')
 			event.preventDefault();
 		if (event.key === 'ArrowUp')
@@ -74,18 +74,23 @@ const SinglePlayerCanvas = () => {
 		if (event.key === 'ArrowDown')
 			keyActions.down = true;
     // console.log('User pressed: ', event.key);
-	});
+	};
 
-	addEventListener("keyup", (event) => {
+	const handleKeyUp = (event) => {
 		if (event.key === 'ArrowUp')
 			keyActions.up = false;
 		if (event.key === 'ArrowDown')
 			keyActions.down = false;
     // console.log('User released: ', event.key);
-	});
+	};
 
   return (
-    <div className="mx-auto w-full h-full pt-[50px] overflow-y-scroll scrollbar-hide">
+    <div 
+			className="mx-auto w-full h-full pt-[50px] overflow-y-scroll scrollbar-hide"
+			tabIndex={0}
+			onKeyDownCapture={handleKeyDown}
+			onKeyUpCapture={handleKeyUp}
+		>
       <div
         id="container"
         ref={div}
@@ -105,7 +110,7 @@ const SinglePlayerCanvas = () => {
 	        </p>
 				}
         <div
-				className="rounded-full bg-white grid justify-center m-auto
+				className="rounded-full grid justify-center m-auto
 				xl:h-[125px] xl:w-[125px]
 				lg:h-[100px] lg:w-[100px]
 				md:h-[75px] md:w-[75px]
@@ -122,7 +127,7 @@ const SinglePlayerCanvas = () => {
 					}
         </div>
         <div
-          className="rounded-full bg-white grid justify-center m-auto
+          className="rounded-full grid justify-center m-auto
 												xl:h-[125px] xl:w-[125px]
 												lg:h-[100px] lg:w-[100px]
 												md:h-[75px] md:w-[75px]
