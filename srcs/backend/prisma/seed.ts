@@ -146,6 +146,82 @@ async function main()
 
     //  Create a bunch of friend request's
 
+    //  Add harsh
+
+    try
+    {
+        await prisma.friendRequest.create({
+            data: {
+                sender: 'hbanthiy',
+                receiver: evaluatorUsername,
+                status: 'accepted',
+            },
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.create({
+            data: {
+                sender: 'hbanthiy',
+                receiver: 'bperron',
+                status: 'accepted',
+            },
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.create({
+            data: {
+                sender: 'hbanthiy',
+                receiver: 'jvillefr',
+                status: 'accepted',
+            },
+        })
+    }
+    catch{}
+
+    //  Add gab
+
+    try
+    {
+        await prisma.friendRequest.create({
+            data: {
+                sender: 'gasselin',
+                receiver: evaluatorUsername,
+                status: 'accepted',
+            },
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.create({
+            data: {
+                sender: 'gasselin',
+                receiver: 'bperron',
+                status: 'accepted',
+            },
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.friendRequest.create({
+            data: {
+                sender: 'gasselin',
+                receiver: 'jvillefr',
+                status: 'accepted',
+            },
+        })
+    }
+    catch{}
+
     console.log("Creating a bunch of friend request's")
 
     try
@@ -308,14 +384,32 @@ async function main()
 
     console.log("Creating a bunch of games")
 
+    //  Harsh
+
     try
     {
         await prisma.game.create({
             data: {
-                gameRoomID: 'testData0',
+                gameRoomID: 'testData100',
+                leftPlayer: 'hbanthiy',
+                leftPlayerScore: 5,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 2,
+                active: false,
+                winner: 'hbanthiy',
+            },
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.create({
+            data: {
+                gameRoomID: 'testData101',
                 leftPlayer: 'jbadia',
                 leftPlayerScore: 5,
-                rightPlayer: 'gcollet',
+                rightPlayer: 'hbanthiy',
                 rightPlayerScore: 2,
                 active: false,
                 winner: 'jbadia',
@@ -328,7 +422,73 @@ async function main()
     {
         await prisma.game.create({
             data: {
-                gameRoomID: 'testData1',
+                gameRoomID: 'testData102',
+                leftPlayer: 'hbanthiy',
+                leftPlayerScore: 5,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 2,
+                active: false,
+                winner: 'hbanthiy',
+            },
+        })
+    }
+    catch{}
+
+    //  Gab
+
+    try
+    {
+        await prisma.game.create({
+            data: {
+                gameRoomID: 'testData103',
+                leftPlayer: 'gasselin',
+                leftPlayerScore: 5,
+                rightPlayer: evaluatorUsername,
+                rightPlayerScore: 2,
+                active: false,
+                winner: 'gasselin',
+            },
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.create({
+            data: {
+                gameRoomID: 'testData104',
+                leftPlayer: 'jbadia',
+                leftPlayerScore: 5,
+                rightPlayer: 'gasselin',
+                rightPlayerScore: 2,
+                active: false,
+                winner: 'jbadia',
+            },
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.create({
+            data: {
+                gameRoomID: 'testData105',
+                leftPlayer: 'gasselin',
+                leftPlayerScore: 5,
+                rightPlayer: 'gcollet',
+                rightPlayerScore: 2,
+                active: false,
+                winner: 'gasselin',
+            },
+        })
+    }
+    catch{}
+
+    try
+    {
+        await prisma.game.create({
+            data: {
+                gameRoomID: 'testData106',
                 leftPlayer: 'jvigneau',
                 leftPlayerScore: 200,
                 rightPlayer: 'tberube',
