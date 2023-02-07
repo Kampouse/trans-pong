@@ -94,7 +94,7 @@ export const Contacts = ({
             
             {friends.friendList.map((MdisplayedUser: FriendDto, index: number) => (
 
-            <div key={'friend' + MdisplayedUser.friendUser + String(index)}>
+            <div key={'friend' + MdisplayedUser.friendUser + index}>
             <FriendChatOpenButton 
               displayedUser={MdisplayedUser}
               handleFriendOpenContact={handleFriendOpenButton}
@@ -115,9 +115,9 @@ export const Contacts = ({
 
             {otherUsers.length > 0 && otherUsers.map((displayedUser: PrivateProfileDto, index: number) => (
 
-            (displayedUser.username && displayedUser.username !== user?.username) &&
+            (displayedUser && displayedUser.username && displayedUser.username !== user?.username) &&
 
-            <div key={'members' + displayedUser.username + String(index)}>
+            <div key={'members' + displayedUser.username + index}>
 
             <UserChatOpenButton 
               displayedUser={displayedUser}
