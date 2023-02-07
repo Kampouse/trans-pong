@@ -111,6 +111,11 @@ export const ChatButtonGlobalOption = ({
             //send room id to other player
             console.log(chosenUser.username)
             usersocket.emit("inviteGame", {"user": chosenUser.username, "roomId": roomId});
+            usersocket.on("playerBusy", () => {
+                usersocket.off("playerbusy")
+                usersocket.disconnect()
+                usersocket.connect()
+            })
             usersocket.off("joinedGame")
         })
         handleClose();

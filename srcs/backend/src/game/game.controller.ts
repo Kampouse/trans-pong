@@ -78,13 +78,20 @@ export class GameSocketIOController {
           user = await prisma.user.findUnique({
             where: { username: inviteData['user'] },
           });
-          const socketid = this.getUserFromSocketId(
-            this.gameSocketIO.socketMap,
-            user.userID,
-          );
-          console.log('id: ' + socketid);
-          console.log("emiiting to socket")
-          server.to(socketid).emit('inviteGamePrivate', inviteData['roomId']);
+          if(user.userStatus != "playing")
+          {
+            const socketid = this.getUserFromSocketId(
+              this.gameSocketIO.socketMap,
+              user.userID,
+            );
+            console.log('id: ' + socketid);
+            console.log("emiiting to socket")
+            server.to(socketid).emit('inviteGamePrivate', inviteData['roomId']);
+          }
+          else{
+            socket.emit("playerBusy")
+            socket.leave(inviteData['roomId'])
+          }
         } catch {
           console.log('oops failed');
         }

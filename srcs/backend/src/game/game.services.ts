@@ -6,6 +6,7 @@ import { prisma } from 'src/main';
 import { AnymatchFn } from "vite";
 import { time } from "console";
 import { StrictEventEmitter } from "socket.io/dist/typed-events";
+import { userInfo } from "os";
 
 
 export class Player {
@@ -314,28 +315,31 @@ export class GameSocketIOService {
                 try {
                     const leftuser = await prisma.user.findUnique({ where: { userID: room.getPlayer1Id() } })
                     const rightuser = await prisma.user.findUnique({ where: { userID: room.getPlayer2Id() } })
-                    await prisma.game.create(
-                        {
+                    if(leftuser.userStatus != "playing") //make sure it only happens once
+                    {
+                        await prisma.game.create(
+                            {
+                                data: {
+                                    gameRoomID: room.getRoomName().toString(),
+                                    leftPlayer: leftuser.login42,
+                                    rightPlayer: rightuser.login42,
+                                    active: true,
+                                }
+                            })
+                        await prisma.user.update({
+                            where: { userID: room.getPlayer1Id() },
                             data: {
-                                gameRoomID: room.getRoomName().toString(),
-                                leftPlayer: leftuser.login42,
-                                rightPlayer: rightuser.login42,
-                                active: true,
+                                userStatus: "playing"
                             }
                         })
-                    await prisma.user.update({
-                        where: { userID: room.getPlayer1Id() },
-                        data: {
-                            userStatus: "playing"
-                        }
-                    })
-                    await prisma.user.update({
-                        where: { userID: room.getPlayer2Id() },
-                        data: {
-                            userStatus: "playing"
-                        }
-                    })
-                    console.log("game created")
+                        await prisma.user.update({
+                            where: { userID: room.getPlayer2Id() },
+                            data: {
+                                userStatus: "playing"
+                            }
+                        })
+                        console.log("game created")
+                    }
                 }
                 catch (e) {
                     console.log(e)
