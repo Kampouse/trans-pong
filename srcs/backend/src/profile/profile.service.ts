@@ -469,9 +469,24 @@ export class ProfileService {
             return (response)
         }
 
+        try
+        {
+            let userExist = await prisma.user.findUnique({
+                where : {
+                    username: newUsername
+                }
+            })
+
+            if (userExist)
+            {
+                response.message = "Update username Error 03: Username already taken.";
+                return (response);
+            }
+        }
+        catch{}
+
         //  Put the username with a capital first letter and the rest in lowercase
         newUsername = newUsername.toLowerCase();
-        newUsername = newUsername.at(0).toUpperCase() + newUsername.substring(1);
         try {
             await prisma.user.update({
                 where: {
