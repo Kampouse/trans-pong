@@ -111,6 +111,8 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, set
         console.log("Match found! Redirecting to game.");
         console.log(room);
         nav(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
+        usersocket.off("ack")
+        usersocket.off("roomIsReady")
     })
     usersocket.on("connect", () => {
         console.log(usersocket.id)

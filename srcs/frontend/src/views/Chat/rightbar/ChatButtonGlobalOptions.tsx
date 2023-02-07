@@ -97,6 +97,7 @@ export const ChatButtonGlobalOption = ({
         socket.emit('sendPM', {userId: chosenUser.username});
     };
   
+    
     const handleInvitation = async () => {
         console.log("hello")
         usersocket.emit("socketIsConnected");

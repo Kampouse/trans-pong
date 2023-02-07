@@ -7,6 +7,7 @@ import { AnymatchFn } from "vite";
 import { time } from "console";
 import { StrictEventEmitter } from "socket.io/dist/typed-events";
 import { userInfo } from "os";
+import { userStatus } from "@prisma/client";
 
 
 export class Player {
@@ -34,7 +35,6 @@ export class Player {
             this.unsetKeyArrowUp();
         })
         socket.on("playerReady", () => {
-            console.log("this player is ready");
             this.status = "ready";
         })
         socket.on("disconnect", () => {
@@ -116,7 +116,6 @@ export class GameRoom {
 
     async setPlayer1() { //set Player1 info into game update object
         try {
-            console.log(this.player1.getUserId())
             const user = await prisma.user.findUnique({ where: { userID: this.player1.getUserId() } })
             this.gameUpdateObject.leftPlayer.playerPhoto = user.imagePath
             this.gameUpdateObject.leftPlayer.playerUser = user.login42
@@ -131,7 +130,6 @@ export class GameRoom {
             this.player2 = player;
             try {
                 const user = await prisma.user.findUnique({ where: { userID: player.getUserId() } })
-                console.log(user)
                 this.gameUpdateObject.rightPlayer.playerPhoto = user.imagePath
                 this.gameUpdateObject.rightPlayer.playerUser = user.login42
             }
@@ -307,7 +305,6 @@ export class GameSocketIOService {
         let i = 0;
         if(roomId != ""){ //private room only
             let room: GameRoom = this.privateRoomMap.get(roomId)
-            console.log(room)
             if (room.getPlayer1Id() != player2.getUserId()) {
                 room.setPlayer2(player2) //assign player2 since player1 is already present
                 room.setPlayer1();
@@ -338,12 +335,10 @@ export class GameSocketIOService {
                                 userStatus: "playing"
                             }
                         })
-                        console.log("game created")
                     }
                 }
                 catch (e) {
                     console.log(e)
-                    console.log(room.getRoomName())
                 }
                 return room.getRoomName(); //return room name to make socket join
             }
@@ -380,7 +375,6 @@ export class GameSocketIOService {
                                 userStatus: "playing"
                             }
                         })
-                        console.log("game created")
                     }
                     catch (e) {
                         console.log(e)

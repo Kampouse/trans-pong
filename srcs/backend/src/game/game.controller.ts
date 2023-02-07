@@ -61,7 +61,6 @@ export class GameSocketIOController {
       });
 
       socket.on('joinRoom', async (roomId) => {
-        console.log(socket.id);
         socket.join(roomId);
         const roomName = await this.gameSocketIO.makePlayerJoinRoom(
           new Player(this.gameSocketIO.socketMap.get(socket.id), socket),
@@ -71,10 +70,8 @@ export class GameSocketIOController {
       });
 
       socket.on('inviteGame', async (inviteData) => {
-        console.log(inviteData)
         let user;
         try {
-          console.log('getting user');
           user = await prisma.user.findUnique({
             where: { username: inviteData['user'] },
           });
@@ -84,8 +81,6 @@ export class GameSocketIOController {
               this.gameSocketIO.socketMap,
               user.userID,
             );
-            console.log('id: ' + socketid);
-            console.log("emiiting to socket")
             server.to(socketid).emit('inviteGamePrivate', inviteData['roomId']);
           }
           else{
@@ -106,7 +101,6 @@ export class GameSocketIOController {
       });
 
       socket.on('spectateGame', (roomID) => {
-        console.log(roomID);
         socket.join(roomID);
         socket.emit('roomIsReady');
       });
@@ -151,11 +145,8 @@ export class GameSocketIOController {
   }
 
   getUserFromSocketId(map: Map<string, string>, searchValue: string): string {
-    console.log(map);
-    console.log(searchValue);
     let ret = ""
     map.forEach((value, key) => {
-        console.log("value: " + value)
         if(value == searchValue)
             ret = key
     });
