@@ -18,7 +18,7 @@ export default function Matchmaking()
 {
 
     const nav = useNavigate();
-    usersocket.disconnect(); //automatically disconnect socket on render
+    //usersocket.disconnect(); //automatically disconnect socket on render
     const userid = fetchUserId();
     const [openQueue, setOpenQueue] = useState(false);
     const snackbarMsg = useRef('')
@@ -111,6 +111,8 @@ function startMultiplayerMatchmake(e, nav: NavigateFunction, userid: string, set
         console.log("Match found! Redirecting to game.");
         console.log(room);
         nav(`/game/${room}`, {state:{socketid: usersocket.id}}); //pass socketid to retrieve it on the other side
+        usersocket.off("ack")
+        usersocket.off("roomIsReady")
     })
     usersocket.on("connect", () => {
         console.log(usersocket.id)

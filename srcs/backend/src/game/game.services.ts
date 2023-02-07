@@ -4,6 +4,10 @@ import { GameUpdate, UpdateProps, UpdateProp } from './object.game'
 import * as io from 'socket.io'
 import { prisma } from 'src/main';
 import { AnymatchFn } from "vite";
+import { time } from "console";
+import { StrictEventEmitter } from "socket.io/dist/typed-events";
+import { userInfo } from "os";
+import { userStatus } from "@prisma/client";
 
 
 export class Player {
@@ -31,7 +35,6 @@ export class Player {
             this.unsetKeyArrowUp();
         })
         socket.on("playerReady", () => {
-            console.log("this player is ready");
             this.status = "ready";
         })
         socket.on("disconnect", () => {
@@ -82,7 +85,7 @@ export class GameRoom {
 
 
     constructor(player1: Player, server: io.Server) {
-        this.roomName = this.makeid(10); //default
+        this.roomName = this.makeid(12); //default
         this.player1 = player1;
         this.status = "waiting" //default status
         this.gameUpdateObject = new GameUpdate()
@@ -127,7 +130,6 @@ export class GameRoom {
             this.player2 = player;
             try {
                 const user = await prisma.user.findUnique({ where: { userID: player.getUserId() } })
-                console.log(user)
                 this.gameUpdateObject.rightPlayer.playerPhoto = user.imagePath
                 this.gameUpdateObject.rightPlayer.playerUser = user.login42
             }
@@ -262,6 +264,7 @@ export class GameSocketIOService {
     public socketMap: Map<string, string> //socketid, userid, maps socket id's to user id's for easy retrieval
     public sessionMap: Map<any, any>
     public roomMap: Map<string, GameRoom>
+    public privateRoomMap: Map<string, GameRoom>
 
 
     constructor() {
@@ -278,6 +281,7 @@ export class GameSocketIOService {
         //this.roomMap = new Array<GameRoom>;
         // eslint-disable-next-line prettier/prettier
         this.roomMap = new Map<string, GameRoom>();
+        this.privateRoomMap = new Map<string, GameRoom>();
         this.sessionMap = new Map();
         console.log("Multiplayer socket instance started")
         this.gameRoomUpdateInterval = setInterval(() => {
@@ -297,8 +301,48 @@ export class GameSocketIOService {
     public getRoomForPlayer(player: Player) {
 
     }
-    async makePlayerJoinRoom(player2: Player) { //returning room name
+    async makePlayerJoinRoom(player2: Player, roomId = "") { //returning room name
         let i = 0;
+        if(roomId != ""){ //private room only
+            let room: GameRoom = this.privateRoomMap.get(roomId)
+            if (room.getPlayer1Id() != player2.getUserId()) {
+                room.setPlayer2(player2) //assign player2 since player1 is already present
+                room.setPlayer1();
+                room.status = "active"; //change room status to active
+                try {
+                    const leftuser = await prisma.user.findUnique({ where: { userID: room.getPlayer1Id() } })
+                    const rightuser = await prisma.user.findUnique({ where: { userID: room.getPlayer2Id() } })
+                    if(leftuser.userStatus != "playing") //make sure it only happens once
+                    {
+                        await prisma.game.create(
+                            {
+                                data: {
+                                    gameRoomID: room.getRoomName().toString(),
+                                    leftPlayer: leftuser.login42,
+                                    rightPlayer: rightuser.login42,
+                                    active: true,
+                                }
+                            })
+                        await prisma.user.update({
+                            where: { userID: room.getPlayer1Id() },
+                            data: {
+                                userStatus: "playing"
+                            }
+                        })
+                        await prisma.user.update({
+                            where: { userID: room.getPlayer2Id() },
+                            data: {
+                                userStatus: "playing"
+                            }
+                        })
+                    }
+                }
+                catch (e) {
+                }
+                return room.getRoomName(); //return room name to make socket join
+            }
+        }
+        else{
         for (const room of this.roomMap) {
             if (room[1].status == "waiting") {
                 if (room[1].getPlayer1Id() != player2.getUserId()) {
@@ -330,10 +374,8 @@ export class GameSocketIOService {
                                 userStatus: "playing"
                             }
                         })
-                        console.log("game created")
                     }
                     catch (e) {
-                        console.log(e)
                     }
                     return room[1].getRoomName(); //return room name to make socket join
                 }
@@ -341,6 +383,7 @@ export class GameSocketIOService {
             i++;
         }
         return ("")
+    }
     }
 
 }

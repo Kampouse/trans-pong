@@ -9,10 +9,59 @@ import { NavigateFunction, useNavigate } from "react-router-dom";
 import { UserAPI } from "api/user.api";
 import { PrivateProfileDto } from "utils/user.dto";
 import { WebsocketContext } from "context/WebSocketContext";
+import { usersocket, userid } from "views/Game/Matchmaking";
+import { Fetch } from "utils";
+
+/*
+let interval = setInterval(async () => {
+    try {
+        Fetch ('api/auth/who').then(async (response) =>
+        {
+        if(response.status === 200)
+            {
+                let userid = await getUserId()
+                if (userid != undefined && userid != "")
+                {
+                    usersocket.on("ack", async (socketId) => {
+                        console.log(getUserId())
+                        
+                        usersocket.emit("registerId", {userId: await getUserId(), socket: socketId}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+                        //usersocket.emit("joinRoom", roomId)
+                        usersocket.off("ack")
+                    })
+                    usersocket.emit("socketIsConnected");
+                    clearInterval(interval)
+                }
+            }
+            else
+            {
+                console.log("bruh")
+            }
+        })
+    }
+    catch{
+        
+    }
+}, 500)
+*/
+//usersocket.emit("socketIsConnected");
 
 interface ChatButtonGlobalOptionProps {
     chosenUser: PrivateProfileDto, 
     handleClose: () => void
+}
+async function getUserId(): Promise<string>
+{
+    var userid;
+    await Fetch ('api/profile/get/userid')
+        .then((response) => response.json())
+        .catch((err) => {
+            return ("None");
+        })
+        .then((data) => {
+           userid = data.userid;
+        })
+    return userid;
 }
 
 export const ChatButtonGlobalOption = ({
@@ -40,7 +89,7 @@ export const ChatButtonGlobalOption = ({
     };
   
     const handleProfile = () => {
-        navigate(`/profile/${chosenUser.username}`);
+        navigate(`/profile/${chosenUser.username}`, { replace: true });
     };
 
     const handlePrivateMsg = () => {
@@ -48,10 +97,31 @@ export const ChatButtonGlobalOption = ({
         socket.emit('sendPM', {userId: chosenUser.username});
     };
   
-    const handleInvitation = () => {
+    
+    const handleInvitation = async () => {
+        usersocket.emit("socketIsConnected");
+        usersocket.on("ack", async (socketId) => {
+            usersocket.emit("registerId", {userId: await getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+            usersocket.emit("joinPrivateGame")
+            usersocket.off("ack")
+        })
+        usersocket.on("joinedGame", async (roomId) => {
+            //socket.emit("roomToJoin", roomId)
+            //send room id to other player
+            usersocket.emit("inviteGame", {"user": chosenUser.username, "roomId": roomId});
+            usersocket.on("playerBusy", () => {
+                usersocket.off("playerbusy")
+                usersocket.disconnect()
+                usersocket.connect()
+            })
+            usersocket.off("joinedGame")
+        })
         handleClose();
-        socket.emit("inviteGame", chosenUser.username);
     };
+
+    usersocket.on("bullshit", () => {
+        console.log("this is bullshit")
+    })
 
     React.useEffect(() => {
         const initIsBlocked = async () => {
@@ -66,7 +136,7 @@ export const ChatButtonGlobalOption = ({
         }
     
         initIsBlocked();
-
+        
     }, [user, chosenUser]);
 
     return (
