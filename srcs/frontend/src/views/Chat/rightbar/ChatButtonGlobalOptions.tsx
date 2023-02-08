@@ -9,10 +9,26 @@ import { NavigateFunction, useNavigate } from "react-router-dom";
 import { UserAPI } from "api/user.api";
 import { PrivateProfileDto } from "utils/user.dto";
 import { WebsocketContext } from "context/WebSocketContext";
+import { usersocket, userid } from "views/Game/Matchmaking";
+import { Fetch } from "utils";
 
 interface ChatButtonGlobalOptionProps {
     chosenUser: PrivateProfileDto, 
     handleClose: () => void
+}
+
+async function getUserId(): Promise<string>
+{
+    var userid;
+    await Fetch ('api/profile/get/userid')
+        .then((response) => response.json())
+        .catch((err) => {
+            return ("None");
+        })
+        .then((data) => {
+           userid = data.userid;
+        })
+    return userid;
 }
 
 export const ChatButtonGlobalOption = ({
@@ -47,10 +63,29 @@ export const ChatButtonGlobalOption = ({
         handleClose();
         socket.emit('sendPM', {userId: chosenUser.username});
     };
-  
-    const handleInvitation = () => {
+
+    const handleInvitation = async () => {
+        console.log("hello")
+        usersocket.emit("socketIsConnected");
+        usersocket.on("ack", async (socketId) => {
+            console.log("sending invite")
+            usersocket.emit("registerId", {userId: await getUserId(), socket: usersocket.id}); //sending id because we cant send the socket over, so we will retrieve it on the server side
+            usersocket.emit("joinPrivateGame")
+            usersocket.off("ack")
+        })
+        usersocket.on("joinedGame", async (roomId) => {
+            //socket.emit("roomToJoin", roomId)
+            //send room id to other player
+            console.log(chosenUser.username)
+            usersocket.emit("inviteGame", {"user": chosenUser.username, "roomId": roomId});
+            usersocket.on("playerBusy", () => {
+                usersocket.off("playerbusy")
+                usersocket.disconnect()
+                usersocket.connect()
+            })
+            usersocket.off("joinedGame")
+        })
         handleClose();
-        socket.emit("inviteGame", chosenUser.username);
     };
 
     React.useEffect(() => {

@@ -25,7 +25,7 @@ export interface RoomDto
 
 export class ChatAPI
 {
-    public static async getRoomsFromUser(): Promise<{ rooms: RoomDto[] }> {
+    public static async getRoomsFromUser(): Promise<{ rooms: RoomDto[] | undefined }> {
 
         const resp = await fetch(
           `http://localhost:3000/chat/userRooms`,

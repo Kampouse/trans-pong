@@ -32,6 +32,8 @@ export function SpectateMenu()
             <button className=' ring-1 ring-black hover:bg-purple-200 hover:text-black h-14 w-40 my-4 mx-[39%] px-5 text-xl rounded-md bg-sky-200 text-black' onClick={async () => 
             {
                 await getActiveGames(data, setData);
+                usersocket.disconnect()
+                usersocket.connect()
             }}>
                 Refresh
             </button>
@@ -80,11 +82,11 @@ export function SpectateMenu()
                                     {
                                         //  Open the game component here with gameRoomId stored in : currentMatch.gameID
                                         usersocket.emit("spectateGame", currentMatch.gameID);
-                                        usersocket.on("roomIsReady", () => {
+                                        usersocket.on("roomIsReady", () =>
+                                        {
                                             usersocket.off("roomIsReady");
                                             nav(`/game/${currentMatch.gameID}`)
                                         })
-                                        console.log("TODO: add opening game in spectator mode here");
                                     }}>
                                     Spectate
                                 </button>

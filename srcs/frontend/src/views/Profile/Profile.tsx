@@ -401,8 +401,8 @@ export async function getAuth(data: any, setOpenSnackbar, snackbarMsg, snackbarS
             {
                 data.authenticator = false;
                 setOpenSnackbar(true);
-                snackbarMsg.current ="Google two way auth is inactive";
-                snackbarSeverity.current = 'error'
+                snackbarMsg.current ="Google two way auth desactivated";
+                snackbarSeverity.current = 'success'
             }
         })
         .catch(error => {

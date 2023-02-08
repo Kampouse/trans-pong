@@ -5,6 +5,7 @@ import { PrivateProfileDto } from 'src/dtos/profile.dtos';
 import { Socket } from 'socket.io';
 import { hashPwd } from 'src/helper/bcrypt';
 import { ProfileService } from 'src/profile/profile.service';
+import { prisma } from 'src/main';
 
 export class MessageDto {
   userId: string;
@@ -97,16 +98,13 @@ export class ChatService {
     const sockets: Socket[] = this.authService.getSocketsFromUser(
       userDto.username,
     );
-    sockets.forEach((socket) => socket.join(room.roomName));
+    if (sockets)
+        sockets.forEach((socket) => socket.join(room.roomName));
   }
 
   /*********************** SEND MESSAGE ROOM && PRIVATE MESSAGE ************************/
 
-  addNewRoomMessage(
-    room: RoomDto,
-    user: PrivateProfileDto,
-    message: string,
-  ): MessageDto {
+  addNewRoomMessage( room: RoomDto, user: PrivateProfileDto, message: string,): MessageDto {
     const messageDto: MessageDto = new MessageDto();
     messageDto.message = message;
     messageDto.userId = user.username;
@@ -226,11 +224,7 @@ export class ChatService {
     this.PrivateMsgList.set(receiver.username, allReceiverMsgs);
   }
 
-  addPrivateMessage(
-    sender: PrivateProfileDto,
-    receiver: PrivateProfileDto,
-    message: string,
-  ): MessageDto {
+  addPrivateMessage( sender: PrivateProfileDto, receiver: PrivateProfileDto, message: string, ): MessageDto {
     const allSenderMsgs = this.PrivateMsgList.get(sender.username);
     const allReceiverMsgs = this.PrivateMsgList.get(receiver.username);
 
@@ -257,10 +251,25 @@ export class ChatService {
    **
    */
 
-  getAllRoomsFromUser(userId: string): RoomDto[] {
+  async getAllRoomsFromUser(userId: string): Promise<RoomDto[]>
+  {
+    let user;
+
+    try
+    {
+        user = await prisma.user.findUnique({
+            where:
+            {
+                login42: userId
+            }
+        })
+    }
+    catch{return}
+
+
     const userRooms = new Array<RoomDto>();
     this.RoomList.forEach((value) => {
-      value.users.find(({ username }) => username === userId) &&
+      value.users.find(({ username }) => username === user.username) &&
         userRooms.push(value);
     });
     return userRooms;
@@ -279,14 +288,28 @@ export class ChatService {
    **
    */
 
-  getUserPrivateMsgs(userId: string) {
+  async getUserPrivateMsgs(userId: string)
+  {
+    let user;
+
+    try
+    {
+        user = await prisma.user.findUnique({
+            where:
+            {
+                login42: userId
+            }
+        })
+    }
+    catch{return}
+    if (user)
+        return this.PrivateMsgList.get(user.username);
     return this.PrivateMsgList.get(userId);
   }
 
-  async getUserFromSocket(socket: Socket): Promise<PrivateProfileDto> {
-    const userDto: PrivateProfileDto = await this.authService.getUserFromSocket(
-      socket,
-    );
+  async getUserFromSocket(socket: Socket): Promise<PrivateProfileDto>
+  {
+    const userDto: PrivateProfileDto = await this.authService.getUserFromSocket(socket,);
     return userDto;
   }
 
@@ -336,7 +359,21 @@ export class ChatService {
     return roomReturnDto;
   }
 
-  async getUserFromId(id: string): Promise<PrivateProfileDto> {
+  async getUserFromId(id: string): Promise<PrivateProfileDto>
+  {
+    let user;
+
+    try
+    {
+        user = await prisma.user.findUnique({
+            where: {
+                username: id
+            }
+        })
+    }
+    catch {}
+    if (user)
+        return await this.userService.findOneById(user.login42);
     return await this.userService.findOneById(id);
   }
 

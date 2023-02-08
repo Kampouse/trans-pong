@@ -16,6 +16,7 @@ const [input, setInput] = useState<string>('')
              return  onClose(activeState);
            }
            else {
+            alert("Invalid token");
            }
         })
       }

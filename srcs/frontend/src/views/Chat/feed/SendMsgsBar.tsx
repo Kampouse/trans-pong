@@ -7,12 +7,19 @@ interface SendMsgsBarProps {
     message: string;
 }
 
+
+
 export const SendMsgBar = ({
     setSend,
     setMessage, 
     message
 }: SendMsgsBarProps) => {
-
+    
+    const handleKeyUp = event => {
+        if(event.key == "Enter")
+            setSend(true)
+      };
+    
     const handleMsgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(event.target.value);
     }
@@ -24,13 +31,14 @@ export const SendMsgBar = ({
             flexDirection: "column",
             alignItems: 'center',
         }}>
-            <TextField style={{width:"90%"}}
+            <TextField  style={{width:"90%"}}
                 id="outlined-multiline-static"
                 label="Type your message"
                 placeholder="Your message"
                 multiline
                 rows={3}
                 value={message}
+                onKeyUpCapture={handleKeyUp}
                 onChange={handleMsgChange}
                 InputProps={{
                     endAdornment: (

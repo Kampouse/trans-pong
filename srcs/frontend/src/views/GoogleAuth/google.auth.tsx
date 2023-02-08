@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import QRCode from 'qrcode.react';
 import {Fetch } from 'utils';
 import { getAuth } from "views/Profile/Profile";
+
 export function GoogleAuth({open, onClose})
 {
   const [qrCode, setQrCode] = useState<any>(null);
@@ -17,18 +18,27 @@ export function GoogleAuth({open, onClose})
   }, []);
  
 
-       
-        
-  const  handleSubmit  = async  (e) => {
+
+  const  handleSubmit  = async  (e) => 
+  {
     e.preventDefault();
-    const data =  await Fetch ('api/profile/create/validation', "POST", JSON.stringify({token: token}))
-    if (data.status >= 200) {
+    const data =  await Fetch('api/profile/create/validation', "POST", JSON.stringify({token: token}))
+    .catch((err) => {
+        console.error(err);
+      })
+
+    if (data && data.status >= 200)
+    {
       const isActive = await Fetch('api/profile/get/auth')
-      if (isActive.status === 200) {
-         const output = await isActive.json()
+      if (isActive.status === 200)
+      {
+        const output = await isActive.json()
         const activeState = output.message === "active" ? true : false;
         if (!activeState)
-          throw new Error('invalid token')
+        {
+            alert("Invalid token");
+            return;
+        }
         else {
           return onClose(activeState);
         }
@@ -37,6 +47,8 @@ export function GoogleAuth({open, onClose})
         console.log('error');
       }
     }
+    else
+        console.log("Invalid code")
   } 
     
 

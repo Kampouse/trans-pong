@@ -520,13 +520,10 @@ export class ChatGateway implements OnGatewayConnection {
   async newPMRoom(
     @ConnectedSocket() socket: Socket,
     @MessageBody() body: { userId: string },
-  ) {
-    const sender: PrivateProfileDto = await this.chatService.getUserFromSocket(
-      socket,
-    );
-    const receiver: PrivateProfileDto = await this.chatService.getUserFromId(
-      body.userId,
-    );
+  )
+  {
+    let sender: PrivateProfileDto = await this.chatService.getUserFromSocket(socket,);
+    let receiver: PrivateProfileDto = await this.chatService.getUserFromId(body.userId,);
 
     this.chatService.addToPmList(sender, receiver);
 
