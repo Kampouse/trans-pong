@@ -17,7 +17,7 @@ export class UserAPI
     }
 
     public static async getUserProfile(): Promise<PrivateProfileDto | null> {
-        const resp = await fetch(`http://localhost:3000/auth/who`, {
+        const resp = await fetch(`http://localhost:3000/profile`, {
             credentials: "include",
             method: "GET",
             headers: {

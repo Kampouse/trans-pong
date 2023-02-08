@@ -914,49 +914,6 @@ export class ProfileService {
                     blocked: user.login42
                 }
             })
-
-            //  Remove friend request if they were friends
-            let request = await prisma.friendRequest.findUnique({
-                where: {
-                    sender_receiver: {
-                        sender: login42,
-                        receiver: user.login42
-                    }
-                }
-            })
-
-            if (request) {
-                await prisma.friendRequest.delete({
-                    where: {
-                        sender_receiver: {
-                            sender: login42,
-                            receiver: user.login42
-                        }
-                    }
-                })
-            }
-
-            if (!request) {
-                request = await prisma.friendRequest.findUnique({
-                    where: {
-                        sender_receiver: {
-                            sender: user.login42,
-                            receiver: login42
-                        }
-                    }
-                })
-            }
-
-            if (request) {
-                await prisma.friendRequest.delete({
-                    where: {
-                        sender_receiver: {
-                            sender: user.login42,
-                            receiver: login42
-                        }
-                    }
-                })
-            }
         }
         catch { }
     }

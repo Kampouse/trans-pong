@@ -14,6 +14,7 @@ import SinglePlayerCanvas from 'views/Game/components/SinglePlayerCanvas'
 import '@styles/main.css'
 import Error404 from 'views/Error/Error404'
 import Chat from 'views/Chat/Chat'
+import { UserAPI } from 'api/user.api'
 import { ChatRoom, User } from 'utils/types'
 import Login2fa from 'views/Login/Login2fa'
 import '@styles/main.css'
@@ -107,7 +108,8 @@ export const SetUserContext = React.createContext<any> (null);
 
 export default function App()
 {
-	const [user, setUser] = useState(myProfile)
+	//const [user, setUser] = useState(myProfile)
+    const [user, setUser] = React.useState<PrivateProfileDto | null >(null);
 	const [login, setLogin] = useAtom(useLogin)
 	const [openSearchUser, setOpenSearchUser] = useState(false);
 	const [searchUser, setSearchUser] = useState('');
@@ -115,13 +117,8 @@ export default function App()
 	const [rooms, setRooms] = useAtom(useRooms);
 	const userClicked = useRef<User | null>(null);
 	const navigate = useNavigate();
+    const socket = useContext(WebsocketContext);
 
-  // const [user, setUser] = React.useState<UserDto | null>(null);
-  const socket = useContext(WebsocketContext);
-  // const [loggedIn, setLoggedIn] = React.useState(false);
-	// const [ballColor, setBallColor] = useAtom(useBallColor)
-	// const [backgroundColor, setBackgroundColor] = useAtom(useBackgroundColor)
-	// const [paddleColor, setPaddleColor] = useAtom(usePaddleColor)
 
 //  Here we check with the backend if the user is authentificated
   const SecondAuthStatus = async () => {
@@ -158,8 +155,34 @@ const check = async () =>
   }
   
 }
-
 useEffect(() => { check()}, [])
+React.useEffect(() => {
+    const fetchProfile = async () => {
+      const respUser = await UserAPI.getUserProfile();
+      setUser(respUser);
+
+      if (respUser) {
+        socket.emit("userUpdate");
+      }
+    };
+
+    fetchProfile();
+    // eslint-disable-next-line
+  }, []);
+
+  React.useEffect(() => {
+    socket.on("onUserChange", () => {
+      const fetchProfile = async () => {
+        const respUser = await UserAPI.getUserProfile();
+        setUser(respUser);
+      };
+  
+      fetchProfile();
+    });
+    return () => {
+      socket.off("onUserChange");
+    };
+  }, [socket]);
   return (
         <>
     <div className=" flex container-snap h-screen min-h-screen w-full lg:overflow-y-hidden overflow-x-hidden  bg-[url('https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3387&q=80')] bg-cover    to-pink-500">

@@ -24,7 +24,6 @@ export const RoomTabs = ({
     handleChangeChannel
 
 }: RoomTabsProps) => {
-
     return (
     <Accordion>
         <AccordionSummary

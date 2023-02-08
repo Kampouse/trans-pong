@@ -315,8 +315,10 @@ export class AuthService {
         const output = await this.remove2fa(user, formattedToken);
         return output
     }
-    public async getUserFromSocket(socket: Socket): Promise<PrivateProfileDto | null> {
+    public async getUserFromSocket(socket: Socket): Promise<PrivateProfileDto | null>
+    {
         let login = await this.authentificateSession(socket.handshake);
+
         const userDto: PrivateProfileDto | null = await this.usersService.getProfileEdit(login);
         return userDto;
       }

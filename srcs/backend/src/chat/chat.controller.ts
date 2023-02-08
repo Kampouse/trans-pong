@@ -21,30 +21,45 @@ export class ChatController {
   @UseGuards(JwtGuard)
   public async getRoomsFromUser(@Req() req: RequestWithUser) {
     const login: any = this.authService.authentificateSession(req);
-    const rooms: RoomDto[] = this.chatService.getAllRoomsFromUser(login);
+
+    if (login == undefined)
+        return;
+
+    const rooms: RoomDto[] = await this.chatService.getAllRoomsFromUser(login);
 
     const roomReturns = new Array<RoomReturnDto>();
-    rooms.forEach((room) =>
-      roomReturns.push(this.chatService.getReturnRoom(room)),
-    );
+    if (rooms)
+    {
+        rooms.forEach((room) =>
+        roomReturns.push(this.chatService.getReturnRoom(room)),);
+    }
 
     return { rooms: roomReturns };
   }
 
   @Get('userPMs')
   @UseGuards(JwtGuard)
-  public async getPMsFromUser(@Req() req: RequestWithUser) {
-    const login: any = this.authService.authentificateSession(req);
+  public async getPMsFromUser(@Req() req: RequestWithUser)
+  {
+    const login = await this.authService.authentificateSession(req);
 
-    const privateMsgs: PrivateMsgsDto[] =
-      this.chatService.getUserPrivateMsgs(login);
+    if (login == undefined)
+        return;
+
+    const privateMsgs: PrivateMsgsDto[] = await this.chatService.getUserPrivateMsgs(login);
 
     return { privateMsgs: privateMsgs || [] };
   }
 
   @Get('roomNames')
   @UseGuards(JwtGuard)
-  public async GetAllRoomNames() {
+  public async GetAllRoomNames(@Req() req: RequestWithUser)
+  {
+    const login: any = this.authService.authentificateSession(req);
+
+    if (login == undefined)
+        return;
+
     const roomNames: string[] = this.chatService.getAllRoomNames();
 
     return { rooms: roomNames };
